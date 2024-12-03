@@ -6,19 +6,27 @@ module.exports = {
   theme: {
     extend: {
       keyframes: {
-        'bounce': {
-          '0%, 100%': {
-            transform: 'translateY(-100%)',
-            animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)'
+        'damage-popup': {
+          '0%': {
+            opacity: '0',
+            transform: 'translate(-50%, 0)'
           },
-          '50%': {
-            transform: 'translateY(-150%)',
-            animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)'
+          '15%': {
+            opacity: '1',
+            transform: 'translate(-50%, -20px)'
+          },
+          '85%': {
+            opacity: '1',
+            transform: 'translate(-50%, -20px)'
+          },
+          '100%': {
+            opacity: '0',
+            transform: 'translate(-50%, -20px)'
           }
         }
       },
       animation: {
-        'bounce': 'bounce 1s infinite'
+        'damage-popup': 'damage-popup 5s ease-out forwards'
       }
     },
   },

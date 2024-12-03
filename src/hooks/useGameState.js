@@ -360,6 +360,13 @@ const gameReducer = (state, action) => {
       };
     }
 
+    case 'CLEAR_ANIMATION': {
+      return {
+        ...state,
+        damageAnimation: null
+      };
+    }
+
     case 'END_TURN': {
       const nextPlayer = (state.currentPlayer + 1) % 2;
       const updatedPlayers = updateBuffsAndCooldowns(state.players, nextPlayer);
@@ -410,7 +417,7 @@ const useGameState = () => {
     if (state.damageAnimation) {
       const timer = setTimeout(() => {
         dispatch({ type: 'CLEAR_ANIMATION' });
-      }, 1000);
+      }, 5000); // 5 seconds duration
       return () => clearTimeout(timer);
     }
   }, [state.damageAnimation]);

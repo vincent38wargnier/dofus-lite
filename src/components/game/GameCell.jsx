@@ -9,10 +9,16 @@ const GameCell = ({
   isHighlighted,
   isInPath,
   damageAnimation,
+  currentPlayer,
   onClick,
   onHover,
   onLeave,
 }) => {
+  const isCurrentPlayer = playerId === currentPlayer;
+  const shouldShowDamageAnimation = damageAnimation && 
+    damageAnimation.position.x === x && 
+    damageAnimation.position.y === y;
+
   const getCellContent = () => {
     if (playerId !== null) {
       return playerId === 0 ? PLAYER_ICONS.PLAYER_1 : PLAYER_ICONS.PLAYER_2;
@@ -29,7 +35,7 @@ const GameCell = ({
       'border border-gray-200',
       'flex items-center justify-center',
       'text-2xl cursor-pointer',
-      'transition-all duration-200',
+      'transition-colors duration-200',
       'relative'
     ];
 
@@ -46,12 +52,6 @@ const GameCell = ({
     return baseClasses.join(' ');
   };
 
-  // Check if this cell should show damage animation
-  const showAnimation = damageAnimation && 
-    damageAnimation.position && 
-    damageAnimation.position.x === x && 
-    damageAnimation.position.y === y;
-
   return (
     <div
       className={getCellStyles()}
@@ -61,11 +61,20 @@ const GameCell = ({
       data-testid={`cell-${x}-${y}`}
     >
       <div className="relative">
-        {getCellContent()}
+        {/* Current player indicator */}
+        {isCurrentPlayer && (
+          <div className="absolute inset-[-4px] bg-blue-400/30 rounded-full" />
+        )}
         
-        {showAnimation && (
-          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-2xl font-bold animate-bounce pointer-events-none" style={{ textShadow: '0 0 3px white' }}>
-            <span className={
+        {/* Cell content */}
+        <div className="relative z-10">
+          {getCellContent()}
+        </div>
+
+        {/* Damage Animation */}
+        {shouldShowDamageAnimation && (
+          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-2xl font-bold animate-damage-popup">
+            <div className={
               damageAnimation.type === 'damage' 
                 ? 'text-red-600' 
                 : damageAnimation.type === 'heal' 
@@ -73,11 +82,10 @@ const GameCell = ({
                   : 'text-blue-600'
             }>
               {damageAnimation.type === 'damage' 
-                ? `-${damageAnimation.value}` 
-                : damageAnimation.type === 'heal' 
-                  ? `+${damageAnimation.value}` 
-                  : 'Boost!'}
-            </span>
+                ? `-${damageAnimation.value}`
+                : `+${damageAnimation.value}`
+              }
+            </div>
           </div>
         )}
       </div>
