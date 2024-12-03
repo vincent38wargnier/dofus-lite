@@ -11,13 +11,14 @@ const Game = () => {
     castSpell,
     selectSpell,
     endTurn,
+    setHoveredCell,
   } = useGameState();
 
   const handleCellClick = (x, y) => {
     if (gameState.selectedSpell) {
       castSpell(x, y);
-    } else {
-      movePlayer(x, y);
+    } else if (gameState.path.length > 0 && !gameState.moving) {
+      movePlayer(gameState.path);
     }
   };
 
@@ -47,7 +48,10 @@ const Game = () => {
           players={gameState.players}
           currentPlayer={gameState.currentPlayer}
           selectedSpell={gameState.selectedSpell}
+          path={gameState.path}
           onCellClick={handleCellClick}
+          onCellHover={(x, y) => setHoveredCell({ x, y })}
+          onCellLeave={() => setHoveredCell(null)}
         />
       </div>
     </div>

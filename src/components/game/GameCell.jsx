@@ -7,8 +7,10 @@ const GameCell = ({
   type,
   playerId,
   isHighlighted,
-  isInRange,
+  isInPath,
   onClick,
+  onHover,
+  onLeave,
 }) => {
   const getCellContent = () => {
     if (playerId !== null) {
@@ -21,26 +23,39 @@ const GameCell = ({
   };
 
   const getCellStyles = () => {
-    if (isHighlighted) return 'bg-blue-200';
-    if (isInRange) return 'bg-green-200';
-    return 'bg-white';
+    const baseClasses = [
+      'w-12 h-12',
+      'border border-gray-200',
+      'flex items-center justify-center',
+      'text-2xl cursor-pointer',
+      'transition-all duration-200'
+    ];
+
+    // Add background color based on cell state
+    if (type === 'tree' || type === 'rock') {
+      baseClasses.push('bg-gray-100 hover:bg-gray-200');
+    } else if (isHighlighted) {
+      baseClasses.push('bg-blue-200 hover:bg-blue-300');
+    } else if (isInPath) {
+      baseClasses.push('bg-green-200 hover:bg-green-300');
+    } else {
+      baseClasses.push('bg-white hover:bg-gray-100');
+    }
+
+    return baseClasses.join(' ');
   };
 
   return (
     <div
-      className={`
-        w-12 h-12 
-        border border-gray-200 
-        flex items-center justify-center 
-        text-2xl cursor-pointer
-        transition-colors duration-200
-        ${getCellStyles()}
-        hover:bg-opacity-80
-      `}
+      className={getCellStyles()}
       onClick={() => onClick(x, y)}
+      onMouseEnter={() => onHover(x, y)}
+      onMouseLeave={() => onLeave(x, y)}
       data-testid={`cell-${x}-${y}`}
     >
-      {getCellContent()}
+      <div className="relative transition-transform duration-200 transform hover:scale-110">
+        {getCellContent()}
+      </div>
     </div>
   );
 };
