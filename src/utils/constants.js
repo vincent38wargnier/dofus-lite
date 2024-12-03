@@ -1,14 +1,18 @@
+// Game Board Configuration
 export const BOARD_SIZE = 10;
 export const OBSTACLE_CHANCE = 0.1;
 
+// Player Stats
 export const INITIAL_STATS = {
-  HP: 100,
-  PA: 6,
-  PM: 3,
+  hp: 100,
+  pa: 6,
+  pm: 3,
 };
 
-export const TURN_DURATION = 60;
+// Game Settings
+export const TURN_DURATION = 60; // seconds
 
+// Spells
 export const SPELLS = {
   ATTACK: {
     id: 'attack',
@@ -28,13 +32,21 @@ export const SPELLS = {
   },
 };
 
+// Cell Types
 export const CELL_TYPES = {
   EMPTY: 'empty',
   TREE: 'tree',
   ROCK: 'rock',
 };
 
+// Player Icons
 export const PLAYER_ICONS = {
   PLAYER_1: '🗡️',
   PLAYER_2: '🏹',
+};
+
+// Obstacle Icons
+export const OBSTACLE_ICONS = {
+  TREE: '🌳',
+  ROCK: '🪨',
 };
