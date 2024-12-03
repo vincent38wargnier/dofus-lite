@@ -30,13 +30,20 @@ const SpellHint = ({ spell }) => {
   );
 };
 
-const PlayerInfo = ({ player, isActive, onSpellSelect, onEndTurn }) => {
+const PlayerInfo = ({ player, isActive, onSpellSelect, onEndTurn, disabled }) => {
   const [hoveredSpell, setHoveredSpell] = useState(null);
   const playerClass = CLASSES[player.class];
 
+  const isDead = player.hp <= 0;
+
   return (
-    <div className={`p-4 rounded-lg shadow-md w-64 ${isActive ? 'bg-blue-50 ring-2 ring-blue-400' : 'bg-gray-50'}`}>
-      {/* Player Info */}
+    <div 
+      className={`p-4 rounded-lg shadow-md w-64 transition-all duration-300
+        ${isActive ? 'bg-blue-50 ring-2 ring-blue-400' : 'bg-gray-50'}
+        ${isDead ? 'opacity-50' : ''}
+        ${disabled ? 'pointer-events-none' : ''}
+      `}
+    >
       <div className="flex items-center gap-2 mb-4">
         <span className="text-2xl">
           {playerClass.icon}
@@ -48,10 +55,14 @@ const PlayerInfo = ({ player, isActive, onSpellSelect, onEndTurn }) => {
           <div className="text-sm text-gray-600">
             {playerClass.name}
           </div>
+          {isDead && (
+            <div className="text-sm text-red-500 font-bold mt-1">
+              Defeated ☠️
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Stats */}
       <div className="space-y-4">
         <div>
           <div className="flex justify-between mb-1">
@@ -60,8 +71,8 @@ const PlayerInfo = ({ player, isActive, onSpellSelect, onEndTurn }) => {
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div
-              className="bg-red-600 h-2 rounded-full transition-all"
-              style={{ width: `${player.hp}%` }}
+              className={`h-2 rounded-full transition-all ${isDead ? 'bg-gray-400' : 'bg-red-600'}`}
+              style={{ width: `${Math.max(0, player.hp)}%` }}
             />
           </div>
         </div>
@@ -77,8 +88,7 @@ const PlayerInfo = ({ player, isActive, onSpellSelect, onEndTurn }) => {
           </div>
         </div>
 
-        {/* Spells and Actions */}
-        {isActive && (
+        {isActive && !isDead && (
           <div className="space-y-2">
             <div className="grid grid-cols-2 gap-2">
               {player.spells.map((spell) => (
@@ -87,11 +97,11 @@ const PlayerInfo = ({ player, isActive, onSpellSelect, onEndTurn }) => {
                   onClick={() => onSpellSelect(spell)}
                   onMouseEnter={() => setHoveredSpell(spell)}
                   onMouseLeave={() => setHoveredSpell(null)}
-                  disabled={player.pa < spell.pa}
+                  disabled={player.pa < spell.pa || disabled}
                   className={`
                     px-2 py-1 rounded text-sm relative
                     transition-all duration-200
-                    ${player.pa < spell.pa 
+                    ${player.pa < spell.pa || disabled
                       ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                       : hoveredSpell === spell
                         ? 'bg-blue-600 text-white'
@@ -111,14 +121,19 @@ const PlayerInfo = ({ player, isActive, onSpellSelect, onEndTurn }) => {
             
             <button
               onClick={onEndTurn}
-              className="w-full px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+              disabled={disabled}
+              className={`
+                w-full px-4 py-2 rounded transition-colors
+                ${disabled 
+                  ? 'bg-gray-300 cursor-not-allowed'
+                  : 'bg-gray-500 text-white hover:bg-gray-600'}
+              `}
             >
               End Turn
             </button>
           </div>
         )}
 
-        {/* Spell Hint Section */}
         <SpellHint spell={hoveredSpell} />
       </div>
     </div>
