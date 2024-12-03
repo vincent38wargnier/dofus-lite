@@ -1,88 +1,93 @@
 // Class-specific spells and characteristics
 export const CLASSES = {
   SWORD: {
-    name: 'Sword',
+    name: 'Sword Master',
     icon: '🗡️',
-    description: 'Close-range warrior with powerful melee attacks',
+    description: 'Close-range warrior specializing in devastating melee attacks',
     spells: [
       {
-        id: 'sword_slash',
-        name: 'Slash',
-        damage: 30,
+        id: 'brutal_slash',
+        name: 'Brutal Slash',
+        type: 'hit',
+        damage: 35,
         range: 1,
         pa: 4,
-        description: 'A powerful melee attack',
+        description: 'A powerful close-range attack that deals massive damage',
         emoji: '⚔️'
       },
       {
-        id: 'charge',
-        name: 'Charge',
-        damage: 20,
-        range: 2,
-        pa: 3,
-        description: 'Rush towards enemy and attack',
+        id: 'heroic_leap',
+        name: 'Heroic Leap',
+        type: 'teleport',
+        range: 3,
+        pa: 2,
+        description: 'Jump to a target location, giving you tactical positioning',
         emoji: '💨'
       },
       {
-        id: 'armor_up',
-        name: 'Shield Up',
-        boost: { armor: 15 },
+        id: 'battle_fury',
+        name: 'Battle Fury',
+        type: 'boostPa',
+        boost: 4,
         range: 0,
-        pa: 2,
-        description: 'Increase defense temporarily',
-        emoji: '🛡️'
+        pa: 1,
+        description: 'Channel your inner fury to gain 4 PA for devastating combos',
+        emoji: '🔥'
       },
       {
-        id: 'battle_heal',
+        id: 'second_wind',
         name: 'Second Wind',
-        healing: 15,
+        type: 'heal',
+        healing: 30,
         range: 0,
         pa: 3,
-        description: 'Regain some health',
+        description: 'Regain a significant amount of health through sheer willpower',
         emoji: '💚'
       }
     ]
   },
   ARCHER: {
-    name: 'Archer',
+    name: 'Master Archer',
     icon: '🏹',
-    description: 'Long-range fighter specializing in distance attacks',
+    description: 'Long-range specialist with superior mobility and control',
     spells: [
       {
         id: 'precise_shot',
         name: 'Precise Shot',
-        damage: 20,
-        range: 5,
+        type: 'hit',
+        damage: 25,
+        range: 6,
         pa: 3,
-        description: 'Long-range accurate arrow shot',
+        description: 'A powerful long-range shot that pierces through defenses',
         emoji: '🎯'
       },
       {
-        id: 'rain_of_arrows',
-        name: 'Arrow Rain',
-        damage: 15,
-        range: 4,
-        aoe: true, // Area of effect
-        pa: 4,
-        description: 'Attack multiple cells in an area',
-        emoji: '☔'
+        id: 'tactical_roll',
+        name: 'Tactical Roll',
+        type: 'boostPm',
+        boost: 3,
+        range: 0,
+        pa: 1,
+        description: 'Roll away gaining 3 extra PM for perfect positioning',
+        emoji: '🌪️'
       },
       {
-        id: 'jump_back',
-        name: 'Jump Back',
-        boost: { movement: 2 },
+        id: 'shadow_step',
+        name: 'Shadow Step',
+        type: 'teleport',
+        range: 4,
+        pa: 2,
+        description: 'Instantly teleport to outmaneuver your opponent',
+        emoji: '👻'
+      },
+      {
+        id: 'restoration_arrow',
+        name: 'Restoration Arrow',
+        type: 'heal',
+        healing: 20,
         range: 0,
         pa: 2,
-        description: 'Jump away from enemies',
-        emoji: '↩️'
-      },
-      {
-        id: 'healing_arrow',
-        name: 'Healing Arrow',
-        healing: 10,
-        range: 0,
-        pa: 3,
-        description: 'Self-healing arrow',
+        description: 'A quick self-healing technique using magical arrows',
         emoji: '💝'
       }
     ]

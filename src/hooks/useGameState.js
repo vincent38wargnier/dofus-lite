@@ -19,7 +19,6 @@ const createInitialState = () => ({
       hp: INITIAL_STATS.hp, 
       pa: INITIAL_STATS.pa, 
       pm: INITIAL_STATS.pm,
-      armor: 0,
       spells: CLASSES.SWORD.spells
     },
     { 
@@ -29,7 +28,6 @@ const createInitialState = () => ({
       hp: INITIAL_STATS.hp, 
       pa: INITIAL_STATS.pa, 
       pm: INITIAL_STATS.pm,
-      armor: 0,
       spells: CLASSES.ARCHER.spells
     }
   ],
@@ -91,20 +89,6 @@ const findPath = (start, end, board, maxDistance) => {
   }
 
   return null;
-};
-
-const calculateDamage = (spell, attacker, defender) => {
-  let finalDamage = spell.damage;
-  
-  // Apply armor reduction if defender has armor
-  if (defender.armor > 0) {
-    finalDamage = Math.max(0, finalDamage - defender.armor);
-  }
-  
-  // Add some randomness (-2 to +2)
-  finalDamage += Math.floor(Math.random() * 5) - 2;
-  
-  return Math.max(0, finalDamage);
 };
 
 const gameReducer = (state, action) => {
@@ -207,33 +191,86 @@ const gameReducer = (state, action) => {
       let updatedPlayers = [...state.players];
       let damageAnimation = null;
 
-      if (state.selectedSpell.damage && targetPlayer && targetPlayer.id !== currentPlayer.id) {
-        const finalDamage = calculateDamage(state.selectedSpell, currentPlayer, targetPlayer);
-        damageAnimation = {
-          playerId: targetPlayer.id,
-          position: targetPlayer.position,
-          value: finalDamage,
-          type: 'damage'
-        };
+      switch (state.selectedSpell.type) {
+        case 'hit': {
+          if (targetPlayer && targetPlayer.id !== currentPlayer.id) {
+            const finalDamage = state.selectedSpell.damage;
+            damageAnimation = {
+              playerId: targetPlayer.id,
+              position: targetPlayer.position,
+              value: finalDamage,
+              type: 'damage'
+            };
 
-        updatedPlayers = state.players.map(player =>
-          player.id === targetPlayer.id
-            ? { ...player, hp: Math.max(0, player.hp - finalDamage) }
-            : player
-        );
-      } else if (state.selectedSpell.healing && targetPlayer && targetPlayer.id === currentPlayer.id) {
-        damageAnimation = {
-          playerId: currentPlayer.id,
-          position: currentPlayer.position,
-          value: state.selectedSpell.healing,
-          type: 'heal'
-        };
+            updatedPlayers = state.players.map(player =>
+              player.id === targetPlayer.id
+                ? { ...player, hp: Math.max(0, player.hp - finalDamage) }
+                : player
+            );
+          }
+          break;
+        }
 
-        updatedPlayers = state.players.map(player =>
-          player.id === currentPlayer.id
-            ? { ...player, hp: Math.min(100, player.hp + state.selectedSpell.healing) }
-            : player
-        );
+        case 'heal': {
+          if (!targetPlayer || targetPlayer.id === currentPlayer.id) {
+            damageAnimation = {
+              playerId: currentPlayer.id,
+              position: currentPlayer.position,
+              value: state.selectedSpell.healing,
+              type: 'heal'
+            };
+
+            updatedPlayers = state.players.map(player =>
+              player.id === currentPlayer.id
+                ? { ...player, hp: Math.min(100, player.hp + state.selectedSpell.healing) }
+                : player
+            );
+          }
+          break;
+        }
+
+        case 'boostPa': {
+          damageAnimation = {
+            playerId: currentPlayer.id,
+            position: currentPlayer.position,
+            value: state.selectedSpell.boost,
+            type: 'boostPa'
+          };
+
+          updatedPlayers = state.players.map(player =>
+              player.id === currentPlayer.id
+                ? { ...player, pa: player.pa + state.selectedSpell.boost }
+                : player
+          );
+          break;
+        }
+
+        case 'boostPm': {
+          damageAnimation = {
+            playerId: currentPlayer.id,
+            position: currentPlayer.position,
+            value: state.selectedSpell.boost,
+            type: 'boostPm'
+          };
+
+          updatedPlayers = state.players.map(player =>
+              player.id === currentPlayer.id
+                ? { ...player, pm: player.pm + state.selectedSpell.boost }
+                : player
+          );
+          break;
+        }
+
+        case 'teleport': {
+          if (state.board[y][x].type === CELL_TYPES.EMPTY && !targetPlayer) {
+            updatedPlayers = state.players.map(player =>
+              player.id === currentPlayer.id
+                ? { ...player, position: { x, y } }
+                : player
+            );
+          }
+          break;
+        }
       }
 
       return {
