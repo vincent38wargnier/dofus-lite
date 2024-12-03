@@ -1,7 +1,8 @@
 import { useReducer, useEffect } from 'react';
 import { BOARD_SIZE, INITIAL_STATS, OBSTACLE_CHANCE, CELL_TYPES } from '../utils/constants';
 
-const initialState = {
+// Initial game state
+const createInitialState = () => ({
   board: Array(BOARD_SIZE).fill().map(() =>
     Array(BOARD_SIZE).fill().map(() => ({
       type: Math.random() < OBSTACLE_CHANCE ? 
@@ -10,8 +11,20 @@ const initialState = {
     }))
   ),
   players: [
-    { id: 0, position: { x: 0, y: 0 }, ...INITIAL_STATS },
-    { id: 1, position: { x: 9, y: 9 }, ...INITIAL_STATS }
+    { 
+      id: 0, 
+      position: { x: 0, y: 0 }, 
+      hp: INITIAL_STATS.hp, 
+      pa: INITIAL_STATS.pa, 
+      pm: INITIAL_STATS.pm 
+    },
+    { 
+      id: 1, 
+      position: { x: 9, y: 9 }, 
+      hp: INITIAL_STATS.hp, 
+      pa: INITIAL_STATS.pa, 
+      pm: INITIAL_STATS.pm 
+    }
   ],
   currentPlayer: 0,
   selectedSpell: null,
@@ -19,14 +32,15 @@ const initialState = {
   winner: null,
   moving: false,
   path: [],
-  hoveredCell: null
-};
+  hoveredCell: null,
+  damageAnimation: null
+});
 
-// Clear starting positions
+// Initialize state and clear starting positions
+const initialState = createInitialState();
 initialState.board[0][0].type = CELL_TYPES.EMPTY;
 initialState.board[9][9].type = CELL_TYPES.EMPTY;
 
-// Path finding helper function
 const findPath = (start, end, board, maxDistance) => {
   if (!start || !end) return null;
   
@@ -46,7 +60,6 @@ const findPath = (start, end, board, maxDistance) => {
 
     if (cost >= maxDistance) continue;
 
-    // Check all four directions
     const directions = [
       { x: 1, y: 0 }, { x: -1, y: 0 },
       { x: 0, y: 1 }, { x: 0, y: -1 }
@@ -156,11 +169,9 @@ const reducer = (state, action) => {
         p.position.x === x && p.position.y === y
       );
 
-      // Calculate distance
       const distance = Math.abs(x - currentPlayer.position.x) + 
                       Math.abs(y - currentPlayer.position.y);
 
-      // Check if target is in range
       if (distance > state.selectedSpell.range) {
         return {
           ...state,
@@ -168,25 +179,39 @@ const reducer = (state, action) => {
         };
       }
 
-      // Check if player has enough PA
       if (currentPlayer.pa < state.selectedSpell.pa) {
         return state;
       }
 
       let updatedPlayers = [...state.players];
+      let damageAnimation = null;
 
       if (state.selectedSpell.id === 'attack' && targetPlayer && targetPlayer.id !== currentPlayer.id) {
-        // Apply damage
+        const damage = state.selectedSpell.damage;
+        damageAnimation = {
+          playerId: targetPlayer.id,
+          position: targetPlayer.position,
+          value: damage,
+          type: 'damage'
+        };
+
         updatedPlayers = state.players.map(player =>
           player.id === targetPlayer.id
-            ? { ...player, hp: Math.max(0, player.hp - state.selectedSpell.damage) }
+            ? { ...player, hp: Math.max(0, player.hp - damage) }
             : player
         );
       } else if (state.selectedSpell.id === 'heal' && targetPlayer && targetPlayer.id === currentPlayer.id) {
-        // Apply healing
+        const healing = state.selectedSpell.healing;
+        damageAnimation = {
+          playerId: currentPlayer.id,
+          position: currentPlayer.position,
+          value: healing,
+          type: 'heal'
+        };
+
         updatedPlayers = state.players.map(player =>
           player.id === currentPlayer.id
-            ? { ...player, hp: Math.min(100, player.hp + state.selectedSpell.healing) }
+            ? { ...player, hp: Math.min(100, player.hp + healing) }
             : player
         );
       }
@@ -198,7 +223,15 @@ const reducer = (state, action) => {
             ? { ...p, pa: p.pa - state.selectedSpell.pa }
             : p
         ),
-        selectedSpell: null
+        selectedSpell: null,
+        damageAnimation
+      };
+    }
+
+    case 'CLEAR_ANIMATION': {
+      return {
+        ...state,
+        damageAnimation: null
       };
     }
 
@@ -211,6 +244,7 @@ const reducer = (state, action) => {
         selectedSpell: null,
         path: [],
         moving: false,
+        damageAnimation: null,
         players: state.players.map(p =>
           p.id === nextPlayer
             ? { ...p, pa: INITIAL_STATS.pa, pm: INITIAL_STATS.pm }
@@ -244,6 +278,15 @@ export default function useGameState() {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    if (state.damageAnimation) {
+      const timer = setTimeout(() => {
+        dispatch({ type: 'CLEAR_ANIMATION' });
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [state.damageAnimation]);
+
   const handleMove = (path) => {
     if (!path || path.length === 0) return;
     
@@ -261,7 +304,7 @@ export default function useGameState() {
         clearInterval(interval);
         dispatch({ type: 'FINISH_MOVE' });
       }
-    }, 150); // Adjust this value to control movement speed
+    }, 150);
   };
 
   return {

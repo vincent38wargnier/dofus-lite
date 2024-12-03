@@ -24,35 +24,47 @@ const Game = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
-      <div className="container mx-auto flex flex-col items-center gap-8">
-        <div className="flex justify-between w-full max-w-4xl">
-          <PlayerInfo
-            player={gameState.players[0]}
-            isActive={gameState.currentPlayer === 0}
-            onSpellSelect={selectSpell}
-            onEndTurn={endTurn}
-          />
-          
-          <TurnTimer timeLeft={gameState.timeLeft} />
-          
-          <PlayerInfo
-            player={gameState.players[1]}
-            isActive={gameState.currentPlayer === 1}
-            onSpellSelect={selectSpell}
-            onEndTurn={endTurn}
-          />
+      <div className="container mx-auto">
+        <div className="flex justify-center items-start gap-8">
+          {/* Left Player */}
+          <div className="w-64">
+            <PlayerInfo
+              player={gameState.players[0]}
+              isActive={gameState.currentPlayer === 0}
+              onSpellSelect={selectSpell}
+              onEndTurn={endTurn}
+            />
+          </div>
+
+          {/* Game Board and Timer */}
+          <div className="flex flex-col items-center">
+            <GameBoard
+              board={gameState.board}
+              players={gameState.players}
+              currentPlayer={gameState.currentPlayer}
+              selectedSpell={gameState.selectedSpell}
+              path={gameState.path}
+              damageAnimation={gameState.damageAnimation}
+              onCellClick={handleCellClick}
+              onCellHover={(x, y) => setHoveredCell({ x, y })}
+              onCellLeave={() => setHoveredCell(null)}
+            />
+            
+            <div className="mt-4 w-full max-w-lg">
+              <TurnTimer timeLeft={gameState.timeLeft} />
+            </div>
+          </div>
+
+          {/* Right Player */}
+          <div className="w-64">
+            <PlayerInfo
+              player={gameState.players[1]}
+              isActive={gameState.currentPlayer === 1}
+              onSpellSelect={selectSpell}
+              onEndTurn={endTurn}
+            />
+          </div>
         </div>
-        
-        <GameBoard
-          board={gameState.board}
-          players={gameState.players}
-          currentPlayer={gameState.currentPlayer}
-          selectedSpell={gameState.selectedSpell}
-          path={gameState.path}
-          onCellClick={handleCellClick}
-          onCellHover={(x, y) => setHoveredCell({ x, y })}
-          onCellLeave={() => setHoveredCell(null)}
-        />
       </div>
     </div>
   );
