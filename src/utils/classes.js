@@ -12,7 +12,8 @@ export const CLASSES = {
         damage: 35,
         range: 1,
         pa: 4,
-        description: 'A powerful close-range attack that deals massive damage',
+        usesPerTurn: 1,
+        description: 'A powerful close-range attack that deals massive damage. Once per turn.',
         emoji: '⚔️'
       },
       {
@@ -21,27 +22,32 @@ export const CLASSES = {
         type: 'teleport',
         range: 3,
         pa: 2,
-        description: 'Jump to a target location, giving you tactical positioning',
+        usesPerTurn: 2,
+        description: 'Jump to a target location. Can be used twice per turn.',
         emoji: '💨'
       },
       {
         id: 'battle_fury',
         name: 'Battle Fury',
         type: 'boostPa',
-        boost: 4,
+        boost: 3,
+        duration: 2,
         range: 0,
-        pa: 1,
-        description: 'Channel your inner fury to gain 4 PA for devastating combos',
+        pa: 2,
+        usesPerTurn: 1,
+        description: 'Gain +3 PA for 2 turns. Once per turn.',
         emoji: '🔥'
       },
       {
-        id: 'second_wind',
-        name: 'Second Wind',
+        id: 'iron_will',
+        name: 'Iron Will',
         type: 'heal',
-        healing: 30,
+        healing: 25,
         range: 0,
         pa: 3,
-        description: 'Regain a significant amount of health through sheer willpower',
+        usesPerTurn: 1,
+        cooldown: 3,
+        description: 'Powerful heal with 3 turns cooldown.',
         emoji: '💚'
       }
     ]
@@ -58,17 +64,20 @@ export const CLASSES = {
         damage: 25,
         range: 6,
         pa: 3,
-        description: 'A powerful long-range shot that pierces through defenses',
+        usesPerTurn: 2,
+        description: 'A precise long-range shot. Can be used twice per turn.',
         emoji: '🎯'
       },
       {
         id: 'tactical_roll',
         name: 'Tactical Roll',
         type: 'boostPm',
-        boost: 3,
+        boost: 2,
+        duration: 2,
         range: 0,
-        pa: 1,
-        description: 'Roll away gaining 3 extra PM for perfect positioning',
+        pa: 2,
+        usesPerTurn: 1,
+        description: 'Gain +2 PM for 2 turns.',
         emoji: '🌪️'
       },
       {
@@ -77,18 +86,22 @@ export const CLASSES = {
         type: 'teleport',
         range: 4,
         pa: 2,
-        description: 'Instantly teleport to outmaneuver your opponent',
+        usesPerTurn: 1,
+        cooldown: 2,
+        description: 'Long range teleport with 2 turns cooldown.',
         emoji: '👻'
       },
       {
-        id: 'restoration_arrow',
-        name: 'Restoration Arrow',
-        type: 'heal',
-        healing: 20,
+        id: 'rapid_shot',
+        name: 'Rapid Shot',
+        type: 'boostPa',
+        boost: 2,
+        duration: 1,
         range: 0,
-        pa: 2,
-        description: 'A quick self-healing technique using magical arrows',
-        emoji: '💝'
+        pa: 1,
+        usesPerTurn: 1,
+        description: 'Quick PA boost for immediate use.',
+        emoji: '⚡'
       }
     ]
   }

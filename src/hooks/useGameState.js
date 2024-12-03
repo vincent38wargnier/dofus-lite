@@ -19,7 +19,12 @@ const createInitialState = () => ({
       hp: INITIAL_STATS.hp, 
       pa: INITIAL_STATS.pa, 
       pm: INITIAL_STATS.pm,
-      spells: CLASSES.SWORD.spells
+      spells: CLASSES.SWORD.spells.map(spell => ({
+        ...spell,
+        usesLeft: spell.usesPerTurn,
+        cooldownLeft: 0,
+      })),
+      activeBuffs: []
     },
     { 
       id: 1,
@@ -28,7 +33,12 @@ const createInitialState = () => ({
       hp: INITIAL_STATS.hp, 
       pa: INITIAL_STATS.pa, 
       pm: INITIAL_STATS.pm,
-      spells: CLASSES.ARCHER.spells
+      spells: CLASSES.ARCHER.spells.map(spell => ({
+        ...spell,
+        usesLeft: spell.usesPerTurn,
+        cooldownLeft: 0,
+      })),
+      activeBuffs: []
     }
   ],
   currentPlayer: 0,
@@ -89,6 +99,149 @@ const findPath = (start, end, board, maxDistance) => {
   }
 
   return null;
+};
+
+const handleSpellCast = (state, spell, x, y, currentPlayer, targetPlayer) => {
+  let updatedPlayers = [...state.players];
+  let damageAnimation = null;
+
+  // Check if spell has uses left and is not on cooldown
+  const spellState = currentPlayer.spells.find(s => s.id === spell.id);
+  if (spellState.usesLeft <= 0 || spellState.cooldownLeft > 0) {
+    return null;
+  }
+
+  switch (spell.type) {
+    case 'hit': {
+      if (targetPlayer && targetPlayer.id !== currentPlayer.id) {
+        const finalDamage = spell.damage;
+        damageAnimation = {
+          playerId: targetPlayer.id,
+          position: targetPlayer.position,
+          value: finalDamage,
+          type: 'damage'
+        };
+
+        updatedPlayers = state.players.map(player =>
+          player.id === targetPlayer.id
+            ? { ...player, hp: Math.max(0, player.hp - finalDamage) }
+            : player
+        );
+      }
+      break;
+    }
+
+    case 'heal': {
+      if (!targetPlayer || targetPlayer.id === currentPlayer.id) {
+        damageAnimation = {
+          playerId: currentPlayer.id,
+          position: currentPlayer.position,
+          value: spell.healing,
+          type: 'heal'
+        };
+
+        updatedPlayers = state.players.map(player =>
+          player.id === currentPlayer.id
+            ? { ...player, hp: Math.min(100, player.hp + spell.healing) }
+            : player
+        );
+      }
+      break;
+    }
+
+    case 'boostPa':
+    case 'boostPm': {
+      const buffType = spell.type === 'boostPa' ? 'pa' : 'pm';
+      damageAnimation = {
+        playerId: currentPlayer.id,
+        position: currentPlayer.position,
+        value: spell.boost,
+        type: spell.type
+      };
+
+      const newBuff = {
+        spellId: spell.id,
+        type: buffType,
+        value: spell.boost,
+        turnsLeft: spell.duration
+      };
+
+      updatedPlayers = state.players.map(player =>
+        player.id === currentPlayer.id
+          ? {
+              ...player,
+              activeBuffs: [...player.activeBuffs, newBuff],
+              [buffType]: player[buffType] + spell.boost
+            }
+          : player
+      );
+      break;
+    }
+
+    case 'teleport': {
+      if (state.board[y][x].type === CELL_TYPES.EMPTY && !targetPlayer) {
+        updatedPlayers = state.players.map(player =>
+          player.id === currentPlayer.id
+            ? { ...player, position: { x, y } }
+            : player
+        );
+      }
+      break;
+    }
+
+    default:
+      return null;
+  }
+
+  if (updatedPlayers === null) return null;
+
+  // Update spell uses and cooldown
+  updatedPlayers = updatedPlayers.map(player => 
+    player.id === currentPlayer.id
+      ? {
+          ...player,
+          spells: player.spells.map(s =>
+            s.id === spell.id
+              ? { 
+                  ...s, 
+                  usesLeft: s.usesLeft - 1,
+                  cooldownLeft: s.cooldown || 0
+                }
+              : s
+          )
+        }
+      : player
+  );
+
+  return { updatedPlayers, damageAnimation };
+};
+
+const updateBuffsAndCooldowns = (players, nextPlayer) => {
+  return players.map(player => {
+    // Reduce buff durations and remove expired buffs
+    const updatedBuffs = player.activeBuffs.filter(buff => buff.turnsLeft > 1)
+      .map(buff => ({ ...buff, turnsLeft: buff.turnsLeft - 1 }));
+    
+    // Remove expired buff effects
+    const removedBuffs = player.activeBuffs.filter(buff => buff.turnsLeft <= 1);
+    let updatedStats = { ...player };
+    removedBuffs.forEach(buff => {
+      updatedStats[buff.type] -= buff.value;
+    });
+
+    // Reduce cooldowns
+    const updatedSpells = player.spells.map(spell => ({
+      ...spell,
+      cooldownLeft: Math.max(0, spell.cooldownLeft - 1),
+      usesLeft: player.id === nextPlayer ? spell.usesPerTurn : spell.usesLeft
+    }));
+
+    return {
+      ...updatedStats,
+      activeBuffs: updatedBuffs,
+      spells: updatedSpells
+    };
+  });
 };
 
 const gameReducer = (state, action) => {
@@ -177,101 +330,22 @@ const gameReducer = (state, action) => {
       const distance = Math.abs(x - currentPlayer.position.x) + 
                       Math.abs(y - currentPlayer.position.y);
 
-      if (distance > state.selectedSpell.range) {
+      if (distance > state.selectedSpell.range || currentPlayer.pa < state.selectedSpell.pa) {
         return {
           ...state,
           selectedSpell: null
         };
       }
 
-      if (currentPlayer.pa < state.selectedSpell.pa) {
-        return state;
-      }
+      const result = handleSpellCast(state, state.selectedSpell, x, y, currentPlayer, targetPlayer);
+      if (!result) return state;
 
-      let updatedPlayers = [...state.players];
-      let damageAnimation = null;
+      const { updatedPlayers, damageAnimation } = result;
 
-      switch (state.selectedSpell.type) {
-        case 'hit': {
-          if (targetPlayer && targetPlayer.id !== currentPlayer.id) {
-            const finalDamage = state.selectedSpell.damage;
-            damageAnimation = {
-              playerId: targetPlayer.id,
-              position: targetPlayer.position,
-              value: finalDamage,
-              type: 'damage'
-            };
-
-            updatedPlayers = state.players.map(player =>
-              player.id === targetPlayer.id
-                ? { ...player, hp: Math.max(0, player.hp - finalDamage) }
-                : player
-            );
-          }
-          break;
-        }
-
-        case 'heal': {
-          if (!targetPlayer || targetPlayer.id === currentPlayer.id) {
-            damageAnimation = {
-              playerId: currentPlayer.id,
-              position: currentPlayer.position,
-              value: state.selectedSpell.healing,
-              type: 'heal'
-            };
-
-            updatedPlayers = state.players.map(player =>
-              player.id === currentPlayer.id
-                ? { ...player, hp: Math.min(100, player.hp + state.selectedSpell.healing) }
-                : player
-            );
-          }
-          break;
-        }
-
-        case 'boostPa': {
-          damageAnimation = {
-            playerId: currentPlayer.id,
-            position: currentPlayer.position,
-            value: state.selectedSpell.boost,
-            type: 'boostPa'
-          };
-
-          updatedPlayers = state.players.map(player =>
-              player.id === currentPlayer.id
-                ? { ...player, pa: player.pa + state.selectedSpell.boost }
-                : player
-          );
-          break;
-        }
-
-        case 'boostPm': {
-          damageAnimation = {
-            playerId: currentPlayer.id,
-            position: currentPlayer.position,
-            value: state.selectedSpell.boost,
-            type: 'boostPm'
-          };
-
-          updatedPlayers = state.players.map(player =>
-              player.id === currentPlayer.id
-                ? { ...player, pm: player.pm + state.selectedSpell.boost }
-                : player
-          );
-          break;
-        }
-
-        case 'teleport': {
-          if (state.board[y][x].type === CELL_TYPES.EMPTY && !targetPlayer) {
-            updatedPlayers = state.players.map(player =>
-              player.id === currentPlayer.id
-                ? { ...player, position: { x, y } }
-                : player
-            );
-          }
-          break;
-        }
-      }
+      // Check for winner
+      const winner = updatedPlayers.find(p => p.hp <= 0) 
+        ? updatedPlayers.find(p => p.hp > 0).id 
+        : null;
 
       return {
         ...state,
@@ -281,19 +355,15 @@ const gameReducer = (state, action) => {
             : p
         ),
         selectedSpell: null,
-        damageAnimation
-      };
-    }
-
-    case 'CLEAR_ANIMATION': {
-      return {
-        ...state,
-        damageAnimation: null
+        damageAnimation,
+        winner
       };
     }
 
     case 'END_TURN': {
       const nextPlayer = (state.currentPlayer + 1) % 2;
+      const updatedPlayers = updateBuffsAndCooldowns(state.players, nextPlayer);
+
       return {
         ...state,
         currentPlayer: nextPlayer,
@@ -302,9 +372,10 @@ const gameReducer = (state, action) => {
         path: [],
         moving: false,
         damageAnimation: null,
-        players: state.players.map(p =>
+        players: updatedPlayers.map(p =>
           p.id === nextPlayer
-            ? { ...p, pa: INITIAL_STATS.pa, pm: INITIAL_STATS.pm }
+            ? { ...p, pa: INITIAL_STATS.pa + p.activeBuffs.reduce((acc, buff) => buff.type === 'pa' ? acc + buff.value : acc, 0),
+                   pm: INITIAL_STATS.pm + p.activeBuffs.reduce((acc, buff) => buff.type === 'pm' ? acc + buff.value : acc, 0) }
             : p
         )
       };

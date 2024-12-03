@@ -1,6 +1,49 @@
 import React, { useState } from 'react';
 import { CLASSES } from '../../utils/classes';
 
+const SpellButton = ({ spell, onSpellSelect, onHover, onLeave, disabled, pa }) => {
+  const isOnCooldown = spell.cooldownLeft > 0;
+  const noUsesLeft = spell.usesLeft <= 0;
+  const cantAfford = pa < spell.pa;
+  const isDisabled = disabled || isOnCooldown || noUsesLeft || cantAfford;
+
+  return (
+    <button
+      onClick={() => !isDisabled && onSpellSelect(spell)}
+      onMouseEnter={() => onHover(spell)}
+      onMouseLeave={onLeave}
+      disabled={isDisabled}
+      className={`
+        px-2 py-1 rounded text-sm relative
+        transition-all duration-200
+        ${isDisabled
+          ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+          : 'bg-blue-500 text-white hover:bg-blue-600'}
+      `}
+    >
+      <div className="flex flex-col items-center">
+        <span>{spell.emoji}</span>
+        <span className="whitespace-nowrap overflow-hidden text-ellipsis w-full text-center">
+          {spell.name}
+        </span>
+        <div className="text-xs space-x-1">
+          <span>{spell.pa} PA</span>
+          {spell.usesPerTurn > 1 && (
+            <span>({spell.usesLeft}/{spell.usesPerTurn})</span>
+          )}
+        </div>
+        {isOnCooldown && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded">
+            <span className="text-white font-bold text-lg">
+              {spell.cooldownLeft}
+            </span>
+          </div>
+        )}
+      </div>
+    </button>
+  );
+};
+
 const SpellHint = ({ spell }) => {
   if (!spell) {
     return (
@@ -18,12 +61,23 @@ const SpellHint = ({ spell }) => {
           <span className="font-bold">{spell.name}</span>
         </div>
         <div className="text-gray-600">{spell.description}</div>
-        <div className="flex gap-4 text-xs text-gray-700">
+        <div className="flex flex-wrap gap-2 text-xs text-gray-700">
           <div>Cost: {spell.pa} PA</div>
           <div>Range: {spell.range} cells</div>
           {spell.damage && <div>Damage: {spell.damage}</div>}
           {spell.healing && <div>Healing: {spell.healing}</div>}
-          {spell.boost && <div>Boost: +{spell.boost}</div>}
+          {spell.boost && (
+            <div>
+              Boost: +{spell.boost} {spell.type === 'boostPa' ? 'PA' : 'PM'}
+              {spell.duration > 1 && ` for ${spell.duration} turns`}
+            </div>
+          )}
+          {spell.usesPerTurn > 1 && (
+            <div className="text-blue-600">{spell.usesPerTurn}x per turn</div>
+          )}
+          {spell.cooldown > 0 && (
+            <div className="text-red-600">{spell.cooldown} turns cooldown</div>
+          )}
         </div>
       </div>
     </div>
@@ -64,6 +118,7 @@ const PlayerInfo = ({ player, isActive, onSpellSelect, onEndTurn, disabled }) =>
       </div>
 
       <div className="space-y-4">
+        {/* HP Bar */}
         <div>
           <div className="flex justify-between mb-1">
             <span>HP</span>
@@ -77,45 +132,64 @@ const PlayerInfo = ({ player, isActive, onSpellSelect, onEndTurn, disabled }) =>
           </div>
         </div>
 
+        {/* Stats with Active Buffs */}
         <div className="grid grid-cols-2 gap-2">
           <div>
             <div className="text-sm text-gray-600">PA</div>
-            <div className="font-medium">{player.pa}/6</div>
+            <div className="font-medium flex items-center gap-1">
+              {player.pa}/6
+              {player.activeBuffs.some(buff => buff.type === 'pa') && (
+                <span className="text-green-500 text-xs">
+                  +{player.activeBuffs.reduce((acc, buff) => 
+                    buff.type === 'pa' ? acc + buff.value : acc, 0
+                  )}
+                </span>
+              )}
+            </div>
           </div>
           <div>
             <div className="text-sm text-gray-600">PM</div>
-            <div className="font-medium">{player.pm}/3</div>
+            <div className="font-medium flex items-center gap-1">
+              {player.pm}/3
+              {player.activeBuffs.some(buff => buff.type === 'pm') && (
+                <span className="text-green-500 text-xs">
+                  +{player.activeBuffs.reduce((acc, buff) => 
+                    buff.type === 'pm' ? acc + buff.value : acc, 0
+                  )}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
+        {/* Active Buffs */}
+        {player.activeBuffs.length > 0 && (
+          <div className="text-xs text-gray-600">
+            Active Buffs:
+            <div className="flex flex-wrap gap-1 mt-1">
+              {player.activeBuffs.map((buff, index) => (
+                <div key={index} className="bg-green-100 text-green-700 px-1 rounded">
+                  +{buff.value} {buff.type.toUpperCase()} ({buff.turnsLeft}t)
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Spells */}
         {isActive && !isDead && (
           <div className="space-y-2">
             <div className="grid grid-cols-2 gap-2">
               {player.spells.map((spell) => (
-                <button
+                <SpellButton
                   key={spell.id}
-                  onClick={() => onSpellSelect(spell)}
-                  onMouseEnter={() => setHoveredSpell(spell)}
-                  onMouseLeave={() => setHoveredSpell(null)}
-                  disabled={player.pa < spell.pa || disabled}
-                  className={`
-                    px-2 py-1 rounded text-sm relative
-                    transition-all duration-200
-                    ${player.pa < spell.pa || disabled
-                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                      : hoveredSpell === spell
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-blue-500 text-white hover:bg-blue-600'}
-                  `}
-                >
-                  <div className="flex flex-col items-center">
-                    <span>{spell.emoji}</span>
-                    <span className="whitespace-nowrap overflow-hidden text-ellipsis w-full text-center">
-                      {spell.name}
-                    </span>
-                    <span className="text-xs">{spell.pa} PA</span>
-                  </div>
-                </button>
+                  spell={spell}
+                  pa={player.pa}
+                  onSpellSelect={onSpellSelect}
+                  onHover={() => setHoveredSpell(spell)}
+                  onLeave={() => setHoveredSpell(null)}
+                  disabled={disabled}
+                />
               ))}
             </div>
             
