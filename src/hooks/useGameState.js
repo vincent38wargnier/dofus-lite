@@ -1,5 +1,6 @@
 import { useReducer, useEffect } from 'react';
 import { BOARD_SIZE, INITIAL_STATS, OBSTACLE_CHANCE, CELL_TYPES } from '../utils/constants';
+import { CLASSES } from '../utils/classes';
 
 // Initial game state
 const createInitialState = () => ({
@@ -12,18 +13,24 @@ const createInitialState = () => ({
   ),
   players: [
     { 
-      id: 0, 
+      id: 0,
+      class: 'SWORD', 
       position: { x: 0, y: 0 }, 
       hp: INITIAL_STATS.hp, 
       pa: INITIAL_STATS.pa, 
-      pm: INITIAL_STATS.pm 
+      pm: INITIAL_STATS.pm,
+      armor: 0,
+      spells: CLASSES.SWORD.spells
     },
     { 
-      id: 1, 
+      id: 1,
+      class: 'ARCHER', 
       position: { x: 9, y: 9 }, 
       hp: INITIAL_STATS.hp, 
       pa: INITIAL_STATS.pa, 
-      pm: INITIAL_STATS.pm 
+      pm: INITIAL_STATS.pm,
+      armor: 0,
+      spells: CLASSES.ARCHER.spells
     }
   ],
   currentPlayer: 0,
@@ -86,7 +93,21 @@ const findPath = (start, end, board, maxDistance) => {
   return null;
 };
 
-const reducer = (state, action) => {
+const calculateDamage = (spell, attacker, defender) => {
+  let finalDamage = spell.damage;
+  
+  // Apply armor reduction if defender has armor
+  if (defender.armor > 0) {
+    finalDamage = Math.max(0, finalDamage - defender.armor);
+  }
+  
+  // Add some randomness (-2 to +2)
+  finalDamage += Math.floor(Math.random() * 5) - 2;
+  
+  return Math.max(0, finalDamage);
+};
+
+const gameReducer = (state, action) => {
   switch (action.type) {
     case 'SET_HOVERED_CELL': {
       if (state.moving || state.selectedSpell) return state;
@@ -186,32 +207,31 @@ const reducer = (state, action) => {
       let updatedPlayers = [...state.players];
       let damageAnimation = null;
 
-      if (state.selectedSpell.id === 'attack' && targetPlayer && targetPlayer.id !== currentPlayer.id) {
-        const damage = state.selectedSpell.damage;
+      if (state.selectedSpell.damage && targetPlayer && targetPlayer.id !== currentPlayer.id) {
+        const finalDamage = calculateDamage(state.selectedSpell, currentPlayer, targetPlayer);
         damageAnimation = {
           playerId: targetPlayer.id,
           position: targetPlayer.position,
-          value: damage,
+          value: finalDamage,
           type: 'damage'
         };
 
         updatedPlayers = state.players.map(player =>
           player.id === targetPlayer.id
-            ? { ...player, hp: Math.max(0, player.hp - damage) }
+            ? { ...player, hp: Math.max(0, player.hp - finalDamage) }
             : player
         );
-      } else if (state.selectedSpell.id === 'heal' && targetPlayer && targetPlayer.id === currentPlayer.id) {
-        const healing = state.selectedSpell.healing;
+      } else if (state.selectedSpell.healing && targetPlayer && targetPlayer.id === currentPlayer.id) {
         damageAnimation = {
           playerId: currentPlayer.id,
           position: currentPlayer.position,
-          value: healing,
+          value: state.selectedSpell.healing,
           type: 'heal'
         };
 
         updatedPlayers = state.players.map(player =>
           player.id === currentPlayer.id
-            ? { ...player, hp: Math.min(100, player.hp + healing) }
+            ? { ...player, hp: Math.min(100, player.hp + state.selectedSpell.healing) }
             : player
         );
       }
@@ -255,7 +275,7 @@ const reducer = (state, action) => {
 
     case 'TICK_TIMER': {
       if (state.timeLeft <= 0) {
-        return reducer(state, { type: 'END_TURN' });
+        return gameReducer(state, { type: 'END_TURN' });
       }
       return {
         ...state,
@@ -268,8 +288,8 @@ const reducer = (state, action) => {
   }
 };
 
-export default function useGameState() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+const useGameState = () => {
+  const [state, dispatch] = useReducer(gameReducer, initialState);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -315,4 +335,6 @@ export default function useGameState() {
     selectSpell: (spell) => dispatch({ type: 'SELECT_SPELL', payload: spell }),
     endTurn: () => dispatch({ type: 'END_TURN' })
   };
-}
+};
+
+export default useGameState;
