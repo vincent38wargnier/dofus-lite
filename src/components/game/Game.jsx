@@ -11,43 +11,43 @@ const Game = () => {
     castSpell,
     selectSpell,
     endTurn,
-    timeLeft
   } = useGameState();
 
-  const { board, players, currentPlayer, selectedSpell, highlightedCells } = gameState;
+  const handleCellClick = (x, y) => {
+    if (gameState.selectedSpell) {
+      castSpell(x, y);
+    } else {
+      movePlayer(x, y);
+    }
+  };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col items-center gap-8">
+    <div className="min-h-screen bg-gray-100 p-4">
+      <div className="container mx-auto flex flex-col items-center gap-8">
         <div className="flex justify-between w-full max-w-4xl">
           <PlayerInfo
-            player={players[0]}
-            isActive={currentPlayer === 0}
+            player={gameState.players[0]}
+            isActive={gameState.currentPlayer === 0}
             onSpellSelect={selectSpell}
             onEndTurn={endTurn}
           />
-          <TurnTimer timeLeft={timeLeft} />
+          
+          <TurnTimer timeLeft={gameState.timeLeft} />
+          
           <PlayerInfo
-            player={players[1]}
-            isActive={currentPlayer === 1}
+            player={gameState.players[1]}
+            isActive={gameState.currentPlayer === 1}
             onSpellSelect={selectSpell}
             onEndTurn={endTurn}
           />
         </div>
         
         <GameBoard
-          board={board}
-          players={players}
-          currentPlayer={currentPlayer}
-          selectedSpell={selectedSpell}
-          highlightedCells={highlightedCells}
-          onCellClick={(x, y) => {
-            if (selectedSpell) {
-              castSpell(x, y);
-            } else {
-              movePlayer(x, y);
-            }
-          }}
+          board={gameState.board}
+          players={gameState.players}
+          currentPlayer={gameState.currentPlayer}
+          selectedSpell={gameState.selectedSpell}
+          onCellClick={handleCellClick}
         />
       </div>
     </div>
