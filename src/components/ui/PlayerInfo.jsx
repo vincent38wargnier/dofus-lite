@@ -180,7 +180,15 @@ const SpellButton = ({ spell, onSpellSelect, onHover, onLeave, disabled, pa, isA
   );
 };
 
-const PlayerInfo = ({ player, isActive, onSpellSelect, onEndTurn, disabled }) => {
+const PlayerInfo = ({ 
+  player, 
+  isActive, 
+  onSpellSelect, 
+  onEndTurn, 
+  disabled,
+  isAIControlled,
+  onAIToggle 
+}) => {
   const [hoveredSpell, setHoveredSpell] = useState(null);
   const playerClass = CLASSES[player.class];
   const isDead = player.hp <= 0;
@@ -196,23 +204,36 @@ const PlayerInfo = ({ player, isActive, onSpellSelect, onEndTurn, disabled }) =>
       `}
     >
       {/* Header */}
-      <div className="flex items-center gap-2 mb-4">
-        <span className="text-2xl">
-          {playerClass.icon}
-        </span>
-        <div>
-          <h2 className="text-lg font-bold">
-            Player {player.id + 1}
-          </h2>
-          <div className="text-sm text-gray-600">
-            {playerClass.name}
-          </div>
-          {isDead && (
-            <div className="text-sm text-red-500 font-bold mt-1">
-              Defeated ☠️
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">
+            {playerClass.icon}
+          </span>
+          <div>
+            <h2 className="text-lg font-bold">
+              Player {player.id + 1}
+            </h2>
+            <div className="text-sm text-gray-600">
+              {playerClass.name}
             </div>
-          )}
+            {isDead && (
+              <div className="text-sm text-red-500 font-bold mt-1">
+                Defeated ☠️
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* AI Control Toggle */}
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={isAIControlled}
+            onChange={() => onAIToggle(player.id)}
+            className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          />
+          AI Control
+        </label>
       </div>
 
       <div className="space-y-4 flex-grow">
@@ -274,7 +295,7 @@ const PlayerInfo = ({ player, isActive, onSpellSelect, onEndTurn, disabled }) =>
           </div>
         )}
 
-        {/* Spells - Now always visible */}
+        {/* Spells */}
         <div className="space-y-2">
           <div className="grid grid-cols-2 gap-2">
             {player.spells.map((spell) => (
@@ -285,13 +306,13 @@ const PlayerInfo = ({ player, isActive, onSpellSelect, onEndTurn, disabled }) =>
                 onSpellSelect={onSpellSelect}
                 onHover={() => setHoveredSpell(spell)}
                 onLeave={() => setHoveredSpell(null)}
-                disabled={disabled}
+                disabled={disabled || (isAIControlled && isActive)}
                 isActiveTurn={isActive && !isDead}
               />
             ))}
           </div>
           
-          {isActive && !isDead && (
+          {isActive && !isDead && !isAIControlled && (
             <button
               onClick={onEndTurn}
               disabled={disabled}
