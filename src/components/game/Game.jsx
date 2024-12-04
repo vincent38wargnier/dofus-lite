@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import GameBoard from './GameBoard';
 import PlayerInfo from '../ui/PlayerInfo';
 import TurnTimer from '../ui/TurnTimer';
 import VictoryScreen from '../ui/VictoryScreen';
+import LogPanel from '../ui/LogPanel';
 import useGameState from '../../hooks/useGameState';
 import { SwordMasterAI } from '../../ai/SwordMasterAI';
 
-const AI_THINKING_DELAY = 2000; // 2 seconds
-const AI_ACTION_DELAY = 1000;   // 1 second
+const AI_THINKING_DELAY = 1000;
+const AI_ACTION_DELAY = 500;
 
 const Game = () => {
   const {
@@ -19,98 +20,173 @@ const Game = () => {
     setHoveredCell,
   } = useGameState();
 
+  // Store AI instances in refs to maintain them across renders
+  const aiInstances = useRef({});
+
   const [aiControl, setAiControl] = useState({
     0: false,
     1: false
   });
 
   const [aiThinking, setAiThinking] = useState(false);
+  const [isExecutingAIAction, setIsExecutingAIAction] = useState(false);
+  const [logs, setLogs] = useState([]);
 
-  // Initialize AIs
-  const [ais] = useState({
-    0: new SwordMasterAI(),
-    1: new SwordMasterAI()
-  });
+  const addLog = useCallback((message, type = 'info') => {
+    setLogs(prevLogs => [...prevLogs, { message, type, timestamp: Date.now() }]);
+  }, []);
 
+  // Execute a single AI action with proper delays
+  const executeAIAction = useCallback(async (action) => {
+    if (!action) return;
+
+    setIsExecutingAIAction(true);
+    
+    try {
+      switch (action.type) {
+        case 'move':
+          if (action.path && action.path.length > 0) {
+            addLog(`AI moving to position (${action.path[action.path.length-1].x}, ${action.path[action.path.length-1].y})`, 'ai');
+            await new Promise(resolve => setTimeout(resolve, AI_ACTION_DELAY));
+            movePlayer(action.path);
+          }
+          break;
+
+        case 'cast':
+          if (action.spell && action.target) {
+            addLog(`AI casting ${action.spell.name} at (${action.target.x}, ${action.target.y})`, 'ai');
+            selectSpell(action.spell);
+            await new Promise(resolve => setTimeout(resolve, AI_ACTION_DELAY));
+            castSpell(action.target.x, action.target.y);
+          }
+          break;
+
+        case 'end_turn':
+          addLog('AI ending turn', 'ai');
+          await new Promise(resolve => setTimeout(resolve, AI_ACTION_DELAY));
+          endTurn();
+          break;
+      }
+    } catch (error) {
+      addLog(`Error executing AI action: ${error.message}`, 'error');
+    } finally {
+      setIsExecutingAIAction(false);
+    }
+  }, [movePlayer, castSpell, selectSpell, endTurn, addLog]);
+
+  // Handle AI turn
   const handleAITurn = useCallback(async () => {
     const currentPlayerId = gameState.currentPlayer;
-    console.log('Checking AI turn for player', currentPlayerId);
-    console.log('AI Control status:', aiControl);
 
-    if (!aiControl[currentPlayerId]) {
-      console.log('AI not enabled for current player');
+    // Only proceed if current player is AI-controlled
+    if (!aiControl[currentPlayerId] || !aiInstances.current[currentPlayerId]) {
       return;
     }
 
-    if (gameState.moving || gameState.winner) {
-      console.log('Game state not ready for AI move');
+    // Additional checks
+    if (gameState.winner !== null || isExecutingAIAction || gameState.moving) {
       return;
     }
 
-    console.log('Starting AI turn...');
+    addLog(`AI player ${currentPlayerId + 1} starting turn`, 'ai');
     setAiThinking(true);
 
     try {
-      const ai = ais[currentPlayerId];
+      // Get the AI instance for current player
+      const ai = aiInstances.current[currentPlayerId];
       ai.initialize(gameState, currentPlayerId);
 
+      addLog('AI analyzing game state...', 'ai');
       await new Promise(resolve => setTimeout(resolve, AI_THINKING_DELAY));
-      
-      const decision = await ai.makeDecision();
-      console.log('AI Decision:', decision);
 
-      if (decision.type === 'cast') {
-        console.log('AI casting spell');
-        selectSpell(decision.spell);
-        await new Promise(resolve => setTimeout(resolve, AI_ACTION_DELAY));
-        castSpell(decision.target.x, decision.target.y);
-      } else if (decision.type === 'end_turn') {
-        console.log('AI ending turn');
-        await new Promise(resolve => setTimeout(resolve, AI_ACTION_DELAY));
-        endTurn();
-      }
+      const decision = await ai.makeDecision();
+      addLog(`AI decided: ${decision.type}`, 'ai');
+
+      await executeAIAction(decision);
+
     } catch (error) {
-      console.error('AI Error:', error);
+      addLog(`AI Error: ${error.message}`, 'error');
       await new Promise(resolve => setTimeout(resolve, AI_ACTION_DELAY));
       endTurn();
     } finally {
       setAiThinking(false);
     }
-  }, [gameState, aiControl, ais, selectSpell, castSpell, endTurn]);
+  }, [
+    gameState,
+    aiControl,
+    isExecutingAIAction,
+    executeAIAction,
+    endTurn,
+    addLog
+  ]);
 
   // Monitor for AI turns
   useEffect(() => {
-    const timer = setTimeout(() => {
-      handleAITurn();
-    }, 500); // Small delay to ensure state is stable
+    // Only proceed if current player is AI-controlled
+    if (aiControl[gameState.currentPlayer] && !isExecutingAIAction && !gameState.moving) {
+      const timer = setTimeout(() => {
+        handleAITurn();
+      }, 100);
 
-    return () => clearTimeout(timer);
-  }, [gameState.currentPlayer, handleAITurn]);
+      return () => clearTimeout(timer);
+    }
+  }, [
+    gameState.currentPlayer,
+    handleAITurn,
+    aiControl,
+    isExecutingAIAction,
+    gameState.moving
+  ]);
 
+  // Handle AI toggle
   const handleAIToggle = (playerId) => {
-    console.log('Toggling AI for player', playerId);
+    const newValue = !aiControl[playerId];
+    addLog(`${newValue ? 'Enabling' : 'Disabling'} AI for player ${playerId + 1}`);
+    
+    // Create or destroy AI instance based on toggle
+    if (newValue) {
+      // Create new AI instance for this player
+      aiInstances.current[playerId] = new SwordMasterAI();
+      aiInstances.current[playerId].initialize(gameState, playerId);
+    } else {
+      // Remove AI instance when disabled
+      delete aiInstances.current[playerId];
+    }
+
     setAiControl(prev => ({
       ...prev,
-      [playerId]: !prev[playerId]
+      [playerId]: newValue
     }));
   };
 
+  // Handle cell clicks (for human players)
   const handleCellClick = useCallback((x, y) => {
     if (aiControl[gameState.currentPlayer]) {
-      console.log('Manual control disabled - AI is in control');
+      addLog('Manual control disabled - AI is in control');
       return;
     }
 
     if (gameState.selectedSpell) {
+      addLog(`Player casting spell at (${x}, ${y})`);
       castSpell(x, y);
     } else if (gameState.path.length > 0 && !gameState.moving) {
+      addLog(`Player moving to (${x}, ${y})`);
       movePlayer(gameState.path);
     }
-  }, [aiControl, gameState.currentPlayer, gameState.selectedSpell, gameState.path, gameState.moving, movePlayer, castSpell]);
+  }, [
+    aiControl,
+    gameState.currentPlayer,
+    gameState.selectedSpell,
+    gameState.path,
+    gameState.moving,
+    movePlayer,
+    castSpell,
+    addLog
+  ]);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="flex gap-8 items-center relative">
+      <div className="flex gap-8 items-start relative">
         {/* Left Player */}
         <div className="relative">
           <PlayerInfo
@@ -120,7 +196,7 @@ const Game = () => {
             onEndTurn={endTurn}
             disabled={gameState.winner !== null || (aiControl[0] && gameState.currentPlayer === 0)}
             isAIControlled={aiControl[0]}
-            onAIToggle={handleAIToggle}
+            onAIToggle={() => handleAIToggle(0)}
           />
           {aiThinking && gameState.currentPlayer === 0 && aiControl[0] && (
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-6
@@ -130,7 +206,7 @@ const Game = () => {
           )}
         </div>
         
-        {/* Center Board and Timer */}
+        {/* Center Content */}
         <div className="flex flex-col items-center">
           <GameBoard
             board={gameState.board}
@@ -160,7 +236,7 @@ const Game = () => {
             onEndTurn={endTurn}
             disabled={gameState.winner !== null || (aiControl[1] && gameState.currentPlayer === 1)}
             isAIControlled={aiControl[1]}
-            onAIToggle={handleAIToggle}
+            onAIToggle={() => handleAIToggle(1)}
           />
           {aiThinking && gameState.currentPlayer === 1 && aiControl[1] && (
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-6
@@ -168,6 +244,11 @@ const Game = () => {
               AI Thinking...
             </div>
           )}
+        </div>
+
+        {/* Log Panel */}
+        <div className="absolute right-0 top-0 transform translate-x-full ml-4">
+          <LogPanel logs={logs} />
         </div>
 
         {gameState.winner !== null && (
