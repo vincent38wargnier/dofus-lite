@@ -49,16 +49,6 @@ const Cell = ({
     );
   };
 
-  const renderPathPreview = () => {
-    if (!isInPath || pathStep === null) return null;
-    
-    return (
-      <div className="path-preview">
-        <span className="path-number">{pathStep + 1}</span>
-      </div>
-    );
-  };
-
   const getOccupantTooltip = (occupant) => (
     <div className="tooltip-content">
       <div>{occupant.name}</div>
@@ -95,7 +85,6 @@ const Cell = ({
       data-x={x}
       data-y={y}
     >
-      {renderPathPreview()}
       {renderOccupant()}
     </div>
   );

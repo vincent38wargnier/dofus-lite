@@ -46,11 +46,31 @@
 
 /* Player representation */
 .cell-occupant {
-  font-size: 2rem;
   position: absolute;
-  z-index: 2;
-  transition: all 0.3s ease;
-  animation: bounceIn 0.5s ease;
+  font-size: 2rem;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+}
+
+.moving-character {
+  position: absolute;
+  z-index: 1000;
+  pointer-events: none;
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  will-change: transform;
+  transition: transform 0.5s ease;
 }
 
 .cell-occupant.current-player {
@@ -89,4 +109,13 @@
   0% { transform: scale(1); }
   50% { transform: scale(1.1); }
   100% { transform: scale(1); }
+}
+
+.board-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.board-grid {
+  position: relative;
 }

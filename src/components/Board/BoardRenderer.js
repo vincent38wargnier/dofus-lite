@@ -5,14 +5,18 @@ import { findPath } from '../../utils/movement';
 import { LineOfSight } from '../../utils/lineOfSight';
 import './Board.css';
 
+const MOVEMENT_ANIMATION_DURATION = 500;
+
 const BoardRenderer = () => {
   const { state, actions } = useGame();
   const { board, currentPlayer, selectedAction } = state;
 
   const [currentPath, setCurrentPath] = useState([]);
   const [rangedCells, setRangedCells] = useState([]);
+  const [isMoving, setIsMoving] = useState(false);
+  const [movingCharacterPos, setMovingCharacterPos] = useState(null);
+  const [movingCharacterClass, setMovingCharacterClass] = useState(null);
 
-  // Calculate range cells for spells
   useEffect(() => {
     if (selectedAction?.type === 'CAST_SORT') {
       const playerPos = board.findPlayerPosition(currentPlayer);
@@ -28,7 +32,7 @@ const BoardRenderer = () => {
   }, [selectedAction, currentPlayer, board]);
 
   const handleCellHover = (x, y) => {
-    if (!currentPlayer || selectedAction) return;
+    if (!currentPlayer || selectedAction || isMoving) return;
 
     const playerPos = board.findPlayerPosition(currentPlayer);
     const path = findPath(
@@ -44,33 +48,54 @@ const BoardRenderer = () => {
   };
 
   const handleCellLeave = () => {
-    setCurrentPath([]);
+    if (!isMoving) {
+      setCurrentPath([]);
+    }
   };
 
-  const handleCellClick = (x, y) => {
-    if (!currentPlayer) return;
+  const handleCellClick = async (x, y) => {
+    if (!currentPlayer || isMoving || selectedAction?.type === 'CAST_SORT') return;
 
-    // If a spell is selected, handle spell casting
-    if (selectedAction?.type === 'CAST_SORT') {
-      // Handle spell casting
-      return;
-    }
-
-    // Handle movement
     const path = currentPath;
     if (path && path.length > 0) {
-      // Execute movement
       const cost = path.length - 1;
       if (cost <= currentPlayer.getPM()) {
-        // Move player
-        const lastPosition = path[path.length - 1];
-        board.movePlayer(
-          board.findPlayerPosition(currentPlayer).x,
-          board.findPlayerPosition(currentPlayer).y,
-          lastPosition.x,
-          lastPosition.y
-        );
+        setIsMoving(true);
+        
+        // Start position
+        const startPos = board.findPlayerPosition(currentPlayer);
+        const playerClass = currentPlayer.class.toLowerCase();
+        
+        // Remove player from start cell
+        board.setCell(startPos.x, startPos.y, { occupant: null });
+        
+        // Set up moving character
+        setMovingCharacterClass(playerClass);
+        setMovingCharacterPos({
+          x: startPos.x * 60,
+          y: startPos.y * 60
+        });
+
+        // Wait a frame to ensure the initial position is set
+        await new Promise(resolve => requestAnimationFrame(resolve));
+
+        // Start the animation to final position
+        const endPos = path[path.length - 1];
+        setMovingCharacterPos({
+          x: endPos.x * 60,
+          y: endPos.y * 60
+        });
+
+        // Wait for animation to complete
+        await new Promise(resolve => setTimeout(resolve, MOVEMENT_ANIMATION_DURATION));
+
+        // Clean up and place player in final position
+        setMovingCharacterPos(null);
+        setMovingCharacterClass(null);
+        board.setCell(endPos.x, endPos.y, { occupant: currentPlayer });
+        
         currentPlayer.reducePM(cost);
+        setIsMoving(false);
         setCurrentPath([]);
       }
     }
@@ -86,6 +111,19 @@ const BoardRenderer = () => {
 
   const isCellInRange = (x, y) => {
     return rangedCells.some(cell => cell.x === x && cell.y === y);
+  };
+
+  const renderMovingCharacter = () => {
+    if (!movingCharacterPos || !movingCharacterClass) return null;
+
+    return (
+      <div
+        className={`moving-character occupant-${movingCharacterClass}`}
+        style={{
+          transform: `translate(${movingCharacterPos.x}px, ${movingCharacterPos.y}px)`
+        }}
+      />
+    );
   };
 
   const renderBoard = () => {
@@ -121,6 +159,7 @@ const BoardRenderer = () => {
             );
           })
         )).flat()}
+        {renderMovingCharacter()}
       </div>
     );
   };
