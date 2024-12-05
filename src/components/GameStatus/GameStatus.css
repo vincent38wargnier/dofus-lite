@@ -1,0 +1,135 @@
+.game-status {
+  background: #2c3e50;
+  border-radius: 8px;
+  padding: 1rem;
+  color: #ecf0f1;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.turn-counter {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #3498db;
+}
+
+.current-player {
+  margin-bottom: 1.5rem;
+}
+
+.current-player h3 {
+  margin-bottom: 0.5rem;
+  color: #bdc3c7;
+  font-size: 0.9rem;
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.player-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.player-avatar.warrior {
+  background: #e74c3c;
+}
+
+.player-avatar.archer {
+  background: #2ecc71;
+}
+
+.player-avatar.mage {
+  background: #3498db;
+}
+
+.player-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.player-name {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.player-class {
+  color: #bdc3c7;
+  font-size: 0.9rem;
+}
+
+.player-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stat-label {
+  width: 30px;
+  font-weight: bold;
+  color: #bdc3c7;
+}
+
+.stat-bar {
+  flex: 1;
+  height: 20px;
+  background: #34495e;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.stat-fill.health {
+  background: #e74c3c;
+}
+
+.stat-fill.action {
+  background: #f1c40f;
+}
+
+.stat-fill.movement {
+  background: #3498db;
+}
+
+.stat-value {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ecf0f1;
+  font-size: 0.9rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Animation for stat changes */
+@keyframes statChange {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.stat-changed {
+  animation: statChange 0.3s ease;
+}

@@ -1,0 +1,131 @@
+.cell {
+  width: 60px;
+  height: 60px;
+  background: #34495e;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cell:hover {
+  transform: scale(1.05);
+}
+
+/* Cell types */
+.cell-normal {
+  background: #34495e;
+}
+
+.cell-obstacle {
+  background: #7f8c8d;
+}
+
+.cell-water {
+  background: #3498db;
+}
+
+/* Cell states */
+.cell-highlighted {
+  background: #2980b9;
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+}
+
+.cell-selected {
+  background: #27ae60;
+  box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+}
+
+.cell-movable {
+  background: #2ecc71;
+}
+
+.cell-attackable {
+  background: #e74c3c;
+}
+
+/* Player representation */
+.cell-occupant {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.occupant-warrior {
+  background: #e74c3c;
+}
+
+.occupant-archer {
+  background: #2ecc71;
+}
+
+.occupant-mage {
+  background: #3498db;
+}
+
+/* Obstacle representation */
+.cell-obstacle-content {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  z-index: 1;
+}
+
+.obstacle-wall {
+  background: #95a5a6;
+  border-radius: 4px;
+}
+
+.obstacle-bush {
+  background: #27ae60;
+  border-radius: 8px;
+}
+
+.obstacle-rock {
+  background: #7f8c8d;
+  border-radius: 50%;
+}
+
+/* Animations */
+@keyframes cellHighlight {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.cell-animated {
+  animation: cellHighlight 0.3s ease;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .cell {
+    width: 50px;
+    height: 50px;
+  }
+
+  .cell-occupant,
+  .cell-obstacle-content {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cell {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cell-occupant,
+  .cell-obstacle-content {
+    width: 30px;
+    height: 30px;
+  }
+}

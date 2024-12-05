@@ -1,0 +1,62 @@
+.board-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: #2c3e50;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.board-grid {
+  display: grid;
+  gap: 2px;
+  background: #34495e;
+  padding: 2px;
+  border-radius: 4px;
+}
+
+/* Interactive states */
+.board-grid.active {
+  cursor: pointer;
+}
+
+.board-grid.disabled {
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* Animation for turn transitions */
+@keyframes boardHighlight {
+  0% {
+    box-shadow: 0 0 0 2px #3498db;
+  }
+  50% {
+    box-shadow: 0 0 10px 2px #3498db;
+  }
+  100% {
+    box-shadow: 0 0 0 2px #3498db;
+  }
+}
+
+.board-grid.current-turn {
+  animation: boardHighlight 2s ease-in-out;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .board-container {
+    padding: 10px;
+  }
+
+  .board-grid {
+    gap: 1px;
+    padding: 1px;
+  }
+}
+
+@media (max-width: 480px) {
+  .board-container {
+    padding: 5px;
+  }
+}

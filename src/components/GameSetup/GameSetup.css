@@ -1,0 +1,66 @@
+.game-setup {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #2c3e50;
+  border-radius: 8px;
+  color: #ecf0f1;
+}
+
+.game-setup h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #3498db;
+}
+
+.player-setup {
+  background: #34495e;
+  padding: 1.5rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.player-setup h3 {
+  margin-bottom: 1rem;
+  color: #3498db;
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #bdc3c7;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  background: #2c3e50;
+  color: #ecf0f1;
+  font-size: 1rem;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3498db;
+}
+
+.input-group select option {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .game-setup {
+    padding: 1rem;
+    margin: 0 1rem;
+  }
+}

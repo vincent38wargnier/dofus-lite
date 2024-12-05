@@ -1,109 +1,152 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, useCallback } from 'react';
+import BoardEngine from '../components/Board/BoardEngine';
+import Player from '../components/Player/Player';
+import { BOARD_CONFIG, GAME_STATUS } from '../utils/constants';
+import { GameState } from '../utils/GameState';
 
-// Create the context
 const GameContext = createContext();
 
-// Initial state
 const initialState = {
+  status: GAME_STATUS.WAITING,
   players: [],
-  currentPlayer: null,
   board: null,
-  gameStatus: 'waiting', // waiting, active, ended
-  winner: null,
-  turnNumber: 0
+  currentPlayer: null,
+  turnNumber: 1,
+  selectedAction: null,
+  winner: null
 };
 
-// Action types
-const actions = {
-  INITIALIZE_GAME: 'INITIALIZE_GAME',
-  UPDATE_GAME_STATE: 'UPDATE_GAME_STATE',
-  SET_CURRENT_PLAYER: 'SET_CURRENT_PLAYER',
-  END_TURN: 'END_TURN',
-  END_GAME: 'END_GAME'
-};
-
-// Reducer
 function gameReducer(state, action) {
   switch (action.type) {
-    case actions.INITIALIZE_GAME:
+    case 'INITIALIZE_GAME':
       return {
         ...state,
-        players: action.payload.players,
-        board: action.payload.board,
-        currentPlayer: action.payload.players[0],
-        gameStatus: 'active',
-        turnNumber: 1
+        ...action.payload,
+        status: GAME_STATUS.ACTIVE
       };
-    case actions.UPDATE_GAME_STATE:
+      
+    case 'UPDATE_GAME_STATE':
       return {
         ...state,
         ...action.payload
       };
-    case actions.SET_CURRENT_PLAYER:
+
+    case 'SELECT_ACTION':
       return {
         ...state,
-        currentPlayer: action.payload
+        selectedAction: action.payload
       };
-    case actions.END_TURN:
-      const currentPlayerIndex = state.players.findIndex(
-        player => player === state.currentPlayer
-      );
+
+    case 'END_TURN':
+      const currentPlayerIndex = state.players.indexOf(state.currentPlayer);
       const nextPlayerIndex = (currentPlayerIndex + 1) % state.players.length;
+      
       return {
         ...state,
         currentPlayer: state.players[nextPlayerIndex],
-        turnNumber: nextPlayerIndex === 0 ? state.turnNumber + 1 : state.turnNumber
+        turnNumber: nextPlayerIndex === 0 ? state.turnNumber + 1 : state.turnNumber,
+        selectedAction: null
       };
-    case actions.END_GAME:
+
+    case 'END_GAME':
       return {
         ...state,
-        gameStatus: 'ended',
-        winner: action.payload
+        status: GAME_STATUS.ENDED,
+        winner: action.payload,
+        selectedAction: null
       };
+
     default:
       return state;
   }
 }
 
-// Provider component
 export function GameProvider({ children }) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
 
+  const initializeGame = useCallback((playerConfigs) => {
+    // Create board
+    const board = new BoardEngine(
+      BOARD_CONFIG.DEFAULT_SIZE.columns,
+      BOARD_CONFIG.DEFAULT_SIZE.rows
+    );
+
+    // Create players
+    const players = playerConfigs.map(config => 
+      new Player(config.name, config.class)
+    );
+
+    // Place players on board
+    const startPositions = [
+      { x: 0, y: Math.floor(board.height / 2) },
+      { x: board.width - 1, y: Math.floor(board.height / 2) }
+    ];
+
+    players.forEach((player, index) => {
+      board.placePlayer(player, startPositions[index].x, startPositions[index].y);
+    });
+
+    // Initialize game state
+    dispatch({
+      type: 'INITIALIZE_GAME',
+      payload: {
+        board,
+        players,
+        currentPlayer: players[0],
+        status: GAME_STATUS.ACTIVE
+      }
+    });
+  }, []);
+
+  const selectAction = useCallback((action) => {
+    dispatch({
+      type: 'SELECT_ACTION',
+      payload: action
+    });
+  }, []);
+
+  const endTurn = useCallback(() => {
+    const currentPlayer = state.currentPlayer;
+    
+    // Reset player's points
+    currentPlayer.resetPA();
+    currentPlayer.resetPM();
+    
+    dispatch({ type: 'END_TURN' });
+  }, [state.currentPlayer]);
+
+  const checkGameEnd = useCallback(() => {
+    const alivePlayers = state.players.filter(player => player.isAlive());
+    
+    if (alivePlayers.length === 1) {
+      dispatch({
+        type: 'END_GAME',
+        payload: alivePlayers[0]
+      });
+    }
+  }, [state.players]);
+
   const value = {
     state,
-    dispatch,
     actions: {
-      initializeGame: (players, board) =>
-        dispatch({
-          type: actions.INITIALIZE_GAME,
-          payload: { players, board }
-        }),
-      updateGameState: (newState) =>
-        dispatch({
-          type: actions.UPDATE_GAME_STATE,
-          payload: newState
-        }),
-      setCurrentPlayer: (player) =>
-        dispatch({
-          type: actions.SET_CURRENT_PLAYER,
-          payload: player
-        }),
-      endTurn: () =>
-        dispatch({
-          type: actions.END_TURN
-        }),
-      endGame: (winner) =>
-        dispatch({
-          type: actions.END_GAME,
-          payload: winner
-        })
+      initializeGame,
+      selectAction,
+      endTurn,
+      checkGameEnd,
+      updateGameState: (newState) => dispatch({
+        type: 'UPDATE_GAME_STATE',
+        payload: newState
+      })
     }
   };
 
-  return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
+  return (
+    <GameContext.Provider value={value}>
+      {children}
+    </GameContext.Provider>
+  );
 }
 
-// Custom hook for using the game context
 export function useGame() {
   const context = useContext(GameContext);
   if (!context) {
@@ -111,5 +154,3 @@ export function useGame() {
   }
   return context;
 }
-
-export default GameProvider;
