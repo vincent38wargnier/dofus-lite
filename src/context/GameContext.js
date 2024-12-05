@@ -1,13 +1,12 @@
-import React, { createContext, useContext, useReducer, useCallback } from 'react';
+import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
 import BoardEngine from '../components/Board/BoardEngine';
 import Player from '../components/Player/Player';
 import { BOARD_CONFIG, GAME_STATUS } from '../utils/constants';
-import { GameState } from '../utils/GameState';
 
 const GameContext = createContext();
 
 const initialState = {
-  status: GAME_STATUS.WAITING,
+  status: GAME_STATUS.ACTIVE, // Changed from WAITING to ACTIVE
   players: [],
   board: null,
   currentPlayer: null,
@@ -64,17 +63,23 @@ function gameReducer(state, action) {
 export function GameProvider({ children }) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
 
-  const initializeGame = useCallback((playerConfigs) => {
+  // Initialize game with default players automatically
+  useEffect(() => {
+    initializeDefaultGame();
+  }, []);
+
+  const initializeDefaultGame = () => {
     // Create board
     const board = new BoardEngine(
       BOARD_CONFIG.DEFAULT_SIZE.columns,
       BOARD_CONFIG.DEFAULT_SIZE.rows
     );
 
-    // Create players
-    const players = playerConfigs.map(config => 
-      new Player(config.name, config.class)
-    );
+    // Create default players
+    const players = [
+      new Player('Mage', 'MAGE'),
+      new Player('Warrior', 'WARRIOR')
+    ];
 
     // Place players on board
     const startPositions = [
@@ -92,11 +97,10 @@ export function GameProvider({ children }) {
       payload: {
         board,
         players,
-        currentPlayer: players[0],
-        status: GAME_STATUS.ACTIVE
+        currentPlayer: players[0]
       }
     });
-  }, []);
+  };
 
   const selectAction = useCallback((action) => {
     dispatch({
@@ -129,7 +133,7 @@ export function GameProvider({ children }) {
   const value = {
     state,
     actions: {
-      initializeGame,
+      initializeGame: initializeDefaultGame,
       selectAction,
       endTurn,
       checkGameEnd,

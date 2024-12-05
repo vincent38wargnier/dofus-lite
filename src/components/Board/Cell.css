@@ -2,7 +2,7 @@
   width: 60px;
   height: 60px;
   background: #34495e;
-  border-radius: 4px;
+  border: 1px solid #2c3e50;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,119 +13,89 @@
 
 .cell:hover {
   transform: scale(1.05);
-}
-
-/* Cell types */
-.cell-normal {
-  background: #34495e;
-}
-
-.cell-obstacle {
-  background: #7f8c8d;
-}
-
-.cell-water {
-  background: #3498db;
+  z-index: 2;
 }
 
 /* Cell states */
 .cell-highlighted {
-  background: #2980b9;
-  box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+  background: rgba(46, 204, 113, 0.3);
+  border: 2px solid #2ecc71;
 }
 
-.cell-selected {
-  background: #27ae60;
-  box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+.cell-highlighted:hover {
+  background: rgba(46, 204, 113, 0.5);
 }
 
-.cell-movable {
-  background: #2ecc71;
+.cell-in-path {
+  background: rgba(241, 196, 15, 0.4);
+  border: 2px solid #f1c40f;
 }
 
-.cell-attackable {
-  background: #e74c3c;
+.cell-in-path:hover {
+  background: rgba(241, 196, 15, 0.6);
+}
+
+.cell-in-range {
+  background: rgba(52, 152, 219, 0.3);
+  border: 2px solid #3498db;
+}
+
+.cell-in-range:hover {
+  background: rgba(52, 152, 219, 0.5);
 }
 
 /* Player representation */
 .cell-occupant {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  font-size: 2rem;
   position: absolute;
   z-index: 2;
   transition: all 0.3s ease;
+  animation: bounceIn 0.5s ease;
 }
 
-.occupant-warrior {
-  background: #e74c3c;
+.cell-occupant.current-player {
+  animation: pulsate 2s infinite;
 }
 
-.occupant-archer {
-  background: #2ecc71;
+/* Character class styles */
+.occupant-warrior::after {
+  content: "⚔️";
 }
 
-.occupant-mage {
-  background: #3498db;
+.occupant-archer::after {
+  content: "🏹";
 }
 
-/* Obstacle representation */
-.cell-obstacle-content {
-  width: 40px;
-  height: 40px;
+.occupant-mage::after {
+  content: "🧙";
+}
+
+/* Path visualization */
+.path-preview {
   position: absolute;
+  width: 20px;
+  height: 20px;
+  background: rgba(241, 196, 15, 0.8);
+  border-radius: 50%;
   z-index: 1;
 }
 
-.obstacle-wall {
-  background: #95a5a6;
-  border-radius: 4px;
-}
-
-.obstacle-bush {
-  background: #27ae60;
-  border-radius: 8px;
-}
-
-.obstacle-rock {
-  background: #7f8c8d;
-  border-radius: 50%;
+.path-step {
+  position: absolute;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #2c3e50;
 }
 
 /* Animations */
-@keyframes cellHighlight {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+@keyframes bounceIn {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
   100% { transform: scale(1); }
 }
 
-.cell-animated {
-  animation: cellHighlight 0.3s ease;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .cell {
-    width: 50px;
-    height: 50px;
-  }
-
-  .cell-occupant,
-  .cell-obstacle-content {
-    width: 35px;
-    height: 35px;
-  }
-}
-
-@media (max-width: 480px) {
-  .cell {
-    width: 40px;
-    height: 40px;
-  }
-
-  .cell-occupant,
-  .cell-obstacle-content {
-    width: 30px;
-    height: 30px;
-  }
+@keyframes pulsate {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }

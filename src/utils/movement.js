@@ -1,77 +1,86 @@
-import { findPath, calculateMovementCost } from './pathfinding';
+// Recursive function to find all reachable cells within PM range
+export const findReachableCells = (board, startX, startY, pm, visited = new Set()) => {
+  const key = `${startX},${startY}`;
+  if (visited.has(key)) return [];
+  visited.add(key);
 
-export const getValidMoves = (player, board, maxRange) => {
-  const currentPos = board.findPlayerPosition(player);
-  const validMoves = [];
-
-  // Check all positions within maxRange
-  for (let x = Math.max(0, currentPos.x - maxRange); x <= Math.min(board.width - 1, currentPos.x + maxRange); x++) {
-    for (let y = Math.max(0, currentPos.y - maxRange); y <= Math.min(board.height - 1, currentPos.y + maxRange); y++) {
-      const targetPos = { x, y };
-      
-      // Skip current position
-      if (x === currentPos.x && y === currentPos.y) continue;
-
-      // Check if position is accessible
-      if (!board.isBlocked(targetPos)) {
-        const path = findPath(currentPos, targetPos, board);
-        
-        // If path exists and within movement points
-        if (path && calculateMovementCost(path) <= player.getPM()) {
-          validMoves.push({
-            position: targetPos,
-            path: path,
-            cost: calculateMovementCost(path)
-          });
-        }
-      }
-    }
-  }
-
-  return validMoves;
-};
-
-export const executeMove = (player, path, board) => {
-  const cost = calculateMovementCost(path);
+  const reachableCells = [{ x: startX, y: startY }];
   
-  // Validate movement points
-  if (cost > player.getPM()) {
-    throw new Error('Not enough movement points');
-  }
+  if (pm <= 0) return reachableCells;
 
-  // Execute the move
-  const currentPos = board.findPlayerPosition(player);
-  const targetPos = path[path.length - 1];
-
-  board.movePlayer(currentPos, targetPos);
-  player.reducePM(cost);
-
-  return {
-    type: 'MOVE',
-    player,
-    from: currentPos,
-    to: targetPos,
-    cost
-  };
-};
-
-export const getAdjacentCells = (position, board) => {
-  const adjacent = [
-    { x: position.x, y: position.y - 1 }, // up
-    { x: position.x + 1, y: position.y }, // right
-    { x: position.x, y: position.y + 1 }, // down
-    { x: position.x - 1, y: position.y }  // left
+  // Check all adjacent cells
+  const directions = [
+    { x: 0, y: -1 },  // up
+    { x: 1, y: 0 },   // right
+    { x: 0, y: 1 },   // down
+    { x: -1, y: 0 }   // left
   ];
 
-  return adjacent.filter(pos => 
-    pos.x >= 0 && 
-    pos.x < board.width && 
-    pos.y >= 0 && 
-    pos.y < board.height &&
-    !board.isBlocked(pos)
-  );
+  directions.forEach(dir => {
+    const newX = startX + dir.x;
+    const newY = startY + dir.y;
+    
+    // Check if the new position is valid and walkable
+    if (isValidPosition(newX, newY, board) && !board.isBlocked(newX, newY)) {
+      const nextCells = findReachableCells(board, newX, newY, pm - 1, visited);
+      reachableCells.push(...nextCells);
+    }
+  });
+
+  return reachableCells;
 };
 
-export const getManhattanDistance = (pos1, pos2) => {
-  return Math.abs(pos1.x - pos2.x) + Math.abs(pos1.y - pos2.y);
+// Function to find the shortest path between two points
+export const findPath = (board, startX, startY, endX, endY, pm) => {
+  const queue = [{
+    x: startX,
+    y: startY,
+    path: [{ x: startX, y: startY }],
+    cost: 0
+  }];
+  const visited = new Set();
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    const key = `${current.x},${current.y}`;
+
+    if (current.x === endX && current.y === endY) {
+      return current.path;
+    }
+
+    if (visited.has(key) || current.cost >= pm) continue;
+    visited.add(key);
+
+    // Check all adjacent cells
+    const directions = [
+      { x: 0, y: -1 },  // up
+      { x: 1, y: 0 },   // right
+      { x: 0, y: 1 },   // down
+      { x: -1, y: 0 }   // left
+    ];
+
+    directions.forEach(dir => {
+      const newX = current.x + dir.x;
+      const newY = current.y + dir.y;
+      
+      if (isValidPosition(newX, newY, board) && !board.isBlocked(newX, newY)) {
+        queue.push({
+          x: newX,
+          y: newY,
+          path: [...current.path, { x: newX, y: newY }],
+          cost: current.cost + 1
+        });
+      }
+    });
+  }
+
+  return null; // No path found
+};
+
+const isValidPosition = (x, y, board) => {
+  return x >= 0 && x < board.width && y >= 0 && y < board.height;
+};
+
+export const calculateMovementCost = (path) => {
+  return path ? path.length - 1 : 0; // -1 because starting position doesn't cost PM
 };
