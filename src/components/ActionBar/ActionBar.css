@@ -1,57 +1,148 @@
 .action-bar {
-  background: #2c3e50;
-  border-radius: 8px;
-  padding: 1rem;
+  background: #f0f4ff;
+  border-radius: 1rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
+  max-width: 320px;
 }
 
-.action-buttons {
+.player-header {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.action-buttons button {
-  flex: 1;
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.class-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: #60a5fa;
+  color: white;
+  border-radius: 0.5rem;
 }
 
-.action-buttons button:disabled {
-  opacity: 0.6;
+.player-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.player-class {
+  color: #6b7280;
+  margin: 0;
+}
+
+.hp-progress {
+  height: 1.25rem;
+  background: #fee2e2;
+  border-radius: 0.625rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hp-fill {
+  height: 100%;
+  background: #ef4444;
+  transition: width 0.3s ease;
+}
+
+.hp-text {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  z-index: 1;
+}
+
+.points-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+}
+
+.point-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  color: #374151;
+}
+
+.point-value {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.spells-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.spell-button {
+  background: #60a5fa;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.spell-button:hover:not(.disabled) {
+  background: #3b82f6;
+}
+
+.spell-button.disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.sorts-container {
-  background: #34495e;
-  border-radius: 6px;
-  padding: 1rem;
+.spell-icon {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-  .action-bar {
-    padding: 0.5rem;
-  }
-
-  .action-buttons button {
-    padding: 0.5rem;
-    font-size: 0.9rem;
-  }
+.spell-name {
+  font-weight: 500;
+  font-size: 0.875rem;
 }
 
-/* Animation for button hover */
-.action-buttons button:not(:disabled):hover {
-  transform: translateY(-2px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+.spell-cost {
+  font-size: 0.75rem;
+  opacity: 0.9;
 }
 
-/* Animation for button click */
-.action-buttons button:not(:disabled):active {
-  transform: translateY(1px);
-  box-shadow: none;
+.end-turn-button {
+  background: #6b7280;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.end-turn-button:hover {
+  background: #4b5563;
 }
