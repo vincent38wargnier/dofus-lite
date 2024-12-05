@@ -7,6 +7,7 @@ const GameCell = ({
   type,
   playerId,
   isHighlighted,
+  highlightType = 'spell',
   isInPath,
   damageAnimation,
   currentPlayer,
@@ -42,7 +43,11 @@ const GameCell = ({
     if (type === 'tree' || type === 'rock') {
       baseClasses.push('bg-gray-100 hover:bg-gray-200');
     } else if (isHighlighted) {
-      baseClasses.push('bg-blue-200 hover:bg-blue-300');
+      if (highlightType === 'spell') {
+        baseClasses.push('bg-blue-200 hover:bg-blue-300');
+      } else {
+        baseClasses.push('bg-green-200 hover:bg-green-300');
+      }
     } else if (isInPath) {
       baseClasses.push('bg-green-200 hover:bg-green-300');
     } else {
@@ -52,12 +57,24 @@ const GameCell = ({
     return baseClasses.join(' ');
   };
 
+  const handleClick = () => {
+    if (onClick) onClick(x, y);
+  };
+
+  const handleMouseEnter = () => {
+    if (onHover) onHover(x, y);
+  };
+
+  const handleMouseLeave = () => {
+    if (onLeave) onLeave(x, y);
+  };
+
   return (
     <div
       className={getCellStyles()}
-      onClick={() => onClick(x, y)}
-      onMouseEnter={() => onHover(x, y)}
-      onMouseLeave={() => onLeave(x, y)}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       data-testid={`cell-${x}-${y}`}
     >
       <div className="relative">

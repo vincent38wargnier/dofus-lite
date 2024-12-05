@@ -7,10 +7,10 @@ const GameBoard = ({
   players, 
   currentPlayer,
   selectedSpell,
-  highlightedCells,
-  damageAnimation,
   path,
   onCellClick,
+  damageAnimation,
+  highlightedCells,
   onCellHover,
   onCellLeave
 }) => {
@@ -47,13 +47,13 @@ const GameBoard = ({
               y={y}
               type={cell.type}
               playerId={getPlayerAtPosition(x, y)}
-              isHighlighted={selectedSpell && isInSpellRange(x, y)}
+              isHighlighted={selectedSpell ? isInSpellRange(x, y) : false}
               isInPath={isInPath(x, y)}
               currentPlayer={currentPlayer}
               damageAnimation={damageAnimation}
-              onClick={onCellClick}
-              onHover={onCellHover}
-              onLeave={onCellLeave}
+              onClick={() => onCellClick(x, y)}
+              onHover={() => onCellHover(x, y)}
+              onLeave={() => onCellLeave(x, y)}
             />
           ))
         )}

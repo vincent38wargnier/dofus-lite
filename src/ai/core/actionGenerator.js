@@ -1,55 +1,81 @@
-import { findPath } from './pathfinding';
-import { generateMovementOptions, generateSpellTargets } from './moveGenerator';
+import { findPath } from '../../utils/pathfinding';
+import { BOARD_SIZE, CELL_TYPES } from '../../utils/constants';
 
-export function generatePossibleActions(node, isMaximizing, playerId) {
+export function generateActions(gameState, playerId) {
     const actions = [];
-    const state = node.state;
-    const player = isMaximizing ? 
-        state.players[playerId] : 
-        state.players[1 - playerId];
+    const currentPlayer = gameState.players[playerId];
+    const board = gameState.board;
 
-    try {
-        // Only generate actions if we have resources left
-        if (node.remainingPa > 0 || node.remainingPm > 0) {
-            // 1. Generate movement options if PM available
-            if (node.remainingPm > 0) {
-                const movementOptions = generateMovementOptions(player.position, node.remainingPm, state.board);
-                for (const movePos of movementOptions) {
-                    const path = findPath(player.position, movePos, state.board, node.remainingPm);
-                    if (path && path.length > 1) {  // Only add if path exists and is not current position
+    // Generate move actions
+    if (currentPlayer.pm > 0) {
+        for (let x = 0; x < BOARD_SIZE; x++) {
+            for (let y = 0; y < BOARD_SIZE; y++) {
+                // Check if cell is empty and within PM range
+                if (board[y][x].type === CELL_TYPES.EMPTY) {
+                    const path = findPath(
+                        currentPlayer.position,
+                        { x, y },
+                        board,
+                        currentPlayer.pm
+                    );
+                    if (path) {
                         actions.push({
                             type: 'move',
-                            path: path
+                            x, y,
+                            pmCost: path.length - 1,
+                            path
                         });
                     }
                 }
             }
+        }
+    }
 
-            // 2. Generate spell casts if PA available
-            if (node.remainingPa > 0) {
-                for (const spell of player.spells) {
-                    if (spell.cooldownLeft === 0 && spell.usesLeft > 0 && node.remainingPa >= spell.pa) {
-                        const targets = generateSpellTargets(spell, player.position, state, playerId);
-                        for (const target of targets) {
-                            actions.push({
-                                type: 'cast',
-                                spell: spell,
-                                target: target
-                            });
+    // Generate spell actions
+    if (currentPlayer.pa > 0) {
+        for (const spell of currentPlayer.spells) {
+            // Skip if spell is on cooldown or no uses left
+            if (spell.cooldownLeft > 0 || spell.usesLeft <= 0 || spell.pa > currentPlayer.pa) {
+                continue;
+            }
+
+            for (let x = 0; x < BOARD_SIZE; x++) {
+                for (let y = 0; y < BOARD_SIZE; y++) {
+                    const distance = Math.abs(x - currentPlayer.position.x) + 
+                                   Math.abs(y - currentPlayer.position.y);
+                    
+                    if (distance <= spell.range) {
+                        // For healing spells, only target self
+                        if (spell.type === 'heal') {
+                            if (x === currentPlayer.position.x && y === currentPlayer.position.y) {
+                                actions.push({
+                                    type: 'cast',
+                                    spell: spell.id,
+                                    x, y
+                                });
+                            }
+                        }
+                        // For attack spells, only target enemies
+                        else if (spell.type === 'hit') {
+                            const targetPlayer = gameState.players.find(p => 
+                                p.position.x === x && p.position.y === y && p.id !== playerId
+                            );
+                            if (targetPlayer) {
+                                actions.push({
+                                    type: 'cast',
+                                    spell: spell.id,
+                                    x, y
+                                });
+                            }
                         }
                     }
                 }
             }
         }
-
-        // Always include end turn option
-        actions.push({ type: 'end_turn' });
-
-        console.log('Generated actions:', actions);
-        return actions;
-
-    } catch (error) {
-        console.error('Error generating actions:', error);
-        return [{ type: 'end_turn' }];
     }
+
+    // Always add end turn
+    actions.push({ type: 'end_turn' });
+
+    return actions;
 }
