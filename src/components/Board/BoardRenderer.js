@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useGame } from '../../context/GameContext';
 import Cell from './Cell';
-import { findReachableCells, findPath } from '../../utils/movement';
+import { findPath } from '../../utils/movement';
 import { LineOfSight } from '../../utils/lineOfSight';
 import './Board.css';
 
@@ -9,23 +9,8 @@ const BoardRenderer = () => {
   const { state, actions } = useGame();
   const { board, currentPlayer, selectedAction } = state;
 
-  const [reachableCells, setReachableCells] = useState([]);
   const [currentPath, setCurrentPath] = useState([]);
   const [rangedCells, setRangedCells] = useState([]);
-
-  // Calculate reachable cells when player or PM changes
-  useEffect(() => {
-    if (currentPlayer) {
-      const playerPos = board.findPlayerPosition(currentPlayer);
-      const cells = findReachableCells(
-        board, 
-        playerPos.x, 
-        playerPos.y, 
-        currentPlayer.getPM()
-      );
-      setReachableCells(cells);
-    }
-  }, [currentPlayer, board]);
 
   // Calculate range cells for spells
   useEffect(() => {
@@ -86,15 +71,6 @@ const BoardRenderer = () => {
           lastPosition.y
         );
         currentPlayer.reducePM(cost);
-        
-        // Update reachable cells after movement
-        const newReachableCells = findReachableCells(
-          board,
-          lastPosition.x,
-          lastPosition.y,
-          currentPlayer.getPM()
-        );
-        setReachableCells(newReachableCells);
         setCurrentPath([]);
       }
     }
@@ -106,10 +82,6 @@ const BoardRenderer = () => {
 
   const getPathStep = (x, y) => {
     return currentPath.findIndex(pos => pos.x === x && pos.y === y);
-  };
-
-  const isCellReachable = (x, y) => {
-    return reachableCells.some(cell => cell.x === x && cell.y === y);
   };
 
   const isCellInRange = (x, y) => {
@@ -139,8 +111,7 @@ const BoardRenderer = () => {
                 x={x}
                 y={y}
                 cell={cell}
-                isHighlighted={!selectedAction && isCellReachable(x, y)}
-                isInPath={isInPath}
+                isHighlighted={isInPath}
                 pathStep={pathStep}
                 isInRange={selectedAction && isCellInRange(x, y)}
                 onMouseEnter={() => handleCellHover(x, y)}
