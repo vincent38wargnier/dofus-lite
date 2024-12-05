@@ -1,0 +1,54 @@
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.icon-small {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+.icon-medium {
+  font-size: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.icon-large {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+/* Animations for specific icons */
+.icon-spin {
+  animation: icon-spin 2s linear infinite;
+}
+
+.icon-pulse {
+  animation: icon-pulse 1s ease-in-out infinite;
+}
+
+@keyframes icon-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes icon-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

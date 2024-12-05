@@ -1,0 +1,116 @@
+.hud {
+  width: 300px;
+  background: #34495e;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.hud-section {
+  background: #2c3e50;
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.end-turn-button {
+  width: 100%;
+  padding: 0.8rem;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.end-turn-button:hover:not(:disabled) {
+  background: #c0392b;
+}
+
+.end-turn-button:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+}
+
+/* Player state specific styles */
+.player-state {
+  color: #ecf0f1;
+}
+
+.health-bar-container {
+  width: 100%;
+  height: 20px;
+  background: #2c3e50;
+  border-radius: 10px;
+  margin: 8px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.health-bar {
+  height: 100%;
+  transition: width 0.3s ease-in-out;
+}
+
+.health-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 0.8rem;
+  line-height: 20px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.points-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.points {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.pa {
+  background: #e67e22;
+}
+
+.pm {
+  background: #3498db;
+}
+
+.status-effects {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.status-effect {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.8rem;
+}
+
+.damage-over-time {
+  background: #c0392b;
+}
+
+.heal-over-time {
+  background: #27ae60;
+}
+
+.buff {
+  background: #2980b9;
+}
+
+.debuff {
+  background: #d35400;
+}

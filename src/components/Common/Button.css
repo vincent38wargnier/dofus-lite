@@ -1,0 +1,77 @@
+.button {
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Variants */
+.button-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.button-primary:hover:not(.button-disabled) {
+  background-color: #2980b9;
+}
+
+.button-secondary {
+  background-color: #95a5a6;
+  color: white;
+}
+
+.button-secondary:hover:not(.button-disabled) {
+  background-color: #7f8c8d;
+}
+
+.button-success {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.button-success:hover:not(.button-disabled) {
+  background-color: #27ae60;
+}
+
+.button-danger {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.button-danger:hover:not(.button-disabled) {
+  background-color: #c0392b;
+}
+
+/* Sizes */
+.button-small {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.button-medium {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+
+.button-large {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+}
+
+/* Disabled state */
+.button-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Focus state */
+.button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+}

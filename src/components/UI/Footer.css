@@ -1,0 +1,40 @@
+.footer {
+  background-color: #2c3e50;
+  padding: 0.75rem;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ecf0f1;
+  font-size: 0.9rem;
+}
+
+.turn-info {
+  color: #3498db;
+  font-weight: bold;
+}
+
+.winner-info {
+  color: #2ecc71;
+  font-weight: bold;
+  animation: winner-announcement 1s ease-in-out;
+}
+
+@keyframes winner-announcement {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
