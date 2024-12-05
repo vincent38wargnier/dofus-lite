@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useGame } from '../../context/GameContext';
 import Cell from './Cell';
 import { findPath } from '../../utils/movement';
 import { LineOfSight } from '../../utils/lineOfSight';
 import './Board.css';
 
-const MOVEMENT_ANIMATION_DURATION = 500;
+const CELL_SIZE = 60;
+const MOVEMENT_SPEED = 150; // ms per cell
 
 const BoardRenderer = () => {
   const { state, actions } = useGame();
@@ -14,8 +15,9 @@ const BoardRenderer = () => {
   const [currentPath, setCurrentPath] = useState([]);
   const [rangedCells, setRangedCells] = useState([]);
   const [isMoving, setIsMoving] = useState(false);
-  const [movingCharacterPos, setMovingCharacterPos] = useState(null);
   const [movingCharacterClass, setMovingCharacterClass] = useState(null);
+  const [animationStyle, setAnimationStyle] = useState(null);
+  const characterRef = useRef(null);
 
   useEffect(() => {
     if (selectedAction?.type === 'CAST_SORT') {
@@ -53,6 +55,69 @@ const BoardRenderer = () => {
     }
   };
 
+  const createKeyframeAnimation = (path) => {
+    const totalSteps = path.length - 1;
+    if (totalSteps === 0) return '';
+
+    let keyframes = '';
+    path.forEach((pos, index) => {
+      const percentage = (index * 100) / totalSteps;
+      keyframes += `
+        ${percentage}% {
+          transform: translate(${pos.x * CELL_SIZE}px, ${pos.y * CELL_SIZE}px);
+        }
+      `;
+    });
+
+    // Ensure we end at the final position
+    keyframes += `
+      100% {
+        transform: translate(${path[path.length - 1].x * CELL_SIZE}px, ${path[path.length - 1].y * CELL_SIZE}px);
+      }
+    `;
+
+    return keyframes;
+  };
+
+  const animateAlongPath = async (path) => {
+    if (path.length < 2) return;
+
+    const startPos = path[0];
+    const playerClass = currentPlayer.class.toLowerCase();
+
+    // Remove player from start position
+    board.setCell(startPos.x, startPos.y, { occupant: null });
+
+    // Create and inject the keyframe animation
+    const keyframes = createKeyframeAnimation(path);
+    const animationName = `move-${Date.now()}`;
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
+      @keyframes ${animationName} {
+        ${keyframes}
+      }
+    `;
+    document.head.appendChild(styleSheet);
+
+    // Set up the animation
+    setMovingCharacterClass(playerClass);
+    setAnimationStyle({
+      animation: `${animationName} ${MOVEMENT_SPEED * (path.length - 1)}ms linear forwards`
+    });
+
+    // Wait for animation to complete
+    await new Promise(resolve => setTimeout(resolve, MOVEMENT_SPEED * (path.length - 1)));
+
+    // Clean up
+    document.head.removeChild(styleSheet);
+    setAnimationStyle(null);
+    setMovingCharacterClass(null);
+
+    // Place player in final position
+    const finalPos = path[path.length - 1];
+    board.setCell(finalPos.x, finalPos.y, { occupant: currentPlayer });
+  };
+
   const handleCellClick = async (x, y) => {
     if (!currentPlayer || isMoving || selectedAction?.type === 'CAST_SORT') return;
 
@@ -61,39 +126,7 @@ const BoardRenderer = () => {
       const cost = path.length - 1;
       if (cost <= currentPlayer.getPM()) {
         setIsMoving(true);
-        
-        // Start position
-        const startPos = board.findPlayerPosition(currentPlayer);
-        const playerClass = currentPlayer.class.toLowerCase();
-        
-        // Remove player from start cell
-        board.setCell(startPos.x, startPos.y, { occupant: null });
-        
-        // Set up moving character
-        setMovingCharacterClass(playerClass);
-        setMovingCharacterPos({
-          x: startPos.x * 60,
-          y: startPos.y * 60
-        });
-
-        // Wait a frame to ensure the initial position is set
-        await new Promise(resolve => requestAnimationFrame(resolve));
-
-        // Start the animation to final position
-        const endPos = path[path.length - 1];
-        setMovingCharacterPos({
-          x: endPos.x * 60,
-          y: endPos.y * 60
-        });
-
-        // Wait for animation to complete
-        await new Promise(resolve => setTimeout(resolve, MOVEMENT_ANIMATION_DURATION));
-
-        // Clean up and place player in final position
-        setMovingCharacterPos(null);
-        setMovingCharacterClass(null);
-        board.setCell(endPos.x, endPos.y, { occupant: currentPlayer });
-        
+        await animateAlongPath(path);
         currentPlayer.reducePM(cost);
         setIsMoving(false);
         setCurrentPath([]);
@@ -114,14 +147,13 @@ const BoardRenderer = () => {
   };
 
   const renderMovingCharacter = () => {
-    if (!movingCharacterPos || !movingCharacterClass) return null;
+    if (!movingCharacterClass || !animationStyle) return null;
 
     return (
       <div
-        className={`moving-character occupant-${movingCharacterClass}`}
-        style={{
-          transform: `translate(${movingCharacterPos.x}px, ${movingCharacterPos.y}px)`
-        }}
+        ref={characterRef}
+        className={`moving-character occupant-${movingCharacterClass} animating`}
+        style={animationStyle}
       />
     );
   };

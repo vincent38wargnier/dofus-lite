@@ -70,7 +70,11 @@
   width: 60px;
   height: 60px;
   will-change: transform;
-  transition: transform 0.5s ease;
+}
+
+.moving-character.animating {
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
 }
 
 .cell-occupant.current-player {
