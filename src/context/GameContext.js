@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
 import BoardEngine from '../components/Board/BoardEngine';
 import Player from '../components/Player/Player';
-import { BOARD_CONFIG, GAME_STATUS } from '../utils/constants';
+import { BOARD_CONFIG, GAME_STATUS, SORTS } from '../utils/constants';
+import { calculateSortEffects, applyEffects } from '../utils/gameLogic';
 
 const GameContext = createContext();
 
 const initialState = {
-  status: GAME_STATUS.ACTIVE, // Changed from WAITING to ACTIVE
+  status: GAME_STATUS.ACTIVE,
   players: [],
   board: null,
   currentPlayer: null,
@@ -63,25 +64,21 @@ function gameReducer(state, action) {
 export function GameProvider({ children }) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
 
-  // Initialize game with default players automatically
   useEffect(() => {
     initializeDefaultGame();
   }, []);
 
   const initializeDefaultGame = () => {
-    // Create board
     const board = new BoardEngine(
       BOARD_CONFIG.DEFAULT_SIZE.columns,
       BOARD_CONFIG.DEFAULT_SIZE.rows
     );
 
-    // Create default players
     const players = [
       new Player('Mage', 'MAGE'),
       new Player('Warrior', 'WARRIOR')
     ];
 
-    // Place players on board
     const startPositions = [
       { x: 0, y: Math.floor(board.height / 2) },
       { x: board.width - 1, y: Math.floor(board.height / 2) }
@@ -91,7 +88,6 @@ export function GameProvider({ children }) {
       board.placePlayer(player, startPositions[index].x, startPositions[index].y);
     });
 
-    // Initialize game state
     dispatch({
       type: 'INITIALIZE_GAME',
       payload: {
@@ -109,13 +105,38 @@ export function GameProvider({ children }) {
     });
   }, []);
 
+  const castSort = useCallback(async (sort, target) => {
+    const currentPlayer = state.currentPlayer;
+    const sortData = SORTS[sort.key];
+    
+    if (currentPlayer.getPA() >= sortData.cost) {
+      const effects = calculateSortEffects(sort.key, currentPlayer, target);
+      applyEffects(effects, state);
+
+      currentPlayer.reducePA(sortData.cost);
+      currentPlayer.updateSortCooldown(sort.key, sortData.cooldown);
+
+      // Clear selected action after casting
+      dispatch({
+        type: 'SELECT_ACTION',
+        payload: null
+      });
+
+      // Update game state to reflect changes
+      dispatch({
+        type: 'UPDATE_GAME_STATE',
+        payload: {
+          board: state.board,
+          currentPlayer: currentPlayer
+        }
+      });
+    }
+  }, [state]);
+
   const endTurn = useCallback(() => {
     const currentPlayer = state.currentPlayer;
-    
-    // Reset player's points
     currentPlayer.resetPA();
     currentPlayer.resetPM();
-    
     dispatch({ type: 'END_TURN' });
   }, [state.currentPlayer]);
 
@@ -135,6 +156,7 @@ export function GameProvider({ children }) {
     actions: {
       initializeGame: initializeDefaultGame,
       selectAction,
+      castSort,
       endTurn,
       checkGameEnd,
       updateGameState: (newState) => dispatch({

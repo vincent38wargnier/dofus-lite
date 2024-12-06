@@ -37,6 +37,17 @@ const ActionBar = () => {
   const maxPm = CLASSES[currentPlayer.class].basePM;
   const sorts = currentPlayer.getSorts();
 
+  const handleSpellSelect = (sortKey) => {
+    const spell = SORTS[sortKey];
+    actions.selectAction({
+      type: 'CAST_SORT',
+      sort: {
+        ...spell,
+        key: sortKey
+      }
+    });
+  };
+
   return (
     <div className="action-bar">
       <div className="player-header">
@@ -77,13 +88,13 @@ const ActionBar = () => {
         {sorts.map((sortKey) => {
           const spell = SORTS[sortKey];
           const cooldown = currentPlayer.getSortCooldown(sortKey);
-          const isUsable = currentPlayer.canUseSort(spell);
+          const isUsable = currentPlayer.canUseSort(sortKey);
           
           return (
             <button 
               key={sortKey}
               className={`spell-button ${!isUsable ? 'disabled' : ''}`}
-              onClick={() => isUsable && actions.selectSort(sortKey)}
+              onClick={() => isUsable && handleSpellSelect(sortKey)}
               disabled={!isUsable}
             >
               {getSpellIcon(sortKey, spell.type)}

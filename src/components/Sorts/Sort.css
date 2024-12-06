@@ -1,0 +1,151 @@
+.sort {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  margin: 4px 0;
+  background: #34495e;
+  border: 1px solid #2c3e50;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.sort:hover {
+  transform: scale(1.02);
+  background: #3d566e;
+}
+
+.sort-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  position: relative;
+}
+
+.sort-disabled::before {
+  display: none;
+}
+
+.sort-disabled:hover {
+  transform: none;
+  background: #34495e;
+}
+
+.sort-icon {
+  font-size: 1.5rem;
+  margin-right: 12px;
+  width: 32px;
+  text-align: center;
+}
+
+.sort-details {
+  flex: 1;
+}
+
+.sort-name {
+  display: block;
+  font-weight: bold;
+  color: #ecf0f1;
+  margin-bottom: 4px;
+}
+
+.sort-cost {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #bdc3c7;
+}
+
+.sort-cooldown {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #e74c3c;
+}
+
+/* Tooltip */
+.sort-tooltip {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  background: #2c3e50;
+  border: 1px solid #34495e;
+  border-radius: 4px;
+  padding: 12px;
+  width: 200px;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 8px;
+  z-index: 100;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.sort:hover .sort-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.sort-tooltip h4 {
+  margin: 0 0 8px 0;
+  color: #ecf0f1;
+}
+
+.sort-tooltip p {
+  margin: 4px 0;
+  color: #bdc3c7;
+  font-size: 0.9rem;
+}
+
+/* Sort list container */
+.sort-list {
+  padding: 12px;
+  background: #2c3e50;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+.sort-list-title {
+  color: #ecf0f1;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #34495e;
+}
+
+.sorts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Different colors for sort types */
+.sort[data-type="DAMAGE"] .sort-icon {
+  color: #e74c3c;
+}
+
+.sort[data-type="HEAL"] .sort-icon {
+  color: #2ecc71;
+}
+
+.sort[data-type="BUFF"] .sort-icon {
+  color: #3498db;
+}
+
+.sort[data-type="DEBUFF"] .sort-icon {
+  color: #9b59b6;
+}
+
+.sort[data-type="MOVEMENT"] .sort-icon {
+  color: #f1c40f;
+}
+
+.sort[data-type="MOVEMENT_DAMAGE"] .sort-icon {
+  color: #e67e22;
+}
+
+.sort[data-type="DOT_DAMAGE"] .sort-icon {
+  color: #c0392b;
+}

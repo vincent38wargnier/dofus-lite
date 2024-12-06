@@ -36,12 +36,23 @@
 }
 
 .cell-in-range {
-  background: rgba(52, 152, 219, 0.3);
+  background: rgba(52, 152, 219, 0.25);
   border: 2px solid #3498db;
+  box-shadow: inset 0 0 10px rgba(52, 152, 219, 0.3);
 }
 
 .cell-in-range:hover {
-  background: rgba(52, 152, 219, 0.5);
+  background: rgba(52, 152, 219, 0.4);
+  transform: scale(1.05);
+  z-index: 2;
+}
+
+.cell-in-range.cell-occupied {
+  background: rgba(52, 152, 219, 0.4);
+  border: 2px solid #3498db;
+  box-shadow: 
+    inset 0 0 10px rgba(52, 152, 219, 0.4),
+    0 0 15px rgba(52, 152, 219, 0.3);
 }
 
 /* Player representation */

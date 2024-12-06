@@ -13,7 +13,7 @@ const BoardRenderer = () => {
   const { board, currentPlayer, selectedAction } = state;
 
   const [currentPath, setCurrentPath] = useState([]);
-  const [rangedCells, setRangedCells] = useState([]);
+  const [rangedCells, setRangedCells] = useState(new Set());
   const [isMoving, setIsMoving] = useState(false);
   const [movingCharacterClass, setMovingCharacterClass] = useState(null);
   const [animationStyle, setAnimationStyle] = useState(null);
@@ -29,7 +29,7 @@ const BoardRenderer = () => {
       );
       setRangedCells(inRangeCells);
     } else {
-      setRangedCells([]);
+      setRangedCells(new Set());
     }
   }, [selectedAction, currentPlayer, board]);
 
@@ -69,7 +69,6 @@ const BoardRenderer = () => {
       `;
     });
 
-    // Ensure we end at the final position
     keyframes += `
       100% {
         transform: translate(${path[path.length - 1].x * CELL_SIZE}px, ${path[path.length - 1].y * CELL_SIZE}px);
@@ -85,10 +84,8 @@ const BoardRenderer = () => {
     const startPos = path[0];
     const playerClass = currentPlayer.class.toLowerCase();
 
-    // Remove player from start position
     board.setCell(startPos.x, startPos.y, { occupant: null });
 
-    // Create and inject the keyframe animation
     const keyframes = createKeyframeAnimation(path);
     const animationName = `move-${Date.now()}`;
     const styleSheet = document.createElement('style');
@@ -99,27 +96,34 @@ const BoardRenderer = () => {
     `;
     document.head.appendChild(styleSheet);
 
-    // Set up the animation
     setMovingCharacterClass(playerClass);
     setAnimationStyle({
       animation: `${animationName} ${MOVEMENT_SPEED * (path.length - 1)}ms linear forwards`
     });
 
-    // Wait for animation to complete
     await new Promise(resolve => setTimeout(resolve, MOVEMENT_SPEED * (path.length - 1)));
 
-    // Clean up
     document.head.removeChild(styleSheet);
     setAnimationStyle(null);
     setMovingCharacterClass(null);
 
-    // Place player in final position
     const finalPos = path[path.length - 1];
     board.setCell(finalPos.x, finalPos.y, { occupant: currentPlayer });
   };
 
   const handleCellClick = async (x, y) => {
-    if (!currentPlayer || isMoving || selectedAction?.type === 'CAST_SORT') return;
+    if (!currentPlayer || isMoving) return;
+
+    if (selectedAction?.type === 'CAST_SORT') {
+      if (isCellInRange(x, y)) {
+        const targetCell = board.getCell(x, y);
+        if (targetCell.occupant) {
+          await actions.castSort(selectedAction.sort, targetCell.occupant);
+        }
+        setRangedCells(new Set());
+      }
+      return;
+    }
 
     const path = currentPath;
     if (path && path.length > 0) {
@@ -143,7 +147,7 @@ const BoardRenderer = () => {
   };
 
   const isCellInRange = (x, y) => {
-    return rangedCells.some(cell => cell.x === x && cell.y === y);
+    return rangedCells.has(`${x},${y}`);
   };
 
   const renderMovingCharacter = () => {
@@ -174,6 +178,7 @@ const BoardRenderer = () => {
             const cell = board.getCell(x, y);
             const isInPath = isCellInPath(x, y);
             const pathStep = isInPath ? getPathStep(x, y) : null;
+            const isInSpellRange = selectedAction?.type === 'CAST_SORT' && isCellInRange(x, y);
 
             return (
               <Cell
@@ -183,7 +188,7 @@ const BoardRenderer = () => {
                 cell={cell}
                 isHighlighted={isInPath}
                 pathStep={pathStep}
-                isInRange={selectedAction && isCellInRange(x, y)}
+                isInRange={isInSpellRange}
                 onMouseEnter={() => handleCellHover(x, y)}
                 onMouseLeave={handleCellLeave}
                 onClick={() => handleCellClick(x, y)}

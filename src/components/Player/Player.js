@@ -1,4 +1,4 @@
-import { MAX_HP, MAX_PA, MAX_PM, CLASSES } from '../../utils/constants';
+import { MAX_HP, MAX_PA, MAX_PM, CLASSES, SORTS } from '../../utils/constants';
 
 class Player {
   constructor(name, classType) {
@@ -68,18 +68,18 @@ class Player {
     return this.sorts;
   }
 
-  getSortCooldown(sort) {
-    return this.sortCooldowns[sort] || 0;
+  getSortCooldown(sortKey) {
+    return this.sortCooldowns[sortKey] || 0;
   }
 
-  updateSortCooldown(sort, cooldown) {
-    this.sortCooldowns[sort] = cooldown;
+  setSortCooldown(sortKey, cooldown) {
+    this.sortCooldowns[sortKey] = cooldown;
   }
 
   decrementCooldowns() {
-    Object.keys(this.sortCooldowns).forEach(sort => {
-      if (this.sortCooldowns[sort] > 0) {
-        this.sortCooldowns[sort]--;
+    Object.keys(this.sortCooldowns).forEach(sortKey => {
+      if (this.sortCooldowns[sortKey] > 0) {
+        this.sortCooldowns[sortKey]--;
       }
     });
   }
@@ -106,21 +106,17 @@ class Player {
     this.resetPA();
     this.resetPM();
     this.decrementCooldowns();
-    // Process status effects at turn start
     this.processStatusEffects();
   }
 
   endTurn() {
-    // Process status effects at turn end
     this.processStatusEffects();
   }
 
   processStatusEffects() {
-    // Remove expired effects and apply ongoing effects
     this.statusEffects = this.statusEffects.filter(effect => {
       effect.duration--;
       if (effect.duration > 0) {
-        // Apply effect
         this.applyStatusEffect(effect);
         return true;
       }
@@ -145,8 +141,8 @@ class Player {
     return this.hp > 0;
   }
 
-  canUseSort(sort) {
-    return this.sortCooldowns[sort] === 0 && this.pa >= sort.cost;
+  canUseSort(sortKey) {
+    return this.getSortCooldown(sortKey) === 0 && this.getPA() >= SORTS[sortKey].cost;
   }
 }
 

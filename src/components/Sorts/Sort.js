@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGame } from '../../context/GameContext';
+import './Sort.css';
 
 const Sort = ({ sort, isUsable, onSelect }) => {
   const getSortTypeIcon = (type) => {
@@ -39,7 +40,8 @@ const Sort = ({ sort, isUsable, onSelect }) => {
   return (
     <div 
       className={`sort ${!isUsable ? 'sort-disabled' : ''}`}
-      onClick={onSelect}
+      onClick={() => isUsable && onSelect()}
+      data-type={sort.type}
     >
       <div className="sort-icon">
         {getSortTypeIcon(sort.type)}

@@ -3,7 +3,9 @@ import Sort from './Sort';
 import { SORTS } from '../../utils/constants';
 import { useGame } from '../../context/GameContext';
 
-const SortList = ({ player, onSortSelect }) => {
+const SortList = ({ player }) => {
+  const { actions } = useGame();
+  
   if (!player) return null;
 
   const playerSorts = player.getSorts().map(sortKey => ({
@@ -12,15 +14,23 @@ const SortList = ({ player, onSortSelect }) => {
     cooldown: player.getSortCooldown(sortKey)
   }));
 
+  const handleSortSelect = (sort) => {
+    actions.selectAction({
+      type: 'CAST_SORT',
+      sort: sort
+    });
+  };
+
   const renderSort = (sort) => {
-    const isUsable = player.canUseSort(sort);
+    // We pass the sort key directly instead of the sort object
+    const isUsable = player.canUseSort(sort.key);
     
     return (
       <Sort
         key={sort.key}
         sort={sort}
         isUsable={isUsable}
-        onSelect={() => isUsable && onSortSelect(sort)}
+        onSelect={() => handleSortSelect(sort)}
       />
     );
   };
