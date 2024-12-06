@@ -37,16 +37,20 @@ function gameReducer(state, action) {
         selectedAction: action.payload
       };
 
-    case 'END_TURN':
+    case 'END_TURN': {
       const currentPlayerIndex = state.players.indexOf(state.currentPlayer);
       const nextPlayerIndex = (currentPlayerIndex + 1) % state.players.length;
+      const nextPlayer = state.players[nextPlayerIndex];
+      
+      nextPlayer.startTurn();
       
       return {
         ...state,
-        currentPlayer: state.players[nextPlayerIndex],
+        currentPlayer: nextPlayer,
         turnNumber: nextPlayerIndex === 0 ? state.turnNumber + 1 : state.turnNumber,
         selectedAction: null
       };
+    }
 
     case 'END_GAME':
       return {
@@ -88,6 +92,8 @@ export function GameProvider({ children }) {
       board.placePlayer(player, startPositions[index].x, startPositions[index].y);
     });
 
+    players[0].startTurn();
+
     dispatch({
       type: 'INITIALIZE_GAME',
       payload: {
@@ -107,48 +113,63 @@ export function GameProvider({ children }) {
 
   const castSort = useCallback((sort, target, targetPos) => {
     const currentPlayer = state.currentPlayer;
-    if (currentPlayer.canUseSort(sort.key)) {
-      switch (sort.type) {
-        case 'DAMAGE':
-          if (target) {
-            target.reduceHP(sort.damage);
-          }
-          break;
-        case 'HEAL':
-          if (target) {
-            target.increaseHP(sort.healing);
-          }
-          break;
-        case 'MOVEMENT':
-          // Movement spells are handled in BoardRenderer
-          break;
-        case 'DOT_DAMAGE':
-          if (target) {
-            target.addStatusEffect({
-              type: 'DAMAGE_OVER_TIME',
-              value: sort.damage,
-              duration: sort.duration
-            });
-          }
-          break;
-        case 'BUFF':
-          if (target) {
-            target.addStatusEffect({
-              type: sort.effect,
-              duration: sort.duration
-            });
-          }
-          break;
-        case 'MOVEMENT_DAMAGE':
-          if (target) {
-            target.reduceHP(sort.damage);
-          }
-          break;
-      }
+    if (!currentPlayer.canUseSort(sort.key)) return;
 
-      // Reduce PA and put spell on cooldown
+    // Only apply cooldown and PA cost after successful cast
+    let castSuccessful = false;
+
+    switch (sort.type) {
+      case 'DAMAGE':
+        if (target) {
+          target.reduceHP(sort.damage);
+          castSuccessful = true;
+        }
+        break;
+      case 'HEAL':
+        if (target) {
+          target.increaseHP(sort.healing);
+          castSuccessful = true;
+        }
+        break;
+      case 'MOVEMENT':
+        // Movement spells are handled in BoardRenderer
+        // If we get here, the movement was successful
+        castSuccessful = true;
+        break;
+      case 'DOT_DAMAGE':
+        if (target) {
+          target.addStatusEffect({
+            type: 'DAMAGE_OVER_TIME',
+            value: sort.damage,
+            duration: sort.duration
+          });
+          castSuccessful = true;
+        }
+        break;
+      case 'BUFF':
+        if (target) {
+          target.addStatusEffect({
+            type: sort.effect,
+            duration: sort.duration
+          });
+          castSuccessful = true;
+        }
+        break;
+      case 'MOVEMENT_DAMAGE':
+        if (target) {
+          target.reduceHP(sort.damage);
+          castSuccessful = true;
+        }
+        break;
+    }
+
+    if (castSuccessful) {
+      // Reduce PA and put spell on cooldown only if cast was successful
       currentPlayer.reducePA(sort.cost);
-      currentPlayer.setSortCooldown(sort.key, sort.cooldown);
+      // Only set cooldown if spell has one
+      if (SORTS[sort.key].cooldown > 0) {
+        currentPlayer.setSortCooldown(sort.key, SORTS[sort.key].cooldown);
+      }
 
       // Update game state
       dispatch({
@@ -163,8 +184,7 @@ export function GameProvider({ children }) {
 
   const endTurn = useCallback(() => {
     const currentPlayer = state.currentPlayer;
-    currentPlayer.resetPA();
-    currentPlayer.resetPM();
+    currentPlayer.endTurn();
     dispatch({ type: 'END_TURN' });
   }, [state.currentPlayer]);
 

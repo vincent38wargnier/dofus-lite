@@ -12,10 +12,8 @@ class Player {
     this.statusEffects = [];
     this.sortCooldowns = {};
     
-    // Initialize cooldowns for all sorts
-    this.sorts.forEach(sort => {
-      this.sortCooldowns[sort] = 0;
-    });
+    // Initialize all cooldowns to 0
+    this.resetAllCooldowns();
   }
 
   // Health Points Management
@@ -73,7 +71,16 @@ class Player {
   }
 
   setSortCooldown(sortKey, cooldown) {
-    this.sortCooldowns[sortKey] = cooldown;
+    // Only set cooldown if the spell has one defined
+    if (SORTS[sortKey] && SORTS[sortKey].cooldown > 0) {
+      this.sortCooldowns[sortKey] = cooldown;
+    }
+  }
+
+  resetAllCooldowns() {
+    this.sorts.forEach(sortKey => {
+      this.sortCooldowns[sortKey] = 0;
+    });
   }
 
   decrementCooldowns() {
@@ -142,7 +149,13 @@ class Player {
   }
 
   canUseSort(sortKey) {
-    return this.getSortCooldown(sortKey) === 0 && this.getPA() >= SORTS[sortKey].cost;
+    const sort = SORTS[sortKey];
+    if (!sort) return false;
+    
+    return (
+      this.getSortCooldown(sortKey) === 0 && // Sort is not on cooldown
+      this.getPA() >= sort.cost // Player has enough PA
+    );
   }
 }
 
