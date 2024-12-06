@@ -19,8 +19,10 @@ class Player {
     // Load stats from characteristics
     this.hp = classInfo.characteristics.baseHP;
     this.maxHp = classInfo.characteristics.baseHP;
-    this.pa = classInfo.characteristics.basePA;
-    this.pm = classInfo.characteristics.basePM;
+    this.basePA = classInfo.characteristics.basePA;  // Store base PA
+    this.basePM = classInfo.characteristics.basePM;  // Store base PM
+    this.pa = this.basePA;  // Current PA
+    this.pm = this.basePM;  // Current PM
     
     // Load sorts from constants
     this.sorts = CLASS_SORTS[classType];
@@ -49,7 +51,13 @@ class Player {
 
   // Action Points Management
   getPA() {
-    return this.pa;
+    // Calculate bonus PA from effects
+    const bonusPA = this.statusEffects.reduce((total, effect) => {
+      if (effect.pa_bonus) return total + effect.pa_bonus;
+      if (effect.pa_reduction) return total - effect.pa_reduction;
+      return total;
+    }, 0);
+    return this.pa + bonusPA;
   }
 
   reducePA(amount) {
@@ -58,13 +66,19 @@ class Player {
   }
 
   resetPA() {
-    this.pa = CLASSES[this.class].characteristics.basePA;
-    return this.pa;
+    this.pa = this.basePA;
+    return this.getPA();  // Return total including effects
   }
 
   // Movement Points Management
   getPM() {
-    return this.pm;
+    // Calculate bonus PM from effects
+    const bonusPM = this.statusEffects.reduce((total, effect) => {
+      if (effect.pm_bonus) return total + effect.pm_bonus;
+      if (effect.pm_reduction) return total - effect.pm_reduction;
+      return total;
+    }, 0);
+    return this.pm + bonusPM;
   }
 
   reducePM(amount) {
@@ -73,8 +87,8 @@ class Player {
   }
 
   resetPM() {
-    this.pm = CLASSES[this.class].characteristics.basePM;
-    return this.pm;
+    this.pm = this.basePM;
+    return this.getPM();  // Return total including effects
   }
 
   // Sort (Spell) Management
@@ -109,6 +123,7 @@ class Player {
 
   // Status Effects Management
   addStatusEffect(effect) {
+    if (!effect.duration) effect.duration = 1;
     this.statusEffects.push(effect);
   }
 
@@ -137,33 +152,14 @@ class Player {
   }
 
   processStatusEffects() {
-    this.statusEffects = this.statusEffects.filter(effect => {
+    const remainingEffects = [];
+    this.statusEffects.forEach(effect => {
       effect.duration--;
       if (effect.duration > 0) {
-        this.applyStatusEffect(effect);
-        return true;
+        remainingEffects.push(effect);
       }
-      return false;
     });
-  }
-
-  applyStatusEffect(effect) {
-    switch (effect.type) {
-      case 'DAMAGE_OVER_TIME':
-        this.reduceHP(effect.value);
-        break;
-      case 'HEAL_OVER_TIME':
-        this.increaseHP(effect.value);
-        break;
-      case 'BUFF':
-        if (effect.pa_bonus) this.pa += effect.pa_bonus;
-        if (effect.pm_bonus) this.pm += effect.pm_bonus;
-        break;
-      case 'DEBUFF':
-        if (effect.pa_reduction) this.pa = Math.max(0, this.pa - effect.pa_reduction);
-        if (effect.pm_reduction) this.pm = Math.max(0, this.pm - effect.pm_reduction);
-        break;
-    }
+    this.statusEffects = remainingEffects;
   }
 
   // Utility Methods

@@ -153,11 +153,33 @@ export function GameProvider({ children }) {
         }
         break;
       case 'BUFF':
+        // Apply buff to self if no target and range is 0
+        const buffTarget = (sort.range === 0 || !target) ? currentPlayer : target;
+        if (buffTarget) {
+          if (sort.effect) {
+            buffTarget.addStatusEffect({
+              ...sort.effect,
+              duration: sort.duration || 1
+            });
+          }
+          castSuccessful = true;
+        }
+        break;
+      case 'DEBUFF':
         if (target) {
-          target.addStatusEffect({
-            type: sort.effect,
-            duration: sort.duration
-          });
+          if (sort.effect) {
+            target.addStatusEffect({
+              ...sort.effect,
+              duration: sort.duration || 1
+            });
+            // If the spell also buffs the caster
+            if (sort.self_effect) {
+              currentPlayer.addStatusEffect({
+                ...sort.self_effect,
+                duration: sort.duration || 1
+              });
+            }
+          }
           castSuccessful = true;
         }
         break;
