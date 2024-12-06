@@ -9,6 +9,7 @@ const BoardRenderer = () => {
   const { state, actions } = useGame();
   const { board, currentPlayer, selectedAction } = state;
   const [rangedCells, setRangedCells] = useState(new Set());
+  const [patternCells, setPatternCells] = useState(new Set());
 
   // Effect to update ranged cells when a spell is selected
   useEffect(() => {
@@ -16,12 +17,13 @@ const BoardRenderer = () => {
       const playerPos = board.findPlayerPosition(currentPlayer);
       const inRangeCells = LineOfSight.getVisibleCells(
         playerPos,
-        selectedAction.sort.range,
+        selectedAction.sort,
         board
       );
       setRangedCells(inRangeCells);
     } else {
       setRangedCells(new Set());
+      setPatternCells(new Set());
     }
   }, [selectedAction, currentPlayer, board]);
 
@@ -31,10 +33,36 @@ const BoardRenderer = () => {
     isMoving,
     movingCharacterClass,
     animationStyle,
-    handleCellHover,
-    handleCellLeave,
+    handleCellHover: baseHandleCellHover,
+    handleCellLeave: baseHandleCellLeave,
     handleCellClick
   } = useBoardInteraction(board, currentPlayer, selectedAction, actions, rangedCells);
+
+  // Combine movement and spell pattern previews
+  const handleCellHover = (x, y) => {
+    baseHandleCellHover(x, y);
+    
+    if (selectedAction?.type === 'CAST_SORT' && selectedAction.sort.pattern) {
+      const playerPos = board.findPlayerPosition(currentPlayer);
+      const distance = LineOfSight.calculateDistance(playerPos, {x, y});
+      const maxRange = selectedAction.sort.range;
+      const minRange = selectedAction.sort.min_range || 0;
+
+      if (distance >= minRange && distance <= maxRange) {
+        const newPatternCells = LineOfSight.getPatternCells(
+          {x, y},
+          selectedAction.sort.pattern,
+          selectedAction.sort.pattern_size || 0
+        );
+        setPatternCells(newPatternCells);
+      }
+    }
+  };
+
+  const handleCellLeave = () => {
+    baseHandleCellLeave();
+    setPatternCells(new Set());
+  };
 
   return (
     <div className="board-container">
@@ -43,6 +71,7 @@ const BoardRenderer = () => {
         currentPath={currentPath}
         selectedAction={selectedAction}
         rangedCells={rangedCells}
+        patternCells={patternCells}
         movingCharacterClass={movingCharacterClass}
         animationStyle={animationStyle}
         onCellHover={handleCellHover}

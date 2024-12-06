@@ -1,15 +1,10 @@
-import { WARRIOR_SORTS } from '../sorts/warriorSorts';
+import { WARRIOR_SPELLS } from '../spells/warrior';
 
 export const WARRIOR = {
   name: 'Warrior',
-  emoji: '⚔️',
-  description: 'A close combat fighter with high defense and HP',
-  characteristics: {
-    baseHP: 120,
-    basePA: 6,
-    basePM: 3,
-    defense: 20,
-    resistance: 15,
-  },
-  sorts: WARRIOR_SORTS,
+  description: 'A tough melee fighter who excels at controlling the battlefield and protecting allies.',
+  baseHP: 110,
+  basePA: 6,
+  basePM: 3,
+  sorts: Object.keys(WARRIOR_SPELLS)
 };

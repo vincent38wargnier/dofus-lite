@@ -1,50 +1,30 @@
-export * from './sortTypes';
-export * from './effects';
-export * from './baseStats';
-export * from './classes';
-
-// Game status constants
-export const GAME_STATUS = {
-  WAITING: 'WAITING',
-  ACTIVE: 'ACTIVE',
-  PAUSED: 'PAUSED',
-  ENDED: 'ENDED',
-};
+// Game mechanics
+export { 
+  MAX_HP,
+  MAX_PA,
+  MAX_PM,
+  DIRECTIONS,
+  TURN_TIME_LIMIT,
+  CELL_TYPES 
+} from './game/mechanics';
 
 // Board configuration
-export const BOARD_CONFIG = {
-  DEFAULT_SIZE: {
-    rows: 15,
-    columns: 15,
-  },
-  MAX_SIZE: {
-    rows: 20,
-    columns: 20,
-  },
-  MIN_SIZE: {
-    rows: 8,
-    columns: 8,
-  }
-};
+export {
+  BOARD_CONFIG,
+  OBSTACLE_TYPES
+} from './game/board';
 
-// Cell types
-export const CELL_TYPES = {
-  NORMAL: 'NORMAL',
-  OBSTACLE: 'OBSTACLE',
-  WATER: 'WATER'
-};
+// Game status and effects
+export {
+  GAME_STATUS,
+  STATUS_EFFECTS
+} from './game/status';
 
-// Direction vectors (for movement and calculations)
-export const DIRECTIONS = {
-  UP: { x: 0, y: -1 },
-  RIGHT: { x: 1, y: 0 },
-  DOWN: { x: 0, y: 1 },
-  LEFT: { x: -1, y: 0 },
-  UP_RIGHT: { x: 1, y: -1 },
-  UP_LEFT: { x: -1, y: -1 },
-  DOWN_RIGHT: { x: 1, y: 1 },
-  DOWN_LEFT: { x: -1, y: 1 }
-};
+// Classes
+export { CLASSES } from './classes';
 
-// Turn time limit (in milliseconds)
-export const TURN_TIME_LIMIT = 30000; // 30 seconds
+// Spells/Sorts
+export { 
+  SORTS,
+  SPELL_PATTERNS
+} from './spells';
