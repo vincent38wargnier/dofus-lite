@@ -105,24 +105,21 @@ export function GameProvider({ children }) {
     });
   }, []);
 
-  const castSort = useCallback(async (sort, target) => {
+  const castSort = useCallback((sort, target) => {
     const currentPlayer = state.currentPlayer;
-    const sortData = SORTS[sort.key];
-    
-    if (currentPlayer.getPA() >= sortData.cost) {
-      const effects = calculateSortEffects(sort.key, currentPlayer, target);
-      applyEffects(effects, state);
+    if (currentPlayer.canUseSort(sort.key)) {
+      // Apply damage/effects
+      if (sort.type === 'DAMAGE') {
+        target.reduceHP(sort.damage);
+      } else if (sort.type === 'HEAL') {
+        target.increaseHP(sort.healing);
+      }
 
-      currentPlayer.reducePA(sortData.cost);
-      currentPlayer.updateSortCooldown(sort.key, sortData.cooldown);
+      // Reduce PA and put spell on cooldown
+      currentPlayer.reducePA(sort.cost);
+      currentPlayer.setSortCooldown(sort.key, sort.cooldown);
 
-      // Clear selected action after casting
-      dispatch({
-        type: 'SELECT_ACTION',
-        payload: null
-      });
-
-      // Update game state to reflect changes
+      // Update game state
       dispatch({
         type: 'UPDATE_GAME_STATE',
         payload: {

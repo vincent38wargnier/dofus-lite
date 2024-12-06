@@ -34,7 +34,7 @@ const BoardRenderer = () => {
   }, [selectedAction, currentPlayer, board]);
 
   const handleCellHover = (x, y) => {
-    if (!currentPlayer || selectedAction || isMoving) return;
+    if (!currentPlayer || isMoving || selectedAction?.type === 'CAST_SORT') return;
 
     const playerPos = board.findPlayerPosition(currentPlayer);
     const path = findPath(
@@ -115,12 +115,16 @@ const BoardRenderer = () => {
     if (!currentPlayer || isMoving) return;
 
     if (selectedAction?.type === 'CAST_SORT') {
-      if (isCellInRange(x, y)) {
-        const targetCell = board.getCell(x, y);
-        if (targetCell.occupant) {
-          await actions.castSort(selectedAction.sort, targetCell.occupant);
-        }
-        setRangedCells(new Set());
+      // If clicking outside range, deselect the sort
+      if (!isCellInRange(x, y)) {
+        actions.selectAction(null);
+        return;
+      }
+
+      const targetCell = board.getCell(x, y);
+      if (targetCell.occupant) {
+        await actions.castSort(selectedAction.sort, targetCell.occupant);
+        actions.selectAction(null);
       }
       return;
     }
