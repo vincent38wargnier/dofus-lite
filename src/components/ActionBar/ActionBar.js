@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGame } from '../../context/GameContext';
 import { Sword, Shield, Move, Target, Skull, HeartPulse } from 'lucide-react';
 import { CLASSES } from '../../constants/classes';
@@ -7,24 +7,58 @@ import './ActionBar.css';
 const ActionBar = () => {
   const { state, actions } = useGame();
   const { currentPlayer } = state;
+  const [tooltipContent, setTooltipContent] = useState(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
   const getSpellIcon = (spellKey, type) => {
-    // Simple icon mapping based on spell type
     switch (type) {
-      case 'DAMAGE':
-        return <Sword className="spell-icon" />;
-      case 'BUFF':
-        return <Shield className="spell-icon" />;
+      case 'DAMAGE': return <Sword className="spell-icon" />;
+      case 'BUFF': return <Shield className="spell-icon" />;
       case 'MOVEMENT':
-      case 'MOVEMENT_DAMAGE':
-        return <Move className="spell-icon" />;
-      case 'DOT_DAMAGE':
-        return <Skull className="spell-icon" />;
-      case 'HEAL':
-        return <HeartPulse className="spell-icon" />;
-      default:
-        return <Target className="spell-icon" />;
+      case 'MOVEMENT_DAMAGE': return <Move className="spell-icon" />;
+      case 'DOT_DAMAGE': return <Skull className="spell-icon" />;
+      case 'HEAL': return <HeartPulse className="spell-icon" />;
+      default: return <Target className="spell-icon" />;
     }
+  };
+
+  const formatEffectDescription = (effect) => {
+    if (!effect) return '';
+    const lines = [];
+    if (effect.pa_bonus) lines.push(`+${effect.pa_bonus} PA`);
+    if (effect.pm_bonus) lines.push(`+${effect.pm_bonus} PM`);
+    if (effect.pa_reduction) lines.push(`-${effect.pa_reduction} PA`);
+    if (effect.pm_reduction) lines.push(`-${effect.pm_reduction} PM`);
+    if (effect.damage) lines.push(`${effect.damage} damage`);
+    if (effect.duration) lines.push(`Duration: ${effect.duration} turns`);
+    return lines.join('\n');
+  };
+
+  const getSpellTooltip = (spell) => {
+    let tooltip = `${spell.name}\n${spell.description}\n\n`;
+    tooltip += `Type: ${spell.type}\n`;
+    tooltip += `Cost: ${spell.cost} PA\n`;
+    tooltip += `Range: ${spell.range} cells\n`;
+    if (spell.min_range) tooltip += `Min Range: ${spell.min_range} cells\n`;
+    if (spell.damage) tooltip += `Damage: ${spell.damage}\n`;
+    if (spell.pattern) tooltip += `Pattern: ${spell.pattern} (size: ${spell.pattern_size})\n`;
+    if (spell.cooldown) tooltip += `Cooldown: ${spell.cooldown} turns\n`;
+    if (spell.effect) tooltip += `\nEffect:\n${formatEffectDescription(spell.effect)}`;
+    if (spell.self_effect) tooltip += `\nSelf Effect:\n${formatEffectDescription(spell.self_effect)}`;
+    return tooltip;
+  };
+
+  const handleMouseEnter = (e, spell) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setTooltipPosition({
+      x: rect.left,
+      y: rect.bottom + window.scrollY
+    });
+    setTooltipContent(getSpellTooltip(spell));
+  };
+
+  const handleMouseLeave = () => {
+    setTooltipContent(null);
   };
 
   if (!currentPlayer) return null;
@@ -95,7 +129,8 @@ const ActionBar = () => {
               className={`spell-button ${!isUsable ? 'disabled' : ''}`}
               onClick={() => isUsable && handleSpellSelect(sortKey)}
               disabled={!isUsable}
-              title={`${spell.name}: ${spell.description}\n\nRange: ${spell.range} cells\nCooldown: ${spell.cooldown} turns`}
+              onMouseEnter={(e) => handleMouseEnter(e, spell)}
+              onMouseLeave={handleMouseLeave}
             >
               {getSpellIcon(sortKey, spell.type)}
               <div className="spell-info">
@@ -109,6 +144,18 @@ const ActionBar = () => {
           );
         })}
       </div>
+
+      {tooltipContent && (
+        <div 
+          className="spell-tooltip"
+          style={{
+            left: tooltipPosition.x + 'px',
+            top: tooltipPosition.y + 'px'
+          }}
+        >
+          {tooltipContent}
+        </div>
+      )}
 
       <button className="end-turn-button" onClick={actions.endTurn}>
         End Turn
