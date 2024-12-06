@@ -122,10 +122,19 @@ const BoardRenderer = () => {
       }
 
       const targetCell = board.getCell(x, y);
-      if (targetCell.occupant) {
-        await actions.castSort(selectedAction.sort, targetCell.occupant);
-        actions.selectAction(null);
+      const targetPos = { x, y };
+      
+      // Handle movement spells
+      if (selectedAction.sort.type === 'MOVEMENT') {
+        const playerPos = board.findPlayerPosition(currentPlayer);
+        const startCell = board.getCell(playerPos.x, playerPos.y);
+        board.setCell(playerPos.x, playerPos.y, { ...startCell, occupant: null });
+        board.setCell(x, y, { ...targetCell, occupant: currentPlayer });
       }
+      
+      // Cast the spell with target position for all cases
+      await actions.castSort(selectedAction.sort, targetCell.occupant, targetPos);
+      actions.selectAction(null);
       return;
     }
 

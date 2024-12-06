@@ -105,14 +105,45 @@ export function GameProvider({ children }) {
     });
   }, []);
 
-  const castSort = useCallback((sort, target) => {
+  const castSort = useCallback((sort, target, targetPos) => {
     const currentPlayer = state.currentPlayer;
     if (currentPlayer.canUseSort(sort.key)) {
-      // Apply damage/effects
-      if (sort.type === 'DAMAGE') {
-        target.reduceHP(sort.damage);
-      } else if (sort.type === 'HEAL') {
-        target.increaseHP(sort.healing);
+      switch (sort.type) {
+        case 'DAMAGE':
+          if (target) {
+            target.reduceHP(sort.damage);
+          }
+          break;
+        case 'HEAL':
+          if (target) {
+            target.increaseHP(sort.healing);
+          }
+          break;
+        case 'MOVEMENT':
+          // Movement spells are handled in BoardRenderer
+          break;
+        case 'DOT_DAMAGE':
+          if (target) {
+            target.addStatusEffect({
+              type: 'DAMAGE_OVER_TIME',
+              value: sort.damage,
+              duration: sort.duration
+            });
+          }
+          break;
+        case 'BUFF':
+          if (target) {
+            target.addStatusEffect({
+              type: sort.effect,
+              duration: sort.duration
+            });
+          }
+          break;
+        case 'MOVEMENT_DAMAGE':
+          if (target) {
+            target.reduceHP(sort.damage);
+          }
+          break;
       }
 
       // Reduce PA and put spell on cooldown
