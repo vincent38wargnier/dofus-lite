@@ -46,6 +46,25 @@ export const STATUS_EFFECTS = {
     type: 'DEBUFF',
     effect: 'MOVEMENT_REDUCED',
     reduction: 2
+  },
+  // New status effects for boost spells
+  ACCELERATED: {
+    name: 'Accelerated',
+    type: 'BUFF',
+    effect: 'MOVEMENT_BOOST',
+    bonus_pm: 2
+  },
+  ENERGIZED: {
+    name: 'Energized',
+    type: 'BUFF',
+    effect: 'ACTION_BOOST',
+    bonus_pa: 2
+  },
+  DRAINED: {
+    name: 'Drained',
+    type: 'DEBUFF',
+    effect: 'ACTION_REDUCED',
+    pa_reduction: 2
   }
 };
 
@@ -57,7 +76,7 @@ export const CLASSES = {
     baseHP: 110,
     basePA: 6,
     basePM: 3,
-    sorts: ['SLASH', 'SHIELD_BASH', 'CHARGE', 'PROTECTIVE_LEAP']
+    sorts: ['SLASH', 'SHIELD_BASH', 'CHARGE', 'PROTECTIVE_LEAP', 'POWER_GIFT']
   },
   ARCHER: {
     name: 'Archer',
@@ -65,7 +84,7 @@ export const CLASSES = {
     baseHP: 85,
     basePA: 6,
     basePM: 4,
-    sorts: ['PRECISE_SHOT', 'EXPLOSIVE_ARROW', 'TACTICAL_ROLL', 'MARK_TARGET']
+    sorts: ['PRECISE_SHOT', 'EXPLOSIVE_ARROW', 'TACTICAL_ROLL', 'MARK_TARGET', 'SPEED_SHOT']
   },
   MAGE: {
     name: 'Mage',
@@ -73,7 +92,7 @@ export const CLASSES = {
     baseHP: 75,
     basePA: 7,
     basePM: 3,
-    sorts: ['FIREBALL', 'ICE_WALL', 'TELEPORT', 'ARCANE_BLAST']
+    sorts: ['FIREBALL', 'ICE_WALL', 'TELEPORT', 'ARCANE_BLAST', 'ENERGY_TRANSFER']
   }
 };
 
@@ -140,6 +159,19 @@ export const SORTS = {
     cooldown: 4,
     description: 'Leap to a location. You and allies within 2 cells gain damage reduction.'
   },
+  // New Warrior boost spell
+  POWER_GIFT: {
+    name: 'Power Gift',
+    type: 'BUFF',
+    cost: 4,
+    range: 2,
+    pattern: 'SINGLE',
+    effect: 'ENERGIZED',
+    self_effect: 'DRAINED',
+    duration: 2,
+    cooldown: 4,
+    description: 'Transfer your power to an ally, granting them +2 PA but reducing your own PA by 2 next turn.'
+  },
 
   // Archer Sorts - Focus on positioning and punishing enemy movement
   PRECISE_SHOT: {
@@ -191,6 +223,20 @@ export const SORTS = {
     cooldown: 3,
     description: 'Mark targets in a diamond pattern, making them take increased damage.'
   },
+  // New Archer boost spell
+  SPEED_SHOT: {
+    name: 'Speed Shot',
+    type: 'BUFF',
+    cost: 3,
+    range: 5,
+    pattern: 'CIRCLE',
+    pattern_size: 1,
+    effect: 'ACCELERATED',
+    condition: 'TARGET_MARKED',  // Only works on marked targets
+    duration: 2,
+    cooldown: 4,
+    description: 'Grant +2 PM to allies near a marked target. Only works if target is marked.'
+  },
 
   // Mage Sorts - Focus on area control and elemental combinations
   FIREBALL: {
@@ -240,6 +286,19 @@ export const SORTS = {
     bonus_damage_status: 10,
     cooldown: 1,
     description: 'Release a star-shaped blast that deals bonus damage to debuffed targets.'
+  },
+  // New Mage boost spell
+  ENERGY_TRANSFER: {
+    name: 'Energy Transfer',
+    type: 'BUFF',
+    cost: 3,
+    range: 4,
+    pattern: 'SINGLE',
+    effect: 'ENERGIZED',
+    duration: 1,
+    special_condition: 'CONSUME_STATUS',  // Removes a debuff from target and gives them PA instead
+    cooldown: 3,
+    description: 'Convert a negative status effect on target into +2 PA for 1 turn.'
   }
 };
 

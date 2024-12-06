@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useGame } from '../../context/GameContext';
-import { CLASSES } from '../../utils/constants';
+import { CLASSES } from '../../constants/classes';
 import Button from '../Common/Button';
 import './GameSetup.css';
 

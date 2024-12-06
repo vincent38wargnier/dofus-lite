@@ -1,14 +1,30 @@
-import { MAX_HP, MAX_PA, MAX_PM, CLASSES, SORTS } from '../../utils/constants';
+import { CLASSES } from '../../constants/classes';
+import { WARRIOR_SORTS } from '../../constants/sorts/warriorSorts';
+import { MAGE_SORTS } from '../../constants/sorts/mageSorts';
+import { ARCHER_SORTS } from '../../constants/sorts/archerSorts';
+
+// Map class types to their sorts
+const CLASS_SORTS = {
+  WARRIOR: WARRIOR_SORTS,
+  MAGE: MAGE_SORTS,
+  ARCHER: ARCHER_SORTS
+};
 
 class Player {
   constructor(name, classType) {
     this.name = name;
     this.class = classType;
-    this.hp = CLASSES[classType].baseHP;
-    this.maxHp = CLASSES[classType].baseHP;
-    this.pa = CLASSES[classType].basePA;
-    this.pm = CLASSES[classType].basePM;
-    this.sorts = CLASSES[classType].sorts;
+    const classInfo = CLASSES[classType];
+    
+    // Load stats from characteristics
+    this.hp = classInfo.characteristics.baseHP;
+    this.maxHp = classInfo.characteristics.baseHP;
+    this.pa = classInfo.characteristics.basePA;
+    this.pm = classInfo.characteristics.basePM;
+    
+    // Load sorts from constants
+    this.sorts = CLASS_SORTS[classType];
+    
     this.statusEffects = [];
     this.sortCooldowns = {};
     
@@ -42,7 +58,7 @@ class Player {
   }
 
   resetPA() {
-    this.pa = CLASSES[this.class].basePA;
+    this.pa = CLASSES[this.class].characteristics.basePA;
     return this.pa;
   }
 
@@ -57,7 +73,7 @@ class Player {
   }
 
   resetPM() {
-    this.pm = CLASSES[this.class].basePM;
+    this.pm = CLASSES[this.class].characteristics.basePM;
     return this.pm;
   }
 
@@ -72,13 +88,13 @@ class Player {
 
   setSortCooldown(sortKey, cooldown) {
     // Only set cooldown if the spell has one defined
-    if (SORTS[sortKey] && SORTS[sortKey].cooldown > 0) {
+    if (this.sorts[sortKey] && this.sorts[sortKey].cooldown > 0) {
       this.sortCooldowns[sortKey] = cooldown;
     }
   }
 
   resetAllCooldowns() {
-    this.sorts.forEach(sortKey => {
+    Object.keys(this.sorts).forEach(sortKey => {
       this.sortCooldowns[sortKey] = 0;
     });
   }
@@ -139,7 +155,14 @@ class Player {
       case 'HEAL_OVER_TIME':
         this.increaseHP(effect.value);
         break;
-      // Add other effect types as needed
+      case 'BUFF':
+        if (effect.pa_bonus) this.pa += effect.pa_bonus;
+        if (effect.pm_bonus) this.pm += effect.pm_bonus;
+        break;
+      case 'DEBUFF':
+        if (effect.pa_reduction) this.pa = Math.max(0, this.pa - effect.pa_reduction);
+        if (effect.pm_reduction) this.pm = Math.max(0, this.pm - effect.pm_reduction);
+        break;
     }
   }
 
@@ -149,7 +172,7 @@ class Player {
   }
 
   canUseSort(sortKey) {
-    const sort = SORTS[sortKey];
+    const sort = this.sorts[sortKey];
     if (!sort) return false;
     
     return (

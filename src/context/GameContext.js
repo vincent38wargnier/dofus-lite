@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
 import BoardEngine from '../components/Board/BoardEngine';
 import Player from '../components/Player/Player';
-import { BOARD_CONFIG, GAME_STATUS, SORTS } from '../utils/constants';
+import { BOARD_CONFIG } from '../constants/game/board';
+import { GAME_STATUS } from '../constants/game/status';
+import { CLASSES } from '../constants/classes';
 import { calculateSortEffects, applyEffects } from '../utils/gameLogic';
 
 const GameContext = createContext();
@@ -115,6 +117,10 @@ export function GameProvider({ children }) {
     const currentPlayer = state.currentPlayer;
     if (!currentPlayer.canUseSort(sort.key)) return;
 
+    // Get the spell details from the player's sorts
+    const spellDetails = currentPlayer.getSorts()[sort.key];
+    if (!spellDetails) return;
+
     // Only apply cooldown and PA cost after successful cast
     let castSuccessful = false;
 
@@ -167,8 +173,8 @@ export function GameProvider({ children }) {
       // Reduce PA and put spell on cooldown only if cast was successful
       currentPlayer.reducePA(sort.cost);
       // Only set cooldown if spell has one
-      if (SORTS[sort.key].cooldown > 0) {
-        currentPlayer.setSortCooldown(sort.key, SORTS[sort.key].cooldown);
+      if (spellDetails.cooldown > 0) {
+        currentPlayer.setSortCooldown(sort.key, spellDetails.cooldown);
       }
 
       // Update game state

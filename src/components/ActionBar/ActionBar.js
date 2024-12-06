@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGame } from '../../context/GameContext';
 import { Sword, Shield, Move, Target, Skull, HeartPulse } from 'lucide-react';
-import { CLASSES, SORTS } from '../../utils/constants';
+import { CLASSES } from '../../constants/classes';
 import './ActionBar.css';
 
 const ActionBar = () => {
@@ -32,13 +32,13 @@ const ActionBar = () => {
   const hp = currentPlayer.getHP();
   const maxHp = currentPlayer.maxHp;
   const pa = currentPlayer.getPA();
-  const maxPa = CLASSES[currentPlayer.class].basePA;
+  const maxPa = CLASSES[currentPlayer.class].characteristics.basePA;
   const pm = currentPlayer.getPM();
-  const maxPm = CLASSES[currentPlayer.class].basePM;
+  const maxPm = CLASSES[currentPlayer.class].characteristics.basePM;
   const sorts = currentPlayer.getSorts();
 
   const handleSpellSelect = (sortKey) => {
-    const spell = SORTS[sortKey];
+    const spell = sorts[sortKey];
     actions.selectAction({
       type: 'CAST_SORT',
       sort: {
@@ -85,8 +85,7 @@ const ActionBar = () => {
       </div>
 
       <div className="spells-grid">
-        {sorts.map((sortKey) => {
-          const spell = SORTS[sortKey];
+        {Object.entries(sorts).map(([sortKey, spell]) => {
           const cooldown = currentPlayer.getSortCooldown(sortKey);
           const isUsable = currentPlayer.canUseSort(sortKey);
           
@@ -96,12 +95,15 @@ const ActionBar = () => {
               className={`spell-button ${!isUsable ? 'disabled' : ''}`}
               onClick={() => isUsable && handleSpellSelect(sortKey)}
               disabled={!isUsable}
+              title={`${spell.name}: ${spell.description}\n\nRange: ${spell.range} cells\nCooldown: ${spell.cooldown} turns`}
             >
               {getSpellIcon(sortKey, spell.type)}
-              <div className="spell-name">{spell.name}</div>
-              <div className="spell-cost">
-                {spell.cost} PA
-                {cooldown > 0 && ` (${cooldown})`}
+              <div className="spell-info">
+                <div className="spell-name">{spell.name}</div>
+                <div className="spell-cost">
+                  {spell.cost} PA
+                  {cooldown > 0 && ` (${cooldown})`}
+                </div>
               </div>
             </button>
           );

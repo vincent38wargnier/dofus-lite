@@ -1,4 +1,5 @@
-import { CELL_TYPES, BOARD_CONFIG } from '../../utils/constants';
+import { CELL_TYPES } from '../../constants/game/mechanics';
+import { BOARD_CONFIG } from '../../constants/game/board';
 
 export class BoardEngine {
   constructor(width = BOARD_CONFIG.DEFAULT_SIZE.columns, height = BOARD_CONFIG.DEFAULT_SIZE.rows) {
