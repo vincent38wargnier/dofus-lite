@@ -35,6 +35,7 @@ const Cell = ({
     if (!cell.occupant) return null;
 
     const isCurrentPlayer = cell.occupant === currentPlayer;
+    const hpPercentage = (cell.occupant.getHP() / cell.occupant.maxHp) * 100;
     
     return (
       <Tooltip content={getOccupantTooltip(cell.occupant)}>
@@ -44,7 +45,14 @@ const Cell = ({
             occupant-${cell.occupant.class.toLowerCase()}
             ${isCurrentPlayer ? 'current-player' : ''}
           `}
-        />
+        >
+          <div className="hp-bar-mini">
+            <div 
+              className="hp-fill-mini" 
+              style={{ width: `${hpPercentage}%` }} 
+            />
+          </div>
+        </div>
       </Tooltip>
     );
   };

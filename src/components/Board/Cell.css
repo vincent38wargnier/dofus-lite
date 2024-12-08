@@ -16,7 +16,6 @@
   z-index: 2;
 }
 
-/* Cell states */
 .cell-highlighted {
   background: rgba(46, 204, 113, 0.3);
   border: 2px solid #2ecc71;
@@ -55,19 +54,40 @@
     0 0 15px rgba(52, 152, 219, 0.3);
 }
 
-/* Player representation */
 .cell-occupant {
-  position: absolute;
-  font-size: 2rem;
-  z-index: 3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
   height: 100%;
-  pointer-events: none;
-  top: 0;
-  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.cell-occupant::after {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 3px 2px rgba(255, 255, 255, 0.4));
+}
+
+.cell-occupant.current-player::after {
+  filter: drop-shadow(0 3px 3px rgba(255, 255, 255, 0.7));
+}
+
+.hp-bar-mini {
+  width: 70%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+  overflow: hidden;
+  position: absolute;
+  bottom: 8px;
+}
+
+.hp-fill-mini {
+  height: 100%;
+  background: #ef4444;
+  transition: width 0.3s ease;
 }
 
 .moving-character {
@@ -92,7 +112,6 @@
   animation: pulsate 2s infinite;
 }
 
-/* Character class styles */
 .occupant-warrior::after {
   content: "⚔️";
 }
@@ -105,7 +124,6 @@
   content: "🧙";
 }
 
-/* Path step number */
 .path-step {
   position: absolute;
   font-size: 0.8rem;
@@ -113,7 +131,6 @@
   color: #2c3e50;
 }
 
-/* Animations */
 @keyframes bounceIn {
   0% { transform: scale(0); }
   50% { transform: scale(1.2); }
