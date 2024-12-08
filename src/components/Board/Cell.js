@@ -43,7 +43,7 @@ const Cell = ({
           className={`
             cell-occupant 
             occupant-${cell.occupant.class.toLowerCase()}
-            ${isCurrentPlayer ? 'current-player' : ''}
+            ${isCurrentPlayer ? 'active-player' : ''}
           `}
         >
           <div className="hp-bar-mini">
