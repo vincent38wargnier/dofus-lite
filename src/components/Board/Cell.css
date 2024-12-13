@@ -135,3 +135,21 @@
 .board-grid {
   position: relative;
 }
+
+.cell-obstacle {
+  cursor: not-allowed;
+}
+
+.cell-obstacle:hover {
+  transform: none;
+}
+
+.cell-obstacle.cell-in-range {
+  background: rgba(231, 76, 60, 0.3);
+  border: 2px solid #e74c3c;
+}
+
+.cell-obstacle.cell-highlighted {
+  background: rgba(231, 76, 60, 0.3);
+  border: 2px solid #e74c3c;
+}

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
 import BoardEngine from '../components/Board/BoardEngine';
 import Player from '../components/Player/Player';
-import { BOARD_CONFIG } from '../constants/game/board';
+import { BOARD_CONFIG, OBSTACLE_TYPES } from '../constants/game/board';
 import { GAME_STATUS } from '../constants/game/status';
 import { CLASSES } from '../constants/classes';
 import { calculateSortEffects, applyEffects } from '../utils/gameLogic';
@@ -92,6 +92,32 @@ export function GameProvider({ children }) {
 
     players.forEach((player, index) => {
       board.placePlayer(player, startPositions[index].x, startPositions[index].y);
+    });
+
+    // Add obstacles
+    const obstacles = [
+      // Center walls
+      { type: 'WALL', x: Math.floor(board.width / 2), y: Math.floor(board.height / 2) },
+      { type: 'WALL', x: Math.floor(board.width / 2), y: Math.floor(board.height / 2) - 1 },
+      { type: 'WALL', x: Math.floor(board.width / 2), y: Math.floor(board.height / 2) + 1 },
+      
+      // Bushes near corners
+      { type: 'BUSH', x: 2, y: 2 },
+      { type: 'BUSH', x: board.width - 3, y: 2 },
+      { type: 'BUSH', x: 2, y: board.height - 3 },
+      { type: 'BUSH', x: board.width - 3, y: board.height - 3 },
+      
+      // Rocks in strategic positions
+      { type: 'ROCK', x: Math.floor(board.width / 2) - 3, y: Math.floor(board.height / 2) },
+      { type: 'ROCK', x: Math.floor(board.width / 2) + 3, y: Math.floor(board.height / 2) },
+      
+      // Additional walls for cover
+      { type: 'WALL', x: Math.floor(board.width / 4), y: Math.floor(board.height / 4) },
+      { type: 'WALL', x: Math.floor(board.width * 3 / 4), y: Math.floor(board.height * 3 / 4) }
+    ];
+
+    obstacles.forEach(({ type, x, y }) => {
+      board.placeObstacle({ type, ...OBSTACLE_TYPES[type] }, x, y);
     });
 
     players[0].startTurn();

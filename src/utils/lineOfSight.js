@@ -36,12 +36,20 @@ export class LineOfSight {
     // Get all points along the line
     const points = this.getLine(start, end);
     
-    // Remove start and end points from check
+    // Remove start point from check
     points.shift(); // Remove start
-    if (points.length > 0) points.pop(); // Remove end
 
-    // Check if any point blocks line of sight
-    return !points.some(point => board.blocksLineOfSight(point.x, point.y));
+    // Check each point along the line for obstacles
+    for (const point of points) {
+      if (board.blocksLineOfSight(point.x, point.y)) {
+        return false;
+      }
+      // If we reach the end point, we have line of sight
+      if (point.x === end.x && point.y === end.y) {
+        return true;
+      }
+    }
+    return true;
   }
 
   static calculateDistance(pos1, pos2) {
@@ -145,44 +153,33 @@ export class LineOfSight {
     const pattern = spell.pattern || 'SINGLE';
     const patternSize = spell.pattern_size || 0;
     
-    // For single target spells or patterns that need center point checks
-    if (pattern === 'SINGLE' || pattern === 'CIRCLE' || pattern === 'DIAMOND') {
-      // Check all possible center points
-      for (let x = Math.max(0, position.x - maxRange); x <= Math.min(board.width - 1, position.x + maxRange); x++) {
-        for (let y = Math.max(0, position.y - maxRange); y <= Math.min(board.height - 1, position.y + maxRange); y++) {
-          const target = { x, y };
-          
-          // Check if the center point is in range and has line of sight
-          if (this.isInSpellRange(position, target, minRange, maxRange) && 
-              this.hasLineOfSight(position, target, board)) {
-            // Get and validate each cell in the pattern
+    // For each cell within the maximum possible range
+    for (let x = Math.max(0, position.x - maxRange - patternSize); 
+         x <= Math.min(board.width - 1, position.x + maxRange + patternSize); x++) {
+      for (let y = Math.max(0, position.y - maxRange - patternSize); 
+           y <= Math.min(board.height - 1, position.y + maxRange + patternSize); y++) {
+        const target = { x, y };
+        const distance = this.calculateDistance(position, target);
+        
+        // Check if the cell is within spell range
+        if (distance >= minRange && distance <= maxRange) {
+          // Check line of sight to the target cell
+          if (this.hasLineOfSight(position, target, board)) {
+            // For pattern spells, check each cell in the pattern
             const patternCells = this.getPatternCells(target, pattern, patternSize);
             patternCells.forEach(cellKey => {
               const [cellX, cellY] = cellKey.split(',').map(Number);
-              if (board.isWithinBounds(cellX, cellY) && this.hasLineOfSight(position, {x: cellX, y: cellY}, board)) {
-                visibleCells.add(cellKey);
-              }
-            });
-          }
-        }
-      }
-    } else {
-      // For directional patterns (LINE, CONE), check from edges inward
-      const extendedRange = maxRange + patternSize;
-      for (let x = Math.max(0, position.x - extendedRange); x <= Math.min(board.width - 1, position.x + extendedRange); x++) {
-        for (let y = Math.max(0, position.y - extendedRange); y <= Math.min(board.height - 1, position.y + extendedRange); y++) {
-          const target = { x, y };
-          const distance = this.calculateDistance(position, target);
-          
-          if (distance <= extendedRange && this.hasLineOfSight(position, target, board)) {
-            const patternCells = this.getPatternCells(target, pattern, patternSize);
-            patternCells.forEach(cellKey => {
-              const [cellX, cellY] = cellKey.split(',').map(Number);
-              // Validate each cell in the pattern is within actual spell range
-              if (board.isWithinBounds(cellX, cellY) && 
-                  this.isInSpellRange(position, {x: cellX, y: cellY}, minRange, maxRange) && 
-                  this.hasLineOfSight(position, {x: cellX, y: cellY}, board)) {
-                visibleCells.add(cellKey);
+              
+              // Validate each pattern cell
+              if (board.isWithinBounds(cellX, cellY)) {
+                // For pattern cells, we need line of sight from both:
+                // 1. Caster to target center
+                // 2. Target center to pattern cell
+                if (pattern === 'SINGLE' || 
+                    (this.hasLineOfSight(target, { x: cellX, y: cellY }, board) &&
+                     this.hasLineOfSight(position, { x: cellX, y: cellY }, board))) {
+                  visibleCells.add(cellKey);
+                }
               }
             });
           }

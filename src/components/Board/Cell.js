@@ -1,6 +1,7 @@
 import React from 'react';
 import { useGame } from '../../context/GameContext';
 import Tooltip from '../Common/Tooltip';
+import Obstacle from './Obstacle';
 import './Cell.css';
 
 const Cell = ({ 
@@ -27,6 +28,7 @@ const Cell = ({
     if (isInPath) classNames.push('cell-path');
     if (isInRange) classNames.push('cell-in-range');
     if (cell.occupant) classNames.push('cell-occupied');
+    if (cell.obstacle) classNames.push('cell-obstacle');
 
     return classNames.join(' ');
   };
@@ -55,6 +57,11 @@ const Cell = ({
         </div>
       </Tooltip>
     );
+  };
+
+  const renderObstacle = () => {
+    if (!cell.obstacle) return null;
+    return <Obstacle type={cell.obstacle.type} />;
   };
 
   const getOccupantTooltip = (occupant) => (
@@ -93,7 +100,11 @@ const Cell = ({
       data-x={x}
       data-y={y}
     >
+      {renderObstacle()}
       {renderOccupant()}
+      {isInPath && pathStep !== null && (
+        <div className="path-step">{pathStep + 1}</div>
+      )}
     </div>
   );
 };
