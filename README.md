@@ -71,7 +71,7 @@ dofus-lite/
     │   │       └── OutcomePredictor.js    ❌
     │   ├── Sorts/                    # Spell system
     │   │   ├── Sort.js            ✅ Spell implementation
-    │   │   └── SortList.js        ✅ Spell UI management
+    │   │   ���── SortList.js        ✅ Spell UI management
     │   ├── UI/                       # User interface
     │   │   ├── Header.js          ✅ Game header
     │   │   ├── Footer.js          ✅ Game footer
@@ -92,7 +92,7 @@ dofus-lite/
     │   ├── pathfinding.js        ✅ NEW - Movement algorithms
     │   ├── combat.js             ✅ NEW - Combat system
     │   ├── movement.js           ✅ NEW - Movement logic
-    │   ├── turnManager.js        ✅ NEW - Turn management
+    │   ���── turnManager.js        ✅ NEW - Turn management
     │   ├── lineOfSight.js        ✅ NEW - LOS calculations
     │   └── constants.js          ✅ Game constants
     ├── styles/                     ✅ NEW - Global styles
@@ -151,7 +151,34 @@ dofus-lite/
    - Tutorial system
    - Online multiplayer
 
-[Rest of the README remains the same with Character Classes, Game Mechanics Details, etc.]
+### Obstacle System
+- Types of obstacles:
+  - Static obstacles: Permanent map features that cannot be modified
+  - Dynamic obstacles: Can be created or destroyed during gameplay
+  - Temporary obstacles: Created by spells or abilities, lasting for specific durations
+
+- Obstacle Properties
+  - Movement blocking: Prevents players from moving through or occupying the space
+  - Line of sight blocking: Affects spell targeting and visibility
+  - Spell interaction: Some obstacles may be affected by specific spells
+  - Damage properties: Some obstacles might deal damage or apply effects
+
+- Placement Rules
+  - Cannot be placed on occupied cells
+  - Must respect map boundaries
+  - May have specific placement patterns or restrictions
+  - Strategic positioning for tactical advantage
+
+- Game Mechanics Integration
+  - Pathfinding takes obstacles into account
+  - Spells check for obstacle interference
+  - Line of sight calculations consider obstacle positions
+  - Movement validation includes obstacle detection
+
+- Map Design
+  - Pre-placed obstacles for map structure
+  - Strategic obstacle placement for gameplay variety
+  - Balance between open spaces and obstacle-rich areas
 
 ## Getting Started
 
