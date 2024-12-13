@@ -40,7 +40,7 @@ dofus-lite/
     │   │   ├── BoardInteractionManager.js ✅ NEW - User interaction
     │   │   ├── Board.css          ✅ NEW - Board styling
     │   │   ├── Cell.css           ✅ NEW - Cell styling
-    │   │   ├── Obstacle.js        ❌ Obstacle management
+    │   │   ├── Obstacle.js        ✅ Obstacle management
     │   │   ├── MovementManager.js  ✅ Movement calculations
     │   │   ├── ActionValidator.js  ❌ Action validation
     │   │   ├── LOSCalculator.js   ✅ NEW - Line of sight system
