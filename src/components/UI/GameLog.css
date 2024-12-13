@@ -4,11 +4,11 @@
   border: 1px solid #374151;
   border-radius: 8px;
   margin-top: 16px;
-  height: 300px;
+  height: 200px;
 }
 
 .game-log::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 .game-log::-webkit-scrollbar-track {
@@ -27,24 +27,34 @@
 
 .game-log-header {
   background-color: rgba(31, 41, 55, 0.95);
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-bottom: 1px solid #374151;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
 
 .game-log-content {
-  padding: 12px;
-  height: calc(100% - 45px);
+  padding: 8px;
+  height: calc(100% - 33px);
   overflow-y: auto;
 }
 
 .log-entry {
-  padding: 4px 8px;
+  padding: 2px 6px;
   border-radius: 4px;
   transition: background-color 0.2s;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  margin-bottom: 2px;
 }
 
 .log-entry:hover {
   background-color: rgba(55, 65, 81, 0.5);
+}
+
+.log-entry.turn-marker {
+  color: #60a5fa;
+  font-weight: 600;
+  border-top: 1px solid rgba(96, 165, 250, 0.2);
+  margin-top: 4px;
 } 

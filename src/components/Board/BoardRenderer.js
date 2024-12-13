@@ -4,6 +4,7 @@ import { LineOfSight } from '../../utils/lineOfSight';
 import BoardGrid from './components/BoardGrid';
 import useBoardInteraction from './hooks/useBoardInteraction';
 import './Board.css';
+import FloatingCombatManager from '../UI/FloatingCombatManager';
 
 const BoardRenderer = () => {
   const { state, actions } = useGame();
@@ -65,19 +66,22 @@ const BoardRenderer = () => {
   };
 
   return (
-    <div className="board-container">
-      <BoardGrid
-        board={board}
-        currentPath={currentPath}
-        selectedAction={selectedAction}
-        rangedCells={rangedCells}
-        patternCells={patternCells}
-        movingCharacterClass={movingCharacterClass}
-        animationStyle={animationStyle}
-        onCellHover={handleCellHover}
-        onCellLeave={handleCellLeave}
-        onCellClick={handleCellClick}
-      />
+    <div className="relative">
+      <div className="board-container">
+        <BoardGrid
+          board={board}
+          currentPath={currentPath}
+          selectedAction={selectedAction}
+          rangedCells={rangedCells}
+          patternCells={patternCells}
+          movingCharacterClass={movingCharacterClass}
+          animationStyle={animationStyle}
+          onCellHover={handleCellHover}
+          onCellLeave={handleCellLeave}
+          onCellClick={handleCellClick}
+        />
+      </div>
+      <FloatingCombatManager />
     </div>
   );
 };

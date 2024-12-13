@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useGame } from '../../context/GameContext';
 import Tooltip from '../Common/Tooltip';
 import Obstacle from './Obstacle';
@@ -19,6 +19,17 @@ const Cell = ({
 }) => {
   const { state } = useGame();
   const { currentPlayer } = state;
+  const cellRef = useRef(null);
+
+  // Update player screen position when cell position or content changes
+  useEffect(() => {
+    if (cell.occupant && cellRef.current) {
+      const rect = cellRef.current.getBoundingClientRect();
+      const centerX = rect.left + (rect.width / 2);
+      const characterTop = rect.top + (rect.height * 0.2);
+      cell.occupant.updatePosition(x, y, centerX, characterTop);
+    }
+  }, [x, y, cell.occupant]);
 
   const getClassNames = () => {
     let classNames = ['cell'];
@@ -79,24 +90,13 @@ const Cell = ({
     </div>
   );
 
-  const handleMouseEnter = () => {
-    if (onMouseEnter) onMouseEnter(x, y);
-  };
-
-  const handleMouseLeave = () => {
-    if (onMouseLeave) onMouseLeave(x, y);
-  };
-
-  const handleClick = () => {
-    if (onClick) onClick(x, y);
-  };
-
   return (
     <div 
+      ref={cellRef}
       className={getClassNames()}
-      onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       data-x={x}
       data-y={y}
     >
@@ -109,4 +109,4 @@ const Cell = ({
   );
 };
 
-export default React.memo(Cell);
+export default Cell;

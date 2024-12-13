@@ -1,0 +1,22 @@
+.floating-number {
+  position: absolute;
+  pointer-events: none;
+  animation: fade 1.5s ease-out forwards;
+  font-weight: bold;
+  font-size: 1.2em;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -60px);
+  white-space: nowrap;
+}
+
+.floating-number.damage { color: #ff4444; }
+.floating-number.heal { color: #44ff44; }
+.floating-number.pa { color: #3498db; }
+.floating-number.pm { color: #2ecc71; }
+
+@keyframes fade {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+} 

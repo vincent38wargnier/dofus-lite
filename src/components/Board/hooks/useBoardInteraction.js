@@ -85,6 +85,14 @@ export const useBoardInteraction = (board, currentPlayer, selectedAction, action
         const startCell = board.getCell(playerPos.x, playerPos.y);
         board.setCell(playerPos.x, playerPos.y, { ...startCell, occupant: null });
         board.setCell(x, y, { ...targetCell, occupant: currentPlayer });
+        
+        const targetElement = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+        if (targetElement) {
+          const rect = targetElement.getBoundingClientRect();
+          const centerX = rect.left + (rect.width / 2);
+          const characterTop = rect.top + (rect.height * 0.2);
+          currentPlayer.updatePosition(x, y, centerX, characterTop);
+        }
       }
       
       await actions.castSort(selectedAction.sort, targetCell.occupant, targetPos);
@@ -98,6 +106,16 @@ export const useBoardInteraction = (board, currentPlayer, selectedAction, action
       if (cost <= currentPlayer.getPM()) {
         setIsMoving(true);
         await animateAlongPath(path);
+        
+        const finalPos = path[path.length - 1];
+        const finalElement = document.querySelector(`[data-x="${finalPos.x}"][data-y="${finalPos.y}"]`);
+        if (finalElement) {
+          const rect = finalElement.getBoundingClientRect();
+          const centerX = rect.left + (rect.width / 2);
+          const characterTop = rect.top + (rect.height * 0.2);
+          currentPlayer.updatePosition(finalPos.x, finalPos.y, centerX, characterTop);
+        }
+        
         currentPlayer.reducePM(cost);
         setIsMoving(false);
         setCurrentPath([]);
