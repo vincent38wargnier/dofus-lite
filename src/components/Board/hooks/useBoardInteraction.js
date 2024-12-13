@@ -71,13 +71,15 @@ export const useBoardInteraction = (board, currentPlayer, selectedAction, action
   const handleCellClick = async (x, y) => {
     if (!currentPlayer || isMoving) return;
 
+    const targetCell = board.getCell(x, y);
+
+    // Handle spell casting (either from direct click or AI keyboard)
     if (selectedAction?.type === 'CAST_SORT') {
       if (!isCellInRange(x, y)) {
         actions.selectAction(null);
         return;
       }
 
-      const targetCell = board.getCell(x, y);
       const targetPos = { x, y };
       
       if (selectedAction.sort.type === 'MOVEMENT') {
@@ -100,6 +102,23 @@ export const useBoardInteraction = (board, currentPlayer, selectedAction, action
       return;
     }
 
+    // Handle movement
+    if (targetCell.occupant === currentPlayer) {
+      // If clicking on current player, start showing movement options
+      const playerPos = board.findPlayerPosition(currentPlayer);
+      const path = findPath(
+        board,
+        playerPos.x,
+        playerPos.y,
+        x,
+        y,
+        currentPlayer.getPM()
+      );
+      setCurrentPath(path || []);
+      return;
+    }
+
+    // Execute movement if there's a valid path
     const path = currentPath;
     if (path && path.length > 0) {
       const cost = path.length - 1;

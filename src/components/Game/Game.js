@@ -6,8 +6,12 @@ import ActionBar from '../ActionBar/ActionBar';
 import Header from '../UI/Header';
 import Footer from '../UI/Footer';
 import GameLog from '../UI/GameLog';
+import AIDebugDashboard from '../AI/AIDebugDashboard';
+import { useGame } from '../../context/GameContext';
 
 export function Game() {
+  const { state, actions } = useGame();
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -25,13 +29,14 @@ export function Game() {
         </div>
 
         {/* Right sidebar - AI Controls */}
-        <div className="w-[300px] flex flex-col">
+        <div className="w-[300px] flex flex-col space-y-4">
           <AIDashboard />
-          <GameLog />
+          <AIDebugDashboard gameState={state} actions={actions} />
         </div>
       </main>
 
       <Footer />
+      <GameLog />
     </div>
   );
 } 

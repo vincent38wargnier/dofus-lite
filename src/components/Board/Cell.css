@@ -153,3 +153,13 @@
   background: rgba(231, 76, 60, 0.3);
   border: 2px solid #e74c3c;
 }
+
+.cell-coordinates {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+  z-index: 1;
+}

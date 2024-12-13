@@ -100,6 +100,7 @@ const Cell = ({
       data-x={x}
       data-y={y}
     >
+      <div className="cell-coordinates">{x},{y}</div>
       {renderObstacle()}
       {renderOccupant()}
       {isInPath && pathStep !== null && (

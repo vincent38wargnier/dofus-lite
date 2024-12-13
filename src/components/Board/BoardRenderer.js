@@ -3,14 +3,19 @@ import { useGame } from '../../context/GameContext';
 import { LineOfSight } from '../../utils/lineOfSight';
 import BoardGrid from './components/BoardGrid';
 import useBoardInteraction from './hooks/useBoardInteraction';
-import './Board.css';
 import FloatingCombatManager from '../UI/FloatingCombatManager';
+import AIEngine from '../../ai/AIEngine';
+import './Board.css';
 
 const BoardRenderer = () => {
   const { state, actions } = useGame();
   const { board, currentPlayer, selectedAction } = state;
   const [rangedCells, setRangedCells] = useState(new Set());
   const [patternCells, setPatternCells] = useState(new Set());
+  const [isAIThinking, setIsAIThinking] = useState(false);
+
+  // Initialize AI Engine
+  const aiEngine = React.useMemo(() => new AIEngine(), []);
 
   // Effect to update ranged cells when a spell is selected
   useEffect(() => {
@@ -39,7 +44,6 @@ const BoardRenderer = () => {
     handleCellClick
   } = useBoardInteraction(board, currentPlayer, selectedAction, actions, rangedCells);
 
-  // Combine movement and spell pattern previews
   const handleCellHover = (x, y) => {
     baseHandleCellHover(x, y);
     
@@ -65,8 +69,28 @@ const BoardRenderer = () => {
     setPatternCells(new Set());
   };
 
+  // Expose the handlers through actions
+  React.useEffect(() => {
+    actions.handleCellHover = handleCellHover;
+    actions.handleCellLeave = handleCellLeave;
+    actions.handleCellClick = handleCellClick;
+  }, [actions, handleCellHover, handleCellLeave, handleCellClick]);
+
+  const handleAITurn = async () => {
+    if (isAIThinking || !currentPlayer) return;
+    
+    setIsAIThinking(true);
+    try {
+      aiEngine.initialize(state, actions);
+      await aiEngine.playTurn();
+    } catch (error) {
+      console.error('AI Error:', error);
+    }
+    setIsAIThinking(false);
+  };
+
   return (
-    <div className="relative">
+    <div className="relative flex flex-col items-center">
       <div className="board-container">
         <BoardGrid
           board={board}
@@ -82,6 +106,15 @@ const BoardRenderer = () => {
         />
       </div>
       <FloatingCombatManager />
+      
+      {/* AI Control Button */}
+      <button
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400"
+        onClick={handleAITurn}
+        disabled={isAIThinking || !currentPlayer}
+      >
+        {isAIThinking ? 'AI Thinking...' : 'Trigger AI Turn'}
+      </button>
     </div>
   );
 };
