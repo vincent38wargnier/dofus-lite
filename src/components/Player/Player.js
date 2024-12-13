@@ -2,6 +2,7 @@ import { CLASSES } from '../../constants/classes';
 import { WARRIOR_SORTS } from '../../constants/sorts/warriorSorts';
 import { MAGE_SORTS } from '../../constants/sorts/mageSorts';
 import { ARCHER_SORTS } from '../../constants/sorts/archerSorts';
+import EventEmitter from 'events';
 
 // Map class types to their sorts
 const CLASS_SORTS = {
@@ -9,6 +10,8 @@ const CLASS_SORTS = {
   MAGE: MAGE_SORTS,
   ARCHER: ARCHER_SORTS
 };
+
+const gameLogger = new EventEmitter();
 
 class Player {
   constructor(name, classType) {
@@ -32,6 +35,9 @@ class Player {
     
     // Initialize all cooldowns to 0
     this.resetAllCooldowns();
+    
+    // Log player creation
+    gameLogger.emit('log', `${name} (${classType}) enters the battle!`);
   }
 
   // Health Points Management
@@ -41,11 +47,13 @@ class Player {
 
   reduceHP(amount) {
     this.hp = Math.max(0, this.hp - amount);
+    gameLogger.emit('log', `${this.name} takes ${amount} damage. HP: ${this.hp}/${this.maxHp}`);
     return this.hp;
   }
 
   increaseHP(amount) {
     this.hp = Math.min(this.maxHp, this.hp + amount);
+    gameLogger.emit('log', `${this.name} heals for ${amount}. HP: ${this.hp}/${this.maxHp}`);
     return this.hp;
   }
 
@@ -125,6 +133,7 @@ class Player {
   addStatusEffect(effect) {
     if (!effect.duration) effect.duration = 1;
     this.statusEffects.push(effect);
+    gameLogger.emit('log', `${this.name} gains effect: ${effect.name}`);
   }
 
   removeStatusEffect(effectId) {
@@ -171,11 +180,19 @@ class Player {
     const sort = this.sorts[sortKey];
     if (!sort) return false;
     
-    return (
-      this.getSortCooldown(sortKey) === 0 && // Sort is not on cooldown
-      this.getPA() >= sort.cost // Player has enough PA
-    );
+    const canUse = this.getSortCooldown(sortKey) === 0 && this.getPA() >= sort.cost;
+    
+    if (!canUse) {
+      if (this.getSortCooldown(sortKey) > 0) {
+        gameLogger.emit('log', `${this.name} cannot use ${sort.name} - On cooldown: ${this.getSortCooldown(sortKey)} turns`);
+      } else if (this.getPA() < sort.cost) {
+        gameLogger.emit('log', `${this.name} cannot use ${sort.name} - Not enough PA`);
+      }
+    }
+    
+    return canUse;
   }
 }
 
+export { gameLogger };
 export default Player;

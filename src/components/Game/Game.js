@@ -5,6 +5,7 @@ import GameStatus from '../GameStatus/GameStatus';
 import ActionBar from '../ActionBar/ActionBar';
 import Header from '../UI/Header';
 import Footer from '../UI/Footer';
+import GameLog from '../UI/GameLog';
 
 export function Game() {
   return (
@@ -24,8 +25,9 @@ export function Game() {
         </div>
 
         {/* Right sidebar - AI Controls */}
-        <div className="w-[300px]">
+        <div className="w-[300px] flex flex-col">
           <AIDashboard />
+          <GameLog />
         </div>
       </main>
 

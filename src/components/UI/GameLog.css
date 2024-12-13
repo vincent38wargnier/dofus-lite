@@ -1,0 +1,50 @@
+.game-log {
+  width: 300px;
+  background-color: rgba(17, 24, 39, 0.95);
+  border: 1px solid #374151;
+  border-radius: 8px;
+  margin-top: 16px;
+  height: 300px;
+}
+
+.game-log::-webkit-scrollbar {
+  width: 8px;
+}
+
+.game-log::-webkit-scrollbar-track {
+  background: #1f2937;
+  border-radius: 4px;
+}
+
+.game-log::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
+
+.game-log::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+.game-log-header {
+  background-color: rgba(31, 41, 55, 0.95);
+  padding: 8px 12px;
+  border-bottom: 1px solid #374151;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.game-log-content {
+  padding: 12px;
+  height: calc(100% - 45px);
+  overflow-y: auto;
+}
+
+.log-entry {
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.log-entry:hover {
+  background-color: rgba(55, 65, 81, 0.5);
+} 
