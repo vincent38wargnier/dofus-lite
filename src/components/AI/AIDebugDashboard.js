@@ -76,7 +76,7 @@ const AIDebugDashboard = ({ gameState, actions }) => {
   };
 
   // Action Functions
-  const handleMove = () => {
+  const handleCellClick = () => {
     if (!targetX || !targetY) {
       console.error('Please enter target coordinates');
       return;
@@ -99,6 +99,10 @@ const AIDebugDashboard = ({ gameState, actions }) => {
     }
     const currentPlayer = gameState.currentPlayer;
     const spell = currentPlayer.getSorts()[selectedSpell];
+    if (!currentPlayer.canUseSort(selectedSpell)) {
+      console.error('Spell is not usable (cooldown or not enough PA)');
+      return;
+    }
     actions.selectAction({
       type: 'CAST_SORT',
       sort: {
@@ -108,15 +112,10 @@ const AIDebugDashboard = ({ gameState, actions }) => {
     });
   };
 
-  const handleCastSpell = () => {
-    if (!targetX || !targetY || !selectedSpell) {
-      console.error('Please enter target coordinates and select a spell');
-      return;
-    }
-    const currentPlayer = gameState.currentPlayer;
-    const spell = currentPlayer.getSorts()[selectedSpell];
-    const target = { x: parseInt(targetX), y: parseInt(targetY) };
-    actions.castSort(spell, target);
+  const handleSpellChange = (spellKey) => {
+    setSelectedSpell(spellKey);
+    // Clear any previous spell selection
+    actions.selectAction(null);
   };
 
   const handleEndTurn = () => {
@@ -174,6 +173,12 @@ const AIDebugDashboard = ({ gameState, actions }) => {
             placeholder="Y"
             className="w-20 px-2 py-1 rounded"
           />
+          <button 
+            className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+            onClick={handleCellClick}
+          >
+            Click Cell
+          </button>
         </div>
       </div>
 
@@ -182,7 +187,7 @@ const AIDebugDashboard = ({ gameState, actions }) => {
         <h4 className="text-white font-bold mb-2">Spell Selection</h4>
         <select
           value={selectedSpell}
-          onChange={(e) => setSelectedSpell(e.target.value)}
+          onChange={(e) => handleSpellChange(e.target.value)}
           className="w-full px-2 py-1 rounded"
         >
           <option value="">Select a spell</option>
@@ -198,14 +203,8 @@ const AIDebugDashboard = ({ gameState, actions }) => {
       <div className="mb-6">
         <h4 className="text-white font-bold mb-2">Actions</h4>
         <div className="grid grid-cols-2 gap-2">
-          <button className="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600" onClick={handleMove}>
-            Move to Target
-          </button>
           <button className="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600" onClick={handleSelectSpell}>
             Select Spell
-          </button>
-          <button className="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600" onClick={handleCastSpell}>
-            Cast at Target
           </button>
           <button className="bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600" onClick={handleEndTurn}>
             End Turn
