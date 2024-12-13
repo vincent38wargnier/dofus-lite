@@ -32,6 +32,8 @@ export class AIPlayerController {
         case ACTION_TYPES.END_TURN:
           result = await this.playerActions.endTurn();
           break;
+        default:
+          result = await this.playerActions.endTurn();
       }
 
       if (!result?.success) {

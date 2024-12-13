@@ -15,7 +15,7 @@ export class SimpleStrategy extends AIStrategy {
     const { moves, spells } = availableActions;
     
     // First try to cast spells if possible
-    if (spells.length > 0) {
+    if (spells && spells.length > 0) {
       const spell = spells[Math.floor(Math.random() * spells.length)];
       const target = spell.targets[Math.floor(Math.random() * spell.targets.length)];
       return new GameAction(ACTION_TYPES.SPELL, {
@@ -25,7 +25,7 @@ export class SimpleStrategy extends AIStrategy {
     }
     
     // Otherwise try to move
-    if (moves.length > 0) {
+    if (moves && moves.length > 0) {
       const position = moves[Math.floor(Math.random() * moves.length)];
       return new GameAction(ACTION_TYPES.MOVE, { position });
     }

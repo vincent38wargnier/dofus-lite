@@ -1,0 +1,5 @@
+export const PLAYER_ACTIONS = {
+  MOVE: 'MOVE',
+  CAST_SPELL: 'CAST_SPELL',
+  END_TURN: 'END_TURN'
+}; 
