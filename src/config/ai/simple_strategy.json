@@ -1,0 +1,36 @@
+{
+  "name": "Simple Strategy",
+  "version": "1.0",
+  "priorities": {
+    "attack": 0.7,
+    "defense": 0.3,
+    "positioning": 0.5
+  },
+  "rules": [
+    {
+      "condition": "health < 30%",
+      "action": "defensive_position",
+      "priority": 0.9
+    },
+    {
+      "condition": "enemy_in_range",
+      "action": "cast_damage_spell",
+      "priority": 0.8
+    },
+    {
+      "condition": "can_move_closer",
+      "action": "approach_enemy",
+      "priority": 0.6
+    }
+  ],
+  "positions": {
+    "defensive": {
+      "distance_from_enemy": "max",
+      "near_obstacle": true
+    },
+    "offensive": {
+      "distance_from_enemy": "min",
+      "near_obstacle": false
+    }
+  }
+} 

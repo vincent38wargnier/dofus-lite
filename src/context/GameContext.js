@@ -10,6 +10,7 @@ import { TurnManager } from '../components/Board/TurnManager';
 import { SimpleStrategy } from '../components/AI/strategies/SimpleStrategy';
 import { GameHistory } from '../game/GameHistory';
 import { GameStateSnapshot } from '../game/GameStateSnapshot';
+import { AIEngine } from '../components/AI/AIEngine';
 
 const GameContext = createContext();
 
@@ -76,6 +77,8 @@ export function GameProvider({ children }) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
   const turnManagerRef = useRef(new TurnManager());
   const gameHistory = useRef(new GameHistory());
+  const aiEngineRef = useRef(null);
+  const aiControllers = useRef(new Map());
 
   useEffect(() => {
     initializeDefaultGame();
@@ -345,8 +348,17 @@ export function GameProvider({ children }) {
   const assignAIControl = useCallback((playerId, aiStrategy) => {
     const controller = new AIPlayerController(aiStrategy);
     controller.initialize(playerId, playerActions(playerId));
+    
+    // Store the controller
+    aiControllers.current.set(playerId, controller);
     turnManagerRef.current.registerAIPlayer(playerId, controller);
   }, [playerActions]);
+
+  const removeAIControl = useCallback((playerId) => {
+    // Remove AI control from player
+    aiControllers.current.delete(playerId);
+    turnManagerRef.current.unregisterAIPlayer(playerId);
+  }, []);
 
   const executeAction = useCallback(async (action) => {
     const result = await state.board.executeAction(action);
@@ -370,6 +382,21 @@ export function GameProvider({ children }) {
     return gameHistory.current;
   }, []);
 
+  const initializeAI = useCallback((strategy) => {
+    aiEngineRef.current = new AIEngine(strategy);
+    aiEngineRef.current.enable();
+  }, []);
+
+  const disableAI = useCallback(() => {
+    if (aiEngineRef.current) {
+      aiEngineRef.current.disable();
+    }
+  }, []);
+
+  const getAIStatistics = useCallback(() => {
+    return aiEngineRef.current?.getStatistics() || null;
+  }, []);
+
   const value = {
     state,
     actions: {
@@ -384,8 +411,13 @@ export function GameProvider({ children }) {
       }),
       playerActions,
       assignAIControl,
+      removeAIControl,
       executeAction,
-      getGameHistory
+      getGameHistory,
+      initializeAI,
+      disableAI,
+      getAIStatistics,
+      isAIControlled: (playerId) => aiControllers.current.has(playerId)
     }
   };
 

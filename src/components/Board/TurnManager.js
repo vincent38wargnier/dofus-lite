@@ -2,26 +2,27 @@ import { AIPlayerController } from '../AI/AIPlayerController';
 
 export class TurnManager {
   constructor() {
-    this.players = new Map();
+    this.aiPlayers = new Map();
     this.turnStartListeners = new Set();
   }
 
+  registerAIPlayer(playerId, controller) {
+    this.aiPlayers.set(playerId, controller);
+  }
+
+  unregisterAIPlayer(playerId) {
+    this.aiPlayers.delete(playerId);
+  }
+
   async startTurn(playerId) {
-    const player = this.players.get(playerId);
-    
-    if (player instanceof AIPlayerController) {
-      await player.onTurnStart();
-    } else {
-      this.notifyTurnStart(playerId);
-    }
-  }
-
-  registerAIPlayer(playerId, aiController) {
-    this.players.set(playerId, aiController);
-  }
-
-  notifyTurnStart(playerId) {
+    // Notify listeners
     this.turnStartListeners.forEach(listener => listener(playerId));
+
+    // If AI controlled, execute AI turn
+    if (this.aiPlayers.has(playerId)) {
+      const controller = this.aiPlayers.get(playerId);
+      await controller.onTurnStart();
+    }
   }
 
   addTurnStartListener(listener) {

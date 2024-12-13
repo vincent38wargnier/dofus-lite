@@ -1,0 +1,86 @@
+.ai-dashboard {
+  background-color: #1f2937;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  color: white;
+}
+
+.ai-dashboard h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #60a5fa;
+}
+
+.ai-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #d1d5db;
+}
+
+.ai-select {
+  width: 100%;
+  background-color: #374151;
+  border: 1px solid #4b5563;
+  color: white;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s;
+}
+
+.ai-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.ai-select option {
+  background-color: #374151;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.ai-button {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.ai-button:disabled {
+  background-color: #4b5563;
+  cursor: not-allowed;
+}
+
+.ai-button-enable {
+  background-color: #2563eb;
+}
+
+.ai-button-enable:not(:disabled):hover {
+  background-color: #1d4ed8;
+}
+
+.ai-button-disable {
+  background-color: #dc2626;
+}
+
+.ai-button-disable:not(:disabled):hover {
+  background-color: #b91c1c;
+} 

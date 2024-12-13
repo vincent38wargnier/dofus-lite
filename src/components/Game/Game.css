@@ -1,0 +1,13 @@
+.game {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.game-board {
+  flex: 1;
+}
+
+.game-controls {
+  width: 300px;
+} 
