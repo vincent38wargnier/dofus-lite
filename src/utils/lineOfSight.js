@@ -163,8 +163,8 @@ export class LineOfSight {
         
         // Check if the cell is within spell range
         if (distance >= minRange && distance <= maxRange) {
-          // Check line of sight to the target cell
-          if (this.hasLineOfSight(position, target, board)) {
+          // If spell doesn't require line of sight, or if we have line of sight
+          if (!spell.requiresLineOfSight || this.hasLineOfSight(position, target, board)) {
             // For pattern spells, check each cell in the pattern
             const patternCells = this.getPatternCells(target, pattern, patternSize);
             patternCells.forEach(cellKey => {
@@ -173,11 +173,11 @@ export class LineOfSight {
               // Validate each pattern cell
               if (board.isWithinBounds(cellX, cellY)) {
                 // For pattern cells, we need line of sight from both:
-                // 1. Caster to target center
-                // 2. Target center to pattern cell
-                if (pattern === 'SINGLE' || 
-                    (this.hasLineOfSight(target, { x: cellX, y: cellY }, board) &&
-                     this.hasLineOfSight(position, { x: cellX, y: cellY }, board))) {
+                // 1. Caster to target center (already checked above)
+                // 2. Target center to pattern cell (only if spell requires line of sight)
+                if (!spell.requiresLineOfSight || 
+                    pattern === 'SINGLE' || 
+                    this.hasLineOfSight(target, { x: cellX, y: cellY }, board)) {
                   visibleCells.add(cellKey);
                 }
               }

@@ -16,33 +16,33 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2rem;
+  font-size: 2.8rem;
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
   transition: transform 0.2s ease;
 }
 
 /* Wall obstacle */
 .obstacle-wall .obstacle-content {
-  font-size: 2.2rem;
+  font-size: 3rem;
   filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
 }
 
 /* Bush obstacle */
 .obstacle-bush .obstacle-content {
-  font-size: 2.4rem;
+  font-size: 3.2rem;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
   animation: sway 3s ease-in-out infinite;
 }
 
 /* Rock obstacle */
 .obstacle-rock .obstacle-content {
-  font-size: 2.3rem;
+  font-size: 4.1rem;
   filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.5));
 }
 
 /* Ice Wall obstacle */
 .obstacle-ice_wall .obstacle-content {
-  font-size: 2.5rem;
+  font-size: 3.3rem;
   filter: drop-shadow(0 0 4px rgba(52, 152, 219, 0.6));
   animation: fade 2s infinite;
 }

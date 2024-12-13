@@ -119,6 +119,7 @@ export const SORTS = {
     pattern_size: 3,
     damage: 20,
     cooldown: 0,
+    requiresLineOfSight: true,
     description: 'A wide slash that hits multiple enemies in a cone.'
   },
   SHIELD_BASH: {
@@ -132,6 +133,7 @@ export const SORTS = {
     effect: 'STUNNED',
     duration: 1,
     cooldown: 3,
+    requiresLineOfSight: true,
     description: 'A powerful bash that stuns enemies in a line.'
   },
   CHARGE: {
@@ -144,6 +146,7 @@ export const SORTS = {
     pushback: 2,
     pattern: 'LINE',  // Hits all enemies in the charge path
     cooldown: 3,
+    requiresLineOfSight: true,
     description: 'Rush in a line, damaging and pushing all enemies in your path.'
   },
   PROTECTIVE_LEAP: {
@@ -157,6 +160,7 @@ export const SORTS = {
     pattern: 'CIRCLE',  // Affects allies in a circle
     pattern_size: 2,  // 2 cell radius
     cooldown: 4,
+    requiresLineOfSight: true,
     description: 'Leap to a location. You and allies within 2 cells gain damage reduction.'
   },
   // New Warrior boost spell
@@ -170,6 +174,7 @@ export const SORTS = {
     self_effect: 'DRAINED',
     duration: 2,
     cooldown: 4,
+    requiresLineOfSight: true,
     description: 'Transfer your power to an ally, granting them +2 PA but reducing your own PA by 2 next turn.'
   },
 
@@ -184,6 +189,7 @@ export const SORTS = {
     damage: 18,
     bonus_damage_marked: 8,
     cooldown: 0,
+    requiresLineOfSight: true,
     description: 'A precise shot that deals extra damage to marked targets. Cannot be used at point blank.'
   },
   EXPLOSIVE_ARROW: {
@@ -198,6 +204,7 @@ export const SORTS = {
     effect: 'BURNING',
     duration: 2,
     cooldown: 3,
+    requiresLineOfSight: true,
     description: 'Fire an explosive arrow that creates a cross-shaped explosion.'
   },
   TACTICAL_ROLL: {
@@ -208,6 +215,7 @@ export const SORTS = {
     pattern: 'LINE',  // Must roll in a straight line
     bonus_pm: 1,
     cooldown: 3,
+    requiresLineOfSight: true,
     description: 'Roll in a straight line and gain 1 extra MP for the turn.'
   },
   MARK_TARGET: {
@@ -221,6 +229,7 @@ export const SORTS = {
     effect: 'MARKED',
     duration: 2,
     cooldown: 3,
+    requiresLineOfSight: true,
     description: 'Mark targets in a diamond pattern, making them take increased damage.'
   },
   // New Archer boost spell
@@ -235,6 +244,7 @@ export const SORTS = {
     condition: 'TARGET_MARKED',  // Only works on marked targets
     duration: 2,
     cooldown: 4,
+    requiresLineOfSight: true,
     description: 'Grant +2 PM to allies near a marked target. Only works if target is marked.'
   },
 
@@ -251,6 +261,7 @@ export const SORTS = {
     effect: 'BURNING',
     duration: 2,
     cooldown: 2,
+    requiresLineOfSight: true,
     description: 'Launch a fireball that creates a large circular explosion.'
   },
   ICE_WALL: {
@@ -264,6 +275,7 @@ export const SORTS = {
     duration: 2,
     effect: 'FROZEN',
     cooldown: 4,
+    requiresLineOfSight: true,
     description: 'Create a 3-cell wide wall of ice perpendicular to the cast direction.'
   },
   TELEPORT: {
@@ -273,7 +285,8 @@ export const SORTS = {
     min_range: 2,
     range: 4,
     cooldown: 3,
-    description: 'Instantly teleport to a target location at least 2 cells away.'
+    requiresLineOfSight: false,
+    description: 'Instantly teleport to a target location at least 2 cells away, ignoring line of sight.'
   },
   ARCANE_BLAST: {
     name: 'Arcane Blast',
@@ -285,6 +298,7 @@ export const SORTS = {
     damage: 15,
     bonus_damage_status: 10,
     cooldown: 1,
+    requiresLineOfSight: true,
     description: 'Release a star-shaped blast that deals bonus damage to debuffed targets.'
   },
   // New Mage boost spell
@@ -298,6 +312,7 @@ export const SORTS = {
     duration: 1,
     special_condition: 'CONSUME_STATUS',  // Removes a debuff from target and gives them PA instead
     cooldown: 3,
+    requiresLineOfSight: true,
     description: 'Convert a negative status effect on target into +2 PA for 1 turn.'
   }
 };
