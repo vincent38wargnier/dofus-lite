@@ -1,5 +1,6 @@
 import { CELL_TYPES } from '../../constants/game/mechanics';
 import { BOARD_CONFIG } from '../../constants/game/board';
+import { GameStateSnapshot } from '../../game/GameStateSnapshot';
 
 export class BoardEngine {
   constructor(width = BOARD_CONFIG.DEFAULT_SIZE.columns, height = BOARD_CONFIG.DEFAULT_SIZE.rows) {
@@ -128,6 +129,132 @@ export class BoardEngine {
       }))
     );
     return board;
+  }
+
+  simulateAction(action, gameState) {
+    const simulatedState = new GameStateSnapshot(gameState).restore();
+    
+    switch (action.type) {
+      case 'MOVE':
+        return this.simulateMove(action, simulatedState);
+      case 'SPELL':
+        return this.simulateSpell(action, simulatedState);
+      case 'END_TURN':
+        return this.simulateEndTurn(simulatedState);
+      default:
+        throw new Error(`Unknown action type: ${action.type}`);
+    }
+  }
+
+  simulateMove(action, state) {
+    const { playerId, position } = action.data;
+    const player = state.players.find(p => p.id === playerId);
+    
+    // Calculate path and MP cost
+    const path = this.calculatePath(player.position, position);
+    const mpCost = path.length - 1;
+
+    if (mpCost > player.movementPoints) {
+      return {
+        success: false,
+        error: 'Insufficient movement points'
+      };
+    }
+
+    // Update position and MP
+    player.position = position;
+    player.movementPoints -= mpCost;
+
+    return {
+      success: true,
+      resultingState: state,
+      changes: {
+        position: position,
+        remainingMP: player.movementPoints
+      }
+    };
+  }
+
+  simulateSpell(action, state) {
+    const { playerId, spellId, target } = action.data;
+    const player = state.players.find(p => p.id === playerId);
+    const spell = player.spells.find(s => s.id === spellId);
+
+    // Validate spell availability
+    if (spell.currentCooldown > 0) {
+      return {
+        success: false,
+        error: 'Spell on cooldown'
+      };
+    }
+
+    // Calculate effects
+    const effects = this.calculateSpellEffects(spell, player, target, state);
+    
+    // Apply effects to simulated state
+    this.applySpellEffects(effects, state);
+
+    return {
+      success: true,
+      resultingState: state,
+      changes: effects
+    };
+  }
+
+  // Add these methods for AI analysis
+  getCompleteState() {
+    return {
+      grid: this.grid,
+      dimensions: {
+        width: this.width,
+        height: this.height
+      },
+      players: this.getAllPlayers(),
+      obstacles: this.getAllObstacles()
+    };
+  }
+
+  getAllPlayers() {
+    const players = [];
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        const cell = this.grid[y][x];
+        if (cell.occupant) {
+          players.push({
+            player: cell.occupant,
+            position: { x, y }
+          });
+        }
+      }
+    }
+    return players;
+  }
+
+  getAllObstacles() {
+    const obstacles = [];
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        const cell = this.grid[y][x];
+        if (cell.obstacle) {
+          obstacles.push({
+            ...cell.obstacle,
+            position: { x, y }
+          });
+        }
+      }
+    }
+    return obstacles;
+  }
+
+  // Add pathfinding for AI movement planning
+  calculatePath(start, end) {
+    // Implement A* pathfinding
+    // This is needed for proper movement simulation
+  }
+
+  // Add line of sight calculation for spell targeting
+  hasLineOfSight(from, to) {
+    // Implement Bresenham's line algorithm with obstacle checking
   }
 }
 

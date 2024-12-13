@@ -8,6 +8,8 @@ import { calculateSortEffects, applyEffects } from '../utils/gameLogic';
 import { AIPlayerController } from '../components/AI/AIPlayerController';
 import { TurnManager } from '../components/Board/TurnManager';
 import { SimpleStrategy } from '../components/AI/strategies/SimpleStrategy';
+import { GameHistory } from '../game/GameHistory';
+import { GameStateSnapshot } from '../game/GameStateSnapshot';
 
 const GameContext = createContext();
 
@@ -73,6 +75,7 @@ function gameReducer(state, action) {
 export function GameProvider({ children }) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
   const turnManagerRef = useRef(new TurnManager());
+  const gameHistory = useRef(new GameHistory());
 
   useEffect(() => {
     initializeDefaultGame();
@@ -345,6 +348,28 @@ export function GameProvider({ children }) {
     turnManagerRef.current.registerAIPlayer(playerId, controller);
   }, [playerActions]);
 
+  const executeAction = useCallback(async (action) => {
+    const result = await state.board.executeAction(action);
+    
+    if (result.success) {
+      // Record the action and its result
+      gameHistory.current.recordAction(action, new GameStateSnapshot(state));
+      
+      // Update game state
+      dispatch({
+        type: 'UPDATE_GAME_STATE',
+        payload: result.resultingState
+      });
+    }
+
+    return result;
+  }, [state]);
+
+  // Add method to access history
+  const getGameHistory = useCallback(() => {
+    return gameHistory.current;
+  }, []);
+
   const value = {
     state,
     actions: {
@@ -358,7 +383,9 @@ export function GameProvider({ children }) {
         payload: newState
       }),
       playerActions,
-      assignAIControl
+      assignAIControl,
+      executeAction,
+      getGameHistory
     }
   };
 
