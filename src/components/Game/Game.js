@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import BoardRenderer from '../Board/BoardRenderer';
 import { AIDashboard } from '../Dashboard/AIDashboard';
 import GameStatus from '../GameStatus/GameStatus';
@@ -11,6 +11,11 @@ import { useGame } from '../../context/GameContext';
 
 export function Game() {
   const { state, actions } = useGame();
+  const [selectedUnit, setSelectedUnit] = useState(null);
+
+  const handleUnitSelect = (unit) => {
+    setSelectedUnit(unit);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -25,13 +30,17 @@ export function Game() {
 
         {/* Center - Game board */}
         <div className="flex-1 mx-4">
-          <BoardRenderer />
+          <BoardRenderer onUnitSelect={handleUnitSelect} />
         </div>
 
         {/* Right sidebar - AI Controls */}
         <div className="w-[300px] flex flex-col space-y-4">
           <AIDashboard />
-          <AIDebugDashboard gameState={state} actions={actions} />
+          <AIDebugDashboard 
+            gameState={state}
+            actions={actions}
+            selectedUnit={selectedUnit}
+          />
         </div>
       </main>
 

@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AIEngine from '../../ai/AIEngine';
 
-const AIDebugDashboard = ({ gameState, actions }) => {
-  const [aiEngine] = useState(() => new AIEngine());
+const AIDebugDashboard = ({ gameState, actions, selectedUnit }) => {
+  const [aiEngine] = useState(() => {
+    const engine = new AIEngine();
+    engine.initialize(gameState, actions);
+    return engine;
+  });
+
+  // Add effect to update aiEngine when actions or gameState change
+  useEffect(() => {
+    aiEngine.initialize(gameState, actions);
+  }, [gameState, actions, aiEngine]);
+
   const [analysis, setAnalysis] = useState(null);
   const [targetX, setTargetX] = useState('');
   const [targetY, setTargetY] = useState('');
   const [selectedSpell, setSelectedSpell] = useState('');
+  const [selectedStrategy, setSelectedStrategy] = useState('none');
 
   // Effect to trigger hover when coordinates change
   React.useEffect(() => {
@@ -51,28 +62,25 @@ const AIDebugDashboard = ({ gameState, actions }) => {
 
   // Analysis Functions
   const handleAnalyzeState = () => {
-    aiEngine.initialize(gameState, actions);
+    aiEngine.analyzeGameState();
     const gameAnalysis = aiEngine.analyzeGameState();
     setAnalysis(gameAnalysis);
     console.log('Game Analysis:', gameAnalysis);
   };
 
   const handleFindEnemies = () => {
-    aiEngine.initialize(gameState, actions);
-    const enemies = aiEngine.findEnemies();
-    console.log('Found Enemies:', enemies);
+    aiEngine.findEnemies();
+    console.log('Found Enemies:', aiEngine.findEnemies());
   };
 
   const handleGetMoves = () => {
-    aiEngine.initialize(gameState, actions);
-    const moves = aiEngine.getAvailableMoves();
-    console.log('Available Moves:', moves);
+    aiEngine.getAvailableMoves();
+    console.log('Available Moves:', aiEngine.getAvailableMoves());
   };
 
   const handleGetSpells = () => {
-    aiEngine.initialize(gameState, actions);
-    const spells = aiEngine.getAvailableSpells();
-    console.log('Available Spells:', spells);
+    aiEngine.getAvailableSpells();
+    console.log('Available Spells:', aiEngine.getAvailableSpells());
   };
 
   // Action Functions
@@ -130,6 +138,26 @@ const AIDebugDashboard = ({ gameState, actions }) => {
         key,
         name: spell.name
       }));
+  };
+
+  const strategies = [
+    { id: 'none', name: 'No Strategy' },
+    { id: 'simpleMovement', name: 'Simple Movement' },
+    { id: 'chessLike', name: 'Chess-like Combat' }
+  ];
+
+  const handleStrategyChange = (e) => {
+    const newStrategy = e.target.value;
+    setSelectedStrategy(newStrategy);
+  };
+
+  const handleExecuteStrategy = async () => {
+    if (selectedStrategy === 'none' || !selectedUnit) {
+      console.log('Please select a strategy and unit');
+      return;
+    }
+
+    await aiEngine.executeStrategy(gameState, selectedUnit, selectedStrategy);
   };
 
   return (
@@ -229,6 +257,56 @@ const AIDebugDashboard = ({ gameState, actions }) => {
           <pre className="bg-gray-700 p-2 rounded mt-2 text-sm overflow-auto max-h-40">
             {JSON.stringify(analysis, null, 2)}
           </pre>
+        </div>
+      )}
+
+      <div className="mb-4">
+        <label className="block mb-2">Strategy:</label>
+        <select 
+          value={selectedStrategy}
+          onChange={handleStrategyChange}
+          className="w-full p-2 bg-gray-700 rounded"
+        >
+          {strategies.map(strategy => (
+            <option key={strategy.id} value={strategy.id}>
+              {strategy.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="mb-4">
+        <label className="block mb-2">Selected Unit:</label>
+        <div className="bg-gray-700 p-2 rounded">
+          {selectedUnit ? (
+            `${selectedUnit.type} at (${selectedUnit.position.x}, ${selectedUnit.position.y})`
+          ) : (
+            'No unit selected'
+          )}
+        </div>
+      </div>
+
+      <button
+        onClick={handleExecuteStrategy}
+        disabled={selectedStrategy === 'none' || !selectedUnit}
+        className={`w-full p-2 rounded ${
+          selectedStrategy === 'none' || !selectedUnit
+            ? 'bg-gray-600 cursor-not-allowed'
+            : 'bg-blue-600 hover:bg-blue-700'
+        }`}
+      >
+        Execute Strategy
+      </button>
+
+      {/* Optional: Add strategy description */}
+      {selectedStrategy !== 'none' && (
+        <div className="mt-4 p-2 bg-gray-700 rounded">
+          <h3 className="font-bold mb-2">Strategy Description:</h3>
+          <p>
+            {selectedStrategy === 'simpleMovement' 
+              ? 'Moves unit towards the nearest enemy until out of movement points.'
+              : 'Advanced chess-like combat strategy with tactical evaluation.'}
+          </p>
         </div>
       )}
     </div>

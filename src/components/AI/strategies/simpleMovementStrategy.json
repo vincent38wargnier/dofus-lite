@@ -1,0 +1,40 @@
+{
+  "name": "Simple Movement Strategy",
+  "version": "1.0",
+  "description": "Basic strategy that moves units towards the nearest enemy",
+  
+  "movement": {
+    "priority": [
+      {
+        "type": "moveTowardsEnemy",
+        "conditions": {
+          "hasMovementPoints": true,
+          "enemyInRange": false
+        }
+      }
+    ],
+    "endTurn": {
+      "conditions": {
+        "noMovementPoints": true
+      }
+    }
+  },
+
+  "evaluation": {
+    "distanceScoring": {
+      "weight": 100,
+      "preferredDistance": 1
+    }
+  },
+
+  "moveGeneration": {
+    "priorityCategories": [
+      {
+        "type": "approach",
+        "conditions": {
+          "hasMovementPoints": true
+        }
+      }
+    ]
+  }
+} 

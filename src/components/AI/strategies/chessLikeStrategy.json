@@ -1,0 +1,57 @@
+{
+  "name": "Chess-like Combat Strategy",
+  "version": "1.0",
+  "description": "Advanced strategy using chess-like evaluation and lookahead",
+  
+  "evaluation": {
+    "materialValues": {
+      "WARRIOR": 500,
+      "ARCHER": 330,
+      "MAGE": 350,
+      "BASE_HP": 10,
+      "BASE_PA": 30,
+      "BASE_PM": 20
+    },
+    "positionScoring": {
+      "centerControl": {
+        "weight": 100,
+        "centerSquares": [[5,5], [5,6], [6,5], [6,6]],
+        "nearCenterMultiplier": 0.7
+      },
+      "mobility": {
+        "weight": 50,
+        "perMovementPoint": 10,
+        "perActionPoint": 15
+      }
+    }
+  },
+
+  "searchParameters": {
+    "defaultDepth": 3,
+    "maxDepth": 5,
+    "quiescenceSearch": {
+      "enabled": true,
+      "maxAdditionalDepth": 2,
+      "captureThreshold": 100
+    }
+  },
+
+  "moveGeneration": {
+    "priorityCategories": [
+      {
+        "type": "attacks",
+        "conditions": {
+          "targetLowHealth": true,
+          "goodTradeValue": true
+        }
+      },
+      {
+        "type": "positioning",
+        "conditions": {
+          "improvesMobility": true,
+          "threatensKey": true
+        }
+      }
+    ]
+  }
+} 
