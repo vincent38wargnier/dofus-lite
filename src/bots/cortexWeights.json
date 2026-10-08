@@ -1,0 +1,14 @@
+{
+  "damage": 1.146,
+  "kill": 1.899,
+  "heal": 0.621,
+  "removePa": 0.898,
+  "removePm": 0.62,
+  "push": 0.687,
+  "summon": 0.93,
+  "paEfficiency": 0.277,
+  "focusWeak": 0.55,
+  "threat": 0.87,
+  "rangeBand": 0.797,
+  "buff": 0.552
+}

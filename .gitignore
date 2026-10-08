@@ -4,3 +4,9 @@ venv
 code_to_single_file.py
 code_documentation.txt
 code_structure.txt
+OblivionRetro
+emulators
+shot-*.png
+build
+src/tuning/out/
+src/tuning/rl/
