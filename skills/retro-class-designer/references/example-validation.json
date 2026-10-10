@@ -1,0 +1,18 @@
+{
+  "format": "dofus-lite-class-validation",
+  "version": 1,
+  "scope": "complete-package",
+  "technicalStatus": "valid",
+  "balanceStatus": "untested",
+  "guardrails": "review-required",
+  "className": "Ember Warden — example",
+  "spellCount": 10,
+  "imagesChecked": 19,
+  "baselineSha256": "51fe899018abab0d810931e3c9ae684eaef6f4aa61388d86ecf0f8f7c2e87946",
+  "manifestSha256": "0a77164c452de22cea850412e60622e839badc50a5987d3f177e89455789ecf1",
+  "errors": [],
+  "warnings": [
+    "last_flare: raw damage/AP 6.80 exceeds starting envelope 6."
+  ],
+  "archiveSha256": "0973b9d6e06d4ea4638905950ae8a2c0b9fdfcf2377ba8acb4721b71ccb66cf4"
+}

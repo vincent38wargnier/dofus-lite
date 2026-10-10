@@ -10,7 +10,7 @@ const fold = value => String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,
 const newId = () => window.crypto?.randomUUID?.() || `stuff-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const snapshot = value => JSON.parse(JSON.stringify(value));
 
-export default function LoadoutLibrary({ side, classId, loadout, update, saveError, compact = false, expanded, onExpandedChange }) {
+export default function LoadoutLibrary({ side, classId, draftKey, loadout, update, saveError, compact = false, expanded, onExpandedChange }) {
   const { library, commit, libraryError } = useLoadoutLibrary();
   const [localOpen, setLocalOpen] = useState(false);
   const open = expanded ?? localOpen;
@@ -20,7 +20,7 @@ export default function LoadoutLibrary({ side, classId, loadout, update, saveErr
   const [notice, setNotice] = useState(null);
   const input = useRef(null);
   const editingName = !!form;
-  const key = `${side}:${classId}`;
+  const key = draftKey || `${side}:${classId}`;
   const active = library.builds.find(b => b.id === library.active[key]);
   const dirty = active && !sameEquipment(active.loadout, loadout);
   const builds = useMemo(() => library.builds

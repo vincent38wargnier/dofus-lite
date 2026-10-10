@@ -1,0 +1,152 @@
+.workshop-screen { max-width: 1640px; margin: 0 auto; padding: 28px; color: var(--text, #343d2d); }
+.creator-header, .creator-section-heading, .creator-inline, .creator-library-strip, .creator-name-row, .creator-tabs, .creator-undo { display: flex; align-items: center; gap: 16px; }
+.creator-header, .creator-section-heading { justify-content: space-between; }
+.creator-header { margin-bottom: 26px; align-items: flex-start; }
+.creator-header .eyebrow, .creator-save-status, .creator-tabs .btn, .creator-library-strip .btn, .creator-card h3 { display: flex; align-items: center; gap: 8px; }
+.creator-header h1 { margin: 10px 0; font-size: clamp(26px, 2.5vw, 36px); }
+.creator-header p, .creator-section-heading p, .creator-launch p { color: #737967; margin: 6px 0 14px; }
+.creator-save-status { font-size: 12px; padding-top: 12px; color: #66794a; }
+.creator-tabs { border-bottom: 1px solid #d6d9c7; margin-bottom: 22px; padding-bottom: 12px; }
+.creator-tabs .btn { padding: 12px 20px; }
+.creator-tabs .btn.selected { background: #e4ebd5; border-color: #687b48; }
+.creator-tabs span, .creator-count { border-radius: 6px; padding: 4px 9px; background: #e8eddb; font-weight: 700; white-space: nowrap; }
+.creator-library-strip { flex-wrap: wrap; margin-bottom: 24px; align-items: flex-end; }
+.creator-library-strip > label { min-width: 280px; flex: 1; max-width: 540px; }
+.workshop-screen .field, .custom-spell-picker .field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; min-width: 0; color: #68705e; }
+.workshop-screen input[type="text"], .workshop-screen input[type="search"], .workshop-screen select, .custom-spell-picker input[type="search"], .custom-spell-picker select { min-width: 0; width: 100%; box-sizing: border-box; border: 1px solid #cfd4bf; border-radius: 8px; background: #fffef9; color: #353d2e; padding: 10px 12px; font: inherit; }
+.creator-name-row { margin-bottom: 20px; flex-wrap: wrap; }
+.creator-name-row .field { flex: 1; max-width: 600px; }
+.creator-name-row input { font-size: 21px !important; font-weight: 700; }
+.creator-name-row > span { font-size: 13px; }
+.creator-card { border: 1px solid #d3d7c4; background: #fcfbf6; border-radius: 13px; padding: 22px; margin-bottom: 20px; min-width: 0; }
+.creator-card h3, .custom-spell-picker h3, .custom-spell-picker h4 { margin: 0 0 12px; }
+.creator-launch { display: flex; align-items: center; flex-wrap: wrap; gap: 18px; background: #eaf0dc; }
+.creator-launch > div:first-child { flex: 1 1 240px; }
+.creator-launch .field { flex: 1 1 170px; }
+.creator-launch-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+.creator-launch > .creator-warning { flex-basis: 100%; margin: 0; }
+.creator-dungeon-layout { display: grid; grid-template-columns: minmax(330px, .9fr) minmax(0, 2fr); gap: 20px; align-items: start; }
+.creator-dungeon-summary { position: sticky; top: 16px; min-width: 0; }
+.creator-dungeon-summary .selected-map-preview { width: 100%; }
+.creator-dungeon-summary .map-picker { max-width: none; display: flex; flex-direction: column; align-items: stretch; gap: 10px; }
+.creator-dungeon-summary .selected-map-preview .map-preview { max-height: 160px; }
+.creator-roster-dropzone { border: 2px dashed #aab893; background: #f3f6e9; transition: background .15s, border-color .15s; }
+.creator-roster-dropzone.accepting { border-color: #6c834c; }
+.creator-roster-dropzone.drop-over { background: #e2edc8; border-style: solid; box-shadow: 0 0 0 3px #b0c28e; }
+.creator-roster-dropzone.full { border-style: solid; }
+.creator-drop-hint, .creator-drag-feedback { color: #65754e; font-size: 13px; line-height: 1.5; }
+.creator-drop-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; min-height: 110px; padding: 20px; }
+.creator-drag-feedback:empty { display: none; }
+.creator-copy-room { border-top: 1px solid #d5dcc6; padding-top: 12px; font-size: 13px; margin-top: 12px; }
+.creator-copy-room summary { cursor: pointer; color: #687950; }
+.creator-copy-room label { margin-top: 12px; }
+.creator-roster { max-height: 340px; overflow-y: auto; }
+.creator-roster-row { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 12px 0; border-bottom: 1px solid #e0e3d5; }
+.creator-roster-row > .retro-portrait { width: 42px; height: 42px; object-fit: contain; }
+.creator-roster-row > strong { min-width: 0; font-size: 14px; }
+.creator-roster-row > label { grid-row: 2; grid-column: 1 / 3; }
+.creator-roster-row > label select { padding: 7px 8px; }
+.creator-quantity { grid-row: 2; grid-column: 3; align-self: end; }
+.creator-remove-monster { grid-row: 1; grid-column: 3; justify-self: end; padding: 5px 10px; }
+.creator-quantity { display: flex; align-items: center; gap: 8px; }
+.creator-quantity .btn { padding: 5px 10px; }
+.creator-monster-filters { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin: 14px 0 22px; }
+.creator-monster-filters > .field { flex: 1; min-width: 200px; }
+.creator-check { padding: 10px 0; font-size: 14px; }
+.creator-monster-results { display: grid; grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)); gap: 12px; max-height: 730px; overflow: auto; padding: 2px 6px 2px 2px; }
+.creator-monster-card { border: 1px solid #d7dbc9; border-radius: 10px; padding: 14px; background: #fffef9; display: flex; flex-direction: column; gap: 12px; }
+.creator-monster-card[draggable="true"] { cursor: grab; }
+.creator-monster-card.dragging { opacity: .55; border-color: #718650; }
+.creator-monster-grip { flex-shrink: 0; margin-left: auto; color: #83916e; }
+.creator-monster-heading { display: flex; align-items: center; gap: 12px; min-height: 60px; }
+.creator-monster-heading .retro-portrait { width: 52px; height: 58px; object-fit: contain; }
+.creator-monster-heading small { display: block; color: #767d6c; font-size: 12px; margin-top: 5px; }
+.creator-monster-card > .btn { width: 100%; }
+.creator-character-identity { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; }
+.creator-character-identity > .retro-portrait { height: 96px; width: 78px; object-fit: contain; }
+.creator-character-identity > .field { flex: 1; min-width: 160px; }
+.creator-character-totals { display: flex; flex-direction: column; gap: 8px; min-width: 100px; color: #647746; }
+.creator-character-totals strong { font-size: 23px; }
+.creator-empty { padding: 26px; background: #f1f3e8; color: #747d65; border-radius: 10px; }
+.creator-welcome { text-align: center; padding: 65px 25px; border: 1px dashed #b8c2a3; }
+.creator-welcome h2 { color: #3e4b32; }
+.creator-warning { color: #916332; font-size: 13px; line-height: 1.6; }
+.creator-undo { margin: 12px 0; background: #e8eedb; padding: 12px 18px; border-radius: 8px; }
+.custom-spell-picker { min-width: 0; }
+.custom-spell-picker > .creator-section-heading { margin: 24px 0; }
+.custom-spell-picker > .creator-section-heading p { max-width: 800px; line-height: 1.5; }
+.creator-spell-columns { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 22px; align-items: start; }
+.creator-spell-selection { border: 1px solid #d3d9c3; border-radius: 10px; padding: 14px; background: #f0f3e7; position: sticky; top: 16px; min-width: 0; }
+.creator-spell-selection h4 { margin: 0; }
+.creator-spell-selection .creator-section-heading { gap: 8px; }
+.creator-spell-selection .btn { font-size: 12px; padding: 6px 8px; }
+.creator-spell-limit { border-radius: 6px; background: #e0e9cb; padding: 10px; font-size: 12px; line-height: 1.5; color: #53663c; }
+.creator-selected-spells { list-style: none; margin: 0; padding: 0; max-height: 670px; overflow: auto; }
+.creator-selected-spells > li { background: #fffef9; border: 1px solid #dbe0cd; border-radius: 8px; padding: 10px; margin-top: 8px; cursor: grab; }
+.creator-selected-actions { display: flex; align-items: center; justify-content: flex-end; gap: 5px; margin-top: 8px; }
+.creator-selected-actions > label { font-size: 12px; display: flex; align-items: center; gap: 5px; margin-right: auto; }
+.creator-selected-actions select { width: 55px; padding: 5px; }
+.creator-spell-inspect { display: flex; align-items: center; gap: 10px; width: 100%; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; padding: 0; font: inherit; }
+.creator-spell-inspect .retro-spell-icon { width: 39px; height: 39px; flex: 0 0 39px; }
+.creator-spell-inspect strong { display: block; font-size: 14px; }
+.creator-spell-inspect small { display: block; color: #7b826f; font-size: 12px; margin-top: 5px; }
+.creator-filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 16px 0 20px; align-items: end; }
+.creator-spell-results { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; max-height: 720px; overflow: auto; padding: 2px 6px 2px 2px; }
+.creator-spell-card { border: 1px solid #d7ddc8; border-radius: 10px; background: #fffef9; padding: 14px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.creator-spell-card.selected { background: #eff4e3; border-color: #93a56f; }
+.creator-spell-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.creator-spell-tags span { background: #ebeedf; border-radius: 4px; padding: 3px 6px; font-size: 10px; }
+.creator-spell-facts { display: flex; justify-content: space-between; align-items: center; gap: 5px; margin-top: auto; font-size: 11px; }
+.creator-spell-facts .btn { padding: 6px 9px; font-size: 12px; }
+.creator-spell-card > small { font-size: 10px; }
+.creator-spell-detail { margin: 16px 0; border: 1px solid #a8b58d; border-radius: 10px; padding: 18px; background: #f0f4e5; }
+.creator-inline { flex-wrap: wrap; }
+.creator-inline .field { width: 110px; }
+.creator-effect-table { overflow-x: auto; }
+.creator-effect-table table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.creator-effect-table th, .creator-effect-table td { padding: 9px; text-align: left; border-bottom: 1px solid #d6ddc5; }
+.creator-package { margin: 18px 0 24px; background: linear-gradient(120deg, #f5f6ed, #fffef9); }
+.creator-package h3 { display: flex; align-items: center; gap: 8px; }
+.creator-package-workflow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(235px, .4fr); gap: 20px; margin: 18px 0 8px; align-items: stretch; }
+.creator-package textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #cbd3bc; border-radius: 8px; background: #fffef9; color: inherit; font: inherit; resize: vertical; }
+.creator-package-actions { display: flex; flex-direction: column; justify-content: end; gap: 10px; }
+.creator-package-actions .btn { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; }
+.creator-package-downloads { display: flex; flex-wrap: wrap; gap: 6px; }
+.creator-package-downloads .btn { display: inline-flex; align-items: center; gap: 6px; }
+.creator-package-preview { margin-top: 12px; }
+.creator-package-preview textarea { font: 12px/1.6 ui-monospace, monospace; }
+.creator-package-errors { color: #a43d29; white-space: pre-wrap; overflow-wrap: anywhere; }
+.creator-package-report { padding: 10px 0; font-size: 13px; }
+.creator-package-report li { margin: 8px 0; }
+.creator-custom-monster { padding: 12px 0; border-bottom: 1px solid #d6ddc5; }
+.creator-custom-monster .creator-roster-row { display: flex; flex-wrap: wrap; }
+.creator-custom-monster .creator-roster-row > div:first-of-type { flex: 1; min-width: 120px; }
+.creator-custom-monster small { display: block; font-size: 11px; line-height: 1.6; color: #777e6b; }
+.creator-custom-monster > p { font-size: 12px; margin: 7px 0; }
+.creator-custom-monster-spells { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.creator-custom-monster-spells span { background: #e7edd8; border-radius: 4px; font-size: 11px; padding: 5px 7px; }
+.creator-monster-spell-editor { min-width: 0; }
+.creator-monster-spell-editor .creator-spell-columns { grid-template-columns: 1fr; }
+@media (max-width: 1100px) {
+  .creator-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .creator-header { flex-wrap: wrap; }
+}
+@media (max-width: 960px) {
+  .creator-dungeon-layout { grid-template-columns: 1fr; }
+  .creator-dungeon-summary { position: static; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+}
+@media (max-width: 760px) {
+  .creator-package-workflow { grid-template-columns: 1fr; gap: 12px; }
+  .workshop-screen { padding: 16px 10px; }
+  .creator-library-strip > .field { flex: 1 1 100%; max-width: none; }
+  .creator-spell-columns { grid-template-columns: 1fr; }
+  .creator-spell-selection { position: static; }
+  .creator-selected-spells { max-height: 280px; }
+  .creator-section-heading, .creator-name-row { flex-wrap: wrap; }
+  .creator-card { padding: 14px; }
+  .creator-dungeon-summary { display: block; }
+  .creator-tabs .btn { padding: 10px; font-size: 13px; }
+  .creator-launch-buttons { width: 100%; }
+  .creator-launch-buttons .btn { flex: 1; }
+  .creator-name-row .field { flex-basis: 100%; }
+}

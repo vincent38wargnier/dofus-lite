@@ -23,7 +23,7 @@ export default function FighterPanel({ fighter, fighters, side, isActive, compac
     <div className={`panel fighter-card${isActive ? ' is-active' : ''}`} data-fighter-id={fighter.id}>
       <div className="fighter-head">
         <div className={`face side-${side}-border`}>{fighter.isSummon ? <span aria-hidden="true">{fighter.emoji || '✦'}</span>
-          : <RetroPortrait classId={fighter.classId} monsterId={fighter.isMonster ? fighter.monsterId : null} side={side} fallback={fighter.emoji || cls?.emoji} />}</div>
+          : <RetroPortrait classId={fighter.classId} artworkId={fighter.artworkId || fighter.loadout?.artworkId} monsterId={fighter.isMonster ? fighter.appearanceMonsterId ?? fighter.monsterId : null} side={side} fallback={fighter.emoji || cls?.emoji} />}</div>
         <div className="who">
           <div className="bot-name">{fighter.name}</div>
           <div className="class-name">{fighter.isSummon ? (fighter.isDouble ? 'Double' : fighter.staticSummon ? 'Invocation statique' : 'Invocation') : fighter.isMonster ? 'Monstre' : cls.name} · niv. {fighter.level}</div>

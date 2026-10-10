@@ -105,6 +105,25 @@ def import_symbols(groups):
     return out, lookup
 
 
+def import_accessories(client):
+    """Index the compact client libraries by their native type_gfx linkage.
+
+    Only equipped symbols are linked by the browser. Preserve the libraries
+    themselves, including nested cape/pet timelines and dynamic exports.
+    """
+    symbols, libraries = {}, {}
+    for source in sorted((client / 'clips/sprites/accessories').glob('a[1-9].swf')):
+        url = f'clips/sprites/accessories/{source.name}'
+        target = OUT / 'raw' / url
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, target)
+        libraries[url] = hashlib.sha256(source.read_bytes()).hexdigest()
+        for name in exports(read(source)[2]):
+            if name.split('_')[0] in ('16', '17', '18', '81'):
+                symbols[name] = url
+    return {'symbols': symbols, 'libraries': libraries, 'clientUnit': 20791}
+
+
 def map_symbol_transform(rotation, flip, slope=1):
     """MapHandler's Flash quarter turns, about the exported symbol origin."""
     # A sloped ground selects a timeline frame instead of rotating the flat tile.
@@ -274,12 +293,23 @@ def main():
     parser.add_argument('--maps-only', action='store_true')
     parser.add_argument('--animations-only', action='store_true')
     parser.add_argument('--audio-only', action='store_true')
+    parser.add_argument('--accessories-only', action='store_true')
     parser.add_argument('--audio-data', type=Path, help='Local lang/swf/audio_*.swf definitions')
     args = parser.parse_args()
     client = args.client.expanduser().resolve()
     if not (client / 'clips/sprites/80.swf').is_file():
         parser.error(f'Not a Retro client directory: {client}')
     OUT.mkdir(parents=True, exist_ok=True)
+    if args.accessories_only:
+        manifest = json.loads((OUT / 'manifest.json').read_text())
+        manifest['accessories'] = import_accessories(client)
+        for variants in manifest['classes'].values():
+            for actor_id in variants.values():
+                adapted = adapt_sprite(client / f'clips/sprites/{actor_id}.swf', OUT / f'actors/{actor_id}.swf')
+                manifest['actors'][actor_id] = {'url': f'actors/{actor_id}.swf', **adapted}
+        write_json(OUT / 'manifest.json', manifest)
+        print(f'Updated 24 class sprites; {len(manifest["accessories"]["symbols"])} wearable graphics.')
+        return
     if args.audio_only:
         manifest = json.loads((OUT / 'manifest.json').read_text())
         manifest['audio'] = extract_audio(client, args.audio_data)
@@ -288,6 +318,7 @@ def main():
         return
     if args.animations_only:
         manifest = json.loads((OUT / 'manifest.json').read_text())
+        manifest['accessories'] = import_accessories(client)
         for file in sorted((client / 'clips/sprites').glob('*.swf')):
             adapted = adapt_sprite(file, OUT / 'actors' / file.name)
             if adapted:
@@ -355,6 +386,7 @@ def main():
         'version': 1, 'files': len(inventory), 'bytes': sum(f['bytes'] for f in inventory),
         'classes': {c: {'male': str((i + 1) * 10), 'female': str((i + 1) * 10 + 1)} for i, c in enumerate(CLASSES)},
         'actors': actors, 'spells': spells, 'monsters': monsters, 'audio': extract_audio(client, args.audio_data),
+        'accessories': import_accessories(client),
         'maps': build_maps(client), 'imagesReady': False,
         'counts': dict(Counter(f['path'].split('/')[1] if f['path'].startswith('clips/') else f['path'].split('/')[0] for f in inventory)),
     }

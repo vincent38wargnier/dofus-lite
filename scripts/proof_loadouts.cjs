@@ -143,7 +143,7 @@ const legacy = { version: 1, builds: [
     await page.screenshot({ path: `${out}/shared-stuff-combat.png` });
     report.checks.push('same saved stuff on Sacrieur', 'actual combat equipment and class');
     await click('.fight-heading-actions button', 'Préparation');
-    await click('.tools-menu summary'); await click('.tools-dropdown button', 'Arène');
+    await click('.tabs > button', 'IA contre IA'); await click('.arena-setup-actions button', 'Personnaliser');
     const classB = await page.evaluateHandle(() => [...document.querySelectorAll('label')].find(e => e.checkVisibility() && e.textContent.trim().startsWith('Classe B')).querySelector('select'));
     await classB.asElement().select('SACRIEUR'); await classB.dispose();
     await click('.loadout-side.side-B');

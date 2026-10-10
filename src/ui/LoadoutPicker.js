@@ -178,7 +178,7 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
     <div className="loadout-sides" role="tablist" aria-label="Combattant à équiper">
       {['A', 'B'].map(s => <button key={s} type="button" role="tab" aria-selected={side === s}
         className={`loadout-side side-${s}${side === s ? ' selected' : ''}`} onClick={() => { setSide(s); setInspectId(null); }}>
-        <RetroPortrait classId={classes[s]} side={s} fallback={CLASSES[classes[s]].emoji} />
+        <RetroPortrait classId={classes[s]} artworkId={loadouts[s]?.artworkId} side={s} fallback={CLASSES[classes[s]].emoji} />
         <span><strong>{names[s]}</strong><small>{CLASSES[classes[s]].name} · {summaries[s].items.length} objets</small></span>
         <span className="loadout-side-stats">{summaries[s].hp} PV · {summaries[s].pa} PA · {summaries[s].pm} PM{!summaries[s].valid ? ' · ⚠' : ''}</span>
       </button>)}
@@ -227,7 +227,7 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
       <div className="loadout-character">
         <div className="equipment-paperdoll">
           {EQUIPMENT_SLOTS.filter(s => !s.id.startsWith('dofus')).map(renderSlot)}
-          <div className="equipment-character-art"><RetroPortrait classId={classId} side={side} fallback={CLASSES[classId].emoji} /><strong>{CLASSES[classId].name}</strong><span>Niveau {level}</span><small>{summary.items.length} / 16 objets</small></div>
+          <div className="equipment-character-art"><RetroPortrait classId={classId} artworkId={loadout.artworkId} side={side} fallback={CLASSES[classId].emoji} /><strong>{CLASSES[classId].name}</strong><span>Niveau {level}</span><small>{summary.items.length} / 16 objets</small></div>
         </div>
         <div className="equipment-dofus-slots">{EQUIPMENT_SLOTS.filter(s => s.id.startsWith('dofus')).map(renderSlot)}</div>
         <div className="loadout-totals" aria-label="Caractéristiques totales">
@@ -367,7 +367,7 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
       <p className="loadout-footnote">La force améliore les dégâts terre et neutre ; l’intelligence, le feu et les soins ; la chance, l’eau ; l’agilité, l’air et les critiques. Les objets ne changent pas l’élément des sorts.</p>
     </div>
     <div id={`${tabId}-spells`} role="tabpanel" aria-labelledby={`${tabId}-spells-tab`} hidden={view !== 'spells'}>
-      <SpellLoadoutPicker weapon={summary.weaponSpell} classId={classId} loadout={loadout} change={change} />
+    {view === 'spells' && <SpellLoadoutPicker weapon={summary.weaponSpell} classId={classId} loadout={loadout} change={change} />}
     </div>
   </section>;
 }

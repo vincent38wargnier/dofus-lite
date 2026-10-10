@@ -16,7 +16,7 @@ export default function useCombatSounds(frame, events, fighters, assets, appeara
   useEffect(() => {
     if (!assets) return;
     const stopMove = id => { clearInterval(moves.current.get(id)); moves.current.delete(id); };
-    const reset = previous.current.scene !== scene || frame < previous.current.frame;
+    const reset = previous.current.scene !== scene || frame < previous.current.frame || frame > previous.current.frame + 1;
     if (reset) {
       for (const id of moves.current.keys()) stopMove(id);
       player?.stopScope(scope);

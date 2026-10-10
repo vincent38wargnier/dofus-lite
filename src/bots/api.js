@@ -8,8 +8,15 @@ import {
 } from '../engine/engine';
 import { utilityDecide } from './utilityBrain';
 import { maisonDecide, maisonWeightsFor } from './maison';
+import { casterAfterSpell } from './tactics';
 import { key, dist, cellsInRange, hasLineOfSight } from '../engine/geometry';
 import { bfs, reachableCells, reconstructPath } from '../engine/pathfinding';
+
+// A stable RNG belongs to one fighter in one match. Remember only actions that
+// left its public view unchanged: an invisible body can reject an otherwise
+// legal path/LoS. Never inspect hidden positions or consume the RNG to learn it.
+const decisionMemory = new WeakMap();
+const actionKey = action => JSON.stringify(action);
 
 // Rebuild a minimal engine state from a bot view (enough for validateAction).
 function stateFromView(view) {
@@ -19,6 +26,7 @@ function stateFromView(view) {
     leader: v.leader,
     isSummon: v.isSummon,
     isMonster: v.isMonster, monsterGrade: v.monsterGrade,
+    ...(v.customMonster ? { customMonster: v.customMonster } : {}),
     isDouble: v.isDouble, staticSummon: v.staticSummon, summonGrade: v.summonGrade,
     hidden: v.hidden, carriedBy: v.carriedBy, carrying: v.carrying,
     monsterId: v.monsterId,
@@ -68,8 +76,14 @@ export function makeBotApi(view, rng) {
   const state = stateFromView(view);
   const you = view.you;
   const { width, height } = view.board;
+  const signature = JSON.stringify(view);
+  const previous = decisionMemory.get(rng);
+  const rejected = previous?.signature === signature ? new Set(previous.rejected) : new Set();
+  if (previous?.signature === signature && previous.action && previous.action.type !== 'PASS') rejected.add(actionKey(previous.action));
+  const failedSteps = new Set([...rejected].map(value => JSON.parse(value)).filter(a => a.type === 'MOVE').map(a => key(a.to.x, a.to.y)));
+  const forecastStates = new Map();
 
-  const moveBlocked = (x, y) => blocksMoveAt(state, x, y);
+  const moveBlocked = (x, y) => failedSteps.has(key(x, y)) || blocksMoveAt(state, x, y);
   const losBlocked = (x, y) => blocksLosAt(state, x, y);
 
   // BFS distances from the enemy (their cell excluded from blocking so the
@@ -113,7 +127,7 @@ export function makeBotApi(view, rng) {
       && !moveBlocked(pos.x, pos.y),
 
     // Cases atteignables ce tour: [{ pos, cost, path }]
-    reachable: () => (you.pm > 0
+    reachable: () => (you.pm > 0 && !you.carriedBy
       ? reachableCells(you.pos, you.pm, width, height, moveBlocked)
       : []),
 
@@ -127,12 +141,44 @@ export function makeBotApi(view, rng) {
 
     // ---- validation (mêmes règles que l'arène) -------------------------
     canMove: (pos) => {
+      if (rejected.has(actionKey({ type: 'MOVE', to: pos }))) return { ok: false, reason: 'Déplacement déjà refusé' };
       const r = validateAction(state, { type: 'MOVE', to: pos });
       return { ok: r.ok, reason: r.reason || null };
     },
 
     canCast: (spellKey, target) => {
+      if (rejected.has(actionKey({ type: 'CAST', spell: spellKey, target }))) return { ok: false, reason: 'Cible déjà refusée' };
       const r = validateAction(state, { type: 'CAST', spell: spellKey, target });
+      return { ok: r.ok, reason: r.reason || null };
+    },
+
+    // Check a prospective firing cell with the same state/target/cooldown rules.
+    // The caller obtains reachable cells separately; this never moves the actor.
+    canCastFrom: (spellKey, target, from) => {
+      if (from.x === you.pos.x && from.y === you.pos.y) return api.canCast(spellKey, target);
+      const projected = { ...state, fighters: { ...state.fighters,
+        [you.id]: { ...state.fighters[you.id], pos: { ...from } } } };
+      const r = validateAction(projected, { type: 'CAST', spell: spellKey, target });
+      return { ok: r.ok, reason: r.reason || null };
+    },
+
+    // Limited within-turn forecast: consume PA/uses/cooldown and apply the
+    // first spell's immediate self boosts, without touching real state or RNG.
+    canCastAfter: (firstKey, firstTarget, nextKey, nextTarget, from = you.pos) => {
+      const first = you.spells.find(s => s.key === firstKey);
+      if (!first) return { ok: false, reason: 'Sort inconnu' };
+      const cacheKey = `${firstKey}:${key(firstTarget.x, firstTarget.y)}:${key(from.x, from.y)}`;
+      if (!forecastStates.has(cacheKey)) {
+        const after = casterAfterSpell(state.fighters[you.id], first, firstTarget, from);
+        after.usedThisTurn = { ...after.usedThisTurn, [firstKey]: (after.usedThisTurn[firstKey] || 0) + 1 };
+        after.cooldowns = { ...after.cooldowns, [firstKey]: first.cooldown || 0 };
+        after.usedOnTarget = { ...after.usedOnTarget };
+        const victim = firstTarget.x === from.x && firstTarget.y === from.y ? after
+          : Object.values(state.fighters).find(f => f.id !== you.id && f.hp > 0 && f.pos.x === firstTarget.x && f.pos.y === firstTarget.y);
+        if (victim) after.usedOnTarget[firstKey] = { ...after.usedOnTarget[firstKey], [victim.id]: (after.usedOnTarget[firstKey]?.[victim.id] || 0) + 1 };
+        forecastStates.set(cacheKey, { ...state, fighters: { ...state.fighters, [you.id]: after } });
+      }
+      const r = validateAction(forecastStates.get(cacheKey), { type: 'CAST', spell: nextKey, target: nextTarget });
       return { ok: r.ok, reason: r.reason || null };
     },
 
@@ -206,6 +252,10 @@ export function makeBotApi(view, rng) {
     // Aléa déterministe (rejouable): même seed, même match.
     random: () => rng.next(),
     pick: (arr) => arr[Math.floor(rng.next() * arr.length)],
+    rememberDecision: action => {
+      decisionMemory.set(rng, { signature, rejected, action });
+      return action;
+    },
   };
 
   // Le cerveau utilitaire intégré: retourne la meilleure action pondérée.

@@ -4,7 +4,7 @@ import { effectDescription, signed } from './combatEffects';
 import { summarizedHealthEvents } from './healthChanges';
 
 function lines(e, nameOf) {
-  const change = (id, value, cls = 'info') => ({ cls, subject: nameOf(id), value, title: e.name || e.label });
+  const change = (id, value, cls = 'info') => ({ cls, subject: nameOf(id), value, title: e.name || e.label || e.spellName });
   switch (e.t) {
     case 'damage':
       return [change(e.target, `${signed(-e.amount)} PV`, 'dmg')];
@@ -80,7 +80,10 @@ export default function LogPanel({ events, namesById, state }) {
           ? <span className="muted small">Aucun changement pour le moment.</span>
           : entries.map(({ event: e, ...l }) => {
             return <div key={l.key} className={`entry ${l.cls}`} title={l.title}>
-              {l.text || <>{l.subject} : <strong className={['damage', 'heal', 'point_removal', 'pa_refund'].includes(e.t) ? 'log-amount' : undefined}>{l.value}</strong></>}
+              {l.text || <>
+                {l.subject} : <strong className={['damage', 'heal', 'point_removal', 'pa_refund'].includes(e.t) ? 'log-amount' : undefined}>{l.value}</strong>
+                {l.title && !l.value.includes(l.title) && <span className="log-source"> · {l.title}</span>}
+              </>}
               {details && e.calculation && <div className="muted small">Jet {e.calculation.jet}{e.calculation.boost ? ` + charge ${e.calculation.boost}` : ''}{e.calculation.flatDamage ? ` · ${e.calculation.flatDamage > 0 ? '+' : ''}${e.calculation.flatDamage} dommages fixes` : ''} → {e.calculation.raw} après caractéristiques{e.calculation.areaPercent !== undefined && e.calculation.areaPercent !== 100 ? ` → zone ${e.calculation.areaPercent} % : ${e.calculation.afterArea}` : ''} → {e.calculation.afterRes} après résistances → armure −{e.calculation.armor}</div>}
             </div>;
           })}

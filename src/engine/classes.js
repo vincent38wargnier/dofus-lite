@@ -2,6 +2,8 @@
 // and summon stats are separately sourced; see spell-audit.json and README.
 
 import LIBRARY from './spellLibrary.json';
+import { isCustomSpellbook, MAX_CUSTOM_SPELLS } from './customSpells';
+import { isAuthoredSpell } from './authoredSpells';
 import { PARCHMENT_STAT, baseActionPoints } from './characteristicDefaults';
 export const SPELL_LIBRARY = LIBRARY;
 
@@ -118,6 +120,8 @@ export function buildSpell(raw) {
     targetMode: raw.rangeMax === 0 ? 'self' : raw.emptyCellOnly ? 'freeCell' : raw.targetMode,
     grade: raw.grade,
     requiredLevel: raw.requiredLevel,
+    ...(isAuthoredSpell(raw) ? { authoringVersion: raw.authoringVersion, description: raw.description, visualSpellId: raw.visualSpellId,
+      ...(raw.iconArtworkId ? { iconArtworkId: raw.iconArtworkId, iconFile: raw.iconFile } : {}) } : {}),
     element: main ? main.element : null,
     pa: raw.pa,
     range: [raw.rangeMin, raw.rangeMax],
@@ -163,6 +167,28 @@ export function resolveSpellLoadout(classId, loadout = {}) {
   const level = loadout.level || 100;
   const config = loadout.spells || {};
   const errors = [];
+  if (config.custom !== undefined) {
+    if (Array.isArray(config.custom) && config.custom.length > MAX_CUSTOM_SPELLS) {
+      return { spells: {}, errors: [`Une classe personnalisée peut avoir au maximum ${MAX_CUSTOM_SPELLS} sorts. Retirez ${config.custom.length - MAX_CUSTOM_SPELLS} sort(s) avant de jouer.`], valid: false };
+    }
+    if (!isCustomSpellbook(config.custom)) return { spells: {}, errors: ['Liste de sorts personnalisés invalide.'], valid: false };
+    const locked = config.custom.filter(raw => isAuthoredSpell(raw) && raw.requiredLevel > level);
+    if (locked.length) return { spells: {}, errors: locked.map(raw => `${raw.name} : niveau ${raw.requiredLevel} requis pour un sort créé.`), valid: false };
+    const order = config.order || [];
+    const keys = new Set();
+    const custom = config.custom.map(raw => {
+      // Keep the public spell keys used by existing, hand-written AIs.
+      const spell = { ...buildSpell(raw), monsterSummons: !!raw.monsterSummons };
+      if (keys.has(spell.key)) spell.key += `_${spell.id}`;
+      keys.add(spell.key);
+      return spell;
+    });
+    custom.sort((a, b) => {
+      const ai = order.indexOf(a.id), bi = order.indexOf(b.id);
+      return (ai < 0 ? 10000 : ai) - (bi < 0 ? 10000 : bi);
+    });
+    return { spells: Object.fromEntries(custom.map(spell => [spell.key, spell])), errors, valid: true };
+  }
   const common = [...new Set(config.common || [])];
   const ids = [...(LIBRARY.classes[classId] || []), ...common.filter(id => LIBRARY.common.includes(id))];
   if (common.some(id => !LIBRARY.common.includes(id))) errors.push('Sort commun inconnu.');

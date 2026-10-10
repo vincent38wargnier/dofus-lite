@@ -23,6 +23,7 @@ import {
 } from './classes';
 import { MAPS } from './maps';
 import { getMonster } from './monsters';
+import { resolveCustomMonster } from './customMonsters';
 import {
   key, dist, samePos, isAligned, adjacentCells,
   hasLineOfSight, spellZoneCells, areaDamagePercent,
@@ -71,6 +72,7 @@ export function alliesOf(state, fighterId) {
 // Spells of a fighter: class kit for leaders, monster kit for summons.
 export function spellsOf(fighter) {
   if (fighter.isDouble) return {};
+  if (fighter.customMonster) return resolveCustomMonster(fighter.customMonster).spells;
   if (fighter.isMonster) return getMonster(fighter.monsterId, fighter.monsterGrade)?.spells || {};
   if (fighter.isSummon) return getSummon(fighter.monsterId, fighter.summonGrade || 5)?.spells || {};
   const spells = fighter.loadout ? resolveSpellLoadout(fighter.classId, fighter.loadout).spells : CLASSES[fighter.classId].spells;
@@ -256,7 +258,7 @@ export function createGame({ mapId = 'arene', seed = 1, fighters, placement = fa
   };
 
   configs.forEach(cfg => {
-    const monster = cfg.monsterId != null ? getMonster(cfg.monsterId, cfg.monsterGrade) : null;
+    const monster = cfg.customMonster ? resolveCustomMonster(cfg.customMonster) : cfg.monsterId != null ? getMonster(cfg.monsterId, cfg.monsterGrade) : null;
     if (cfg.monsterId != null && !monster) throw new Error(`Unknown monster/grade: ${cfg.monsterId}/${cfg.monsterGrade}`);
     const cls = monster || CLASSES[cfg.classId];
     if (!cls) throw new Error(`Unknown class: ${cfg.classId}`);
@@ -299,6 +301,8 @@ export function createGame({ mapId = 'arene', seed = 1, fighters, placement = fa
       initiative: 0,
       ...(monster ? {
         monsterId: monster.monsterId, monsterGrade: monster.grade, emoji: monster.emoji,
+        ...(cfg.customMonster ? { customMonster: clone(cfg.customMonster), appearanceMonsterId: monster.appearanceMonsterId,
+          artworkId: monster.artworkId, customInitiative: monster.initiative } : {}),
         permanent: { dodgePa: monster.dodgePa, dodgePm: monster.dodgePm }, maxSummons: monster.maxSummons,
       } : {}),
       ...(equipment ? {
@@ -317,7 +321,7 @@ export function createGame({ mapId = 'arene', seed = 1, fighters, placement = fa
   const ids = Object.keys(state.fighters);
   for (const id of ids) {
     const f = state.fighters[id];
-    f.initiative = f.isMonster ? getMonster(f.monsterId, f.monsterGrade).initiative
+    f.initiative = f.isMonster ? f.customInitiative ?? getMonster(f.monsterId, f.monsterGrade).initiative
       : initiative(f.stats, f.hp, f.maxHp, statBuff(f, 'initiative'));
   }
   const [a, b] = ids;
@@ -775,7 +779,7 @@ function validateCast(state, action) {
   if (spell.id === 445 && occupant?.team === f.team) return { ok: false, reason: 'Coopération nécessite un ennemi' };
   if (spell.id === 450 && (!occupant || occupant.id === f.id || occupant.team !== f.team)) return { ok: false, reason: 'Folie sanguinaire nécessite un autre allié' };
   if (spell.effects.some(e => ['summon', 'staticSummon'].includes(e.kind)
-    && !(f.isMonster ? getMonster(e.p1, e.p2) : getSummon(e.p1, e.p2)))) {
+    && !((f.isMonster || spell.monsterSummons) ? getMonster(e.p1, e.p2) : getSummon(e.p1, e.p2)))) {
     return { ok: false, reason: 'Données de cette invocation indisponibles' };
   }
   const obs = state.board.obstacles[key(target.x, target.y)];
@@ -962,6 +966,7 @@ function doCast(state, events, spell, target, trigger = null) {
 
   events.push({
     t: trigger ? 'hazard_effect' : 'cast', fighter: f.id, spell: spell.key, spellId: trigger?.visualSpellId || spell.id, grade: spell.grade,
+    ...(spell.visualSpellId ? { visualSpellId: spell.visualSpellId } : {}),
     spellName: spell.name,
     itemId: spell.itemId || null, weaponAnimation: spell.isWeapon ? spell.animation : null,
     emoji: spell.emoji, element: spell.element, from: casterPos,
@@ -1270,13 +1275,13 @@ function doCast(state, events, spell, target, trigger = null) {
       case 'staticSummon':
       case 'double':
       case 'summon': {
-        const monster = f.isMonster && effect.kind !== 'double' ? getMonster(effect.p1, effect.p2) : null;
+        const monster = (f.isMonster || spell.monsterSummons) && effect.kind !== 'double' ? getMonster(effect.p1, effect.p2) : null;
         const tpl = effect.kind === 'double' ? { ...f, monsterId: null, name: 'Double', emoji: '👤', hp: f.maxHp, pa: 0, pm: f.basePm }
           : monster ? { ...monster, hp: monster.baseHp, pa: Math.max(0, monster.basePa), pm: Math.max(0, monster.basePm) }
             : getSummon(effect.p1, effect.p2);
         if (!tpl) break;
         // Invocation 1.29: stats et PV multipliés par (1 + niveau de l'invocateur / 100).
-        const coef = effect.kind === 'double' || f.isMonster ? 1 : 1 + f.level / 100;
+        const coef = effect.kind === 'double' || f.isMonster || spell.monsterSummons ? 1 : 1 + f.level / 100;
         const id = `${f.id}s${(f.summonCount = (f.summonCount || 0) + 1)}`;
         const summon = {
           id,
@@ -1544,6 +1549,7 @@ export function getView(state, fighterId) {
     leader: f.leader,
     isSummon: !!f.isSummon,
     isMonster: !!f.isMonster, monsterGrade: f.monsterGrade,
+    ...(f.customMonster ? { customMonster: clone(f.customMonster) } : {}),
     isDouble: !!f.isDouble, staticSummon: !!f.staticSummon, summonGrade: f.summonGrade,
     carriedBy: f.carriedBy || null, carrying: f.carrying || null,
     hidden: f.team !== me.team && isInvisible(f),
@@ -1551,7 +1557,7 @@ export function getView(state, fighterId) {
     ownerId: f.ownerId || null,
     name: f.name,
     classId: f.classId,
-    className: f.isMonster ? getMonster(f.monsterId, f.monsterGrade).name : CLASSES[f.classId]?.name || f.name,
+    className: f.isMonster ? f.customMonster?.name || getMonster(f.monsterId, f.monsterGrade)?.name : CLASSES[f.classId]?.name || f.name,
     level: f.level,
     pos: { ...(isInvisible(f) && f.team !== me.team ? f.lastVisiblePos || f.startPos || f.pos : f.pos) },
     hp: f.hp,
@@ -1574,6 +1580,8 @@ export function getView(state, fighterId) {
       key: s.key,
       id: s.id,
       grade: s.grade,
+      ...(s.visualSpellId ? { visualSpellId: s.visualSpellId, description: s.description } : {}),
+      ...(s.iconArtworkId ? { iconArtworkId: s.iconArtworkId, iconFile: s.iconFile } : {}),
       unsupportedEffects: s.unsupportedEffects || [],
       usesPerTarget: s.usesPerTarget || 0,
       name: s.name,
@@ -1587,6 +1595,7 @@ export function getView(state, fighterId) {
         Math.max(s.range[0], s.range[1] + (s.adjustableRange ? statBuff(f, 'range') : 0)),
       ],
       adjustableRange: !!s.adjustableRange,
+      requiredStates: [...(s.requiredStates || [])], forbiddenStates: [...(s.forbiddenStates || [])],
       lineOnly: s.lineOnly,
       needsLos: s.needsLos,
       critRate: s.critRate,

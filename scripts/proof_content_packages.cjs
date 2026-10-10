@@ -1,0 +1,130 @@
+// Real browser imports, isolated from the user's saves and active game.
+require('./ai_runtime.cjs');
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const puppeteer = require('puppeteer-core');
+const { packageExample } = require('../src/content/contentPackage');
+const { readInput } = require('./content-pack.cjs');
+const { writeZip } = require('../skills/retro-class-designer/scripts/class-kit.cjs');
+
+const out = process.env.PROOF_DIR || '/tmp/dofus-content-packages';
+const root = path.join(__dirname, '../public/templates/content-packages');
+(async () => {
+  fs.mkdirSync(out, { recursive: true });
+  const bad = packageExample(); bad.class.spells = Array.from({ length: 11 }, (_, i) => ({ ...bad.class.spells[0], key: `s${i}` }));
+  fs.writeFileSync(path.join(out, 'invalid.zip'), writeZip(new Map([['content.json', Buffer.from(JSON.stringify(bad))]])));
+  const dungeonFiles = await readInput(path.join(root, 'example-dungeon-with-artwork.zip'));
+  const manifest = JSON.parse(Buffer.from(dungeonFiles.get('content.json')));
+  manifest.dungeon.mapId = 'dungeon_2083';
+  manifest.name = 'Citadelle des braises';
+  dungeonFiles.set('content.json', Buffer.from(JSON.stringify(manifest)));
+  fs.writeFileSync(path.join(out, 'dungeon-deflated.zip'), writeZip(new Map([...dungeonFiles].map(([name, data]) => [name, Buffer.from(data)]))));
+  const browser = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true, pipe: true });
+  const report = { errors: [] }; let page;
+  try {
+    page = await browser.newPage(); page.setDefaultTimeout(30000);
+    await page.setViewport({ width: 1640, height: 1120 });
+    page.on('pageerror', error => report.errors.push(error.message));
+    const url = process.env.PROOF_URL || 'http://127.0.0.1:3013';
+    await browser.defaultBrowserContext().overridePermissions(url, ['clipboard-read', 'clipboard-write', 'clipboard-sanitized-write']);
+    await page.evaluateOnNewDocument(() => {
+      const original = URL.createObjectURL;
+      URL.createObjectURL = function(blob) { window.lastExport = blob; return original.call(this, blob); };
+    });
+    const click = async (selector, text = '') => {
+      const handle = await page.evaluateHandle(({ selector, text }) => [...document.querySelectorAll(selector)].find(e => e.checkVisibility() && e.textContent.includes(text)), { selector, text });
+      assert(handle.asElement(), `Missing ${selector}: ${text}`);
+      assert(!await handle.asElement().evaluate(e => e.disabled), `Disabled ${selector}: ${text}`);
+      await handle.asElement().click(); await handle.dispose();
+    };
+    const importZip = async file => {
+      const input = await page.$('[aria-label="Importer une classe ou un donjon ZIP"]');
+      await input.uploadFile(file);
+      await page.waitForFunction(() => document.querySelector('[data-package-panel] [role="status"]')?.textContent.match(/importé et sauvegardé|Import refusé/));
+    };
+    const saved = () => page.evaluate(() => JSON.parse(localStorage.getItem('dofus-lite-creations-v1')));
+    const log = async () => {
+      if (!await page.$('.fight-log')) await click('.fight-heading-actions button', 'Journal');
+      await click('.combat-log-heading button', 'Exporter');
+      return page.evaluate(async () => JSON.parse(await window.lastExport.text()));
+    };
+    await page.goto(url, { waitUntil: 'networkidle0' });
+    await click('.tabs > button', 'Atelier'); await click('.creator-tabs button', 'Mes classes');
+    await page.type('[data-package-panel] textarea', 'Une classe Jedi avec sabre, poussée de Force et mobilité ; dix sorts maximum.');
+    await click('[data-package-panel] button', 'Copier le prompt IA');
+    await page.waitForFunction(() => document.querySelector('[data-package-panel] [role="status"]')?.textContent.includes('copié'));
+    const prompt = await page.evaluate(() => navigator.clipboard.readText());
+    assert(prompt.indexOf('Une classe Jedi') < 100); assert(prompt.includes('PACKAGE TYPE: class'));
+    assert(prompt.includes('"format": "dofus-lite-content"')); assert(prompt.includes('Critical variant is a COMPLETE'));
+    report.clipboard = { themeAtTop: true, length: prompt.length, completeSpec: true };
+    await importZip(path.join(out, 'invalid.zip'));
+    assert(await page.$('.creator-package-errors')); assert.equal(await saved(), null);
+    report.invalidZipRejected = true;
+    await importZip(path.join(root, 'example-class-with-artwork.zip'));
+    const character = (await saved()).characters[0];
+    assert.equal(character.name, 'Gardien des braises'); assert(character.loadout.artworkId);
+    assert(character.loadout.spells.custom[0].iconArtworkId);
+    await page.waitForSelector('.creator-character-identity img[src^="blob:"]');
+    await page.waitForSelector('.creator-selected-spells img[src^="blob:"]');
+    await page.$eval('[data-package-panel]', e => e.scrollIntoView({ block: 'start' }));
+    await page.screenshot({ path: path.join(out, 'builder-class.png') });
+    await page.setViewport({ width: 390, height: 844 });
+    await page.$eval('[data-package-panel]', e => e.scrollIntoView({ block: 'start' }));
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Mobile overflow');
+    await page.screenshot({ path: path.join(out, 'builder-mobile.png') });
+    await page.setViewport({ width: 1640, height: 1120 });
+    await click('.creator-tabs button', 'Mes donjons');
+    await page.$eval('[data-package-panel] textarea', e => { e.focus(); e.select(); });
+    await page.keyboard.press('Backspace');
+    await page.type('[data-package-panel] textarea', 'Une citadelle de fantasy : un gardien des braises et deux sentinelles. Chaque monstre possède ses propres sorts.');
+    await click('[data-package-panel] button', 'Copier le prompt IA');
+    await page.waitForFunction(async () => (await navigator.clipboard.readText()).includes('PACKAGE TYPE: dungeon'));
+    report.dungeonPromptIncludesReferences = (await page.evaluate(() => navigator.clipboard.readText())).includes('Monster stat/model references');
+    await importZip(path.join(out, 'dungeon-deflated.zip'));
+    const room = (await saved()).dungeons[0];
+    assert.equal(room.mapId, 'dungeon_2083'); assert.equal(room.members.length, 2); assert.equal(room.members.reduce((n, m) => n + m.count, 0), 3);
+    assert(room.members[0].customMonster.artworkId);
+    await page.waitForSelector('.creator-custom-monster img[src^="blob:"]');
+    await page.$eval('[data-package-panel]', e => e.scrollIntoView({ block: 'start' }));
+    await page.screenshot({ path: path.join(out, 'builder-dungeon.png') });
+    await click('.creator-custom-monster button', 'Modifier les sorts');
+    await page.waitForFunction(() => document.querySelector('.creator-monster-spell-editor')?.textContent.includes('Braise vive'));
+    const beforeReload = await saved();
+    await page.reload({ waitUntil: 'networkidle0' }); await click('.tabs > button', 'Atelier');
+    assert.deepEqual(await saved(), beforeReload);
+    await page.waitForSelector('.creator-custom-monster img[src^="blob:"]');
+    report.reload = { classes: beforeReload.characters.length, dungeons: beforeReload.dungeons.length, artwork: true };
+    await page.select('.creator-launch select', character.id);
+    await click('.creator-launch-buttons button', 'Jouer cette création');
+    await page.waitForSelector('.placement-cell.yours');
+    await page.waitForFunction(() => document.querySelectorAll('.fight-map .custom-character-sprite').length === 2);
+    const placement = await log(); assert.equal(placement.state.mapId, 'dungeon_2083');
+    assert.equal(Object.values(placement.state.fighters).filter(f => f.team === 'B').length, 3);
+    assert.equal(placement.state.fighters.B.monsterId, null); assert.equal(placement.state.fighters.B.appearanceMonsterId, 147);
+    await click('.fight-log-close');
+    await page.screenshot({ path: path.join(out, 'manual-placement.png') });
+    await click('.fight-heading-actions button', 'Retour à l’atelier');
+    await click('.tabs > button', 'Atelier');
+    await click('.creator-launch-buttons button', 'Tester avec l’IA');
+    await page.waitForSelector('[data-auto-dungeon]', { timeout: 60000 });
+    await click('.auto-result-button');
+    const fight = await log();
+    const casts = fight.events.filter(e => e.t === 'cast');
+    assert(casts.some(e => e.fighter === 'A' && e.spellName === 'Braise vive'));
+    assert(casts.some(e => e.fighter !== 'A' && ['Braise vive', 'Étincelle'].includes(e.spellName)));
+    assert(!fight.events.some(e => ['bot_error', 'unsupported_effects'].includes(e.t)));
+    assert(fight.state.over); assert.equal(fight.state.mapId, room.mapId);
+    report.combat = { winner: fight.state.winner, turns: fight.state.turn, mapId: fight.state.mapId,
+      spells: [...new Set(casts.map(e => e.spellName))], bothTeamsCast: true };
+    fs.writeFileSync(path.join(out, 'combat.json'), JSON.stringify(fight, null, 2));
+    await page.screenshot({ path: path.join(out, 'ai-result.png') });
+    assert.deepEqual(report.errors, []); report.passed = true;
+    console.log(JSON.stringify(report, null, 2));
+  } catch (error) {
+    report.failure = error.stack; if (page) await page.screenshot({ path: path.join(out, 'failure.png') }).catch(() => {}); throw error;
+  } finally {
+    fs.writeFileSync(path.join(out, 'proof.json'), JSON.stringify(report, null, 2));
+    const child = browser.process(); await browser.disconnect(); if (child?.exitCode === null) child.kill('SIGTERM');
+  }
+})().catch(error => { console.error(error); process.exitCode = 1; });

@@ -1,0 +1,170 @@
+{
+  "format": "dofus-lite-content",
+  "schemaVersion": 1,
+  "type": "dungeon",
+  "id": "ember-keep",
+  "version": "1.0.0",
+  "name": "Citadelle des braises",
+  "description": "Un exemple jouable à personnaliser.",
+  "author": "Votre nom",
+  "design": {
+    "role": "Dégâts à moyenne portée",
+    "strengths": [
+      "Préparation offensive"
+    ],
+    "weaknesses": [
+      "Ligne de vue nécessaire",
+      "Aucun soin"
+    ],
+    "turnLoop": "Se rapprocher, préparer Résolution, puis lancer Braise vive.",
+    "counterplay": "Profiter de la relance du bonus et des obstacles."
+  },
+  "dungeon": {
+    "mapId": "amakna_534",
+    "monsters": [
+      {
+        "key": "warden",
+        "name": "Gardien des braises",
+        "description": "Gardien de la citadelle.",
+        "role": "Attaquant",
+        "counterplay": "Couper sa ligne de vue.",
+        "reference": {
+          "monsterId": 147,
+          "grade": 1
+        },
+        "tuning": {
+          "hpPercent": 75,
+          "statsPercent": 100,
+          "paBonus": 0,
+          "pmBonus": 0
+        },
+        "spells": [
+          {
+            "key": "ember",
+            "name": "Braise vive",
+            "description": "Une attaque de feu à moyenne portée.",
+            "counterplay": "Couper la ligne de vue ou résister au feu.",
+            "pa": 3,
+            "rangeMin": 1,
+            "rangeMax": 5,
+            "targetMode": "enemy",
+            "needsLos": true,
+            "lineOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 2,
+            "maxPerTarget": 2,
+            "cooldown": 0,
+            "critRate": 0,
+            "failRate": 0,
+            "endsTurnOnFailure": false,
+            "visualSpellId": 161,
+            "effects": [
+              {
+                "kind": "damage",
+                "min": 15,
+                "max": 19,
+                "duration": 0,
+                "zone": "Pa",
+                "target": "enemy",
+                "element": "feu"
+              }
+            ],
+            "critEffects": []
+          },
+          {
+            "key": "resolve",
+            "name": "Résolution",
+            "description": "Prépare le prochain assaut.",
+            "counterplay": "Garder ses distances pendant les deux tours du bonus.",
+            "pa": 2,
+            "rangeMin": 0,
+            "rangeMax": 0,
+            "targetMode": "self",
+            "needsLos": true,
+            "lineOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 1,
+            "maxPerTarget": 1,
+            "cooldown": 4,
+            "critRate": 0,
+            "failRate": 0,
+            "endsTurnOnFailure": false,
+            "visualSpellId": 153,
+            "effects": [
+              {
+                "kind": "buffDamage",
+                "min": 8,
+                "max": 8,
+                "duration": 2,
+                "zone": "Pa",
+                "target": "self"
+              }
+            ],
+            "critEffects": []
+          }
+        ]
+      },
+      {
+        "key": "sentinel",
+        "name": "Sentinelle de cendre",
+        "description": "Un soutien offensif fragile.",
+        "role": "Attaquant secondaire",
+        "counterplay": "Éliminer rapidement ses faibles PV.",
+        "reference": {
+          "monsterId": 147,
+          "grade": 1
+        },
+        "tuning": {
+          "hpPercent": 25,
+          "statsPercent": 50,
+          "paBonus": 0,
+          "pmBonus": 0
+        },
+        "spells": [
+          {
+            "key": "spark",
+            "name": "Étincelle",
+            "description": "Une attaque de feu à moyenne portée.",
+            "counterplay": "Couper la ligne de vue ou résister au feu.",
+            "pa": 3,
+            "rangeMin": 1,
+            "rangeMax": 5,
+            "targetMode": "enemy",
+            "needsLos": true,
+            "lineOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 2,
+            "maxPerTarget": 2,
+            "cooldown": 0,
+            "critRate": 0,
+            "failRate": 0,
+            "endsTurnOnFailure": false,
+            "visualSpellId": 161,
+            "effects": [
+              {
+                "kind": "damage",
+                "min": 15,
+                "max": 19,
+                "duration": 0,
+                "zone": "Pa",
+                "target": "enemy",
+                "element": "feu"
+              }
+            ],
+            "critEffects": []
+          }
+        ]
+      }
+    ],
+    "members": [
+      {
+        "monster": "warden",
+        "count": 1
+      },
+      {
+        "monster": "sentinel",
+        "count": 2
+      }
+    ]
+  }
+}

@@ -84,8 +84,8 @@ export default function CombatStatsPanel({ id, fighter, resources = fighter, fig
     {controls}
     <div className="dock-fighter-summary">
       <div className="dock-fighter-heading">
-      <div className="dock-portrait">{fighter.isSummon ? fighter.emoji : <RetroPortrait classId={fighter.classId}
-        monsterId={fighter.isMonster ? fighter.monsterId : null} side={fighter.team} fallback={fighter.emoji || cls?.emoji} />}</div>
+      <div className="dock-portrait">{fighter.isSummon ? fighter.emoji : <RetroPortrait classId={fighter.classId} artworkId={fighter.artworkId || fighter.loadout?.artworkId}
+        monsterId={fighter.isMonster ? fighter.appearanceMonsterId ?? fighter.monsterId : null} side={fighter.team} fallback={fighter.emoji || cls?.emoji} />}</div>
       <div className="dock-fighter-name"><strong>{fighter.name}</strong><small title={`Initiative : ${fighter.initiative}${fighter.ownerId ? ` · Invoquée par ${fighters[fighter.ownerId]?.name || fighter.ownerId}` : ''}`}>
         {kind} · niv. {fighter.level}{inspecting ? (fighter.team === 'A' ? ' · Allié' : ' · Adversaire') : ' · Vous'}
       </small></div>

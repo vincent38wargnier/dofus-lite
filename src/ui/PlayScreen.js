@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CLASSES } from '../engine/classes';
+import { resolveLoadout } from '../engine/equipment';
 import { MAPS } from '../engine/maps';
 import { KANOJEDO_MAP_ID } from '../engine/monsters';
 import { key, cellsInRange } from '../engine/geometry';
@@ -21,18 +22,44 @@ import { weaponTargetPlans, weaponZoneLabel } from './weaponTargeting';
 import { spellTargetPreview } from './spellTargeting';
 import { combatResources } from './combatResources';
 import AutoDungeonFight from './AutoDungeonFight';
+import { useCreations } from './CreationsContext';
 
 const BOT_STEP_MS = 620;
 
-export default function PlayScreen({ allBots, active = true, onFightChange }) {
+export default function PlayScreen({ allBots, active = true, onFightChange, customLaunch, onCustomConsumed, onCustomExit }) {
   const assets = useRetroAssets();
   const { appearances, setAppearance } = useAppearances();
   const [initial] = useState(() => readPlayerSetup({ getItem: key => localStorage.getItem(key) }));
   const animationUntil = useRef(0);
-  const [playerClass, setPlayerClass] = useState(initial.playerClass);
+  const [standardPlayerClass, setStandardPlayerClass] = useState(initial.playerClass);
+  const [customCharacterId, setCustomCharacterId] = useState(initial.customCharacterId);
+  const creations = useCreations();
+  const customCharacter = creations?.characters.find(character => character.id === customCharacterId);
+  const playerClass = customCharacter?.classId || standardPlayerClass;
+  const setPlayerClass = classId => { setStandardPlayerClass(classId); setCustomCharacterId(null); };
+  const selectCustomCharacter = character => {
+    setStandardPlayerClass(character.classId); setCustomCharacterId(character.id);
+  };
+  useEffect(() => {
+    if (customCharacterId && !customCharacter) setCustomCharacterId(null);
+  }, [customCharacterId, customCharacter]);
   const [botId, setBotId] = useState(() => allBots.some(bot => bot.id === initial.botId) ? initial.botId : 'maison');
   const [botClass, setBotClass] = useState(initial.botClass);
-  const equipment = useLoadouts(playerClass, botClass);
+  const standardEquipment = useLoadouts(playerClass, botClass);
+  const customSummary = useMemo(() => customCharacter && resolveLoadout(customCharacter.classId, customCharacter.loadout), [customCharacter]);
+  // Edit the original Atelier creation by ID; two classes using the same
+  // character model must never overwrite each other or the standard draft.
+  const equipment = customCharacter ? {
+    ...standardEquipment,
+    loadouts: { ...standardEquipment.loadouts, A: customCharacter.loadout },
+    summaries: { ...standardEquipment.summaries, A: customSummary },
+    saveError: standardEquipment.saveError || !!creations.error,
+    update: (side, change, targetClass) => {
+      if (side !== 'A') { standardEquipment.update(side, change, targetClass); return; }
+      creations.update(previous => ({ ...previous, characters: previous.characters.map(character => character.id === customCharacter.id
+        ? { ...character, loadout: typeof change === 'function' ? change(character.loadout) : change } : character) }));
+    },
+  } : standardEquipment;
   const [mapId, setMapId] = useState(initial.mapId);
   const [mode, setMode] = useState(initial.mode);
   const [monsterGrade, setMonsterGrade] = useState(initial.monsterGrade);
@@ -40,14 +67,16 @@ export default function PlayScreen({ allBots, active = true, onFightChange }) {
   const [bossGrade, setBossGrade] = useState(initial.bossGrade);
   const [playerBotId, setPlayerBotId] = useState(() => allBots.some(bot => bot.id === initial.playerBotId) ? initial.playerBotId : 'maison');
   const [autoConfig, setAutoConfig] = useState(null);
+  const [externalSession, setExternalSession] = useState(null);
+  const handledLaunch = useRef(null);
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1e9));
   const [error, setError] = useState(null);
   const [settingsError, setSettingsError] = useState(false);
   useEffect(() => {
-    try { localStorage.setItem(SETUP_STORAGE, JSON.stringify({ playerClass, botClass, botId, playerBotId, mapId, mode, monsterGrade, bossId, bossGrade })); setSettingsError(false); }
+    try { localStorage.setItem(SETUP_STORAGE, JSON.stringify({ playerClass, customCharacterId: customCharacter?.id || null, botClass, botId, playerBotId, mapId, mode, monsterGrade, bossId, bossGrade })); setSettingsError(false); }
     catch (_) { setSettingsError(true); }
-  }, [playerClass, botClass, botId, playerBotId, mapId, mode, monsterGrade, bossId, bossGrade]);
-  const playerSex = equipment.loadouts.A.profile?.sex || 0;
+  }, [playerClass, customCharacter?.id, botClass, botId, playerBotId, mapId, mode, monsterGrade, bossId, bossGrade]);
+  const playerSex = (externalSession?.character.loadout || equipment.loadouts.A).profile?.sex || 0;
   const botSex = equipment.loadouts.B.profile?.sex || 0;
   useEffect(() => {
     if (active) { setAppearance('A', playerSex === 1 ? 'female' : 'male'); setAppearance('B', botSex === 1 ? 'female' : 'male'); }
@@ -106,7 +135,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange }) {
       let decide;
       try { decide = compileBot(controller.code); } catch (e) { setError(`${controller.name} : ${e.message}`); return; }
       setAutoConfig({ mode: 'boss', bossId, bossGrade, seed: s, controllerName: controller.name,
-        bots: { A: { name: 'Vous', decide } }, classes: { A: playerClass },
+        bots: { A: { name: customCharacter?.name || 'Vous', decide } }, classes: { A: playerClass },
         loadouts: { A: JSON.parse(JSON.stringify(equipment.loadouts.A)) } });
       matchRef.current = null;
       setPhase('auto');
@@ -114,7 +143,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange }) {
     }
     let m;
     try {
-      m = new LiveMatch({ playerClass, botClass, mapId: mode === 'kanojedo' ? KANOJEDO_MAP_ID : mapId,
+      m = new LiveMatch({ playerClass, playerName: customCharacter?.name || 'Vous', botClass, mapId: mode === 'kanojedo' ? KANOJEDO_MAP_ID : mapId,
         mode, monsterGrade, bossId, bossGrade, seed: s, botName: bot?.name, botDecide: decideB, loadouts: equipment.loadouts });
     } catch (e) { setError(e.message); return; }
     matchRef.current = m;
@@ -128,6 +157,38 @@ export default function PlayScreen({ allBots, active = true, onFightChange }) {
     setPhase('fight');
     setStep((x) => x + 1);
   };
+
+  const startCustom = (request, newSeed = Math.floor(Math.random() * 1e9)) => {
+    const { character, dungeon, automatic } = request;
+    const loadouts = { A: JSON.parse(JSON.stringify(character.loadout)) };
+    try {
+      animationUntil.current = 0;
+      setError(null); setSeed(newSeed);
+      if (automatic) {
+        const controller = findBot(allBots, request.botId);
+        if (!controller) throw new Error('Choisissez une IA disponible pour le personnage.');
+        const decide = compileBot(controller.code);
+        setAutoConfig({ mode: 'custom', dungeon, seed: newSeed, controllerName: controller.name,
+          bots: { A: { name: character.name, decide } }, classes: { A: character.classId }, loadouts });
+        matchRef.current = null; setPhase('auto');
+      } else {
+        const match = new LiveMatch({ mode: 'custom', dungeon, seed: newSeed,
+          playerClass: character.classId, playerName: character.name, loadouts });
+        matchRef.current = match; setBotName(dungeon.name);
+        setLog(match.initialEvents); setLastEvents(match.initialEvents);
+        setSelectedSpell(null); setHoverCell(null); setHoveredSpell(null); setCompactLog(false);
+        setPhase('fight'); setStep(value => value + 1);
+      }
+      setExternalSession(request);
+    } catch (e) { setExternalSession(null); setPhase('setup'); onCustomExit?.(e.message); }
+  };
+  useEffect(() => {
+    if (!customLaunch || handledLaunch.current === customLaunch.id) return;
+    handledLaunch.current = customLaunch.id;
+    startCustom(customLaunch); onCustomConsumed?.();
+    // A request is an immutable snapshot; changing settings never restarts it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customLaunch]);
 
   const m = phase === 'fight' ? matchRef.current : null;
   const placing = !!m?.placing;
@@ -284,7 +345,15 @@ export default function PlayScreen({ allBots, active = true, onFightChange }) {
     // Cosmetic preference only: keep the current combat export and saved draft
     // in sync without advancing the turn or replaying the last animation.
     mm.state = { ...mm.state, fighters: { ...mm.state.fighters, A: { ...fighter, loadout: withOrder(fighter.loadout) } } };
-    equipment.update('A', withOrder, fighter.classId);
+    if (externalSession) {
+      const character = { ...externalSession.character, loadout: withOrder(fighter.loadout) };
+      setExternalSession(previous => ({ ...previous, character }));
+      if (character.id) creations?.update(previous => ({ ...previous,
+        characters: previous.characters.map(entry => entry.id === character.id
+          ? { ...entry, loadout: withOrder(entry.loadout) } : entry) }));
+      else equipment.update('A', withOrder, fighter.classId);
+      setStep(value => value + 1);
+    } else equipment.update('A', withOrder, fighter.classId);
   };
 
   const endTurn = () => {
@@ -312,18 +381,22 @@ export default function PlayScreen({ allBots, active = true, onFightChange }) {
   const hoveredFighter = m?.state.fighters[inspection.inspection?.id];
   const inspectedFighter = hoveredFighter && (hoveredFighter.team === 'A' || !isInvisible(hoveredFighter)) ? hoveredFighter : null;
   const statsFighter = inspectedFighter || m?.state.fighters.A;
-  const leaveFight = () => { matchRef.current = null; setPhase('setup'); setHoverCell(null); };
+  const leaveFight = () => {
+    matchRef.current = null; setPhase('setup'); setHoverCell(null);
+    if (externalSession) { setExternalSession(null); onCustomExit?.(); }
+  };
   const selectionLabel = selectedInfo?.isWeapon
     ? `${selectedInfo.name} · ${selectedInfo.pa} PA · Visée ${selectedInfo.range[0] === selectedInfo.range[1] ? selectedInfo.range[0] : selectedInfo.range.join('–')} PO · ${weaponZoneLabel(selectedInfo)}`
     : selectedInfo ? `${selectedInfo.name} · Choisissez une cible` : '';
 
   if (phase === 'auto') return <AutoDungeonFight config={autoConfig} active={active} onExit={leaveFight}
-    onRematch={() => start(Math.floor(Math.random() * 1e9))} />;
+    onRematch={() => externalSession ? startCustom(externalSession) : start(Math.floor(Math.random() * 1e9))} />;
 
   return (
     <div className={phase === 'fight' ? 'play-screen fight-screen' : 'play-screen'}>
       {phase !== 'fight' ? (
-        <PlayerSetup {...{ playerClass, setPlayerClass, botClass, setBotClass, botId, setBotId, playerBotId, setPlayerBotId, allBots, mapId, setMapId, mode, setMode, monsterGrade, setMonsterGrade, bossId, setBossId, bossGrade, setBossGrade, seed, setSeed, equipment, error, settingsError }} onStart={() => start()} />
+        <PlayerSetup {...{ playerClass, setPlayerClass, customCharacter, selectCustomCharacter, botClass, setBotClass, botId, setBotId, playerBotId, setPlayerBotId, allBots, mapId, setMapId, mode, setMode, monsterGrade, setMonsterGrade, bossId, setBossId, bossGrade, setBossGrade, seed, setSeed, equipment, error, settingsError }}
+          customCharacters={creations?.characters} onStart={() => start()} />
       ) : (
         <div className={`fight-workspace${showLog ? ' log-open' : ''}`}>
           {showLog && <section className="fight-log" id="fight-log" aria-label="Journal du combat">
@@ -331,9 +404,9 @@ export default function PlayScreen({ allBots, active = true, onFightChange }) {
             <LogPanel events={log} namesById={namesById} state={m.state} />
           </section>}
           <div className="fight-main">
-          <div className="fight-heading"><div><h1>{MAPS[m.state.mapId].name.replace(/^🗺\s*/, '')}</h1><p>{placing ? 'Placement' : m.over ? 'Combat terminé' : `Tour ${m.state.turn} / ${m.state.maxTurns}`} · {CLASSES[playerClass].name}</p></div>
+          <div className="fight-heading"><div><h1>{MAPS[m.state.mapId].name.replace(/^🗺\s*/, '')}</h1><p>{placing ? 'Placement' : m.over ? 'Combat terminé' : `Tour ${m.state.turn} / ${m.state.maxTurns}`} · {externalSession?.character.name || customCharacter?.name || CLASSES[playerClass].name}</p></div>
             <div className="fight-heading-actions"><button className="btn" aria-expanded={showLog} aria-controls="fight-log" onClick={() => setShowLog(open => !open)}>Journal</button>
-              <button className="btn" onClick={leaveFight}>{m.over || placing ? 'Préparation' : 'Abandonner'}</button></div></div>
+              <button className="btn" onClick={leaveFight}>{m.over || placing ? externalSession ? 'Retour à l’atelier' : 'Préparation' : 'Abandonner'}</button></div></div>
           {error ? <p className="loadout-errors" role="alert">{error}</p> : null}
           <div className="fight-map">
               <BoardView

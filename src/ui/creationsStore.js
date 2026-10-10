@@ -1,0 +1,34 @@
+import { CLASSES } from '../engine/classes';
+import { MAPS } from '../engine/maps';
+import { monsterGrades } from '../engine/monsters';
+import { validCustomMonster } from '../engine/customMonsters';
+import { isLoadout } from './loadoutStore';
+
+export const CREATIONS_STORAGE = 'dofus-lite-creations-v1';
+export const emptyCreations = () => ({ version: 1, characters: [], dungeons: [] });
+export const newCreationId = () => window.crypto?.randomUUID?.() || `creation-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+export const cloneCreation = value => JSON.parse(JSON.stringify(value));
+
+export function validCreations(value) {
+  const identified = entries => Array.isArray(entries) && entries.every(entry => entry && typeof entry.id === 'string'
+    && entry.id && typeof entry.name === 'string') && new Set(entries.map(entry => entry.id)).size === entries.length;
+  return value?.version === 1 && identified(value.characters) && identified(value.dungeons)
+    && value.characters.every(entry => CLASSES[entry.classId] && isLoadout(entry.loadout))
+    && value.dungeons.every(entry => Object.prototype.hasOwnProperty.call(MAPS, entry.mapId) && Array.isArray(entry.members) && entry.members.length <= 8
+      && entry.members.every(member => member && (member.customMonster ? validCustomMonster(member.customMonster, { allowEmpty: true }) : monsterGrades(member.monsterId).some(grade => grade.grade === member.grade))
+        && Number.isInteger(member.count) && member.count >= 1 && member.count <= 8)
+      && entry.members.reduce((sum, member) => sum + member.count, 0) <= 8);
+}
+export function readCreations(storage) {
+  try {
+    const raw = storage.getItem(CREATIONS_STORAGE);
+    if (!raw) return { value: emptyCreations(), error: '' };
+    const value = JSON.parse(raw);
+    if (!validCreations(value)) throw new Error('Format de sauvegarde invalide.');
+    return { value, error: '' };
+  } catch (_) { return { value: emptyCreations(), error: 'Impossible de lire vos créations. La sauvegarde existante est conservée.' }; }
+}
+export function persistCreations(storage, value) {
+  if (!validCreations(value)) throw new Error('Création invalide.');
+  storage.setItem(CREATIONS_STORAGE, JSON.stringify(value));
+}

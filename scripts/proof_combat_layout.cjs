@@ -177,9 +177,9 @@ const out = process.env.PROOF_DIR || '/tmp/dofus-combat-layout';
     await page.click('.token.side-A.targetable .figure');
     await page.mouse.move(5, 5);
     await page.waitForSelector('.combat-stats[data-inspected-fighter="A"]');
-    assert.equal(await page.$eval('.spellbar', e => getComputedStyle(e).gridTemplateRows.split(' ').length), 1);
+    assert.equal(await page.$eval('.spellbar', e => getComputedStyle(e).gridTemplateRows.split(' ').length), 2);
     await check('standard-bar', 21);
-    report.compactStandardBar = true;
+    report.twoRowStandardBar = true;
     assert.deepEqual(report.errors, []);
     report.passed = true;
     console.log(JSON.stringify({ passed: report.passed, errors: report.errors, shortcutsAfterReorder: report.shortcutsAfterReorder,

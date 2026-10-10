@@ -1,0 +1,4 @@
+interface:
+  display_name: "Retro Class Designer"
+  short_description: "Design and validate balanced Retro class kits"
+  default_prompt: "Use $retro-class-designer to design a themed class with at most 10 spells, explain its combos and counterplay, compare it with the local Retro baseline, and deliver a validated JSON-and-images ZIP with an honest balance status."

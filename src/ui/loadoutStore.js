@@ -1,4 +1,5 @@
 import { CLASSES } from '../engine/classes';
+import { isCustomSpellbookDraft } from '../engine/customSpells';
 import { isForgeSnapshot } from '../engine/forgedItems';
 import { EQUIPMENT_SLOTS } from '../engine/equipment';
 
@@ -20,9 +21,11 @@ export function isLoadout(value) {
     && (value.rollOrigins == null || (record(value.rollOrigins) && Object.entries(value.rollOrigins)
       .every(([slot, origin]) => EQUIPMENT_SLOTS.some(s => s.id === slot) && EQUIPMENT_SLOTS.some(s => s.id === origin))))
     && (value.profile == null || record(value.profile))
+    && (value.artworkId == null || (typeof value.artworkId === 'string' && /^[a-zA-Z0-9_-]{1,100}$/.test(value.artworkId)))
     && (value.petBonuses == null || (record(value.petBonuses) && Object.values(value.petBonuses).every(integer)))
     && (value.forgedItems == null || (record(value.forgedItems) && Object.values(value.forgedItems).every(isForgeSnapshot)))
     && (value.spells == null || (record(value.spells)
+      && (value.spells.custom === undefined || isCustomSpellbookDraft(value.spells.custom))
       && ['common', 'order'].every(key => value.spells[key] == null || (Array.isArray(value.spells[key]) && value.spells[key].every(integer)))
       && (value.spells.grades == null || (record(value.spells.grades) && Object.values(value.spells.grades).every(grade => integer(grade) && grade >= 1 && grade <= 6)))));
 }

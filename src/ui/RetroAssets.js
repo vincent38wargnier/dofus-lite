@@ -4,7 +4,9 @@ import { createSoundPlayer, readSoundSettings, saveSoundSettings } from './Retro
 import { ITEMS, itemIcon } from '../engine/equipment';
 import { facing, resolveAnimation, castAnimation } from './retroAnimation';
 import { spellEffectPlan, withStageBounds } from './retroSpellEffect';
+import { withAccessoryImports } from './retroEquipment';
 import { spellPresentation } from './spellPresentation';
+import { useCharacterArtwork } from './characterArtwork';
 export { facing, resolveAnimation } from './retroAnimation';
 
 export const RETRO_BASE = `${process.env.PUBLIC_URL || ''}/dofus-local/`;
@@ -80,8 +82,10 @@ export function useSoundScene(scene) {
 
 export function getActorId(assets, fighter, appearance = 'male') {
   if (!assets) return null;
-  return fighter.isSummon || fighter.isMonster ? assets.monsters[fighter.monsterId] || null
-    : assets.classes[fighter.classId]?.[appearance] || null;
+  const sex = fighter.loadout?.profile?.sex;
+  const variant = sex === 0 ? 'male' : sex === 1 ? 'female' : appearance;
+  return fighter.isSummon || fighter.isMonster ? assets.monsters[fighter.appearanceMonsterId ?? fighter.monsterId] || null
+    : assets.classes[fighter.classId]?.[variant] || null;
 }
 
 export function combatAnimationMs(events, fighters, assets, appearances = {}) {
@@ -101,19 +105,19 @@ export function combatAnimationMs(events, fighters, assets, appearances = {}) {
   return Math.min(6000, duration + 100);
 }
 
-export function RetroMovie({ url, animation, restart = 0, className = '', style, onFailure, onReady, scriptAccess = false, parameters, soundTail, frameRate, bounds, combatSteps = false }) {
+export function RetroMovie({ url, animation, restart = 0, className = '', style, onFailure, onReady, scriptAccess = false, parameters, accessories, mirrored = false, soundTail, frameRate, bounds, combatSteps = false }) {
   const soundScope = useId();
   const { player: soundPlayer } = useContext(SoundContext);
   const mount = useRef(null);
   const playerRef = useRef(null);
-  const desired = useRef({ animation, restart });
+  const desired = useRef({ animation, restart, mirrored });
   const failureRef = useRef(onFailure);
   const readyRef = useRef(onReady);
   const parametersRef = useRef(parameters);
   parametersRef.current = parameters;
   failureRef.current = onFailure;
   readyRef.current = onReady;
-  desired.current = { animation, restart };
+  desired.current = { animation, restart, mirrored };
   useEffect(() => {
     let disposed = false;
     let timer;
@@ -128,7 +132,8 @@ export function RetroMovie({ url, animation, restart = 0, className = '', style,
             if (!response.ok) throw new Error(`Animation indisponible : ${url}`);
             return response.arrayBuffer();
           })]);
-        const movieData = bounds ? await withStageBounds(data, bounds) : data;
+        const sizedData = bounds ? await withStageBounds(data, bounds) : data;
+        const movieData = await withAccessoryImports(sizedData, accessories?.imports);
         if (disposed) return;
         player = ruffle.createPlayer();
         player.style.width = '100%';
@@ -138,9 +143,14 @@ export function RetroMovie({ url, animation, restart = 0, className = '', style,
           data: movieData,
           swfFileName: url, base: new URL(RETRO_BASE + 'raw/', window.location.href).href, autoplay: 'on', wmode: 'transparent',
           splashScreen: false, unmuteOverlay: 'hidden', contextMenu: 'off',
+          // A dungeon can have dozens of actors, summons and overlapping
+          // effects. A WebGL context per movie hits the browser's limit;
+          // Ruffle then reloads older actors, briefly hiding/resetting them.
+          // Render the same native timelines with Canvas without that quota.
+          preferredRenderer: 'canvas',
           allowScriptAccess: scriptAccess, allowNetworking: 'all', openUrlMode: 'deny',
           letterbox: 'off', logLevel: 'error', frameRate,
-          parameters: { ...parametersRef.current, soundScope },
+          parameters: { ...parametersRef.current, ...accessories?.parameters, soundScope },
         });
         if (disposed) return;
         player.ruffle().volume = 0;
@@ -149,7 +159,7 @@ export function RetroMovie({ url, animation, restart = 0, className = '', style,
           if (disposed) return;
           if (player.ruffle().readyState === 2 && (!scriptAccess || typeof player.animate === 'function')) {
             playerRef.current = player;
-            if (desired.current.animation) player.ruffle().callExternalInterface('animate', desired.current.animation);
+            if (desired.current.animation) player.ruffle().callExternalInterface('animate', desired.current.animation, desired.current.mirrored);
             readyRef.current?.();
           } else if (++attempts < 200) timer = setTimeout(ready, 25);
           else failureRef.current?.();
@@ -170,10 +180,10 @@ export function RetroMovie({ url, animation, restart = 0, className = '', style,
       // eslint-disable-next-line react-hooks/exhaustive-deps
       if (!soundTail?.current) soundPlayer?.stopScope(soundScope);
     };
-  }, [url, scriptAccess, soundPlayer, soundScope, soundTail, frameRate, bounds]);
+  }, [url, scriptAccess, soundPlayer, soundScope, soundTail, frameRate, bounds, accessories]);
   useEffect(() => {
-    if (animation) playerRef.current?.ruffle().callExternalInterface('animate', animation);
-  }, [animation, restart]);
+    if (animation) playerRef.current?.ruffle().callExternalInterface('animate', animation, mirrored);
+  }, [animation, restart, mirrored]);
   return <span ref={mount} id={`retro-sound-${soundScope}`} className={`retro-movie ${className}`} style={style}
     data-animation={animation} data-combat-steps={combatSteps || undefined} aria-hidden="true" />;
 }
@@ -208,11 +218,13 @@ export function RetroSpellEffect({ url, from, to, scale, grade = 5, duration = 2
     onFailure={() => { setVisible(false); completed.current?.(); }} /> : null;
 }
 
-export function RetroPortrait({ classId, monsterId, side = 'A', appearance, fallback = '', className = '' }) {
+export function RetroPortrait({ classId, monsterId, side = 'A', appearance, artworkId, fallback = '', className = '' }) {
   const assets = useRetroAssets();
   const { appearances } = useAppearances();
+  const { artwork } = useCharacterArtwork(artworkId);
   const id = monsterId ? assets?.monsters[monsterId] : assets?.classes[classId]?.[appearance || appearances[side]];
   const [failed, setFailed] = useState(null);
+  if (artwork) return <img className={`retro-portrait ${className}`} src={artwork.images['portrait.png']} alt="" draggable={false} />;
   return assets?.imagesReady && id && failed !== id
     ? <img className={`retro-portrait ${className}`} src={`${RETRO_BASE}portraits/${id}.png`} alt="" onError={() => setFailed(id)} />
     : <span>{fallback}</span>;
@@ -220,12 +232,15 @@ export function RetroPortrait({ classId, monsterId, side = 'A', appearance, fall
 
 export function RetroSpellIcon({ spell }) {
   const assets = useRetroAssets();
+  const { artwork: customIcons } = useCharacterArtwork(spell.iconArtworkId);
+  const visualId = spell.visualSpellId ?? spell.id;
   const icon = spell.itemId ? itemIcon(ITEMS[spell.itemId])
-    : assets?.imagesReady && assets.renderedSpellIcons?.includes(String(spell.id)) && assets.spells[spell.id]?.icon;
+    : assets?.imagesReady && assets.renderedSpellIcons?.includes(String(visualId)) && assets.spells[visualId]?.icon;
   const [failed, setFailed] = useState(null);
   const { color, category } = spellPresentation(spell);
   const appearance = { className: 'retro-spell-icon', 'data-spell-category': category,
     style: { '--spell-icon-color': color } };
+  if (customIcons?.images[spell.iconFile]) return <img {...appearance} src={customIcons.images[spell.iconFile]} alt="" draggable={false} />;
   return icon && failed !== icon
     ? <img {...appearance} src={spell.itemId ? icon : RETRO_BASE + icon} alt="" draggable={false} onError={() => setFailed(icon)} />
     : <span {...appearance}>{spell.emoji}</span>;

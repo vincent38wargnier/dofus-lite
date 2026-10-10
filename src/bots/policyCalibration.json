@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "profileBlend": 0.5,
+  "meta": {
+    "rulesVersion": 9,
+    "seed": 731000,
+    "matches": 864,
+    "objective": "0.8 × overall win score + 0.2 × weakest class win score",
+    "candidates": [
+      {
+        "blend": 0.5,
+        "matches": 288,
+        "score": 0.6875,
+        "byClass": {
+          "FECA": 0.75,
+          "OSAMODAS": 0.375,
+          "ENUTROF": 0.8333333333333334,
+          "SRAM": 0.6666666666666666,
+          "XELOR": 0.7916666666666666,
+          "ECAFLIP": 0.875,
+          "ENIRIPSA": 0.8333333333333334,
+          "IOP": 0.75,
+          "CRA": 0.7916666666666666,
+          "SADIDA": 0.2916666666666667,
+          "SACRIEUR": 0.75,
+          "PANDAWA": 0.5416666666666666
+        },
+        "objective": 0.6083333333333334
+      },
+      {
+        "blend": 0,
+        "matches": 288,
+        "score": 0.6770833333333334,
+        "byClass": {
+          "FECA": 0.9166666666666666,
+          "OSAMODAS": 0.25,
+          "ENUTROF": 0.75,
+          "SRAM": 0.75,
+          "XELOR": 0.75,
+          "ECAFLIP": 0.75,
+          "ENIRIPSA": 0.6666666666666666,
+          "IOP": 0.75,
+          "CRA": 0.9583333333333334,
+          "SADIDA": 0.2916666666666667,
+          "SACRIEUR": 0.7083333333333334,
+          "PANDAWA": 0.5833333333333334
+        },
+        "objective": 0.5916666666666668
+      },
+      {
+        "blend": 1,
+        "matches": 288,
+        "score": 0.6458333333333334,
+        "byClass": {
+          "FECA": 0.9583333333333334,
+          "OSAMODAS": 0.5833333333333334,
+          "ENUTROF": 0.75,
+          "SRAM": 0.6666666666666666,
+          "XELOR": 0.4583333333333333,
+          "ECAFLIP": 0.6666666666666666,
+          "ENIRIPSA": 0.625,
+          "IOP": 0.625,
+          "CRA": 0.75,
+          "SADIDA": 0.2916666666666667,
+          "SACRIEUR": 0.8333333333333334,
+          "PANDAWA": 0.5416666666666666
+        },
+        "objective": 0.5750000000000001
+      }
+    ],
+    "source": "local-observations/ai-20261010/calibration.json",
+    "note": "Development matches only; validate on untouched seeds before shipping."
+  }
+}

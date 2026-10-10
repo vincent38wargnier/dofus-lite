@@ -10,6 +10,7 @@ export function readPlayerSetup(storage) {
   const bossId = BOSSES.some(boss => boss.id === saved?.bossId) ? saved.bossId : DEFAULT_BOSS_ID;
   return {
     playerClass: Object.prototype.hasOwnProperty.call(CLASSES, saved?.playerClass) ? saved.playerClass : 'IOP',
+    customCharacterId: typeof saved?.customCharacterId === 'string' ? saved.customCharacterId : null,
     botClass: Object.prototype.hasOwnProperty.call(CLASSES, saved?.botClass) ? saved.botClass : 'CRA',
     botId: typeof saved?.botId === 'string' ? saved.botId : 'maison',
     playerBotId: typeof saved?.playerBotId === 'string' ? saved.playerBotId : 'maison',

@@ -3,6 +3,12 @@ import { resolveSound } from './RetroSound';
 
 const audible = (names, assets) => (names || []).filter(name => resolveSound(assets?.audio, name));
 
+// PNG actors have no Flash timeline to dispatch their model's casting cue.
+export function customActorCastSound(actor, pose, suffix, assets) {
+  if (!pose?.startsWith('anim')) return null;
+  return audible(actor?.sounds?.[resolveAnimation(actor, pose, suffix)], assets)[0] || null;
+}
+
 export function movementSounds(actor, fighter, assets) {
   // Take the creature's own authored footsteps first, including sounds from
   // its running animation when the walking export is silent.
@@ -21,7 +27,7 @@ export function movementSounds(actor, fighter, assets) {
 }
 
 export function castFallbackSound(event, spell, actor, assets, direction = { suffix: 'R', mirror: false }) {
-  const info = assets?.spells?.[event.spellId];
+  const info = assets?.spells?.[event.visualSpellId ?? event.spellId];
   // Until metadata has loaded, don't overlay an unknown native animation.
   if (!actor?.sounds) return null;
   const pose = castAnimation(event, assets);

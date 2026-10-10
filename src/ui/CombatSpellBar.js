@@ -49,8 +49,9 @@ export default function CombatSpellBar({ spells, spellInfo, pa, humanTurn, activ
     if (next !== ids) onReorder(next);
   };
 
-  const rows = Math.max(1, Math.ceil(spells.length / 24));
-  const narrowRows = Math.max(1, Math.ceil(spells.length / 16));
+  // Keep the standard spell book on two rows so names have room to be read.
+  const rows = Math.max(2, Math.ceil(spells.length / 24));
+  const narrowRows = Math.max(2, Math.ceil(spells.length / 16));
   return <section className="combat-spellbar" aria-label="Barre de sorts" style={{
     '--spell-columns': Math.ceil(spells.length / rows), '--spell-rows': rows,
     '--spell-columns-narrow': Math.ceil(spells.length / narrowRows), '--spell-rows-narrow': narrowRows,

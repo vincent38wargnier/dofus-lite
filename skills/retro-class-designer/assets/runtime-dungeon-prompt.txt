@@ -1,0 +1,967 @@
+WHAT I WANT TO CREATE (edit only this section to change the theme):
+[Describe the theme, names, roles, each creature and its desired spells, intended opponents and difficulty. For example: a Star Wars class, or a Game of Thrones dungeon room.]
+
+PACKAGE TYPE: dungeon
+
+You are a tactical RPG class/encounter designer AND a content-package author. Create the requested theme for the local Dofus Lite Retro combat game using the exact runtime contract below. Do not require access to any website or repository; all needed rules, valid references and an example are included.
+
+## Deliverable and import
+Produce ONE playable ZIP for the selected type, not merely a design document. Use content.json at the ZIP ROOT, with the exact schema below. UTF-8 JSON, no comments, no trailing commas, no unrecognised fields. Use lowercase ASCII keys and semver. Type class has only class; type dungeon has only dungeon. Required design metadata describes roles, synergies/turn loop, at least two weaknesses and practical counterplay.
+The user imports the ZIP in Atelier → Importer un ZIP. Images and JSON are saved together locally; no copying files or running commands is required. The original class.json authoring-kit format is not this runtime format. Do not put a parent folder around content.json.
+If you can create files, return the actual ZIP and a brief kit/room summary. If you cannot attach files, be honest and provide one complete Python script (stdlib zipfile, json; no downloads) that writes the exact ZIP, including all JSON. Do not claim to have created a file you cannot attach. Never invent a download link.
+
+## Creative freedom and supported scope
+Follow the user's theme for names, visual identity, personalities, tactics and spell combinations. You may combine any of the supported effects. All names/descriptions may be French. This version imports one class or one combat room, not a campaign. Choose any listed map; imported geometry/backgrounds are not supported yet. Each creature may have a different reference model, artwork and a unique spell kit. You define EVERY creature's spells; its original reference spellbook is replaced completely.
+Custom mechanics available in v1: damage, lifeSteal, heal, buffs (damage/power/stats/PA/PM/range/crit/vitality), armor, resistance buffs/debuffs, dodgeable PA/PM removal, range reduction, push, pull, teleport. New summons, poisons, traps, glyphs, conditional triggers, states, resurrection and scripted mechanics are NOT available in this ZIP version. Do not disguise an unsupported mechanic in a description or an animation ID. Adapt the theme honestly to supported mechanics. Existing UI catalogue spells remain available separately.
+
+## Enforced limits
+One class: 1–10 spells, equipped weapon additional; level 200, spell grade 6, no custom starting stat bonuses. baseClass supplies characteristic costs and fallback appearance only; equipment is chosen after import. sex 0=male, 1=female.
+One room: 1–8 creature definitions and 1–8 TOTAL placed enemies (sum of members.count ≤8). Each definition has 1–10 spells. Keys are unique per owner. members references every defined creature exactly once, with count for duplicates. No unused definitions. Map placements use that map's existing legal starting zones.
+Each creature takes level, HP, stats, resistance, initiative and dodge values from an exact monsterId/grade reference in the catalogue. Tuning: HP and stats 25–150% of reference, PA/PM offsets −2..+2. Effective PA must be 1–20 and PM 0–8. Stats include all six reference stats and are rounded; HP is rounded with minimum 1. Resistances/dodge/initiative are unchanged. Reference ID is for stats and appearance only: original spells and ID-specific mechanics are NOT inherited. A dangerous boss reference stays dangerous; choose a reference appropriate to the intended player/party, not the largest HP available.
+Spell cost 1–8 PA. Range min/max integer 0–12, min ≤ max. 1–3 casts/turn; 1–3 casts/target and ≤ casts/turn. Cooldown 0–10 turns, no initial cooldown. Critical: 0 disabled, otherwise denominator 2–100 (1/N); failure: 0 disabled, otherwise denominator 2–1000. No decimal fields. Normal variant 1–4 effects. Critical variant is a COMPLETE replacement list, not an addition: 1–4 effects if enabled, [] otherwise. Each variant independently respects every limit.
+Maximum direct damage per cast, adding ALL damage and lifeSteal lines at maximum roll: 12 raw damage/PA single-target, 9 if any damage line is area. Multiply by 2 for cooldown ≥2 and by 1.35 for a critical variant. Raw healing ≤15/PA, or 30/PA with cooldown ≥2. These are broad rejection ceilings, NOT recommended balance targets.
+Additional per-variant ceilings, summed across all lines of the same kind: buffPa 2; buffPm/removePa/removePm 3; buffDamage 20; buffPower/buffStat 150; armor 20; resistBuff/resistDebuff 30. Per-effect ceilings below also apply.
+Any buffPa requires maxPerTurn=1, cooldown > duration, and each PA gain strictly smaller than the spell's PA cost. A lasting buffDamage, buffPower, buffStat, armor, resistBuff or buffPm requires maxPerTurn=1 and cooldown > duration. These rules avoid unbounded stacking. The runtime has the standard forbidden states [1,3,18,19,41], no user-defined state prerequisites.
+
+## Targeting and effects
+targetMode enemy: occupied enemy cell and rangeMin≥1. fighter: an occupied cell (ally or enemy; effect target filters recipients). cell: any legal target cell, including empty, useful for zones. freeCell: unoccupied cell. self: rangeMin=rangeMax=0. Only self may have rangeMax=0. needsLos/lineOnly/adjustableRange are booleans; make constraints meaningful.
+Every effect has kind,min,max,duration,zone,target. target self affects caster, ally includes caster and allies, otherAlly excludes caster, enemy excludes allies, fighter affects all (friendly fire). Self effects MUST use Pa, regardless of aim point. Other effects apply their zone around the selected cell. A self-cast point effect cannot target enemy/otherAlly. An enemy-cast point effect can target enemy, fighter or self only. A freeCell point effect can only target self, because the destination is empty. Do not use targetMode fighter to promise ally-only legal targeting: PA can be spent on an enemy and its ally-filtered effects then do nothing.
+Optional element required ONLY for damage/lifeSteal/resistBuff/resistDebuff: neutre,terre,feu,eau,air. Optional stat required ONLY for buffStat: force,intelligence,chance,agilite,sagesse. Remove irrelevant element/stat fields. Values min/max are inclusive integers, min≤max; positive except teleport which requires both 0. Duration 0–5 for timed effects; 0 for instant damage/heal/movement. Duration 0 means current turn for a buff; enemy PA/PM removal still affects their next turn. Timed bonuses apply immediately.
+push/pull require min=max=fixed distance 1–6, target not self, targetMode not self. teleport is the only effect in BOTH variants, targetMode freeCell, effect target self, Pa, min=max=0, duration=0, adjustableRange=false; rangeMax is travel distance. Healing targets self/ally/otherAlly only.
+Zone codes: Pa one cell; Cb/Cc Manhattan diamond radius 1/2; Xb/Xc cross radius 1/2; Lb/Lc oriented line 2/3 cells; Tb perpendicular staff shape of 3 cells. Orientation comes from caster to aim point. Direct spell area damage uses 110% at aim cell, then 100%,90% by distance. Weapons have their own Retro rules.
+
+## Balance design, not just validity
+Use one clear primary role, optionally one secondary role, usually 1–2 damage elements, a short repeatable turn plan and explicit tradeoffs. A 6–10 spell class should have complementary tools, not ten stronger variants of the same nuke. A creature usually needs 2–5 spells, a boss 4–8. Ten is a limit, not a target. Give bosses pressure and exploitable weaknesses. Avoid eight healers/buffers multiplying one another, permanent locks, unavoidable long-range bursts and multi-hit attacks that scale excessively with flat damage.
+Compare each new spell with at least two actual grade-six class spells in the baseline below, matching PA cost, range, area, line of sight, cooldown and targeting. Typical starting raw MEAN damage/PA: ≤6 at range, ≤8 in melee (rangeMax≤2), ≤5 in an area. Use the baseline to tune, never treat maxima as entitlements. Reduce damage for lifesteal, flexible range, enemy-only areas, healing/control on the same cast, or synergy with boosts. Duration, uptime, AP economy, safe range and team support matter as much as a single hit.
+Combat scaling: floor(raw roll × (100 + element stat + power)/100 + flat damage), then zone/resistances/armor/other engine rules. Neutral/earth use force, fire intelligence, water chance, air agility. Flat damage applies to EACH line. LifeSteal heals half the actual HP removed. Heal scales with intelligence and healing bonuses. Armor scales with recipient characteristics. PA/PM removal can be dodged. Crit chance improves with agility/crit bonuses. Overkill and healing caps limit actual HP changes. Include these when estimating turns; no made-up displayed damage values.
+Test normal/critical variants, boosts→attack in same turn, three consecutive turns, cooldown downtime, obstacles, allies in area, resistance, low/high stats and flat-damage builds. For a dungeon test the entire team, focus fire, control chains, healing and movement on its chosen map. Compare against several original classes at equal level/stuff and multiple seeds. Specify intended player level/party/stuff and target difficulty in description/design. Report what was actually simulated; technical acceptance alone is NOT proof of balance. The game provides manual play and Tester avec l’IA after import.
+
+## Images, animations and archive
+Images OPTIONAL: omit artwork and icon fields to use existing native models/icons. This makes a text-only AI's ZIP directly playable. If artwork is declared, include ALL three required PNGs for that owner. The same artwork folder/icon may be shared. No empty images, absent referenced files, undeclared files or fake placeholders claiming finished theme art.
+artwork is a folder path, e.g. artwork/warden. Required portrait.png, idle-front.png, idle-back.png are 256×256. Feet anchor x=128,y=224; front faces screen down-right, back up-left, other directions are mirrored. Use consistent scale and leave headroom. Non-portrait frames must contain visible pixels and transparent background. Optional walk-front/back and cast-front/back strips are 1536×256 (6 horizontal 256×256 frames); optional hit-front/back strips 768×256 (3 frames). Walk12fps, cast10fps, hit10fps. Missing actions use idle; include animation strips for fully animated custom artwork.
+Optional spell icon path icons/<slug>.png: 64×64 visible PNG. PNGs must be RGBA 8-bit, non-interlaced, no APNG; each ≤2 MiB, character artwork set ≤12 MiB. visualSpellId must exist in the listed class catalogue; it chooses the original icon/effect/gesture/audio fallback and has NO influence on mechanics. Custom raster icons/characters are accepted; new Flash effects/audio are not imported.
+ZIP is standard STORE or DEFLATE, no passwords, symlinks, ZIP64, executables, external URLs or ../ paths. Limit 32 MiB packed, 48 MiB expanded, 180 entries including directories; content.json ≤512 KiB. Only content.json and declared icons/artwork PNGs belong in the ZIP; omit .DS_Store, __MACOSX, README, schemas and unused images. Directory entries are allowed. No manual installation is needed.
+Before delivering, validate the exact schema plus semantic limits above, all references, unique keys, total room count, spell counts, effect compatibility, image dimensions and actual PNG contents. A schema-only check is insufficient. Explain any remaining balance concerns separately from the ZIP.
+
+## Per-effect numeric ceilings
+damage: min/max 1..300; duration 0; element required.
+lifeSteal: min/max 1..150; duration 0; element required.
+heal: min/max 1..150; duration 0.
+buffDamage: min/max 1..100; duration 0..5.
+buffPower: min/max 1..500; duration 0..5.
+buffStat: min/max 1..500; duration 0..5; stat required.
+buffPa: min/max 1..6; duration 0..5.
+buffPm: min/max 1..6; duration 0..5.
+buffRange: min/max 1..6; duration 0..5.
+buffCrit: min/max 1..50; duration 0..5.
+buffVitality: min/max 1..500; duration 0..5.
+armor: min/max 1..100; duration 0..5.
+resistBuff: min/max 1..50; duration 0..5; element required.
+removePa: min/max 1..6; duration 0..5.
+removePm: min/max 1..6; duration 0..5.
+debuffRange: min/max 1..6; duration 0..5.
+resistDebuff: min/max 1..50; duration 0..5; element required.
+push: min/max 1..6; duration 0.
+pull: min/max 1..6; duration 0.
+teleport: min/max 0..0; duration 0.
+
+## Exact JSON Schema (and the semantic rules above)
+{"$schema":"http://json-schema.org/draft-07/schema#","title":"Dofus Lite — themed class or dungeon","type":"object","properties":{"format":{"const":"dofus-lite-content"},"schemaVersion":{"const":1},"type":{"enum":["class","dungeon"]},"id":{"type":"string","minLength":1,"maxLength":48,"pattern":"^[a-z][a-z0-9_-]*$"},"version":{"type":"string","minLength":1,"maxLength":30,"pattern":"^\\d+\\.\\d+\\.\\d+$"},"name":{"type":"string","minLength":1,"maxLength":80},"description":{"type":"string","minLength":1,"maxLength":800},"author":{"type":"string","minLength":1,"maxLength":100},"design":{"type":"object","properties":{"role":{"type":"string","minLength":1,"maxLength":100},"strengths":{"type":"array","items":{"type":"string","minLength":1,"maxLength":200},"minItems":1,"maxItems":3},"weaknesses":{"type":"array","items":{"type":"string","minLength":1,"maxLength":200},"minItems":2,"maxItems":4},"turnLoop":{"type":"string","minLength":1,"maxLength":800},"counterplay":{"type":"string","minLength":1,"maxLength":800}},"required":["role","strengths","weaknesses","turnLoop","counterplay"],"additionalProperties":false},"class":{"type":"object","properties":{"baseClass":{"enum":["FECA","OSAMODAS","ENUTROF","SRAM","XELOR","ECAFLIP","ENIRIPSA","IOP","CRA","SADIDA","SACRIEUR","PANDAWA"]},"sex":{"enum":[0,1]},"artwork":{"type":"string","minLength":1,"maxLength":100,"pattern":"^artwork/[a-z][a-z0-9_-]*$"},"spells":{"type":"array","items":{"$ref":"#/$defs/spell"},"minItems":1,"maxItems":10}},"required":["baseClass","sex","spells"],"additionalProperties":false},"dungeon":{"type":"object","properties":{"mapId":{"type":"string","minLength":1,"maxLength":80},"monsters":{"type":"array","items":{"type":"object","properties":{"key":{"type":"string","minLength":1,"maxLength":48,"pattern":"^[a-z][a-z0-9_-]*$"},"name":{"type":"string","minLength":1,"maxLength":80},"description":{"type":"string","minLength":1,"maxLength":800},"role":{"type":"string","minLength":1,"maxLength":100},"counterplay":{"type":"string","minLength":1,"maxLength":800},"reference":{"type":"object","properties":{"monsterId":{"type":"integer","minimum":1,"maximum":100000},"grade":{"type":"integer","minimum":1,"maximum":20}},"required":["monsterId","grade"],"additionalProperties":false},"tuning":{"type":"object","properties":{"hpPercent":{"type":"integer","minimum":25,"maximum":150},"statsPercent":{"type":"integer","minimum":25,"maximum":150},"paBonus":{"type":"integer","minimum":-2,"maximum":2},"pmBonus":{"type":"integer","minimum":-2,"maximum":2}},"required":["hpPercent","statsPercent","paBonus","pmBonus"],"additionalProperties":false},"artwork":{"type":"string","minLength":1,"maxLength":100,"pattern":"^artwork/[a-z][a-z0-9_-]*$"},"spells":{"type":"array","items":{"$ref":"#/$defs/spell"},"minItems":1,"maxItems":10}},"required":["key","name","description","role","counterplay","reference","tuning","spells"],"additionalProperties":false},"minItems":1,"maxItems":8},"members":{"type":"array","items":{"type":"object","properties":{"monster":{"type":"string","minLength":1,"maxLength":48,"pattern":"^[a-z][a-z0-9_-]*$"},"count":{"type":"integer","minimum":1,"maximum":8}},"required":["monster","count"],"additionalProperties":false},"minItems":1,"maxItems":8}},"required":["mapId","monsters","members"],"additionalProperties":false}},"required":["format","schemaVersion","type","id","version","name","description","author","design"],"additionalProperties":false,"$defs":{"spell":{"type":"object","properties":{"key":{"type":"string","minLength":1,"maxLength":48,"pattern":"^[a-z][a-z0-9_-]*$"},"name":{"type":"string","minLength":1,"maxLength":80},"description":{"type":"string","minLength":1,"maxLength":800},"counterplay":{"type":"string","minLength":1,"maxLength":800},"pa":{"type":"integer","minimum":1,"maximum":8},"rangeMin":{"type":"integer","minimum":0,"maximum":12},"rangeMax":{"type":"integer","minimum":0,"maximum":12},"targetMode":{"enum":["enemy","fighter","cell","freeCell","self"]},"needsLos":{"type":"boolean"},"lineOnly":{"type":"boolean"},"adjustableRange":{"type":"boolean"},"maxPerTurn":{"type":"integer","minimum":1,"maximum":3},"maxPerTarget":{"type":"integer","minimum":1,"maximum":3},"cooldown":{"type":"integer","minimum":0,"maximum":10},"critRate":{"type":"integer","minimum":0,"maximum":100},"failRate":{"type":"integer","minimum":0,"maximum":1000},"endsTurnOnFailure":{"type":"boolean"},"visualSpellId":{"type":"integer","minimum":1,"maximum":1000000},"icon":{"type":"string","minLength":1,"maxLength":100,"pattern":"^icons/[a-z][a-z0-9_-]*\\.png$"},"effects":{"type":"array","items":{"type":"object","properties":{"kind":{"enum":["damage","lifeSteal","heal","buffDamage","buffPower","buffStat","buffPa","buffPm","buffRange","buffCrit","buffVitality","armor","resistBuff","removePa","removePm","debuffRange","resistDebuff","push","pull","teleport"]},"min":{"type":"integer","minimum":0,"maximum":500},"max":{"type":"integer","minimum":0,"maximum":500},"duration":{"type":"integer","minimum":0,"maximum":5},"zone":{"enum":["Pa","Cb","Cc","Xb","Xc","Lb","Lc","Tb"]},"target":{"enum":["self","ally","otherAlly","enemy","fighter"]},"element":{"enum":["neutre","terre","feu","eau","air"]},"stat":{"enum":["force","intelligence","chance","agilite","sagesse"]}},"required":["kind","min","max","duration","zone","target"],"additionalProperties":false},"minItems":1,"maxItems":4},"critEffects":{"type":"array","items":{"type":"object","properties":{"kind":{"enum":["damage","lifeSteal","heal","buffDamage","buffPower","buffStat","buffPa","buffPm","buffRange","buffCrit","buffVitality","armor","resistBuff","removePa","removePm","debuffRange","resistDebuff","push","pull","teleport"]},"min":{"type":"integer","minimum":0,"maximum":500},"max":{"type":"integer","minimum":0,"maximum":500},"duration":{"type":"integer","minimum":0,"maximum":5},"zone":{"enum":["Pa","Cb","Cc","Xb","Xc","Lb","Lc","Tb"]},"target":{"enum":["self","ally","otherAlly","enemy","fighter"]},"element":{"enum":["neutre","terre","feu","eau","air"]},"stat":{"enum":["force","intelligence","chance","agilite","sagesse"]}},"required":["kind","min","max","duration","zone","target"],"additionalProperties":false},"minItems":0,"maxItems":4}},"required":["key","name","description","counterplay","pa","rangeMin","rangeMax","targetMode","needsLos","lineOnly","adjustableRange","maxPerTurn","maxPerTarget","cooldown","critRate","failRate","endsTurnOnFailure","visualSpellId","effects","critEffects"],"additionalProperties":false}}}
+
+## Valid complete example, images omitted intentionally
+{
+  "format": "dofus-lite-content",
+  "schemaVersion": 1,
+  "type": "dungeon",
+  "id": "ember-keep",
+  "version": "1.0.0",
+  "name": "Citadelle des braises",
+  "description": "Un exemple jouable à personnaliser.",
+  "author": "Votre nom",
+  "design": {
+    "role": "Dégâts à moyenne portée",
+    "strengths": [
+      "Préparation offensive"
+    ],
+    "weaknesses": [
+      "Ligne de vue nécessaire",
+      "Aucun soin"
+    ],
+    "turnLoop": "Se rapprocher, préparer Résolution, puis lancer Braise vive.",
+    "counterplay": "Profiter de la relance du bonus et des obstacles."
+  },
+  "dungeon": {
+    "mapId": "amakna_534",
+    "monsters": [
+      {
+        "key": "warden",
+        "name": "Gardien des braises",
+        "description": "Gardien de la citadelle.",
+        "role": "Attaquant",
+        "counterplay": "Couper sa ligne de vue.",
+        "reference": {
+          "monsterId": 147,
+          "grade": 1
+        },
+        "tuning": {
+          "hpPercent": 75,
+          "statsPercent": 100,
+          "paBonus": 0,
+          "pmBonus": 0
+        },
+        "spells": [
+          {
+            "key": "ember",
+            "name": "Braise vive",
+            "description": "Une attaque de feu à moyenne portée.",
+            "counterplay": "Couper la ligne de vue ou résister au feu.",
+            "pa": 3,
+            "rangeMin": 1,
+            "rangeMax": 5,
+            "targetMode": "enemy",
+            "needsLos": true,
+            "lineOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 2,
+            "maxPerTarget": 2,
+            "cooldown": 0,
+            "critRate": 0,
+            "failRate": 0,
+            "endsTurnOnFailure": false,
+            "visualSpellId": 161,
+            "effects": [
+              {
+                "kind": "damage",
+                "min": 15,
+                "max": 19,
+                "duration": 0,
+                "zone": "Pa",
+                "target": "enemy",
+                "element": "feu"
+              }
+            ],
+            "critEffects": []
+          },
+          {
+            "key": "resolve",
+            "name": "Résolution",
+            "description": "Prépare le prochain assaut.",
+            "counterplay": "Garder ses distances pendant les deux tours du bonus.",
+            "pa": 2,
+            "rangeMin": 0,
+            "rangeMax": 0,
+            "targetMode": "self",
+            "needsLos": true,
+            "lineOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 1,
+            "maxPerTarget": 1,
+            "cooldown": 4,
+            "critRate": 0,
+            "failRate": 0,
+            "endsTurnOnFailure": false,
+            "visualSpellId": 153,
+            "effects": [
+              {
+                "kind": "buffDamage",
+                "min": 8,
+                "max": 8,
+                "duration": 2,
+                "zone": "Pa",
+                "target": "self"
+              }
+            ],
+            "critEffects": []
+          }
+        ]
+      },
+      {
+        "key": "sentinel",
+        "name": "Sentinelle de cendre",
+        "description": "Un soutien offensif fragile.",
+        "role": "Attaquant secondaire",
+        "counterplay": "Éliminer rapidement ses faibles PV.",
+        "reference": {
+          "monsterId": 147,
+          "grade": 1
+        },
+        "tuning": {
+          "hpPercent": 25,
+          "statsPercent": 50,
+          "paBonus": 0,
+          "pmBonus": 0
+        },
+        "spells": [
+          {
+            "key": "spark",
+            "name": "Étincelle",
+            "description": "Une attaque de feu à moyenne portée.",
+            "counterplay": "Couper la ligne de vue ou résister au feu.",
+            "pa": 3,
+            "rangeMin": 1,
+            "rangeMax": 5,
+            "targetMode": "enemy",
+            "needsLos": true,
+            "lineOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 2,
+            "maxPerTarget": 2,
+            "cooldown": 0,
+            "critRate": 0,
+            "failRate": 0,
+            "endsTurnOnFailure": false,
+            "visualSpellId": 161,
+            "effects": [
+              {
+                "kind": "damage",
+                "min": 15,
+                "max": 19,
+                "duration": 0,
+                "zone": "Pa",
+                "target": "enemy",
+                "element": "feu"
+              }
+            ],
+            "critEffects": []
+          }
+        ]
+      }
+    ],
+    "members": [
+      {
+        "monster": "warden",
+        "count": 1
+      },
+      {
+        "monster": "sentinel",
+        "count": 2
+      }
+    ]
+  }
+}
+
+## Existing maps: id and name
+{"id":"arene","name":"Arène du Koliséum"}
+{"id":"muraille","name":"La Muraille"}
+{"id":"canyon","name":"Le Canyon"}
+{"id":"territoire_des_dopeuls_5383","name":"🗺 Territoire des Dopeuls [-32,-8]"}
+{"id":"amakna_1571","name":"🗺 Amakna [5,19]"}
+{"id":"brakmar_6170","name":"🗺 Brâkmar [-23,38]"}
+{"id":"bonta_6173","name":"🗺 Bonta [-31,-59]"}
+{"id":"l_ile_des_wabbits_1735","name":"🗺 L'île des Wabbits [23,-8]"}
+{"id":"amakna_2095","name":"🗺 Amakna [14,20]"}
+{"id":"astrub_2195","name":"🗺 Astrub [1,-9]"}
+{"id":"bonta_6158","name":"🗺 Bonta [-33,-57]"}
+{"id":"brakmar_6167","name":"🗺 Brâkmar [-23,38]"}
+{"id":"donjon_des_bworks_9750","name":"🗺 Donjon des Bworks [-5,10]"}
+{"id":"foret_des_abraknydes_4","name":"🗺 Forêt des Abraknydes [-9,-12]"}
+{"id":"l_ile_des_wabbits_1720","name":"🗺 L'île des Wabbits [25,-7]"}
+{"id":"pandala_donjon_8313","name":"🗺 Pandala Donjon [32,-38]"}
+{"id":"prison_999","name":"🗺 Prison [12,-7]"}
+{"id":"sufokia_1907","name":"🗺 Sufokia [12,24]"}
+{"id":"tainela_2073","name":"🗺 Tainéla [2,-34]"}
+{"id":"astrub_7423","name":"🗺 Astrub PvP [5,-23]"}
+{"id":"amakna_952","name":"🗺 Amakna PvP [-1,0]"}
+{"id":"amakna_534","name":"🗺 Kanojedo [0,0]"}
+{"id":"dungeon_2083","name":"🗺 Donjon des Bouftous [2;-34]"}
+{"id":"dungeon_10164","name":"🗺 Donjon Ensablé [13;-28]"}
+{"id":"dungeon_10363","name":"🗺 Donjon d’Incarnam [6;5]"}
+{"id":"dungeon_9774","name":"🗺 Donjon des Champs [7;-25]"}
+{"id":"dungeon_9784","name":"🗺 Donjon des Scarafeuilles [1;26]"}
+{"id":"dungeon_11887","name":"🗺 Donjon des Blops · Blop Coco Royal [-25;-17]"}
+{"id":"dungeon_11888","name":"🗺 Donjon des Blops · Blop Griotte Royal [-25;-17]"}
+{"id":"dungeon_11889","name":"🗺 Donjon des Blops · Blop Indigo Royal [-25;-17]"}
+{"id":"dungeon_11890","name":"🗺 Donjon des Blops · Blop Reinette Royal [-25;-17]"}
+{"id":"dungeon_11892","name":"🗺 Antre du Blop Multicolore [-25;-17]"}
+{"id":"dungeon_9760","name":"🗺 Donjon des Bworks [-5;10]"}
+{"id":"dungeon_325","name":"🗺 Labyrinthe du Dark Vlad [-7;16]"}
+{"id":"dungeon_10234","name":"🗺 Donjon des Abraknydes [-9;-14]"}
+{"id":"dungeon_1836","name":"🗺 Arbre de Moon [32;12]"}
+{"id":"dungeon_9126","name":"🗺 Donjon du Chêne Mou [-9;-14]"}
+{"id":"dungeon_8965","name":"🗺 Donjon du Koulosse [-17;8]"}
+{"id":"dungeon_6836","name":"🗺 La Gelaxième Dimension [11;28]"}
+{"id":"dungeon_1837","name":"🗺 Bateau du Chouque [30;11]"}
+{"id":"dungeon_9766","name":"🗺 Donjon des Tofus [5;6]"}
+{"id":"dungeon_9648","name":"🗺 Donjon des Canidés [-24;1]"}
+{"id":"dungeon_9580","name":"🗺 Donjon des Craqueleurs [-3;-7]"}
+{"id":"dungeon_8314","name":"🗺 Donjon des Kitsounes [32;-38]"}
+{"id":"dungeon_7526","name":"🗺 Donjon du Bworker [-21;12]"}
+{"id":"dungeon_10212","name":"🗺 Donjon des Rats de Bonta [-35;-59]"}
+{"id":"dungeon_10198","name":"🗺 Donjon des Rats de Brâkmar [-26;31]"}
+{"id":"dungeon_10149","name":"🗺 Donjon des Rats du Château d’Amakna [6;-9]"}
+{"id":"dungeon_8331","name":"🗺 Repaire des Pandikazes [18;-36]"}
+{"id":"dungeon_9535","name":"🗺 Donjon du Tofu Royal [5;6]"}
+{"id":"dungeon_8203","name":"🗺 Donjon des Larves [-2;-14]"}
+{"id":"dungeon_10025","name":"🗺 Donjon de Nowel [-63;-100]"}
+{"id":"dungeon_11961","name":"🗺 Caverne de Nowel [-63;-100]"}
+{"id":"dungeon_11951","name":"🗺 Maison du Papa Nowel [-63;-100]"}
+{"id":"dungeon_11079","name":"🗺 Donjon Grotte Hesque [-59;15]"}
+{"id":"dungeon_11073","name":"🗺 Arche Otomaï [-55;-4]"}
+{"id":"dungeon_11267","name":"🗺 Goulet du Rasboul [-51;9]"}
+{"id":"dungeon_10812","name":"🗺 Laboratoire du Tynril [-53;20]"}
+{"id":"dungeon_9880","name":"🗺 Labyrinthe du Minotoror [-42;-17]"}
+{"id":"dungeon_8549","name":"🗺 Antre du Dragon cochon [-1;33]"}
+{"id":"dungeon_10109","name":"🗺 Donjon des Dragoeufs [-3;24]"}
+{"id":"dungeon_11941","name":"🗺 Donjon Fungus [-18;28]"}
+{"id":"dungeon_8977","name":"🗺 Repaire du Skeunk [-20;10]"}
+{"id":"dungeon_1774","name":"🗺 Château du Wa Wabbit [24;-13]"}
+{"id":"dungeon_8357","name":"🗺 Donjon des Firefoux [28;-52]"}
+{"id":"dungeon_11133","name":"🗺 Canopée du Kimbo [-51;16]"}
+{"id":"dungeon_9879","name":"🗺 Salle du Minotot [-42;-17]"}
+{"id":"dungeon_11976","name":"🗺 Belvédère d’Ilyzaelle [-21;-29]"}
+{"id":"dungeon_11975","name":"🗺 Sanctuaire de Qu’Tan [-14;16]"}
+{"id":"dungeon_9594","name":"🗺 Bibliothèque du Maître Corbac [-19;-61]"}
+{"id":"dungeon_11095","name":"🗺 Antre du Kralamoure Géant [-61;-9]"}
+{"id":"dungeon_12233","name":"🗺 Antre de l’Infortuné [11;15]"}
+{"id":"dungeon_12266","name":"🗺 Mine de Krtek [-20;-34]"}
+{"id":"dungeon_12263","name":"🗺 Crypte du Vampire Dupyr [10;14]"}
+{"id":"dungeon_9853","name":"🗺 Sanctuaire des Dragoeufs · ancien repaire [-5;32]"}
+{"id":"dungeon_1776","name":"🗺 Laboratoire du Wabbit Gm [25;-8]"}
+{"id":"dungeon_12307","name":"🗺 Sanctuaire de Pandala [29;-60]"}
+
+## Monster stat/model references
+Each row is [id,name,grade,level,HP,PA,PM,[force,intelligence,chance,agilite,sagesse,vitalite],[neutral,earth,fire,water,air resistance %]]. Use exact id and grade. Fixed resistances, initiative and dodge also inherit from the reference; download the full reference spec from the builder to inspect these secondary fields if needed. These are references, not the final themed creatures.
+[31,"Larve Bleue",5,6,30,5,2,[100,100,100,0,0,0],[5,9,9,-5,-5]]
+[34,"Larve Verte",5,10,80,5,3,[100,100,100,0,0,0],[10,9,-6,10,14]]
+[43,"Tofu",6,6,18,5,12,[120,110,120,120,70,0],[0,12,-6,12,-6]]
+[46,"Larve Orange",5,12,60,5,3,[100,100,100,0,0,0],[9,-5,-5,14,5]]
+[47,"Abraknyde",5,39,400,6,3,[100,100,100,0,0,0],[20,25,-4,25,-4]]
+[48,"Tournesol Sauvage",5,15,140,6,6,[100,100,100,0,0,0],[10,10,-2,15,-3]]
+[52,"Arakne",5,3,40,5,6,[100,100,100,0,0,0],[-2,5,5,-1,10]]
+[53,"Bwork Mage",5,35,250,7,5,[100,100,100,0,0,0],[10,0,5,10,0]]
+[54,"Chafer",5,40,320,5,6,[100,100,100,0,0,0],[0,-10,10,0,5]]
+[55,"Gelée Bleue",5,9,60,4,4,[100,100,100,0,0,0],[0,0,0,0,0]]
+[56,"Gelée Menthe",5,14,140,8,3,[100,100,100,0,0,0],[0,0,0,0,0]]
+[57,"Gelée Fraise",5,30,300,9,4,[100,100,100,0,0,0],[0,0,0,0,0]]
+[58,"Gelée Royale Bleue",5,58,1400,10,5,[100,100,100,0,0,0],[78,78,78,-6,78]]
+[59,"Champ Champ",5,7,60,6,4,[100,100,100,0,0,0],[0,0,0,0,0]]
+[61,"Moskito",5,2,42,4,7,[100,100,100,0,0,0],[10,10,0,0,-10]]
+[74,"Bwork Archer",5,31,220,6,4,[100,100,100,0,0,0],[0,-11,5,0,0]]
+[78,"Rose Démoniaque",5,8,60,4,3,[100,100,100,0,0,0],[0,0,0,0,0]]
+[79,"Pissenlit Diabolique",5,9,55,6,4,[100,100,100,0,0,0],[-5,25,-5,-2,10]]
+[85,"Gelée Royale Menthe",5,120,1650,10,5,[100,100,100,0,0,0],[70,-10,70,70,70]]
+[86,"Gelée Royale Fraise",5,170,1900,10,5,[100,100,100,0,0,0],[70,70,-10,70,70]]
+[98,"Tofu",5,6,24,4,10,[100,100,100,0,0,0],[0,0,0,0,0]]
+[101,"Bouftou",5,15,120,5,4,[100,100,100,0,0,0],[0,0,0,0,0]]
+[102,"Mulou",5,80,1200,10,6,[100,100,100,0,0,0],[24,-12,28,0,-5]]
+[106,"Craqueleur",5,37,500,6,6,[100,100,100,0,0,0],[10,18,10,-2,-12]]
+[107,"Dark Vlad",5,140,7000,9,7,[100,100,100,0,0,0],[62,-12,48,-12,48]]
+[110,"Chafer Invisible",5,37,400,5,5,[100,100,100,0,0,0],[10,0,0,-10,22]]
+[111,"Tofu Maléfique",5,3,55,7,12,[100,100,100,0,0,0],[0,0,0,0,0]]
+[113,"Dragon Cochon",5,120,2650,10,5,[100,100,100,0,0,0],[38,38,38,-5,-5]]
+[120,"Tofu lancé",5,5,100,6,11,[100,100,100,0,0,0],[50,50,50,50,50]]
+[121,"Minotoror",5,133,6800,14,6,[100,100,100,0,0,0],[43,43,48,63,53]]
+[123,"Cochon de Lait",5,20,190,6,3,[100,100,100,0,0,0],[14,0,-15,-21,58]]
+[147,"Bouftou Royal",5,43,700,7,5,[100,100,100,0,0,0],[34,18,18,23,6]]
+[148,"Chef de Guerre Bouftou",5,23,270,6,4,[100,100,100,0,0,0],[10,10,-2,-2,10]]
+[152,"La Fourbe",6,6,6,6,3,[120,110,120,0,0,0],[0,0,0,0,0]]
+[158,"Coquille Explosive",5,1,1000,2,-1,[100,100,100,0,0,0],[0,0,0,0,0]]
+[159,"Milimulou",5,26,250,7,5,[100,100,100,0,0,0],[18,0,-5,0,0]]
+[173,"Abraknyde Ancestral",5,240,5000,12,5,[100,100,100,0,0,0],[53,53,-5,53,-5]]
+[180,"Wa Wabbit",5,200,5800,10,4,[100,100,100,0,0,0],[28,28,18,-7,-12]]
+[181,"Wobot",5,53,2000,7,5,[100,100,100,0,0,0],[20,20,20,-2,-2]]
+[182,"Wabbit Gm",5,80,1100,9,5,[100,100,100,0,0,0],[43,33,40,-6,-15]]
+[194,"Scarafeuille Rouge",5,36,410,7,4,[100,100,100,0,0,0],[25,0,100,-50,0]]
+[198,"Scarafeuille Bleu",5,36,410,7,4,[100,100,100,0,0,0],[25,0,-50,100,0]]
+[225,"Darkli Moon",5,220,10000,10,6,[100,100,100,0,0,0],[30,-10,30,30,-10]]
+[226,"Moon",5,200,9000,10,6,[100,100,100,0,0,0],[0,50,50,50,50]]
+[228,"Boomba",5,38,700,8,5,[100,100,100,0,0,0],[0,-6,0,9,9]]
+[229,"Nakunbra",5,75,980,6,4,[100,100,100,0,0,0],[22,-2,0,15,0]]
+[230,"Le Chouque",5,94,7000,10,3,[100,100,100,0,0,0],[18,-10,0,36,0]]
+[231,"Canon Dorf",5,75,940,6,3,[100,100,100,0,0,0],[27,20,-4,-8,0]]
+[232,"Meulou",5,198,12000,8,7,[100,100,100,0,0,0],[22,32,-5,42,42]]
+[240,"Scarafeuille Vert",5,36,410,7,4,[100,100,100,0,0,0],[25,100,0,0,-50]]
+[241,"Scarafeuille Blanc",5,36,410,7,4,[100,100,100,0,0,0],[25,-50,0,0,100]]
+[242,"Flammèche Feu",6,6,20,6,2,[120,110,120,0,0,0],[100,0,100,0,0]]
+[243,"Flammèche Eau",6,6,20,6,2,[120,110,120,0,0,0],[100,0,0,100,0]]
+[244,"Flammèche Terre",6,6,20,6,2,[120,110,120,0,0,0],[100,100,0,0,0]]
+[245,"Flammèche Air",6,6,20,6,2,[120,110,120,0,0,0],[100,0,0,0,100]]
+[253,"Abraknyde Sombre",5,84,1850,8,3,[100,100,100,0,0,0],[48,48,-10,49,28]]
+[254,"Abraknyde Vénérable",5,49,570,6,3,[100,100,100,0,0,0],[28,35,6,35,6]]
+[255,"Arakne Agressive",5,8,90,5,6,[100,100,100,0,0,0],[5,0,5,5,-1]]
+[256,"Tronknyde",5,45,400,6,6,[100,100,100,0,0,0],[17,60,-12,70,70]]
+[257,"Chêne Mou",5,920,12000,15,2,[100,100,100,0,0,0],[82,52,52,-5,-5]]
+[258,"Branche Invocatrice",5,140,5000,5,-1,[100,100,100,0,0,0],[62,-5,62,62,-5]]
+[259,"Arakne Majeure",5,43,350,7,6,[100,100,100,0,0,0],[-10,-10,14,14,-10]]
+[260,"Branche Soignante",5,140,5000,7,-1,[100,100,100,0,0,0],[62,62,-5,-5,62]]
+[266,"Bwak de terre",5,20,100,10,8,[100,100,100,0,0,0],[100,100,0,0,0]]
+[267,"Bwak d'air",5,20,100,10,8,[100,100,100,0,0,0],[100,0,0,0,100]]
+[268,"Bwak d'eau",5,20,100,10,8,[100,100,100,0,0,0],[100,0,0,100,0]]
+[273,"Blop Coco",5,38,338,6,4,[100,100,100,0,0,0],[23,-50,23,23,62]]
+[274,"Blop Indigo",5,38,338,6,4,[100,100,100,0,0,0],[23,23,-50,62,23]]
+[275,"Blop Griotte",5,38,338,6,4,[100,100,100,0,0,0],[23,23,62,-50,23]]
+[276,"Blop Reinette",5,38,338,6,4,[100,100,100,0,0,0],[23,62,23,23,-50]]
+[277,"Biblop Indigo",5,18,128,5,4,[100,100,100,0,0,0],[23,23,-50,62,23]]
+[278,"Biblop Coco",5,18,128,5,4,[100,100,100,0,0,0],[23,-50,23,23,62]]
+[279,"Biblop Griotte",5,18,128,5,4,[100,100,100,0,0,0],[23,23,62,-50,23]]
+[280,"Biblop Reinette",5,18,128,5,4,[100,100,100,0,0,0],[23,62,23,23,-50]]
+[281,"Corbac",5,26,200,6,10,[100,100,100,0,0,0],[26,-10,26,-10,26]]
+[282,"Arbre",6,6,350,0,-1,[120,110,120,0,0,0],[55,55,55,-10,-10]]
+[287,"Kanigrou",5,80,1100,8,4,[100,100,100,0,0,0],[26,26,26,-5,-5]]
+[288,"Serpentin",5,14,45,6,2,[100,100,100,0,0,0],[18,18,18,-15,-5]]
+[289,"Maître Corbac",5,200,6500,12,5,[100,100,100,0,0,0],[26,26,46,56,56]]
+[291,"Chafer Archer",5,48,360,6,5,[100,100,100,0,0,0],[-5,0,15,10,20]]
+[293,"Craqueleur des plaines",5,51,540,5,3,[100,100,100,0,0,0],[14,14,28,58,38]]
+[300,"Kolérat",5,13,90,4,3,[100,100,100,0,0,0],[0,0,0,0,0]]
+[301,"Ouginak",5,57,550,6,4,[100,100,100,0,0,0],[0,0,0,0,0]]
+[382,"Tofu Royal",5,120,5000,12,30,[100,100,100,0,0,0],[38,23,18,23,58]]
+[412,"Larve Saphir",5,19,160,6,3,[100,100,100,0,0,0],[10,10,0,10,10]]
+[413,"Larve Rubis",5,43,500,12,6,[100,100,100,0,0,0],[20,20,-10,20,20]]
+[414,"Larve Emeraude",5,23,320,9,4,[100,100,100,0,0,0],[15,15,-10,15,0]]
+[423,"Kralamoure Géant",5,1640,5000,18,-1,[100,100,100,0,0,0],[900,900,900,900,900]]
+[424,"Tentacule Primaire",5,133,240,4,2,[100,100,100,0,0,0],[94,94,94,94,0]]
+[429,"Gelée Citron",5,49,410,9,4,[100,100,100,0,0,0],[0,0,0,0,0]]
+[430,"Gelée Royale Citron",5,280,3300,10,5,[100,100,100,0,0,0],[70,70,70,70,-10]]
+[442,"Rat d'Egoutant",5,58,380,7,4,[100,100,100,0,0,0],[9,73,-22,28,-22]]
+[447,"Chaman d'Egoutant",5,48,310,8,4,[100,100,100,0,0,0],[5,54,5,34,-6]]
+[456,"Larve Dorée",5,36,200,12,4,[100,100,100,0,0,0],[0,0,-6,18,0]]
+[457,"Shin Larve",5,68,2400,9,2,[100,100,100,0,0,0],[54,34,34,-26,-26]]
+[478,"Bworker",5,440,15000,12,9,[100,100,100,0,0,0],[18,28,28,18,-13]]
+[479,"Mama Bwork",5,98,1900,9,5,[100,100,100,0,0,0],[33,33,48,18,28]]
+[483,"Craqueboule",5,28,270,8,4,[100,100,100,0,0,0],[24,24,24,24,24]]
+[484,"Bwork Elémental de Feu",5,133,3400,10,4,[100,100,100,0,0,0],[28,28,100,-15,18]]
+[486,"Bwork Elémental d'Air",5,133,3400,10,4,[100,100,100,0,0,0],[28,-14,18,28,100]]
+[488,"Cybwork",5,185,5300,8,3,[100,100,100,0,0,0],[46,48,18,-12,53]]
+[494,"Poutch Ingball",5,100,10000,0,-1,[0,0,0,0,0,0],[0,0,0,0,0]]
+[499,"Minotoboule de Nowel",5,65,1300,9,4,[100,100,100,0,0,0],[65,-20,35,55,-25]]
+[515,"Bulbiflore",5,26,110,5,5,[100,100,100,0,0,0],[10,25,35,0,0]]
+[518,"Bulbuisson",5,42,370,8,5,[100,100,100,0,0,0],[100,45,15,60,70]]
+[519,"Bulbig",5,83,3150,8,4,[100,100,100,0,0,0],[23,58,23,23,-5]]
+[520,"Araknawa",5,43,420,7,4,[100,100,100,0,0,0],[30,30,30,30,30]]
+[522,"Cooleuvre",5,67,2000,13,9,[100,100,100,0,0,0],[50,-200,-200,-200,-200]]
+[523,"Kitsou Nakwa",5,29,169,9,6,[100,100,100,0,0,0],[25,25,-10,100,15]]
+[524,"Bambouto",5,24,105,8,4,[100,100,100,0,0,0],[5,35,-10,0,15]]
+[527,"Yokai Firefoux",5,170,4400,9,5,[100,100,100,0,0,0],[28,28,28,28,28]]
+[528,"Soryo Firefoux",5,107,1900,9,6,[100,100,100,0,0,0],[70,-10,70,70,70]]
+[529,"Maho Firefoux",5,110,1500,10,5,[100,100,100,0,0,0],[-5,50,50,50,50]]
+[530,"Kitsou Nere",5,81,569,9,6,[100,100,100,0,0,0],[25,100,-10,15,15]]
+[531,"Kitsou Nae",5,61,369,9,6,[100,100,100,0,0,0],[25,25,-10,15,100]]
+[532,"Kitsou Nufeu",5,111,769,9,6,[100,100,100,0,0,0],[25,25,100,-10,15]]
+[534,"Pandawa Ivre",5,80,1245,8,3,[100,100,100,0,0,0],[50,50,50,-10,-10]]
+[535,"Léopardo",5,58,730,7,4,[100,100,100,0,0,0],[-5,-5,-5,-5,-5]]
+[546,"Bambouto Sacré",5,97,3700,8,4,[100,100,100,0,0,0],[5,-50,-50,-50,-50]]
+[547,"Pandalette Ivre",5,66,705,10,5,[100,100,100,0,0,0],[58,-5,-5,40,40]]
+[548,"Bulbambou",5,23,200,6,3,[100,100,100,0,0,0],[0,28,-12,58,18]]
+[556,"Cawotte",6,6,225,0,-1,[120,110,120,0,0,0],[0,0,0,0,0]]
+[568,"Tanukouï San",5,140,5400,10,5,[100,100,100,0,0,0],[32,32,32,32,-5]]
+[569,"Tanuki Chan",5,38,340,6,5,[100,100,100,0,0,0],[20,20,80,-10,20]]
+[571,"Tanuki Chan",5,38,340,6,5,[100,100,100,0,0,0],[32,33,-6,88,18]]
+[572,"Tanuki Chan",5,38,340,6,5,[100,100,100,0,0,0],[20,-10,20,20,80]]
+[574,"Tanuki Chan",5,38,340,6,5,[100,100,100,0,0,0],[20,80,20,20,-10]]
+[577,"Tanuki Chan",5,38,340,6,5,[100,100,100,0,0,0],[88,28,33,9,18]]
+[578,"Pandikaze aérien",5,53,700,7,3,[100,100,100,0,0,0],[28,26,-12,-5,100]]
+[579,"Pandikaze vertige",5,55,600,7,2,[100,100,100,0,0,0],[90,90,90,90,-200]]
+[580,"Pandikwakaze",5,85,1000,7,7,[100,100,100,0,0,0],[100,0,0,0,0]]
+[581,"Pandulkaze",5,78,1700,8,4,[100,100,100,0,0,0],[53,33,33,33,33]]
+[600,"Don Duss Ang",5,68,900,7,3,[100,100,100,0,0,0],[28,-12,-12,28,28]]
+[601,"Don Dorgan",5,72,900,6,4,[100,100,100,0,0,0],[18,-12,58,-12,-12]]
+[603,"Cochon de Farle",5,38,420,6,1,[100,100,100,0,0,0],[58,58,-12,-12,-12]]
+[605,"Péki Péki",5,840,12000,14,15,[100,100,100,0,0,0],[48,38,100,38,38]]
+[606,"Bouate de Pandore",5,1,10,10,2,[100,100,100,0,0,0],[100,100,100,100,100]]
+[612,"Maître Pandore",5,240,9000,10,4,[100,100,100,0,0,0],[78,-5,24,34,-5]]
+[650,"Abrakne",5,42,340,8,4,[100,100,100,0,0,0],[18,-12,28,-5,14]]
+[651,"Abrakne Sombre",5,92,1600,8,4,[100,100,100,0,0,0],[28,-12,36,-5,24]]
+[652,"Champa Vert",5,18,180,6,4,[100,100,100,0,0,0],[58,-5,-5,-5,68]]
+[653,"Champa Rouge",5,28,180,6,3,[100,100,100,0,0,0],[58,-5,68,-5,-5]]
+[654,"Champa Bleu",5,28,50,8,4,[100,100,100,0,0,0],[58,-5,-5,68,-5]]
+[655,"Champa Marron",5,28,230,4,3,[100,100,100,0,0,0],[58,68,-5,-5,-5]]
+[668,"Gamino",5,48,420,6,3,[100,100,100,0,0,0],[18,58,9,-5,-18]]
+[669,"Craqueleur Légendaire",5,140,5000,8,3,[100,100,100,0,0,0],[58,-12,58,67,-17]]
+[670,"Koulosse",5,220,8200,10,3,[100,100,100,0,0,0],[78,28,-12,-12,33]]
+[671,"Bouftou des Cavernes",5,48,290,12,5,[100,100,100,0,0,0],[38,-10,62,28,-13]]
+[672,"Boufcoul",5,58,490,12,6,[100,100,100,0,0,0],[38,62,-12,-13,28]]
+[673,"Emeraude",5,120,7000,9,4,[100,100,100,0,0,0],[98,-6,-6,-6,98]]
+[675,"Saphira",5,120,7000,9,4,[100,100,100,0,0,0],[98,-6,-6,98,-6]]
+[677,"Rubise",5,120,7000,9,4,[100,100,100,0,0,0],[98,-6,98,-6,-6]]
+[678,"Totem Motivant",5,5,380,6,-1,[100,100,100,0,0,0],[98,98,-6,98,98]]
+[679,"Totem Explosif",5,5,380,6,-1,[100,100,100,0,0,0],[98,98,100,98,98]]
+[680,"Totem Soignant",5,5,380,6,-1,[100,100,100,0,0,0],[98,98,-6,98,98]]
+[681,"Diamantine",5,120,7000,9,4,[100,100,100,0,0,0],[98,98,-6,-6,-6]]
+[682,"Poupée Mortelle",5,5,140,4,1,[100,100,100,0,0,0],[-90,90,90,90,90]]
+[780,"Skeunk",5,220,6000,12,5,[100,100,100,0,0,0],[28,28,-5,-5,38]]
+[792,"Bworkette",5,98,3200,9,5,[100,100,100,0,0,0],[33,33,48,18,28]]
+[795,"Scarafeuille Noir",5,48,600,7,5,[100,100,100,0,0,0],[100,24,24,24,24]]
+[796,"Tofu Noir",5,18,60,6,18,[100,100,100,0,0,0],[14,9,-25,-15,38]]
+[797,"Scarabosse Doré",5,78,1900,8,3,[100,100,100,0,0,0],[24,24,24,24,24]]
+[798,"Scarafeuille Immature",5,20,150,6,3,[100,100,100,0,0,0],[100,-10,-10,-10,-10]]
+[799,"Tournesol Affamé",5,48,620,6,2,[100,100,100,0,0,0],[28,28,28,-15,-15]]
+[800,"Batofu",5,68,900,5,10,[100,100,100,0,0,0],[14,9,-25,-15,38]]
+[802,"Bomberfu",5,14,15,4,8,[100,100,100,0,0,0],[0,9,0,0,0]]
+[804,"Tofoune",5,48,320,6,8,[100,100,100,0,0,0],[14,9,28,28,-15]]
+[806,"Tofukaz",5,38,280,7,10,[100,100,100,0,0,0],[44,59,-25,-15,38]]
+[808,"Tofu Ventripotent",5,58,700,8,3,[100,100,100,0,0,0],[44,63,28,-35,58]]
+[823,"Rono le Renarbo",5,98,1800,7,10,[100,100,100,0,0,0],[26,-10,68,-10,-15]]
+[824,"Horace le Corbac Apprivoisé",5,88,1600,8,6,[100,100,100,0,0,0],[26,-10,28,28,-25]]
+[825,"Kapotie le Buveur",5,98,1800,10,6,[100,100,100,0,0,0],[5,-5,-5,68,-5]]
+[827,"Minotot",5,440,20000,10,5,[100,100,100,0,0,0],[38,38,38,-5,-5]]
+[829,"Serpiplume",5,58,640,6,8,[100,100,100,0,0,0],[14,14,-5,-5,14]]
+[830,"Scaratos",5,38,240,6,3,[100,100,100,0,0,0],[14,9,13,-5,-5]]
+[831,"Mominotor",5,120,4400,8,4,[100,100,100,0,0,0],[38,14,38,38,-5]]
+[832,"Déminoboule",5,120,4400,8,4,[100,100,100,0,0,0],[38,38,-5,-5,38]]
+[839,"Abominable Yiti des neiges",5,80,2400,7,3,[100,100,100,0,0,0],[28,19,19,-19,-19]]
+[844,"Boufmouth",5,24,270,7,4,[100,100,100,0,0,0],[10,-2,-2,10,10]]
+[848,"Dragoss Noir",5,58,700,6,3,[100,100,100,0,0,0],[58,-12,68,-12,-12]]
+[849,"Kipik",5,30,280,8,1,[100,100,100,0,0,0],[-20,35,35,35,35]]
+[851,"Glutin farceur",5,43,490,6,5,[100,100,100,0,0,0],[9,0,5,10,10]]
+[853,"Dragoeuf Guerrier",5,96,1600,7,3,[100,100,100,0,0,0],[28,28,28,-12,-22]]
+[854,"Crocabulia",5,480,12000,9,3,[100,100,100,0,0,0],[58,-12,28,28,28]]
+[855,"Dragueuse",5,78,1000,9,4,[100,100,100,0,0,0],[58,-12,28,28,28]]
+[858,"Dragoss Noir Eveillé",5,108,2100,8,3,[100,100,100,0,0,0],[58,-12,68,-12,-12]]
+[862,"Dragoeuf Volant",5,96,1300,9,5,[100,100,100,0,0,0],[58,-12,-12,5,58]]
+[872,"Papa Nowel",5,200,7000,10,2,[100,100,100,0,0,0],[-2,-2,40,40,40]]
+[874,"Demi papa Nowel",5,200,3500,8,3,[100,100,100,0,0,0],[90,-5,50,50,50]]
+[876,"Bwork",5,43,350,9,5,[100,100,100,0,0,0],[9,10,5,-20,0]]
+[877,"Aqualikros l'Impitoyable",5,118,2500,9,3,[100,100,100,0,0,0],[58,-12,-12,68,-12]]
+[878,"Dragoss Blanc Eveillé",5,108,2100,8,3,[100,100,100,0,0,0],[58,68,-12,-12,-12]]
+[879,"Dragoss Doré Eveillé",5,108,2100,8,3,[100,100,100,0,0,0],[58,-12,-12,-12,68]]
+[880,"Kol'nenfan",5,5,200,5,1,[100,100,100,0,0,0],[40,40,40,40,40]]
+[881,"Koup'nenfan",5,5,200,5,3,[100,100,100,0,0,0],[40,40,40,40,40]]
+[882,"Pet'nenfan",5,5,200,6,3,[100,100,100,0,0,0],[40,40,40,40,40]]
+[884,"Dragoss de Saphir",5,58,700,6,3,[100,100,100,0,0,0],[58,-12,-12,68,-12]]
+[885,"Dragoss Blanc",5,58,700,6,3,[100,100,100,0,0,0],[58,68,-12,-12,-12]]
+[886,"Dragoss Doré",5,58,700,6,3,[100,100,100,0,0,0],[58,-12,-12,-12,68]]
+[887,"Cadob'Onux",5,5,80,5,3,[100,100,100,0,0,0],[70,70,70,70,70]]
+[905,"Dragoss de Saphir Eveillé",5,108,2100,8,3,[100,100,100,0,0,0],[58,-12,-12,68,-12]]
+[917,"Araknotron",5,48,420,9,3,[100,100,100,0,0,0],[18,-15,19,-15,19]]
+[920,"Pichon Orange",5,30,240,6,3,[100,100,100,0,0,0],[18,-1,66,18,-1]]
+[921,"Pichon Bleu",5,30,240,6,3,[100,100,100,0,0,0],[18,18,-1,66,-1]]
+[922,"Pichon Blanc",5,30,240,6,3,[100,100,100,0,0,0],[18,-1,-1,18,66]]
+[923,"Pichon Vert",5,30,240,6,3,[100,100,100,0,0,0],[18,66,-1,18,-1]]
+[924,"Pichon Kloune",5,45,400,7,5,[100,100,100,0,0,0],[26,26,26,26,26]]
+[926,"Raul Mops",5,80,1200,10,4,[100,100,100,0,0,0],[30,-1,30,30,-1]]
+[927,"Etoile de la Mer d'Asse",5,30,240,6,3,[100,100,100,0,0,0],[18,18,-1,18,-1]]
+[928,"Mob l'Eponge",5,34,320,6,3,[100,100,100,0,0,0],[14,14,-5,14,-5]]
+[935,"Rat de Marais",5,110,2700,7,4,[100,100,100,0,0,0],[9,73,-22,28,-22]]
+[936,"Rat Batteur",5,100,2200,8,1,[100,100,100,0,0,0],[9,-11,-22,28,34]]
+[937,"Rat Klure",5,100,2000,7,5,[100,100,100,0,0,0],[19,14,28,28,-6]]
+[938,"Rat Basher",5,100,2000,7,5,[100,100,100,0,0,0],[9,73,-22,28,-22]]
+[939,"Rat Noir",5,140,5000,7,4,[100,100,100,0,0,0],[9,73,-22,28,-22]]
+[940,"Rat Blanc",5,140,5000,7,4,[100,100,100,0,0,0],[0,0,0,0,0]]
+[941,"Rat Bajoie",5,100,2200,8,4,[100,100,100,0,0,0],[29,9,-6,28,-6]]
+[942,"Rat Croc",5,110,2700,7,4,[100,100,100,0,0,0],[28,-26,73,-26,28]]
+[943,"Sphincter Cell",5,440,10000,8,5,[100,100,100,0,0,0],[200,200,200,200,200]]
+[944,"Raphaela",5,21,170,6,3,[100,100,100,0,0,0],[50,0,0,30,0]]
+[945,"Donatella",5,20,160,6,3,[100,100,100,0,0,0],[50,0,0,0,30]]
+[946,"Michelangela",5,24,200,6,3,[100,100,100,0,0,0],[50,30,0,0,0]]
+[947,"Leonardawa",5,22,180,6,3,[100,100,100,0,0,0],[50,0,30,0,0]]
+[971,"Petit Bouftou",5,7,32,5,3,[100,100,100,0,0,0],[0,0,0,0,0]]
+[976,"Larve Orange Immature",5,9,33,4,2,[100,100,100,0,0,0],[9,-5,-5,14,5]]
+[978,"Champ Champ Vulnérable",5,7,18,4,3,[100,100,100,0,0,0],[9,9,-6,-12,-6]]
+[980,"Rose Démoniaque Fragile",5,8,18,4,3,[100,100,100,0,0,0],[9,-6,9,-6,9]]
+[981,"Petit Tournesol Sauvage",5,12,60,5,3,[100,100,100,0,0,0],[10,10,-2,15,-3]]
+[983,"Jeune Sanglier",5,14,100,4,3,[100,100,100,0,0,0],[0,5,0,-5,5]]
+[996,"Chafer Prépubère",5,14,70,5,4,[100,100,100,0,0,0],[0,-10,10,0,5]]
+[1001,"Milimilou",5,26,240,7,5,[100,100,100,0,0,0],[18,5,-11,-16,9]]
+[1019,"Bitouf des Plaines",5,90,1300,9,10,[100,100,100,0,0,0],[13,-15,-19,-5,-5]]
+[1020,"Bitouf Aérien",5,143,3300,11,10,[100,100,100,0,0,0],[-5,-27,-3,-2,35]]
+[1022,"Corailleur",5,60,700,8,4,[100,100,100,0,0,0],[25,33,2,3,24]]
+[1025,"Craqueleur Poli",5,90,1300,7,4,[100,100,100,0,0,0],[5,41,-1,-20,13]]
+[1027,"Corailleur Magistral",5,170,2400,8,3,[100,100,100,0,0,0],[23,-6,13,18,-7]]
+[1043,"Poolay",5,124,2500,10,8,[100,100,100,0,0,0],[17,48,9,-5,-32]]
+[1044,"Kaskargo",5,132,2900,10,5,[100,100,100,0,0,0],[5,19,-21,33,9]]
+[1045,"Kimbo",5,990,11000,10,7,[100,100,100,0,0,0],[400,400,400,400,400]]
+[1046,"Meupette",5,92,1500,10,3,[100,100,100,0,0,0],[25,-7,34,-21,13]]
+[1047,"Abrakleur Clair",5,152,3500,10,4,[100,100,100,0,0,0],[13,43,-1,5,-35]]
+[1048,"Sparo",5,80,1100,8,4,[100,100,100,0,0,0],[30,-1,-23,9,37]]
+[1049,"Barbroussa",5,80,1100,8,5,[100,100,100,0,0,0],[13,-22,-10,43,18]]
+[1050,"Le Flib",5,76,940,8,3,[100,100,100,0,0,0],[13,20,33,19,-22]]
+[1051,"Gourlo le Terrible",5,190,2400,10,5,[100,100,100,0,0,0],[200,200,200,200,200]]
+[1060,"Crustorail Kouraçao",5,46,400,8,3,[100,100,100,0,0,0],[13,13,-12,38,13]]
+[1061,"Crustorail Malibout",5,46,400,8,3,[100,100,100,0,0,0],[13,38,13,13,-12]]
+[1064,"Palmifleur Kouraçao",5,60,800,8,3,[100,100,100,0,0,0],[25,-1,-11,30,-1]]
+[1065,"Palmifleur Malibout",5,60,800,8,3,[100,100,100,0,0,0],[25,30,-1,-1,-11]]
+[1066,"Palmifleur Passaoh",5,60,800,8,3,[100,100,100,0,0,0],[25,-1,30,-11,-1]]
+[1067,"Palmifleur Morito",5,60,800,8,3,[100,100,100,0,0,0],[25,-11,-1,-1,30]]
+[1068,"Mufafah",5,78,1050,8,4,[100,100,100,0,0,0],[25,-24,13,35,7]]
+[1069,"Kido",5,89,1300,8,5,[100,100,100,0,0,0],[25,14,41,-1,-17]]
+[1070,"Kilibriss",5,90,1120,10,10,[100,100,100,0,0,0],[25,48,-5,25,-23]]
+[1071,"Silf le Rasboul Majeur",5,440,10000,8,5,[100,100,100,0,0,0],[200,200,200,200,200]]
+[1072,"Tynril Consterné",5,240,5200,10,3,[100,100,100,0,0,0],[200,200,200,200,0]]
+[1080,"Tonneau",5,20,100,2,-1,[100,100,100,0,0,0],[0,100,0,0,0]]
+[1084,"Rasboul Mineur",5,10,100,6,2,[100,100,100,0,0,0],[-75,75,75,75,75]]
+[1085,"Tynril Déconcerté",5,240,5200,10,3,[100,100,100,0,0,0],[200,200,200,0,200]]
+[1086,"Tynril Perfide",5,240,5200,10,3,[100,100,100,0,0,0],[200,200,0,200,200]]
+[1087,"Tynril Ahuri",5,240,5200,10,3,[100,100,100,0,0,0],[200,0,200,200,200]]
+[1088,"Disciple du Kimbo",5,20,100,8,0,[100,100,100,0,0,0],[800,800,800,800,800]]
+[1090,"Tentacule Quaternaire",5,133,240,5,2,[100,100,100,0,0,0],[94,0,94,94,94]]
+[1091,"Tentacule Tertiaire",5,133,240,6,2,[100,100,100,0,0,0],[94,94,0,94,94]]
+[1092,"Tentacule Secondaire",5,133,240,6,2,[100,100,100,0,0,0],[94,94,94,0,94]]
+[1153,"Tromperelle",5,181,4900,10,4,[100,100,100,0,0,0],[18,13,15,41,-33]]
+[1154,"Champaknyde",5,169,4600,10,4,[100,100,100,0,0,0],[17,42,15,-34,10]]
+[1155,"Champodonte",5,190,5600,10,4,[100,100,100,0,0,0],[13,-34,10,10,38]]
+[1156,"Champmane",5,224,8000,10,4,[100,100,100,0,0,0],[42,13,-34,9,14]]
+[1157,"Champbis",5,204,6400,10,4,[100,100,100,0,0,0],[-33,13,41,8,12]]
+[1158,"Champ à Gnons",5,201,6400,10,4,[100,100,100,0,0,0],[41,-33,15,13,14]]
+[1159,"Ougah",5,940,18000,18,6,[100,100,100,0,0,0],[18,13,15,41,18]]
+[1170,"Ilyzaelle",5,1000,17000,9,7,[0,0,0,0,0,0],[45,45,45,45,45]]
+[1178,"Champa Explosif",5,120,2800,8,1,[100,100,100,0,0,0],[0,-5,-5,68,-5]]
+[1179,"Sapik",5,43,700,10,0,[100,100,100,0,0,0],[-20,40,40,40,40]]
+[1180,"Pokipik",5,13,40,10,1,[100,100,100,0,0,0],[-5,13,13,13,13]]
+[1181,"Gloutoblop",5,70,930,6,4,[100,100,100,0,0,0],[23,-5,-22,30,9]]
+[1182,"Blopignon",5,60,650,6,3,[100,100,100,0,0,0],[23,-25,-2,-2,34]]
+[1183,"Tronkoblop",5,60,650,6,2,[100,100,100,0,0,0],[23,13,28,-2,-24]]
+[1184,"Blop Coco Royal",5,120,3000,10,5,[100,100,100,0,0,0],[-12,-12,-12,-12,94]]
+[1185,"Blop Griotte Royal",5,120,3000,10,5,[100,100,100,0,0,0],[-12,-12,94,-12,-12]]
+[1186,"Blop Indigo Royal",5,120,3000,10,5,[100,100,100,0,0,0],[-12,-12,-12,94,-12]]
+[1187,"Blop Reinette Royal",5,120,3000,10,5,[100,100,100,0,0,0],[-12,94,-12,-12,-12]]
+[1188,"Blop Multicolore Royal",5,170,5000,10,3,[100,100,100,0,0,0],[13,13,13,13,13]]
+[1194,"Père Fwetar",5,240,9000,10,2,[100,100,100,0,0,0],[-2,-2,30,30,30]]
+[1195,"Qu'Tan",5,999,17000,9,4,[0,0,0,0,0,0],[35,35,50,20,25]]
+[1197,"Sbire de Qu'Tan",5,427,5666,8,4,[0,0,0,0,0,0],[18,23,28,37,70]]
+[1204,"Cramody",5,150,6000,11,5,[0,0,0,0,0,0],[42,33,42,33,33]]
+[1205,"Mihssih",5,150,5000,8,4,[0,0,0,0,0,0],[28,28,28,28,28]]
+[1206,"Haras",5,150,5500,10,5,[0,0,0,0,0,0],[28,28,28,37,65]]
+[1207,"Yllib",5,150,5000,8,4,[0,0,0,0,0,0],[28,28,37,23,23]]
+[1210,"Chafer Archer Maudit",5,135,3300,9,4,[0,0,0,0,0,0],[20,8,58,-12,-12]]
+[2622,"Croc Gland de Nowel",5,23,230,6,5,[100,100,100,0,0,0],[0,0,0,5,0]]
+[2772,"Jorbak",5,440,6250,12,6,[100,100,100,0,0,0],[0,0,0,0,0]]
+[2786,"Vampire Dupyr",5,150,3700,11,6,[100,100,100,0,0,0],[33,33,-10,-10,28]]
+[2788,"Tofu Très Maléfique",5,50,400,8,12,[100,100,100,0,0,0],[0,0,0,0,0]]
+[2793,"Krtek",5,440,7400,12,5,[100,100,100,0,0,0],[50,45,25,0,35]]
+[2795,"Krokille",5,1,8000,2,-1,[0,0,0,0,0,0],[20,20,20,20,20]]
+[2800,"Grozilla",5,900,100000,12,5,[0,0,0,0,0,0],[20,20,50,20,20]]
+[2801,"Grasmera",5,900,100000,12,5,[0,0,0,0,0,0],[50,30,30,30,30]]
+[2819,"Minotoboule de Nowel",5,440,6400,13,5,[0,0,0,0,0,0],[60,20,10,50,40]]
+[2843,"Dégelée",5,68,920,7,3,[0,0,0,0,0,0],[18,18,18,18,18]]
+[2891,"Péki Garou",6,320,16000,19,7,[0,0,0,0,0,0],[0,15,15,15,15]]
+[2927,"Boufmouth",5,114,2200,10,5,[0,0,0,0,0,0],[23,23,9,-24,53]]
+[2928,"Boufmouth Royal",5,170,5800,15,5,[0,0,0,0,0,0],[23,33,26,-11,48]]
+[2929,"Chef de Guerre Boufmouth",5,122,2700,10,4,[0,0,0,0,0,0],[58,28,-30,34,19]]
+[2947,"Boufmouth légendaire",5,128,2700,10,5,[0,0,0,0,0,0],[19,-27,59,14,27]]
+[2973,"Fantôme Zilla Freux",5,460,12000,10,10,[0,0,0,0,0,0],[23,23,3,33,58]]
+[2974,"Fantôme Pandawa Ivre",5,230,4200,11,5,[0,0,0,0,0,0],[23,23,-2,28,48]]
+[2975,"Fantôme Pandikaze aérien",5,180,4000,11,4,[0,0,0,0,0,0],[28,-1,28,28,100]]
+[2976,"Fantôme Maître Pandore",5,430,15000,10,5,[0,0,0,0,0,0],[27,21,26,17,29]]
+[2977,"Bouate de Fantôme Pandore",1,1,15,10,2,[0,0,0,0,0,0],[150,150,150,150,150]]
+[2978,"Fantôme Pandalette Ivre",5,230,4200,11,5,[0,0,0,0,0,0],[23,23,-2,28,48]]
+[2979,"Fantôme Pandit",5,180,4000,11,4,[0,0,0,0,0,0],[100,21,31,32,-1]]
+[2984,"Fantôme Maître Tanukouï San",5,460,16000,10,5,[0,0,0,0,0,0],[27,42,52,1,1]]
+[2987,"Fantôme Maître Tanuki Chan",1,60,1400,8,5,[0,0,0,0,0,0],[50,0,0,0,100]]
+[2992,"Fantôme Bulbambou",5,236,3900,10,4,[0,0,0,0,0,0],[18,28,38,10,41]]
+[2993,"Fantôme d'Arbre",1,6,1000,0,0,[0,0,0,0,0,0],[30,30,30,-20,-20]]
+[2994,"Fantôme Bulbuisson",5,180,4200,10,4,[0,0,0,0,0,0],[28,38,33,28,10]]
+[2996,"Fantôme Bulbig",5,460,12000,11,5,[0,0,0,0,0,0],[23,23,58,23,16]]
+[2997,"Fantôme de Péki Garou",5,960,17000,10,5,[0,0,0,0,0,0],[27,37,40,42,38]]
+[2999,"Fantôme de Gamelle",1,1,10000,8,1,[0,0,0,0,0,0],[30,30,30,30,30]]
+[3000,"Fantôme Pandule",5,210,8000,12,5,[0,0,0,0,0,0],[28,9,-5,13,13]]
+[3001,"Fantôme Pandikaze",5,180,4000,11,4,[0,0,0,0,0,0],[100,28,5,-1,28]]
+[3019,"Jack'O Lent et Terne",1,666,999,10,4,[0,0,0,0,0,0],[22,2,-20,13,-55]]
+
+## Valid visualSpellId references (original effects/icons/audio only)
+6: Féca / Armure Terrestre
+3: Féca / Attaque Naturelle
+17: Féca / Glyphe Agressif
+4: Féca / Renvoi de Sort
+2: Féca / Aveuglement
+1: Féca / Armure Incandescente
+9: Féca / Attaque Nuageuse
+18: Féca / Armure Aqueuse
+20: Féca / Immunité
+14: Féca / Armure Venteuse
+19: Féca / Bulle
+5: Féca / Trêve
+16: Féca / Science du bâton
+8: Féca / Retour du bâton
+12: Féca / Glyphe d'Aveuglement
+11: Féca / Téléportation
+10: Féca / Glyphe Enflammé
+7: Féca / Bouclier Féca
+15: Féca / Glyphe d'Immobilisation
+13: Féca / Glyphe de Silence
+1901: Féca / Invocation de Dopeul Féca
+422: Féca / Mise en garde
+23: Osamodas / Cri de l'Ours
+34: Osamodas / Invocation de Tofu
+21: Osamodas / Griffe Spectrale
+26: Osamodas / Bénédiction Animale
+22: Osamodas / Déplacement Félin
+35: Osamodas / Invocation de Bouftou
+28: Osamodas / Crapaud
+37: Osamodas / Invocation de Prespic
+30: Osamodas / Fouet
+27: Osamodas / Piqûre Motivante
+24: Osamodas / Corbeau
+33: Osamodas / Griffe Cinglante
+25: Osamodas / Soin Animal
+38: Osamodas / Invocation de Sanglier
+36: Osamodas / Frappe du Craqueleur
+32: Osamodas / Résistance Naturelle
+29: Osamodas / Crocs du Mulou
+39: Osamodas / Invocation de Bwork Mage
+40: Osamodas / Invocation de Craqueleur
+31: Osamodas / Invocation de Dragonnet Rouge
+1902: Osamodas / Invocation de Dopeul Osamodas
+420: Osamodas / Laisse Spirituelle
+43: Enutrof / Lancer de Pelle
+51: Enutrof / Lancer de Pièces
+41: Enutrof / Sac Animé
+49: Enutrof / Pelle Fantomatique
+42: Enutrof / Chance
+47: Enutrof / Boîte de Pandore
+48: Enutrof / Remblai
+45: Enutrof / Clé Réductrice
+53: Enutrof / Force de l'Age
+46: Enutrof / Désinvocation
+52: Enutrof / Cupidité
+44: Enutrof / Roulage de Pelle
+50: Enutrof / Maladresse
+54: Enutrof / Maladresse de Masse
+55: Enutrof / Accélération
+56: Enutrof / Pelle du Jugement
+58: Enutrof / Pelle Massacrante
+59: Enutrof / Corruption
+57: Enutrof / Pelle Animée
+60: Enutrof / Coffre Animé
+1903: Enutrof / Invocation de Dopeul Enutrof
+425: Enutrof / Retraite anticipée
+72: Sram / Invisibilité
+61: Sram / Sournoiserie
+65: Sram / Piège Sournois
+66: Sram / Poison insidieux
+68: Sram / Fourvoiement
+63: Sram / Coup Sournois
+74: Sram / Double
+64: Sram / Repérage
+79: Sram / Piège de Masse
+78: Sram / Invisibilité d'Autrui
+71: Sram / Piège Empoisonné
+62: Sram / Concentration de Chakra
+69: Sram / Piège d'Immobilisation
+77: Sram / Piège de Silence
+73: Sram / Piège répulsif
+67: Sram / Peur
+70: Sram / Arnaque
+75: Sram / Pulsion de Chakra
+76: Sram / Attaque Mortelle
+80: Sram / Piège Mortel
+1904: Sram / Invocation de Dopeul Sram
+416: Sram / Poisse
+81: Xélor / Ralentissement
+83: Xélor / Aiguille
+82: Xélor / Contre
+84: Xélor / Gelure
+100: Xélor / Sablier de Xélor
+92: Xélor / Rayon Obscur
+88: Xélor / Téléportation
+93: Xélor / Flétrissement
+85: Xélor / Flou
+96: Xélor / Poussière Temporelle
+98: Xélor / Vol du Temps
+86: Xélor / Aiguille Chercheuse
+89: Xélor / Dévouement
+90: Xélor / Fuite
+87: Xélor / Démotivation
+94: Xélor / Protection Aveuglante
+99: Xélor / Momification
+95: Xélor / Horloge
+91: Xélor / Frappe de Xélor
+97: Xélor / Cadran de Xélor
+1905: Xélor / Invocation de Dopeul Xélor
+424: Xélor / Raulebaque
+103: Ecaflip / Chance d'Ecaflip
+105: Ecaflip / Bond du Félin
+102: Ecaflip / Pile ou Face
+109: Ecaflip / Bluff
+113: Ecaflip / Perception
+111: Ecaflip / Contrecoup
+104: Ecaflip / Trèfle
+119: Ecaflip / Tout ou rien
+101: Ecaflip / Roulette
+107: Ecaflip / Topkaj
+116: Ecaflip / Langue Râpeuse
+106: Ecaflip / Roue de la Fortune
+117: Ecaflip / Griffe Invocatrice
+108: Ecaflip / Esprit Félin
+115: Ecaflip / Odorat
+118: Ecaflip / Réflexes
+110: Ecaflip / Griffe Joueuse
+112: Ecaflip / Griffe de Ceangal
+114: Ecaflip / Rekop
+120: Ecaflip / Destin d'Ecaflip
+1906: Ecaflip / Invocation de Dopeul Ecaflip
+412: Ecaflip / Félintion
+121: Eniripsa / Mot Curatif
+125: Eniripsa / Mot Interdit
+128: Eniripsa / Mot de Frayeur
+124: Eniripsa / Mot Soignant
+122: Eniripsa / Mot Blessant
+126: Eniripsa / Mot Stimulant
+127: Eniripsa / Mot de Prévention
+123: Eniripsa / Mot Drainant
+130: Eniripsa / Mot Revitalisant
+131: Eniripsa / Mot de Régénération
+132: Eniripsa / Mot d'Epine
+133: Eniripsa / Mot de Jouvence
+134: Eniripsa / Mot Vampirique
+135: Eniripsa / Mot de Sacrifice
+129: Eniripsa / Mot d'Amitié
+136: Eniripsa / Mot d'Immobilisation
+137: Eniripsa / Mot d'Envol
+138: Eniripsa / Mot de Silence
+139: Eniripsa / Mot d'Altruisme
+140: Eniripsa / Mot de Reconstitution
+1907: Eniripsa / Invocation de Dopeul Eniripsa
+427: Eniripsa / Mot Lotof
+142: Iop / Bond
+141: Iop / Pression
+143: Iop / Intimidation
+144: Iop / Compulsion
+145: Iop / Epée Divine
+146: Iop / Epée du destin
+147: Iop / Guide de Bravoure
+148: Iop / Amplification
+154: Iop / Epée Destructrice
+150: Iop / Couper
+151: Iop / Souffle
+155: Iop / Vitalité
+152: Iop / Epée du Jugement
+153: Iop / Puissance
+149: Iop / Mutilation
+156: Iop / Tempête de Puissance
+157: Iop / Epée Céleste
+158: Iop / Concentration
+160: Iop / Epée de Iop
+159: Iop / Colère de Iop
+1908: Iop / Invocation de Dopeul Iop
+410: Iop / Brokle
+169: Cra / Flèche de Recul
+164: Cra / Flèche Empoisonnée
+161: Cra / Flèche Magique
+163: Cra / Flèche Glacée
+165: Cra / Flèche Enflammée
+172: Cra / Tir Eloigné
+167: Cra / Flèche d'Expiation
+168: Cra / Oeil de Taupe
+162: Cra / Tir Critique
+170: Cra / Flèche d'Immobilisation
+171: Cra / Flèche Punitive
+166: Cra / Tir Puissant
+173: Cra / Flèche Harcelante
+174: Cra / Flèche Cinglante
+176: Cra / Flèche Persécutrice
+175: Cra / Flèche Destructrice
+178: Cra / Flèche Absorbante
+177: Cra / Flèche Ralentissante
+179: Cra / Flèche Explosive
+180: Cra / Maîtrise de l'Arc
+1909: Cra / Invocation de Dopeul Crâ
+418: Cra / Flèche de dispersion
+193: Sadida / La Bloqueuse
+183: Sadida / Ronce
+200: Sadida / Poison Paralysant
+198: Sadida / Sacrifice Poupesque
+195: Sadida / Larme
+182: Sadida / La Folle
+192: Sadida / Ronce Apaisante
+197: Sadida / Puissance Sylvestre
+189: Sadida / La Sacrifiée
+181: Sadida / Tremblement
+199: Sadida / Connaissance des Poupées
+191: Sadida / Ronces Multiples
+186: Sadida / Arbre
+196: Sadida / Vent Empoisonné
+190: Sadida / La Gonflable
+194: Sadida / Ronces Agressives
+185: Sadida / Herbe Folle
+184: Sadida / Feu de Brousse
+188: Sadida / Ronce Insolente
+187: Sadida / La Surpuissante
+1910: Sadida / Invocation de Dopeul Sadida
+426: Sadida / Arbre de vie
+431: Sacrieur / Châtiment Forcé
+434: Sacrieur / Attirance
+432: Sacrieur / Pied du Sacrieur
+444: Sacrieur / Dérobade
+449: Sacrieur / Détour
+436: Sacrieur / Assaut
+437: Sacrieur / Châtiment Agile
+439: Sacrieur / Dissolution
+433: Sacrieur / Châtiment Osé
+443: Sacrieur / Châtiment Spirituel
+440: Sacrieur / Sacrifice
+442: Sacrieur / Absorption
+441: Sacrieur / Châtiment Vitalesque
+445: Sacrieur / Coopération
+438: Sacrieur / Transposition
+446: Sacrieur / Punition
+447: Sacrieur / Furie
+448: Sacrieur / Epée volante
+435: Sacrieur / Transfert de Vie
+450: Sacrieur / Folie sanguinaire
+1911: Sacrieur / Invocation de Dopeul Sacrieur
+421: Sacrieur / Douleur partagée
+687: Pandawa / Poing Enflammé
+692: Pandawa / Gueule de Bois
+686: Pandawa / Picole
+689: Pandawa / Epouvante
+690: Pandawa / Souffle Alcoolisé
+691: Pandawa / Vulnérabilité Aqueuse
+688: Pandawa / Vulnérabilité Incandescente
+693: Pandawa / Karcham
+694: Pandawa / Vulnérabilité Venteuse
+695: Pandawa / Stabilisation
+696: Pandawa / Chamrak
+697: Pandawa / Vulnérabilité Terrestre
+698: Pandawa / Souillure
+699: Pandawa / Lait de Bambou
+700: Pandawa / Vague à Lame
+701: Pandawa / Colère de Zatoïshwan
+702: Pandawa / Flasque Explosive
+703: Pandawa / Pandatak
+704: Pandawa / Pandanlku
+705: Pandawa / Lien Spiritueux
+1912: Pandawa / Invocation de Dopeul Pandawa
+423: Pandawa / Ivresse
+
+## Imported grade-six balance comparisons
+Original spells can use mechanics or values outside this new-content profile. Compare constraints; do not copy unsupported raw native effect objects into content.json.
+{"class":"FECA","id":6,"name":"Armure Terrestre","grade":6,"pa":2,"range":[0,0],"needsLos":false,"lineOnly":false,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":0,"cooldown":5,"critRate":50,"effects":[{"kind":"armor","min":16,"max":16,"duration":4,"zone":"Cc","targetMask":4}],"critEffects":[{"kind":"armor","min":17,"max":17,"duration":4,"zone":"Cc","targetMask":4}]}
+{"class":"FECA","id":3,"name":"Attaque Naturelle","grade":6,"pa":3,"range":[1,8],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":50,"effects":[{"kind":"damage","min":9,"max":13,"duration":0,"zone":"Pa","element":"feu","targetMask":0}],"critEffects":[{"kind":"damage","min":15,"max":15,"duration":0,"zone":"Pa","element":"feu","targetMask":0}]}
+{"class":"FECA","id":8,"name":"Retour du bâton","grade":6,"pa":3,"range":[1,3],"needsLos":true,"lineOnly":true,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":2,"cooldown":0,"critRate":35,"effects":[{"kind":"damage","min":21,"max":35,"duration":0,"zone":"Pa","element":"neutre","targetMask":0},{"kind":"stealStat","min":20,"max":20,"duration":3,"zone":"Pa","stat":"force","targetMask":0}],"critEffects":[{"kind":"damage","min":31,"max":37,"duration":0,"zone":"Pa","element":"neutre","targetMask":0},{"kind":"stealStat","min":20,"max":20,"duration":4,"zone":"Pa","stat":"force","targetMask":0}]}
+{"class":"FECA","id":11,"name":"Téléportation","grade":6,"pa":4,"range":[1,9],"needsLos":false,"lineOnly":false,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":0,"cooldown":6,"critRate":0,"effects":[{"kind":"teleport","min":9,"max":9,"duration":1,"zone":"Pa","targetMask":0}],"critEffects":[]}
+{"class":"OSAMODAS","id":23,"name":"Cri de l'Ours","grade":6,"pa":1,"range":[1,9],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":2,"critRate":40,"effects":[{"kind":"buffDamage","min":9,"max":16,"duration":11,"zone":"Xb","targetMask":8},{"kind":"buffDamage","min":8,"max":8,"duration":2,"zone":"Xb","targetMask":18}],"critEffects":[{"kind":"buffDamage","min":24,"max":24,"duration":11,"zone":"Xb","targetMask":8},{"kind":"buffDamage","min":12,"max":12,"duration":2,"zone":"Xb","targetMask":18}]}
+{"class":"OSAMODAS","id":21,"name":"Griffe Spectrale","grade":6,"pa":4,"range":[1,7],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":45,"effects":[{"kind":"damage","min":13,"max":22,"duration":0,"zone":"Pa","element":"feu","targetMask":0}],"critEffects":[{"kind":"damage","min":24,"max":24,"duration":0,"zone":"Pa","element":"feu","targetMask":0}]}
+{"class":"OSAMODAS","id":36,"name":"Frappe du Craqueleur","grade":6,"pa":4,"range":[1,1],"needsLos":true,"lineOnly":true,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":50,"effects":[{"kind":"damage","min":18,"max":37,"duration":0,"zone":"Cc","element":"feu","targetMask":0}],"critEffects":[{"kind":"damage","min":39,"max":39,"duration":0,"zone":"Cc","element":"feu","targetMask":0}]}
+{"class":"OSAMODAS","id":29,"name":"Crocs du Mulou","grade":6,"pa":2,"range":[1,9],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":4,"critRate":40,"effects":[{"kind":"buffPower","min":100,"max":100,"duration":7,"zone":"Xb","targetMask":8},{"kind":"buffPower","min":55,"max":55,"duration":2,"zone":"Xb","targetMask":18}],"critEffects":[{"kind":"buffPower","min":120,"max":120,"duration":7,"zone":"Xb","targetMask":8},{"kind":"buffPower","min":60,"max":60,"duration":3,"zone":"Xb","targetMask":18}]}
+{"class":"ENUTROF","id":43,"name":"Lancer de Pelle","grade":6,"pa":4,"range":[1,8],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":40,"effects":[{"kind":"damage","min":11,"max":16,"duration":0,"zone":"Pa","element":"terre","targetMask":0}],"critEffects":[{"kind":"damage","min":25,"max":25,"duration":0,"zone":"Pa","element":"terre","targetMask":0}]}
+{"class":"ENUTROF","id":51,"name":"Lancer de Pièces","grade":6,"pa":2,"range":[0,12],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":3,"cooldown":0,"critRate":50,"effects":[{"kind":"damage","min":1,"max":8,"duration":0,"zone":"Pa","element":"eau","targetMask":0}],"critEffects":[{"kind":"damage","min":16,"max":16,"duration":0,"zone":"Pa","element":"eau","targetMask":0}]}
+{"class":"ENUTROF","id":58,"name":"Pelle Massacrante","grade":6,"pa":5,"range":[1,7],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":1,"cooldown":0,"critRate":50,"effects":[{"kind":"damage","min":45,"max":50,"duration":0,"zone":"Pa","element":"eau","targetMask":0}],"critEffects":[{"kind":"damage","min":53,"max":58,"duration":0,"zone":"Pa","element":"eau","targetMask":0}]}
+{"class":"ENUTROF","id":59,"name":"Corruption","grade":6,"pa":7,"range":[1,5],"needsLos":true,"lineOnly":false,"adjustableRange":false,"maxPerTurn":1,"maxPerTarget":0,"cooldown":5,"critRate":50,"effects":[{"kind":"heal","min":100,"max":100,"duration":0,"zone":"Pa","targetMask":1},{"kind":"skipTurn","min":1,"max":1,"duration":0,"zone":"Pa","targetMask":2},{"kind":"state","min":-1,"max":-1,"duration":4,"zone":"C_","targetMask":0},{"kind":"heal","min":260,"max":260,"duration":0,"zone":"Pa","targetMask":4}],"critEffects":[{"kind":"heal","min":80,"max":80,"duration":0,"zone":"Pa","targetMask":1},{"kind":"skipTurn","min":1,"max":1,"duration":0,"zone":"Pa","targetMask":2},{"kind":"state","min":-1,"max":-1,"duration":4,"zone":"C_","targetMask":0},{"kind":"heal","min":280,"max":280,"duration":0,"zone":"Pa","targetMask":4}]}
+{"class":"SRAM","id":72,"name":"Invisibilité","grade":6,"pa":2,"range":[0,0],"needsLos":true,"lineOnly":false,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":0,"cooldown":6,"critRate":0,"effects":[{"kind":"invisibility","min":-1,"max":-1,"duration":3,"zone":"Pa","targetMask":0},{"kind":"buffPm","min":2,"max":2,"duration":3,"zone":"Pa","targetMask":0}],"critEffects":[]}
+{"class":"SRAM","id":61,"name":"Sournoiserie","grade":6,"pa":3,"range":[1,5],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":30,"effects":[{"kind":"damage","min":11,"max":13,"duration":0,"zone":"Pa","element":"terre","targetMask":0}],"critEffects":[{"kind":"damage","min":20,"max":20,"duration":0,"zone":"Pa","element":"terre","targetMask":0}]}
+{"class":"SRAM","id":70,"name":"Arnaque","grade":6,"pa":3,"range":[1,3],"needsLos":true,"lineOnly":true,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":2,"cooldown":0,"critRate":30,"effects":[{"kind":"outOfCombat","min":1,"max":250,"duration":0,"zone":"Pa","targetMask":0},{"kind":"damage","min":18,"max":32,"duration":0,"zone":"Pa","element":"air","targetMask":0}],"critEffects":[{"kind":"damage","min":35,"max":35,"duration":0,"zone":"Pa","element":"air","targetMask":0},{"kind":"outOfCombat","min":1,"max":500,"duration":0,"zone":"Pa","targetMask":0}]}
+{"class":"SRAM","id":76,"name":"Attaque Mortelle","grade":6,"pa":4,"range":[1,2],"needsLos":true,"lineOnly":false,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":2,"cooldown":0,"critRate":90,"effects":[{"kind":"damage","min":41,"max":60,"duration":0,"zone":"Pa","element":"terre","targetMask":0}],"critEffects":[{"kind":"damage","min":131,"max":150,"duration":0,"zone":"Pa","element":"terre","targetMask":0}]}
+{"class":"XELOR","id":83,"name":"Aiguille","grade":6,"pa":4,"range":[1,8],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":40,"effects":[{"kind":"damage","min":12,"max":22,"duration":0,"zone":"Pa","element":"feu","targetMask":0},{"kind":"ignore","min":-1,"max":-1,"duration":0,"zone":"Pa","targetMask":0},{"kind":"refundPa","min":1,"max":1,"duration":0,"zone":"Pa","targetMask":0}],"critEffects":[{"kind":"damage","min":25,"max":25,"duration":0,"zone":"Pa","element":"feu","targetMask":0},{"kind":"ignore","min":-1,"max":-1,"duration":0,"zone":"Pa","targetMask":0},{"kind":"refundPa","min":1,"max":1,"duration":0,"zone":"Pa","targetMask":0}]}
+{"class":"XELOR","id":84,"name":"Gelure","grade":6,"pa":3,"range":[3,6],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":1,"cooldown":0,"critRate":40,"effects":[{"kind":"damage","min":10,"max":15,"duration":0,"zone":"Pa","element":"air","targetMask":0},{"kind":"removePa","min":2,"max":2,"duration":1,"zone":"Pa","targetMask":0},{"kind":"ignore","min":-1,"max":-1,"duration":0,"zone":"Pa","targetMask":0},{"kind":"refundPa","min":1,"max":1,"duration":0,"zone":"Pa","targetMask":0}],"critEffects":[{"kind":"damage","min":16,"max":16,"duration":0,"zone":"Pa","element":"air","targetMask":0},{"kind":"removePa","min":2,"max":2,"duration":1,"zone":"Pa","targetMask":0},{"kind":"ignore","min":-1,"max":-1,"duration":0,"zone":"Pa","targetMask":0},{"kind":"refundPa","min":1,"max":1,"duration":0,"zone":"Pa","targetMask":0}]}
+{"class":"XELOR","id":95,"name":"Horloge","grade":6,"pa":4,"range":[1,4],"needsLos":true,"lineOnly":true,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":45,"effects":[{"kind":"damage","min":31,"max":35,"duration":0,"zone":"Pa","element":"eau","targetMask":0},{"kind":"stealPa","min":1,"max":1,"duration":0,"zone":"Pa","targetMask":0},{"kind":"ignore","min":-1,"max":-1,"duration":0,"zone":"Pa","targetMask":0},{"kind":"refundPa","min":1,"max":1,"duration":0,"zone":"Pa","targetMask":0}],"critEffects":[{"kind":"damage","min":36,"max":40,"duration":0,"zone":"Pa","element":"eau","targetMask":0},{"kind":"stealPa","min":1,"max":2,"duration":0,"zone":"Pa","targetMask":0},{"kind":"ignore","min":-1,"max":-1,"duration":0,"zone":"Pa","targetMask":0},{"kind":"refundPa","min":1,"max":1,"duration":0,"zone":"Pa","targetMask":0}]}
+{"class":"XELOR","id":91,"name":"Frappe de Xélor","grade":6,"pa":4,"range":[1,5],"needsLos":true,"lineOnly":true,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":2,"cooldown":0,"critRate":40,"effects":[{"kind":"damage","min":41,"max":45,"duration":0,"zone":"Pa","element":"terre","targetMask":0},{"kind":"ignore","min":-1,"max":-1,"duration":0,"zone":"Pa","targetMask":0},{"kind":"refundPa","min":1,"max":1,"duration":0,"zone":"Pa","targetMask":0}],"critEffects":[{"kind":"damage","min":46,"max":50,"duration":0,"zone":"Pa","element":"terre","targetMask":0},{"kind":"ignore","min":-1,"max":-1,"duration":0,"zone":"Pa","targetMask":0},{"kind":"refundPa","min":1,"max":1,"duration":0,"zone":"Pa","targetMask":0}]}
+{"class":"ECAFLIP","id":105,"name":"Bond du Félin","grade":6,"pa":1,"range":[1,1],"needsLos":true,"lineOnly":false,"adjustableRange":false,"maxPerTurn":5,"maxPerTarget":0,"cooldown":0,"critRate":0,"effects":[{"kind":"teleport","min":1,"max":1,"duration":0,"zone":"Pa","targetMask":0}],"critEffects":[]}
+{"class":"ECAFLIP","id":102,"name":"Pile ou Face","grade":6,"pa":3,"range":[0,7],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":50,"effects":[{"kind":"damage","min":6,"max":19,"duration":0,"zone":"Pa","element":"terre","targetMask":0},{"kind":"heal","min":5,"max":12,"duration":0,"zone":"Pa","targetMask":1},{"kind":"heal","min":8,"max":22,"duration":0,"zone":"Pa","targetMask":4}],"critEffects":[{"kind":"damage","min":9,"max":24,"duration":0,"zone":"Pa","element":"terre","targetMask":0},{"kind":"heal","min":1,"max":5,"duration":0,"zone":"Pa","targetMask":1},{"kind":"heal","min":23,"max":27,"duration":0,"zone":"Pa","targetMask":4}]}
+{"class":"ECAFLIP","id":120,"name":"Destin d'Ecaflip","grade":6,"pa":4,"range":[1,1],"needsLos":true,"lineOnly":true,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":20,"effects":[{"kind":"damage","min":13,"max":37,"duration":0,"zone":"Pa","element":"terre","targetMask":0}],"critEffects":[{"kind":"damage","min":13,"max":75,"duration":0,"zone":"Pa","element":"terre","targetMask":0},{"kind":"push","min":5,"max":5,"duration":0,"zone":"Pa","targetMask":0},{"kind":"debuffPm","min":1,"max":1,"duration":8,"zone":"Pa","targetMask":0}]}
+{"class":"ECAFLIP","id":412,"name":"Félintion","grade":6,"pa":4,"range":[4,4],"needsLos":true,"lineOnly":true,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":1,"cooldown":0,"critRate":50,"effects":[{"kind":"lifeSteal","min":19,"max":28,"duration":0,"zone":"Pa","element":"terre","targetMask":1},{"kind":"heal","min":36,"max":75,"duration":0,"zone":"Pa","targetMask":4},{"kind":"push","min":2,"max":2,"duration":0,"zone":"Pa","targetMask":2}],"critEffects":[{"kind":"lifeSteal","min":29,"max":33,"duration":0,"zone":"Pa","element":"terre","targetMask":1},{"kind":"heal","min":76,"max":80,"duration":0,"zone":"Pa","targetMask":4},{"kind":"push","min":2,"max":2,"duration":0,"zone":"Pa","targetMask":2}]}
+{"class":"ENIRIPSA","id":121,"name":"Mot Curatif","grade":6,"pa":3,"range":[0,0],"needsLos":false,"lineOnly":false,"adjustableRange":false,"maxPerTurn":1,"maxPerTarget":0,"cooldown":0,"critRate":40,"effects":[{"kind":"heal","min":17,"max":25,"duration":0,"zone":"Pa","targetMask":0}],"critEffects":[{"kind":"heal","min":40,"max":40,"duration":0,"zone":"Pa","targetMask":0}]}
+{"class":"ENIRIPSA","id":125,"name":"Mot Interdit","grade":6,"pa":3,"range":[1,4],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":50,"effects":[{"kind":"damage","min":11,"max":16,"duration":0,"zone":"Pa","element":"feu","targetMask":0}],"critEffects":[{"kind":"damage","min":25,"max":25,"duration":0,"zone":"Pa","element":"feu","targetMask":0}]}
+{"class":"ENIRIPSA","id":139,"name":"Mot d'Altruisme","grade":6,"pa":6,"range":[0,0],"needsLos":true,"lineOnly":false,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":0,"cooldown":6,"critRate":50,"effects":[{"kind":"heal","min":80,"max":125,"duration":0,"zone":"C_","targetMask":4},{"kind":"state","min":-1,"max":-1,"duration":5,"zone":"C_","targetMask":4}],"critEffects":[{"kind":"heal","min":126,"max":126,"duration":0,"zone":"C_","targetMask":4},{"kind":"state","min":-1,"max":-1,"duration":5,"zone":"C_","targetMask":4}]}
+{"class":"ENIRIPSA","id":140,"name":"Mot de Reconstitution","grade":6,"pa":4,"range":[0,7],"needsLos":true,"lineOnly":true,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":7,"critRate":45,"effects":[{"kind":"heal","min":401,"max":500,"duration":0,"zone":"Pa","targetMask":0}],"critEffects":[{"kind":"heal","min":851,"max":851,"duration":0,"zone":"Pa","targetMask":0}]}
+{"class":"IOP","id":142,"name":"Bond","grade":6,"pa":5,"range":[1,6],"needsLos":false,"lineOnly":false,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":0,"effects":[{"kind":"teleport","min":6,"max":6,"duration":0,"zone":"Pa","targetMask":0}],"critEffects":[]}
+{"class":"IOP","id":141,"name":"Pression","grade":6,"pa":2,"range":[1,2],"needsLos":true,"lineOnly":false,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":40,"effects":[{"kind":"damage","min":9,"max":13,"duration":0,"zone":"Pa","element":"terre","targetMask":0}],"critEffects":[{"kind":"damage","min":11,"max":15,"duration":0,"zone":"Pa","element":"terre","targetMask":0}]}
+{"class":"IOP","id":160,"name":"Epée de Iop","grade":6,"pa":4,"range":[1,4],"needsLos":true,"lineOnly":true,"adjustableRange":true,"maxPerTurn":2,"maxPerTarget":0,"cooldown":0,"critRate":45,"effects":[{"kind":"damage","min":13,"max":39,"duration":0,"zone":"Xd","element":"terre","targetMask":0}],"critEffects":[{"kind":"damage","min":18,"max":44,"duration":0,"zone":"Xd","element":"terre","targetMask":0}]}
+{"class":"IOP","id":159,"name":"Colère de Iop","grade":6,"pa":7,"range":[1,1],"needsLos":true,"lineOnly":false,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":0,"cooldown":4,"critRate":50,"effects":[{"kind":"damage","min":51,"max":70,"duration":0,"zone":"Pa","element":"terre","targetMask":0},{"kind":"spellBoost","min":159,"max":0,"duration":4,"zone":"Pa","targetMask":0}],"critEffects":[{"kind":"damage","min":61,"max":80,"duration":0,"zone":"Pa","element":"terre","targetMask":0},{"kind":"spellBoost","min":159,"max":0,"duration":4,"zone":"Pa","targetMask":0}]}
+{"class":"CRA","id":169,"name":"Flèche de Recul","grade":6,"pa":4,"range":[1,8],"needsLos":true,"lineOnly":true,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":1,"cooldown":0,"critRate":30,"effects":[{"kind":"damage","min":18,"max":21,"duration":0,"zone":"Pa","element":"air","targetMask":0},{"kind":"push","min":4,"max":4,"duration":0,"zone":"Pa","targetMask":0}],"critEffects":[{"kind":"damage","min":21,"max":24,"duration":0,"zone":"Pa","element":"air","targetMask":0},{"kind":"push","min":4,"max":4,"duration":0,"zone":"Pa","targetMask":0}]}
+{"class":"CRA","id":161,"name":"Flèche Magique","grade":6,"pa":4,"range":[1,12],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":2,"cooldown":0,"critRate":30,"effects":[{"kind":"damage","min":20,"max":22,"duration":0,"zone":"Pa","element":"feu","targetMask":0},{"kind":"stealStat","min":2,"max":2,"duration":1,"zone":"Pa","stat":"range","targetMask":0}],"critEffects":[{"kind":"damage","min":24,"max":26,"duration":0,"zone":"Pa","element":"feu","targetMask":0},{"kind":"stealStat","min":2,"max":2,"duration":1,"zone":"Pa","stat":"range","targetMask":0}]}
+{"class":"CRA","id":179,"name":"Flèche Explosive","grade":6,"pa":4,"range":[1,8],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":2,"maxPerTarget":0,"cooldown":0,"critRate":50,"effects":[{"kind":"damage","min":20,"max":24,"duration":0,"zone":"Cd","element":"feu","targetMask":0}],"critEffects":[{"kind":"damage","min":28,"max":32,"duration":0,"zone":"Cd","element":"feu","targetMask":0}]}
+{"class":"CRA","id":180,"name":"Maîtrise de l'Arc","grade":6,"pa":2,"range":[0,6],"needsLos":false,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":5,"critRate":30,"effects":[{"kind":"buffDamage","min":60,"max":60,"duration":2,"zone":"Pa","targetMask":0}],"critEffects":[{"kind":"buffDamage","min":70,"max":70,"duration":2,"zone":"Pa","targetMask":0}]}
+{"class":"SADIDA","id":183,"name":"Ronce","grade":6,"pa":3,"range":[1,8],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":2,"cooldown":0,"critRate":45,"effects":[{"kind":"damage","min":11,"max":18,"duration":0,"zone":"Pa","element":"terre","targetMask":0}],"critEffects":[{"kind":"damage","min":22,"max":22,"duration":0,"zone":"Pa","element":"terre","targetMask":0}]}
+{"class":"SADIDA","id":198,"name":"Sacrifice Poupesque","grade":6,"pa":2,"range":[1,3],"needsLos":true,"lineOnly":false,"adjustableRange":false,"maxPerTurn":1,"maxPerTarget":0,"cooldown":0,"critRate":50,"effects":[{"kind":"lifeSteal","min":41,"max":45,"duration":0,"zone":"Pa","element":"air","targetMask":8}],"critEffects":[{"kind":"lifeSteal","min":51,"max":55,"duration":0,"zone":"Pa","element":"air","targetMask":8}]}
+{"class":"SADIDA","id":185,"name":"Herbe Folle","grade":6,"pa":3,"range":[0,8],"needsLos":true,"lineOnly":true,"adjustableRange":true,"maxPerTurn":1,"maxPerTarget":0,"cooldown":0,"critRate":50,"effects":[{"kind":"removePm","min":2,"max":4,"duration":1,"zone":"Cc","targetMask":0},{"kind":"damage","min":11,"max":20,"duration":0,"zone":"Cc","element":"feu","targetMask":0}],"critEffects":[{"kind":"removePm","min":3,"max":5,"duration":1,"zone":"Cc","targetMask":0},{"kind":"damage","min":25,"max":25,"duration":0,"zone":"Cc","element":"feu","targetMask":0}]}
+{"class":"SADIDA","id":184,"name":"Feu de Brousse","grade":6,"pa":3,"range":[1,7],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":50,"effects":[{"kind":"damage","min":6,"max":10,"duration":0,"zone":"Pa","element":"feu","targetMask":0},{"kind":"damage","min":6,"max":10,"duration":0,"zone":"Pa","element":"eau","targetMask":0}],"critEffects":[{"kind":"damage","min":11,"max":11,"duration":0,"zone":"Pa","element":"feu","targetMask":0},{"kind":"damage","min":11,"max":11,"duration":0,"zone":"Pa","element":"eau","targetMask":0}]}
+{"class":"SACRIEUR","id":432,"name":"Pied du Sacrieur","grade":6,"pa":3,"range":[1,1],"needsLos":true,"lineOnly":false,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":35,"effects":[{"kind":"damage","min":13,"max":22,"duration":0,"zone":"Pa","element":"terre","targetMask":0},{"kind":"stealStat","min":20,"max":20,"duration":3,"zone":"Pa","stat":"agilite","targetMask":0}],"critEffects":[{"kind":"damage","min":25,"max":25,"duration":0,"zone":"Pa","element":"terre","targetMask":0},{"kind":"stealStat","min":20,"max":20,"duration":4,"zone":"Pa","stat":"agilite","targetMask":0}]}
+{"class":"SACRIEUR","id":436,"name":"Assaut","grade":6,"pa":3,"range":[1,3],"needsLos":true,"lineOnly":true,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":35,"effects":[{"kind":"damage","min":13,"max":19,"duration":0,"zone":"Pa","element":"air","targetMask":0}],"critEffects":[{"kind":"damage","min":19,"max":25,"duration":0,"zone":"Pa","element":"air","targetMask":0}]}
+{"class":"SACRIEUR","id":442,"name":"Absorption","grade":6,"pa":4,"range":[1,3],"needsLos":true,"lineOnly":false,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":2,"cooldown":0,"critRate":40,"effects":[{"kind":"lifeSteal","min":23,"max":27,"duration":0,"zone":"Pa","element":"feu","targetMask":0}],"critEffects":[{"kind":"lifeSteal","min":28,"max":32,"duration":0,"zone":"Pa","element":"feu","targetMask":0}]}
+{"class":"SACRIEUR","id":447,"name":"Furie","grade":6,"pa":3,"range":[1,3],"needsLos":true,"lineOnly":false,"adjustableRange":false,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":50,"effects":[{"kind":"damage","min":9,"max":13,"duration":0,"zone":"Xb","element":"eau","targetMask":0},{"kind":"buffDamage","min":8,"max":8,"duration":4,"zone":"Pa","targetMask":32},{"kind":"damageOnHit","min":1,"max":1,"duration":1,"zone":"Pa","targetMask":32}],"critEffects":[{"kind":"damage","min":11,"max":15,"duration":0,"zone":"Xb","element":"eau","targetMask":0},{"kind":"buffDamage","min":8,"max":8,"duration":4,"zone":"Pa","targetMask":32},{"kind":"damageOnHit","min":1,"max":1,"duration":1,"zone":"Pa","targetMask":32}]}
+{"class":"PANDAWA","id":687,"name":"Poing Enflammé","grade":6,"pa":3,"range":[1,1],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":40,"effects":[{"kind":"damage","min":16,"max":21,"duration":0,"zone":"Pa","element":"feu","targetMask":0}],"critEffects":[{"kind":"damage","min":19,"max":24,"duration":0,"zone":"Pa","element":"feu","targetMask":0}]}
+{"class":"PANDAWA","id":692,"name":"Gueule de Bois","grade":6,"pa":3,"range":[1,1],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":50,"effects":[{"kind":"damage","min":14,"max":22,"duration":0,"zone":"Pa","element":"terre","targetMask":0}],"critEffects":[{"kind":"damage","min":16,"max":24,"duration":0,"zone":"Pa","element":"terre","targetMask":0}]}
+{"class":"PANDAWA","id":703,"name":"Pandatak","grade":6,"pa":4,"range":[1,6],"needsLos":true,"lineOnly":true,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":0,"critRate":50,"effects":[{"kind":"damage","min":26,"max":35,"duration":0,"zone":"Lc","element":"terre","targetMask":0}],"critEffects":[{"kind":"damage","min":36,"max":40,"duration":0,"zone":"Lc","element":"terre","targetMask":0}]}
+{"class":"PANDAWA","id":704,"name":"Pandanlku","grade":6,"pa":2,"range":[0,6],"needsLos":true,"lineOnly":false,"adjustableRange":true,"maxPerTurn":0,"maxPerTarget":0,"cooldown":6,"critRate":50,"effects":[{"kind":"buffPm","min":3,"max":3,"duration":4,"zone":"Pa","targetMask":0}],"critEffects":[{"kind":"buffPm","min":4,"max":4,"duration":4,"zone":"Pa","targetMask":0}]}
+
+Return the ZIP, a concise role/spell overview and a comparison-based balance note. Clearly distinguish inspected rules, estimated balance and actually executed tests.

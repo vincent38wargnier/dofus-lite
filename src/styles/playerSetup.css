@@ -150,7 +150,7 @@ input[type=checkbox], input[type=range] { accent-color: #627544; }
 .setup-class.selected { background: #e4ead5; border-color: #7e9461; box-shadow: inset 0 0 0 1px #7e9461; }
 .setup-class .retro-portrait { width: 63px; height: 63px; transition: transform .15s ease; }
 .setup-class:hover .retro-portrait { transform: translateY(-3px); }
-.setup-class strong { font-size: 12px; font-weight: 650; }
+.setup-class strong { max-width: 100%; overflow-wrap: anywhere; font-size: 12px; font-weight: 650; }
 .setup-class small { font-size: 9px; color: var(--muted); }
 .class-check { position: absolute; top: 7px; right: 7px; background: #667b47; color: white; border-radius: 50%; padding: 2px; box-sizing: content-box; }
 .character-options { display: flex; align-items: flex-end; gap: 24px; margin: 20px 0 24px; padding-bottom: 22px; border-bottom: 1px solid var(--border-soft); }

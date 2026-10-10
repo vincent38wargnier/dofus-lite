@@ -1,0 +1,599 @@
+{
+  "format": "dofus-lite-class",
+  "schemaVersion": 1,
+  "id": "ember-warden-example",
+  "version": "0.1.0",
+  "name": "Ember Warden — example",
+  "author": "dofus-lite authoring kit",
+  "profile": "retro-200-v1",
+  "baseClass": "IOP",
+  "description": "An untested fire specialist illustrating ten authored spells. Medium-range pressure with limited escape and sustain. The mannequin and repeated placeholder icon are technical examples, not finished themed artwork.",
+  "credits": "Character sheets: repository-generated technical mannequin from scripts/generate_character_templates.cjs. Icons: code-generated geometric placeholder. Existing client spell IDs are presentation references only; no client artwork is bundled.",
+  "design": {
+    "identity": "Wins by choosing when to hold medium range and when to spend a short boost window; struggles against fire resistance and sustained long-range pressure.",
+    "theme": "A watchful keeper of embers: warm brass, ash and small deliberate flames. Final themed art has not been produced.",
+    "primaryRole": "damage",
+    "secondaryRole": "placement",
+    "elements": [
+      "feu"
+    ],
+    "intendedRange": "medium",
+    "complexity": "beginner",
+    "strengths": [
+      "Reliable fire pressure without critical dependence.",
+      "A small group attack and a short push create positional choices."
+    ],
+    "weaknesses": [
+      "All attacks deal fire damage, so fire resistance is a hard constraint.",
+      "Escape, healing and protection have downtime; there is no AP denial, summon, or long-range immunity."
+    ],
+    "turnLoop": [
+      "Choose immediate attacks or invest 3 AP in Heat Focus.",
+      "Spend the boost window on attacks if the enemy remains reachable.",
+      "Recover position while the mobility, heal and burst cooldowns reset."
+    ]
+  },
+  "artwork": {
+    "portrait": "artwork/portrait.png",
+    "idle-front": "artwork/idle-front.png",
+    "idle-back": "artwork/idle-back.png",
+    "walk-front": "artwork/walk-front.png",
+    "walk-back": "artwork/walk-back.png",
+    "cast-front": "artwork/cast-front.png",
+    "cast-back": "artwork/cast-back.png",
+    "hit-front": "artwork/hit-front.png",
+    "hit-back": "artwork/hit-back.png"
+  },
+  "spells": [
+    {
+      "key": "cinder_shard",
+      "name": "Cinder Shard",
+      "description": "Reliable 18–22 fire damage at medium range.",
+      "role": "damage",
+      "pa": 4,
+      "rangeMin": 1,
+      "rangeMax": 7,
+      "targetMode": "enemy",
+      "lineOnly": false,
+      "needsLos": true,
+      "adjustableRange": false,
+      "emptyCellOnly": false,
+      "maxPerTurn": 3,
+      "maxPerTarget": 2,
+      "cooldown": 0,
+      "initialCooldown": 0,
+      "critRate": 0,
+      "failRate": 0,
+      "endsTurnOnFailure": false,
+      "effects": [
+        {
+          "kind": "damage",
+          "target": "enemy",
+          "zone": "Pa",
+          "element": "feu",
+          "min": 18,
+          "max": 22,
+          "duration": 0
+        }
+      ],
+      "critEffects": [],
+      "presentation": {
+        "icon": "icons/cinder_shard.png",
+        "animationSpellId": 21
+      },
+      "design": {
+        "purpose": "Reliable 18–22 fire damage at medium range.",
+        "counterplay": "Break line of sight or move outside the spell’s effective range.",
+        "synergies": [],
+        "references": [
+          {
+            "id": 21,
+            "grade": 6,
+            "note": "Griffe Spectrale: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          },
+          {
+            "id": 3,
+            "grade": 6,
+            "note": "Attaque Naturelle: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          }
+        ]
+      }
+    },
+    {
+      "key": "hearth_strike",
+      "name": "Hearth Strike",
+      "description": "Commit to close range for 24–28 fire damage.",
+      "role": "damage",
+      "pa": 4,
+      "rangeMin": 1,
+      "rangeMax": 2,
+      "targetMode": "enemy",
+      "lineOnly": false,
+      "needsLos": true,
+      "adjustableRange": false,
+      "emptyCellOnly": false,
+      "maxPerTurn": 2,
+      "maxPerTarget": 2,
+      "cooldown": 0,
+      "initialCooldown": 0,
+      "critRate": 0,
+      "failRate": 0,
+      "endsTurnOnFailure": false,
+      "effects": [
+        {
+          "kind": "damage",
+          "target": "enemy",
+          "zone": "Pa",
+          "element": "feu",
+          "min": 24,
+          "max": 28,
+          "duration": 0
+        }
+      ],
+      "critEffects": [],
+      "presentation": {
+        "icon": "icons/hearth_strike.png",
+        "animationSpellId": 76
+      },
+      "design": {
+        "purpose": "Commit to close range for 24–28 fire damage.",
+        "counterplay": "Break line of sight or move outside the spell’s effective range.",
+        "synergies": [],
+        "references": [
+          {
+            "id": 76,
+            "grade": 6,
+            "note": "Attaque Mortelle: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          },
+          {
+            "id": 141,
+            "grade": 6,
+            "note": "Pression: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          }
+        ]
+      }
+    },
+    {
+      "key": "crossfire",
+      "name": "Crossfire",
+      "description": "12–16 fire damage in a radius-one cross, including allies.",
+      "role": "damage",
+      "pa": 4,
+      "rangeMin": 1,
+      "rangeMax": 5,
+      "targetMode": "cell",
+      "lineOnly": false,
+      "needsLos": true,
+      "adjustableRange": false,
+      "emptyCellOnly": false,
+      "maxPerTurn": 1,
+      "maxPerTarget": 1,
+      "cooldown": 0,
+      "initialCooldown": 0,
+      "critRate": 0,
+      "failRate": 0,
+      "endsTurnOnFailure": false,
+      "effects": [
+        {
+          "kind": "damage",
+          "target": "fighter",
+          "zone": "Xb",
+          "element": "feu",
+          "min": 12,
+          "max": 16,
+          "duration": 0
+        }
+      ],
+      "critEffects": [],
+      "presentation": {
+        "icon": "icons/crossfire.png",
+        "animationSpellId": 179
+      },
+      "design": {
+        "purpose": "12–16 fire damage in a radius-one cross, including allies.",
+        "counterplay": "Spread out, or stand near the caster’s allies to increase the friendly-fire cost.",
+        "synergies": [
+          "heat_focus",
+          "ember_wake"
+        ],
+        "references": [
+          {
+            "id": 179,
+            "grade": 6,
+            "note": "Flèche Explosive: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          },
+          {
+            "id": 160,
+            "grade": 6,
+            "note": "Epée de Iop: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          }
+        ]
+      }
+    },
+    {
+      "key": "flare_lance",
+      "name": "Flare Lance",
+      "description": "22–26 fire damage in a line, unable to hit closer than 3 cells.",
+      "role": "damage",
+      "pa": 4,
+      "rangeMin": 3,
+      "rangeMax": 8,
+      "targetMode": "enemy",
+      "lineOnly": true,
+      "needsLos": true,
+      "adjustableRange": false,
+      "emptyCellOnly": false,
+      "maxPerTurn": 2,
+      "maxPerTarget": 1,
+      "cooldown": 0,
+      "initialCooldown": 0,
+      "critRate": 0,
+      "failRate": 0,
+      "endsTurnOnFailure": false,
+      "effects": [
+        {
+          "kind": "damage",
+          "target": "enemy",
+          "zone": "Pa",
+          "element": "feu",
+          "min": 22,
+          "max": 26,
+          "duration": 0
+        }
+      ],
+      "critEffects": [],
+      "presentation": {
+        "icon": "icons/flare_lance.png",
+        "animationSpellId": 9
+      },
+      "design": {
+        "purpose": "22–26 fire damage in a line, unable to hit closer than 3 cells.",
+        "counterplay": "Break line of sight or move outside the spell’s effective range.",
+        "synergies": [],
+        "references": [
+          {
+            "id": 9,
+            "grade": 6,
+            "note": "Attaque Nuageuse: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          },
+          {
+            "id": 156,
+            "grade": 6,
+            "note": "Tempête de Puissance: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          }
+        ]
+      }
+    },
+    {
+      "key": "heat_focus",
+      "name": "Heat Focus",
+      "description": "+60 power immediately for 2 turns. Four-turn cooldown.",
+      "role": "support",
+      "pa": 3,
+      "rangeMin": 0,
+      "rangeMax": 0,
+      "targetMode": "self",
+      "lineOnly": false,
+      "needsLos": true,
+      "adjustableRange": false,
+      "emptyCellOnly": false,
+      "maxPerTurn": 1,
+      "maxPerTarget": 1,
+      "cooldown": 4,
+      "initialCooldown": 0,
+      "critRate": 0,
+      "failRate": 0,
+      "endsTurnOnFailure": false,
+      "effects": [
+        {
+          "kind": "buffPower",
+          "target": "self",
+          "zone": "Pa",
+          "min": 60,
+          "max": 60,
+          "duration": 2
+        }
+      ],
+      "critEffects": [],
+      "presentation": {
+        "icon": "icons/heat_focus.png",
+        "animationSpellId": 153
+      },
+      "design": {
+        "purpose": "+60 power immediately for 2 turns. Four-turn cooldown.",
+        "counterplay": "Disengage or break line of sight during the boost window; the setup consumes 3 AP.",
+        "synergies": [
+          "cinder_shard",
+          "hearth_strike",
+          "crossfire",
+          "last_flare"
+        ],
+        "references": [
+          {
+            "id": 153,
+            "grade": 6,
+            "note": "Puissance: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          },
+          {
+            "id": 166,
+            "grade": 6,
+            "note": "Tir Puissant: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          }
+        ]
+      }
+    },
+    {
+      "key": "ember_wake",
+      "name": "Ember Wake",
+      "description": "6–8 fire damage, then push the enemy 2 cells away from the caster.",
+      "role": "placement",
+      "pa": 3,
+      "rangeMin": 1,
+      "rangeMax": 3,
+      "targetMode": "enemy",
+      "lineOnly": true,
+      "needsLos": true,
+      "adjustableRange": false,
+      "emptyCellOnly": false,
+      "maxPerTurn": 1,
+      "maxPerTarget": 1,
+      "cooldown": 1,
+      "initialCooldown": 0,
+      "critRate": 0,
+      "failRate": 0,
+      "endsTurnOnFailure": false,
+      "effects": [
+        {
+          "kind": "damage",
+          "target": "enemy",
+          "zone": "Pa",
+          "element": "feu",
+          "min": 6,
+          "max": 8,
+          "duration": 0
+        },
+        {
+          "kind": "push",
+          "target": "enemy",
+          "zone": "Pa",
+          "distance": 2
+        }
+      ],
+      "critEffects": [],
+      "presentation": {
+        "icon": "icons/ember_wake.png",
+        "animationSpellId": 143
+      },
+      "design": {
+        "purpose": "6–8 fire damage, then push the enemy 2 cells away from the caster.",
+        "counterplay": "Avoid lining up with a wall; stabilize or return to contact after the push where possible.",
+        "synergies": [
+          "flare_lance"
+        ],
+        "references": [
+          {
+            "id": 143,
+            "grade": 6,
+            "note": "Intimidation: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          },
+          {
+            "id": 169,
+            "grade": 6,
+            "note": "Flèche de Recul: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          }
+        ]
+      }
+    },
+    {
+      "key": "cauterize",
+      "name": "Cauterize",
+      "description": "Restore 10–14 base HP, scaled by intelligence, to an ally or self. Three-turn cooldown.",
+      "role": "healing",
+      "pa": 4,
+      "rangeMin": 0,
+      "rangeMax": 3,
+      "targetMode": "fighter",
+      "lineOnly": false,
+      "needsLos": true,
+      "adjustableRange": false,
+      "emptyCellOnly": false,
+      "maxPerTurn": 1,
+      "maxPerTarget": 1,
+      "cooldown": 3,
+      "initialCooldown": 0,
+      "critRate": 0,
+      "failRate": 0,
+      "endsTurnOnFailure": false,
+      "effects": [
+        {
+          "kind": "heal",
+          "target": "ally",
+          "zone": "Pa",
+          "min": 10,
+          "max": 14,
+          "duration": 0
+        }
+      ],
+      "critEffects": [],
+      "presentation": {
+        "icon": "icons/cauterize.png",
+        "animationSpellId": 121
+      },
+      "design": {
+        "purpose": "Restore 10–14 base HP, scaled by intelligence, to an ally or self. Three-turn cooldown.",
+        "counterplay": "Sustain pressure: the modest heal costs 4 AP and has a three-turn cooldown.",
+        "synergies": [],
+        "references": [
+          {
+            "id": 121,
+            "grade": 6,
+            "note": "Mot Curatif: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          },
+          {
+            "id": 124,
+            "grade": 6,
+            "note": "Mot Soignant: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          }
+        ]
+      }
+    },
+    {
+      "key": "ash_step",
+      "name": "Ash Step",
+      "description": "Teleport to an empty cell up to 3 cells away. Three-turn cooldown.",
+      "role": "placement",
+      "pa": 4,
+      "rangeMin": 1,
+      "rangeMax": 3,
+      "targetMode": "freeCell",
+      "lineOnly": false,
+      "needsLos": false,
+      "adjustableRange": false,
+      "emptyCellOnly": true,
+      "maxPerTurn": 1,
+      "maxPerTarget": 1,
+      "cooldown": 3,
+      "initialCooldown": 0,
+      "critRate": 0,
+      "failRate": 0,
+      "endsTurnOnFailure": false,
+      "effects": [
+        {
+          "kind": "teleport",
+          "target": "self",
+          "zone": "Pa"
+        }
+      ],
+      "critEffects": [],
+      "presentation": {
+        "icon": "icons/ash_step.png",
+        "animationSpellId": 142
+      },
+      "design": {
+        "purpose": "Teleport to an empty cell up to 3 cells away. Three-turn cooldown.",
+        "counterplay": "Pressure the destination and punish the three-turn mobility cooldown.",
+        "synergies": [],
+        "references": [
+          {
+            "id": 142,
+            "grade": 6,
+            "note": "Bond: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          },
+          {
+            "id": 11,
+            "grade": 6,
+            "note": "Téléportation: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          }
+        ]
+      }
+    },
+    {
+      "key": "ember_ward",
+      "name": "Ember Ward",
+      "description": "+10 percentage points of fire resistance for 2 turns. Four-turn cooldown.",
+      "role": "protection",
+      "pa": 3,
+      "rangeMin": 0,
+      "rangeMax": 0,
+      "targetMode": "self",
+      "lineOnly": false,
+      "needsLos": true,
+      "adjustableRange": false,
+      "emptyCellOnly": false,
+      "maxPerTurn": 1,
+      "maxPerTarget": 1,
+      "cooldown": 4,
+      "initialCooldown": 0,
+      "critRate": 0,
+      "failRate": 0,
+      "endsTurnOnFailure": false,
+      "effects": [
+        {
+          "kind": "resistBuff",
+          "target": "self",
+          "zone": "Pa",
+          "min": 10,
+          "max": 10,
+          "duration": 2,
+          "element": "feu"
+        }
+      ],
+      "critEffects": [],
+      "presentation": {
+        "icon": "icons/ember_ward.png",
+        "animationSpellId": 7
+      },
+      "design": {
+        "purpose": "+10 percentage points of fire resistance for 2 turns. Four-turn cooldown.",
+        "counterplay": "Use another element or wait out the two-turn protection; it offers no physical escape.",
+        "synergies": [],
+        "references": [
+          {
+            "id": 7,
+            "grade": 6,
+            "note": "Bouclier Féca: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          },
+          {
+            "id": 686,
+            "grade": 6,
+            "note": "Picole: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          }
+        ]
+      }
+    },
+    {
+      "key": "last_flare",
+      "name": "Last Flare",
+      "description": "32–36 fire damage with a three-turn cooldown.",
+      "role": "damage",
+      "pa": 5,
+      "rangeMin": 1,
+      "rangeMax": 4,
+      "targetMode": "enemy",
+      "lineOnly": false,
+      "needsLos": true,
+      "adjustableRange": false,
+      "emptyCellOnly": false,
+      "maxPerTurn": 1,
+      "maxPerTarget": 1,
+      "cooldown": 3,
+      "initialCooldown": 0,
+      "critRate": 0,
+      "failRate": 0,
+      "endsTurnOnFailure": false,
+      "effects": [
+        {
+          "kind": "damage",
+          "target": "enemy",
+          "zone": "Pa",
+          "element": "feu",
+          "min": 32,
+          "max": 36,
+          "duration": 0
+        }
+      ],
+      "critEffects": [],
+      "presentation": {
+        "icon": "icons/last_flare.png",
+        "animationSpellId": 156
+      },
+      "design": {
+        "purpose": "32–36 fire damage with a three-turn cooldown.",
+        "counterplay": "Deny short-range access during its availability; punish the three-turn cooldown.",
+        "synergies": [],
+        "references": [
+          {
+            "id": 156,
+            "grade": 6,
+            "note": "Tempête de Puissance: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          },
+          {
+            "id": 76,
+            "grade": 6,
+            "note": "Attaque Mortelle: compare full targeting, output, cost and limits; this is inspiration, not mechanical equivalence."
+          }
+        ]
+      }
+    }
+  ]
+}

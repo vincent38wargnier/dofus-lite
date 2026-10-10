@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import { SPELL_LIBRARY, resolveSpellLoadout, availableSpellGrades, defaultSpellGrade } from '../engine/classes';
 import { RetroSpellIcon } from './RetroAssets';
 import { sortSpellsByType } from './spellPresentation';
+import CustomSpellPicker from './CustomSpellPicker';
 
-export default function SpellLoadoutPicker({ classId, loadout, change, weapon }) {
+export default function SpellLoadoutPicker(props) {
+  return props.loadout.spells?.custom !== undefined ? <CustomSpellPicker {...props} /> : <StandardSpellLoadoutPicker {...props} />;
+}
+
+function StandardSpellLoadoutPicker({ classId, loadout, change, weapon }) {
   const [dragged, setDragged] = useState(null);
   const [query, setQuery] = useState('');
   const config = loadout.spells || {};

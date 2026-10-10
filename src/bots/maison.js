@@ -9,13 +9,22 @@
 // Battre l'IA Maison avec votre propre bot, c'est ça le défi du Koliséum.
 
 import MAISON from './maisonWeights.json';
-import { utilityDecide } from './utilityBrain';
+import CALIBRATION from './policyCalibration.json';
+import TUNED from './cortexWeights.json';
+import { utilityDecide, DEFAULT_WEIGHTS } from './utilityBrain';
 
 // Poids effectifs pour (ma classe, classe adverse). Repli propre:
 // matchup inconnu → profil de base de la classe → défauts du cerveau.
 export function maisonWeightsFor(myClass, oppClass) {
   const mine = MAISON[myClass] || {};
-  return { ...(mine.base || {}), ...((mine.vs || {})[oppClass] || {}) };
+  const weights = { ...(mine.base || {}), ...((mine.vs || {})[oppClass] || {}) };
+  const defaults = { ...DEFAULT_WEIGHTS, ...TUNED };
+  // Historical profiles were trained on older mechanics. A single fitted
+  // confidence factor regularizes every class, including unseen custom kits.
+  return Object.fromEntries(Object.entries(weights).map(([key, value]) => {
+    const fallback = defaults[key] ?? 1;
+    return [key, fallback + (value - fallback) * CALIBRATION.profileBlend];
+  }));
 }
 
 export function maisonDecide(view, api) {

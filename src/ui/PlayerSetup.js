@@ -27,6 +27,7 @@ const SECTIONS = [
 const mapName = id => MAPS[id]?.name.replace(/^🗺\s*/, '') || 'Salle indisponible';
 
 export default function PlayerSetup({ playerClass, setPlayerClass, botClass, setBotClass, botId, setBotId, allBots,
+  customCharacters = [], customCharacter, selectCustomCharacter,
   playerBotId = 'maison', setPlayerBotId,
   mapId, setMapId, mode = 'duel', setMode, monsterGrade = 5, setMonsterGrade,
   bossId = DEFAULT_BOSS_ID, setBossId, bossGrade = defaultMonsterGrade(bossId), setBossGrade,
@@ -38,6 +39,8 @@ export default function PlayerSetup({ playerClass, setPlayerClass, botClass, set
   const [libraryOpen, setLibraryOpen] = useState(false);
   const { loadouts, update, summaries, saveError } = equipment;
   const player = CLASSES[playerClass];
+  const playerName = customCharacter?.name || player.name;
+  const playerKey = customCharacter ? `custom:${customCharacter.id}` : playerClass;
   const summary = summaries.A;
   const loadout = loadouts.A;
   const bot = allBots.find(b => b.id === botId);
@@ -50,7 +53,8 @@ export default function PlayerSetup({ playerClass, setPlayerClass, botClass, set
   const monsterCount = dungeon?.members.reduce((sum, member) => sum + member.count, 0);
   const missingGroup = dungeonMode && !dungeon;
   const playerBot = allBots.find(b => b.id === playerBotId);
-  const canPlay = summary.valid && !missingGroup && (!automatic || !!playerBot) && (fightingMonster || summaries.B.valid);
+  const missingName = customCharacter && !customCharacter.name.trim();
+  const canPlay = summary.valid && !missingName && !missingGroup && (!automatic || !!playerBot) && (fightingMonster || summaries.B.valid);
   const classes = { A: playerClass, B: botClass };
   const navigate = next => { setSection(next); setEditingSide('A'); setLibraryOpen(false); };
   const editStuff = (side = 'A', nextView = 'equipment') => {
@@ -64,16 +68,16 @@ export default function PlayerSetup({ playerClass, setPlayerClass, botClass, set
     <div className="setup-layout">
       <aside className="player-summary" aria-label="Résumé du personnage">
         <div className="summary-title"><span>MON PERSONNAGE</span><span className="level-badge">Niv. {summary.level}</span></div>
-        <div className="summary-portrait"><RetroPortrait classId={playerClass} fallback={player.emoji} /></div>
-        <h2>{player.name}</h2><p className="summary-role">{ROLES[playerClass]}</p>
+        <div className="summary-portrait"><RetroPortrait classId={playerClass} artworkId={loadout.artworkId} fallback={player.emoji} /></div>
+        <h2>{playerName}</h2><p className="summary-role">{customCharacter ? 'Classe personnalisée' : ROLES[playerClass]}</p>
         <div className="summary-vitals">
           <span><Heart size={15} /><strong>{summary.hp}</strong><small>PV</small></span>
           <span><Zap size={15} /><strong>{summary.pa}</strong><small>PA</small></span>
           <span><Footprints size={15} /><strong>{summary.pm}</strong><small>PM</small></span>
         </div>
         <div className="setup-launch">
-          {canPlay ? <p className="ready-status"><Check size={13} /> Prêt pour le combat</p> : <button className="setup-validation" onClick={() => missingGroup || (automatic && !playerBot) ? navigate('match') : editStuff(summary.valid ? 'B' : 'A')}>
-            {missingGroup ? 'Choisissez une salle disponible' : automatic && !playerBot ? 'Choisissez une IA' : summary.valid ? 'Préparation adverse à corriger' : 'Votre préparation est à corriger'} <ChevronRight size={13} /></button>}
+          {canPlay ? <p className="ready-status"><Check size={13} /> Prêt pour le combat</p> : <button className="setup-validation" onClick={() => missingName ? navigate('character') : missingGroup || (automatic && !playerBot) ? navigate('match') : editStuff(summary.valid ? 'B' : 'A')}>
+            {missingName ? 'Nommez votre classe dans l’Atelier' : missingGroup ? 'Choisissez une salle disponible' : automatic && !playerBot ? 'Choisissez une IA' : summary.valid ? 'Préparation adverse à corriger' : 'Votre préparation est à corriger'} <ChevronRight size={13} /></button>}
           <button type="button" className="btn primary setup-play" disabled={!canPlay} onClick={onStart}><Swords size={19} />{automatic ? 'Simuler le donjon' : 'Jouer'}<ChevronRight size={17} /></button>
           <span>{automatic ? 'Votre personnage joué par l’IA · Salle finale' : `${training ? 'Entraînement' : dungeonMode ? 'Salle finale de donjon' : '1 contre 1'} · 30 secondes par tour`}</span>
         </div>
@@ -104,18 +108,28 @@ export default function PlayerSetup({ playerClass, setPlayerClass, botClass, set
         </nav>
         <div className="setup-content">
           {error ? <p className="loadout-errors" role="alert">{error}</p> : null}
+          {missingName ? <p className="loadout-errors" role="alert">Donnez un nom à cette classe dans l’Atelier avant de jouer.</p> : null}
           {settingsError || saveError ? <p className="loadout-errors" role="alert">La préparation ne peut pas être conservée dans ce navigateur. Vérifiez l’espace de stockage disponible.</p> : null}
           {editingSide === 'B' ? <div className="opponent-edit-banner"><Shield size={18} /><span>Vous équipez l’adversaire : <strong>{CLASSES[botClass].name}</strong></span><button className="btn" onClick={() => editStuff('A')}>Revenir à mon personnage</button></div> : null}
-          <LoadoutLibrary compact side={editingSide} classId={classes[editingSide]} loadout={loadouts[editingSide]} update={update}
+          <LoadoutLibrary key={editingSide === 'A' ? playerKey : botClass} compact side={editingSide} classId={classes[editingSide]}
+            draftKey={editingSide === 'A' ? `A:${playerKey}` : undefined} loadout={loadouts[editingSide]} update={update}
             saveError={saveError} expanded={libraryOpen} onExpandedChange={setLibraryOpen} />
 
           <section id={`${id}-character`} role="tabpanel" aria-labelledby={`${id}-character-tab`} hidden={section !== 'character' || libraryOpen}>
-            <div className="setup-section-heading"><div><h2>Choisissez votre classe</h2><p>Chaque classe garde sa propre préparation.</p></div><span className="count-badge">12 classes</span></div>
+            <div className="setup-section-heading"><div><h2>Choisissez votre classe</h2><p>Chaque classe garde sa propre préparation.{customCharacters.length > 0 ? ' Vos créations de l’Atelier sont incluses.' : ''}</p></div><span className="count-badge">{CLASS_IDS.length + customCharacters.length} classes</span></div>
             <div className="setup-class-grid" aria-label="Classes disponibles">{CLASS_IDS.map(classId => <button type="button" key={classId}
-              className={`setup-class${classId === playerClass ? ' selected' : ''}`} aria-label={`Choisir ${CLASSES[classId].name}`}
-              aria-pressed={classId === playerClass} onClick={() => setPlayerClass(classId)}>
+              className={`setup-class${!customCharacter && classId === playerClass ? ' selected' : ''}`} aria-label={`Choisir ${CLASSES[classId].name}`}
+              aria-pressed={!customCharacter && classId === playerClass} onClick={() => setPlayerClass(classId)}>
               <RetroPortrait classId={classId} fallback={CLASSES[classId].emoji} />
-              <strong>{CLASSES[classId].name}</strong><small>{ROLES[classId]}</small>{classId === playerClass ? <Check className="class-check" size={13} /> : null}
+              <strong>{CLASSES[classId].name}</strong><small>{ROLES[classId]}</small>{!customCharacter && classId === playerClass ? <Check className="class-check" size={13} /> : null}
+            </button>)}{customCharacters.map(character => <button type="button" key={`custom:${character.id}`}
+              data-custom-character-id={character.id} className={`setup-class${character.id === customCharacter?.id ? ' selected' : ''}`}
+              aria-label={`Choisir ${character.name || 'Classe sans nom'} (personnalisée)`} aria-pressed={character.id === customCharacter?.id}
+              onClick={() => selectCustomCharacter(character)}>
+              <RetroPortrait classId={character.classId} artworkId={character.loadout.artworkId}
+                appearance={character.loadout.profile?.sex === 1 ? 'female' : 'male'} fallback={CLASSES[character.classId].emoji} />
+              <strong>{character.name || 'Classe sans nom'}</strong><small>Personnalisée · {character.loadout.spells?.custom?.length || 0} sorts</small>
+              {character.id === customCharacter?.id ? <Check className="class-check" size={13} /> : null}
             </button>)}</div>
             <div className="character-options">
               <div className="setup-level"><label className="field">Niveau du personnage<select aria-label="Niveau du personnage" value={summary.level} onChange={e => changeLevel(e.target.value)}>
@@ -123,14 +137,14 @@ export default function PlayerSetup({ playerClass, setPlayerClass, botClass, set
               </select></label><div className="level-shortcuts">{[100, 150, 200].map(level => <button key={level} className={summary.level === level ? 'selected' : ''} onClick={() => changeLevel(level)}>{level}</button>)}</div></div>
               <AppearanceSelect side="A" value={loadout.profile?.sex === 1 ? 'female' : 'male'} onChange={value => update('A', current => ({ ...current, profile: { ...current.profile, sex: value === 'female' ? 1 : 0 } }))} />
             </div>
-            <CharacteristicAllocator key={playerClass} classId={playerClass} summary={summary} onChange={change => update('A', change)} />
+            <CharacteristicAllocator key={playerKey} classId={playerClass} summary={summary} onChange={change => update('A', change)} />
             <div className="setup-next"><span>{summary.items.length} objets équipés · {summary.sets.map(set => set.name).join(', ') || 'Équipement personnalisé'}</span>
               <button className="btn" onClick={() => editStuff('A')}>Ajuster mon stuff <ChevronRight size={16} /></button></div>
           </section>
 
           <section id={`${id}-equipment`} role="tabpanel" aria-labelledby={`${id}-equipment-tab`} hidden={section !== 'equipment' || libraryOpen}>
-            <LoadoutPicker embedded fixedSide={editingSide} activeView={view} onViewChange={setView} classes={classes}
-              names={{ A: 'Vous', B: bot?.name || 'Adversaire' }} {...equipment} />
+            <LoadoutPicker key={editingSide === 'A' ? playerKey : botClass} embedded fixedSide={editingSide} activeView={view} onViewChange={setView} classes={classes}
+              names={{ A: customCharacter?.name || 'Vous', B: bot?.name || 'Adversaire' }} {...equipment} />
           </section>
 
           <section id={`${id}-match`} role="tabpanel" aria-labelledby={`${id}-match-tab`} hidden={section !== 'match' || libraryOpen}>

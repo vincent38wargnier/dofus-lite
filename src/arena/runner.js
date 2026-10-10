@@ -14,6 +14,7 @@ import { makeBotApi } from '../bots/api';
 import { utilityDecide } from '../bots/utilityBrain';
 import { monsterDecide } from '../engine/monsters';
 import { dungeonMapId, dungeonRoster, dungeonForBoss } from '../engine/dungeons';
+import { customDungeonRoster } from '../engine/customDungeons';
 
 export const MAX_ACTIONS_PER_TURN = 25;
 export const MAX_SAYS_PER_TURN = 2;
@@ -29,14 +30,16 @@ function* matchSteps({
   mode = 'duel',
   bossId,
   bossGrade,
+  dungeon,
 }) {
   if (mode === 'boss') mapId = dungeonMapId(bossId);
+  if (mode === 'custom') mapId = dungeon?.mapId;
   const init = createGame({
     mapId,
     seed,
     fighters: [
       { id: 'A', name: bots.A.name, botName: bots.A.name, classId: classes.A, loadout: loadouts.A },
-      ...(mode === 'boss' ? dungeonRoster(bossId, bossGrade, seed)
+      ...(mode === 'custom' ? customDungeonRoster(dungeon) : mode === 'boss' ? dungeonRoster(bossId, bossGrade, seed)
         : [{ id: 'B', name: bots.B.name, botName: bots.B.name, classId: classes.B, loadout: loadouts.B }]),
     ],
   });
@@ -178,7 +181,8 @@ function* matchSteps({
   return {
     config: { mapId, seed, classes, loadouts: JSON.parse(JSON.stringify(loadouts)),
       ...(mode === 'boss' ? { mode, bossId, bossGrade } : {}),
-      botNames: { A: bots.A.name, B: mode === 'boss' ? dungeonForBoss(bossId).name : bots.B.name } },
+      ...(mode === 'custom' ? { mode, dungeon: JSON.parse(JSON.stringify(dungeon)) } : {}),
+      botNames: { A: bots.A.name, B: mode === 'custom' ? dungeon.name : mode === 'boss' ? dungeonForBoss(bossId).name : bots.B.name } },
     winner: state.winner,          // 'A' | 'B' | null (draw)
     endReason: state.endReason,
     turns: state.turn,

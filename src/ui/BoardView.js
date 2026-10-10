@@ -3,8 +3,12 @@ import { CLASSES } from '../engine/classes';
 import { spellsOf, isInvisible } from '../engine/engine';
 import { key } from '../engine/geometry';
 import { RETRO_BASE, RetroMovie, RetroSpellEffect, getActorId, resolveAnimation, useAppearances, useRetroAssets } from './RetroAssets';
+import { CUSTOM_ARTWORK_ACTOR, useCharacterArtwork } from './characterArtwork';
+import CustomCharacterSprite from './CustomCharacterSprite';
+import { customActorCastSound } from './combatSounds';
 import useFighterAnimation from './useFighterAnimation';
 import useCombatSounds from './useCombatSounds';
+import { fighterAccessories } from './retroEquipment';
 import useMapFrame from './useMapFrame';
 import HealthChangeFloats from './HealthChangeFloats';
 import { healthChangeGroups } from './healthChanges';
@@ -360,10 +364,14 @@ function FighterToken({
   const assets = useRetroAssets();
   const { appearances } = useAppearances();
   const actorId = getActorId(assets, f, appearances[f.team]);
-  const actor = assets?.actors[actorId];
+  const { artwork } = useCharacterArtwork(f.artworkId || (!f.isMonster && (!f.isSummon || f.isDouble) ? f.loadout?.artworkId : null));
+  const actor = artwork ? CUSTOM_ARTWORK_ACTOR : assets?.actors[actorId];
+  const { hat, cape, pet } = f.loadout?.slots || {};
+  const accessories = useMemo(() => fighterAccessories({ isMonster: f.isMonster, isSummon: f.isSummon,
+    loadout: { slots: { hat, cape, pet } } }, assets), [assets, hat, cape, pet, f.isMonster, f.isSummon]);
   const [failedActor, setFailedActor] = useState(null);
   const { pose, direction, restart, position } = useFighterAnimation(f, frameEvents, frameIdx, actor, assets);
-  const useOriginal = actor && failedActor !== actorId;
+  const useOriginal = !artwork && actor && failedActor !== actorId;
   const midWalk = pose === 'walk' && position;
   const pos = position || f.pos;
   const animation = resolveAnimation(actor, pose, direction.suffix);
@@ -385,7 +393,7 @@ function FighterToken({
 
   return (
     <div
-      className={`token side-${f.team}${useOriginal ? ' retro-token' : ''}${f.isSummon ? ' summon' : ''}${f.id === activeId ? ' active' : ''}${targetable ? ' targetable' : ''}${midWalk ? ' walking' : ''}${isInspected ? ' is-inspected' : ''}`}
+      className={`token side-${f.team}${useOriginal || artwork ? ' retro-token' : ''}${artwork ? ' custom-artwork-token' : ''}${f.isSummon ? ' summon' : ''}${f.id === activeId ? ' active' : ''}${targetable ? ' targetable' : ''}${midWalk ? ' walking' : ''}${isInspected ? ' is-inspected' : ''}`}
       data-fighter-id={f.id}
       data-actor={actorId || undefined}
       data-animation={animation || undefined}
@@ -397,7 +405,7 @@ function FighterToken({
       {/* Ciblable : cliquer le corps vise sa case. Sinon les clics traversent
           jusqu'au sol, pour viser précisément la case derrière. */}
       <div
-        className={`figure${useOriginal ? ' retro-figure' : ''}`}
+        className={`figure${useOriginal || artwork ? ' retro-figure' : ''}`}
         role="button" tabIndex={0} aria-label={`Inspecter ${f.name}`} aria-haspopup={inlineInspection ? undefined : 'dialog'}
         aria-expanded={isInspected} aria-controls={isInspected ? inspectorId : undefined}
         onFocus={event => onInspect(f.id, event.currentTarget)} onBlur={onInspectLeave}
@@ -407,9 +415,11 @@ function FighterToken({
         onClick={targetable ? () => onCellClick(f.pos.x, f.pos.y) : event => onInspect(f.id, event.currentTarget, true)}
         onMouseEnter={targetable && onCellHover ? () => onCellHover(f.pos.x, f.pos.y) : undefined}
       >
-        {useOriginal ? (
+        {artwork ? <CustomCharacterSprite artwork={artwork} pose={pose} direction={direction} restart={restart}
+          castSound={customActorCastSound(assets?.actors[actorId], pose, direction.suffix, assets)} /> : useOriginal ? (
           <RetroMovie
             url={actor.url} animation={animation} restart={restart}
+            accessories={accessories} mirrored={direction.mirror}
             className="retro-actor" scriptAccess combatSteps
             style={{ transform: direction.mirror ? 'scaleX(-1)' : undefined }}
             onFailure={() => setFailedActor(actorId)}
@@ -439,7 +449,7 @@ function SpellEffects({ state, frameEvents, frameIdx, assets, L }) {
   const previous = useRef(-1);
   useEffect(() => {
     const next = (frameEvents || []).filter(e => e.t === 'cast' || e.t === 'hazard_effect').map((e, i) => {
-      const info = assets?.spells[e.spellId];
+      const info = assets?.spells[e.visualSpellId ?? e.spellId];
       return info?.effect ? { id: `${frameIdx}-${i}`, event: e, info } : null;
     }).filter(Boolean);
     const rewind = frameIdx <= previous.current;
@@ -537,7 +547,7 @@ export default function BoardView({
     if (e.t === 'cast') {
       const caster = state.fighters[e.fighter];
       const spell = caster ? spellsOf(caster)[e.spell] : null;
-      const effectInfo = assets?.spells[e.spellId || spell?.id];
+      const effectInfo = assets?.spells[e.visualSpellId ?? e.spellId ?? spell?.visualSpellId ?? spell?.id];
       const originalEffect = effectInfo?.effect || effectInfo?.playEffect === false;
       // Projectile du lanceur vers la cible + coût en PA
       const from = L.chest(e.from);

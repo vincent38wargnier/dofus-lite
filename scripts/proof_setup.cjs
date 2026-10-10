@@ -98,7 +98,7 @@ const out = '/tmp/dofus-ui-remaster';
     await click('.sound-settings summary'); await click('.retro-sound-toggle');
     assert.equal(await page.$eval('.retro-sound-toggle', e => e.getAttribute('aria-pressed')), 'false');
     await click('.sound-settings summary');
-    await click('.tools-menu summary'); await click('.tools-dropdown button', 'Arène');
+    await click('.tabs > button', 'IA contre IA'); await click('.arena-setup-actions button', 'Personnaliser');
     assert.ok(await page.$$eval('.loadout-heading', es => es.some(e => e.offsetParent)));
     await click('.tab', 'Jouer');
     assert.equal(await page.$eval('.player-summary h2', e => e.textContent), 'Cra');

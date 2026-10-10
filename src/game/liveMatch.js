@@ -13,20 +13,22 @@ import { utilityDecide } from '../bots/utilityBrain';
 import { MAX_ACTIONS_PER_TURN, MAX_INVALID_PER_TURN } from '../arena/runner';
 import { KANOJEDO_MAP_ID, POUTCH_ID, DEFAULT_BOSS_ID, defaultMonsterGrade, monsterDecide, BOSSES } from '../engine/monsters';
 import { dungeonRoster, dungeonMapId } from '../engine/dungeons';
+import { customDungeonRoster } from '../engine/customDungeons';
 
 export const HUMAN_ID = 'A';
 export const TURN_SECONDS = 30; // comme en 1.29
 
 export class LiveMatch {
-  constructor({ playerClass, botClass, mapId, seed, botName, botDecide, playerName = 'Vous', loadouts = {}, mode = 'duel', monsterGrade = 5, bossId = DEFAULT_BOSS_ID, bossGrade = defaultMonsterGrade(bossId) }) {
+  constructor({ playerClass, botClass, mapId, seed, botName, botDecide, playerName = 'Vous', loadouts = {}, mode = 'duel', monsterGrade = 5, bossId = DEFAULT_BOSS_ID, bossGrade = defaultMonsterGrade(bossId), dungeon }) {
     if (mode === 'boss' && !BOSSES.some(boss => boss.id === bossId)) throw new Error('Boss inconnu.');
     const init = createGame({
-      mapId: mode === 'kanojedo' ? KANOJEDO_MAP_ID : mode === 'boss' ? dungeonMapId(bossId) : mapId,
+      mapId: mode === 'custom' ? dungeon?.mapId : mode === 'kanojedo' ? KANOJEDO_MAP_ID : mode === 'boss' ? dungeonMapId(bossId) : mapId,
       seed,
       placement: true,
       fighters: [
         { id: 'A', name: playerName, botName: playerName, classId: playerClass, loadout: loadouts.A },
-        ...(mode === 'kanojedo' ? [{ id: 'B', monsterId: POUTCH_ID, monsterGrade }]
+        ...(mode === 'custom' ? customDungeonRoster(dungeon)
+          : mode === 'kanojedo' ? [{ id: 'B', monsterId: POUTCH_ID, monsterGrade }]
           : mode === 'boss' ? dungeonRoster(bossId, bossGrade, seed)
           : [{ id: 'B', name: botName, botName, classId: botClass, loadout: loadouts.B }]),
       ],

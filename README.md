@@ -42,6 +42,121 @@ yarn proof:setup     # parcours navigateur, sauvegardes, carte, combat, clavier 
 yarn proof:loadouts  # bibliothèque, variantes, annulations et équipement utilisé en combat
 ```
 
+## Atelier : donjons et classes personnalisées
+
+L’onglet **Atelier** permet de créer des salles indépendantes et des classes nommées.
+Les créations sont enregistrées automatiquement dans ce navigateur, séparément des stuffs
+et des préparations classiques. Elles peuvent être dupliquées ou supprimées avec annulation.
+
+| Création | Possibilités |
+|---|---|
+| Mes donjons | Monstres du catalogue à glisser dans le groupe, carte au choix, 1 à 8 monstres, niveaux et quantités, copie d’une salle existante |
+| Mes classes | Nom, modèle, apparence, niveau, caractéristiques, équipements et liste de 10 sorts maximum, en plus de l’arme |
+| Catalogue des sorts | Recherche par nom ou origine ; filtres classe/monstre, rôle, action, élément et zone ; tri par nom, type, action, élément, PA ou portée |
+| Combat | Placement manuel et combat joué, ou simulation avec l’IA choisie et résultat rejouable |
+
+Le catalogue réunit les sorts effectivement importés pour les classes, les monstres et leurs
+invocations. Les grades disponibles sont ceux de ces définitions ; les sorts choisis remplacent
+la liste de classe. Les coûts, relances, états requis et règles de ciblage restent appliqués.
+Une nouvelle classe commence avec un grimoire vide. Les anciennes créations de plus de
+10 sorts restent consultables et modifiables sans perte ; il faut les ramener à 10 avant de jouer.
+Un sort mixte se retrouve dans plusieurs catégories. Les limites connues sont affichées dans
+son détail. Les sorts d’invocation de monstre conservent les caractéristiques du monstre invoqué.
+
+Les personnages de l’atelier sont aussi sélectionnables séparément pour A et B dans
+**IA contre IA**. Chaque côté reçoit une copie indépendante ; les ajustements du duel ne
+modifient pas la création enregistrée. Le mode donjon personnalisé correspond à **une salle**,
+avec sa carte et son groupe, sans enchaînement de salles.
+
+```bash
+npm run proof:workshop
+CI=true npm test -- --watchAll=false --runInBand src/__tests__/creations.test.js
+```
+
+### Concevoir une classe et de nouveaux sorts
+
+Dans **Atelier → Mes classes → Nouvelle classe → Créer un sort**, donnez un nom
+à votre classe, choisissez son modèle et composez ses propres sorts. Les sorts créés
+peuvent être mélangés au catalogue existant, dans la limite de **10 sorts plus l’arme**.
+
+| Réglage | Disponible dans l’éditeur |
+| --- | --- |
+| Lancer | PA, portée, ligne de vue, ligne droite, relance, limites par tour/cible |
+| Effets | 1–4 lignes ordonnées : dégâts, vol de vie, soin, boosts, protection, retraits, déplacement |
+| Cibles | Cible du lancer, destinataires par effet, 8 zones avec aperçu |
+| Critiques | Probabilité et liste complète d’effets distincte ; échec critique facultatif |
+| Présentation | Nom, description, icône/animation/son repris d’un sort de classe |
+| Validation | Contraintes techniques, avertissements de puissance, trois références natives proches |
+| Essai | Combat manuel ou IA, depuis l’Atelier ; sauvegarde locale après validation du sort |
+
+Les nouveaux sorts sont au **grade 6 / niveau 200**. Le bouton d’enregistrement refuse
+les définitions incompatibles ; une définition valide n’est pas une certification
+d’équilibrage. Les valeurs sont brutes, avant équipement et résistances. Les sorts
+de catalogue et les anciennes créations conservent leurs règles existantes.
+L’éditeur n’ajoute pas encore de nouvelles invocations, états, pièges, poisons ou
+animations dessinées sur mesure ; ces effets existants restent sélectionnables dans le catalogue.
+
+Le [cahier des charges complet](skills/retro-class-designer/references/class-design-spec.md)
+définit l'identité, les dix sorts maximum, les combos, le contre-jeu, les images, le format ZIP
+et le protocole d'équilibrage. Le [skill réutilisable](skills/retro-class-designer/SKILL.md)
+inclut le relevé des 264 sorts de classe, un schéma JSON, un validateur et un exemple complet.
+
+**L’import ZIP est disponible dans l’Atelier**, pour les classes et les donjons avec leurs propres
+monstres et sorts. Saisissez un thème dans **Créer avec une IA**, cliquez sur **Copier le prompt IA**,
+puis sur **Importer un ZIP**. Le prompt fournit les règles, références du jeu et le format exact.
+Le format d’exécution utilise `content.json` ; l’ancien `class.json` du kit de conception est distinct.
+La [documentation des ZIP importables](docs/content-packages.md) regroupe la spécification,
+les exemples jouables, les images et les commandes de validation. Les plafonds contrôlés ne
+certifient pas l’équilibrage : testez vos créations en combat manuel et avec l’IA.
+
+Vérification de l’éditeur et de son intégration au combat :
+
+```bash
+CI=true npm test -- --watchAll=false --runInBand src/__tests__/authoredSpells.test.js src/__tests__/spellDesignerUi.test.js
+node scripts/proof_spell_designer.cjs
+```
+
+```bash
+node scripts/audit_class_balance.cjs
+node scripts/build_class_authoring_kit.cjs
+node skills/retro-class-designer/scripts/class-kit.cjs validate skills/retro-class-designer/assets/example-class.zip
+node --test scripts/test_class_authoring_kit.cjs
+```
+
+### Images des classes personnalisées
+
+Dans **Atelier → Mes classes → Images du personnage**, téléchargez les gabarits puis importez
+les PNG terminés en une sélection. Le guide est servi à `/templates/character-artwork/index.html`
+et le kit complet à `/templates/character-artwork-kit.zip`.
+
+| Fichiers | Dimensions | Animation |
+|---|---|---|
+| `portrait.png`, `idle-front.png`, `idle-back.png` | 256 × 256 chacun | Obligatoires, images fixes |
+| `walk-front.png`, `walk-back.png` | 1536 × 256 chacun | Facultatifs, 6 images à 12 images/s, boucle |
+| `cast-front.png`, `cast-back.png` | 1536 × 256 chacun | Facultatifs, 6 images à 10 images/s, une fois |
+| `hit-front.png`, `hit-back.png` | 768 × 256 chacun | Facultatifs, 3 images à 10 images/s, une fois |
+
+Les planches sont une rangée de cases de 256 × 256, sans marge. Les pieds restent à `(128,224)`
+dans chaque case. `front` regarde vers le bas à droite, `back` vers le haut à gauche ; les deux
+autres directions sont obtenues par miroir. Le kit contient les canevas PNG, les guides SVG à
+masquer avant export, un mannequin technique importable et des exemples de prompts.
+
+Une animation absente utilise la pose de repos de la même direction. Les morts quittent le
+terrain immédiatement. L’apparence PNG contient la tenue complète ; les points d’attache Flash
+des coiffes, capes et familiers ne sont pas disponibles sur ces images. Les statistiques et sons
+du jeu restent actifs.
+
+Les images sont validées (format, dimensions, transparence, images non vides ; 2 Mio par fichier,
+12 Mio par ensemble) puis stockées dans IndexedDB. Un identifiant immuable dans le stuff de la
+classe relie les combats et replays à leur apparence, sans alourdir chaque état de combat. Les
+anciens ensembles restent disponibles pour les copies et replays. Les PNG restent locaux à ce
+navigateur : conservez les fichiers originaux pour les réimporter ailleurs.
+
+```bash
+npm run templates:characters
+npm run proof:character-artwork
+```
+
 ## Combats contre les monstres : Kanojedo
 
 Dans **Jouer → Combat → Monstres · Kanojedo**, choisissez le niveau du Poutch
@@ -240,6 +355,7 @@ CI=true yarn test --watchAll=false --runInBand
 yarn proof:client
 yarn proof:combat
 yarn proof:audio
+yarn proof:combat-audio
 # Autre port : RETRO_URL=http://127.0.0.1:3000 yarn proof:client
 ```
 
@@ -254,8 +370,11 @@ et un export entièrement transparent fait échouer l’import. Référence du l
 
 ## Ce qu'on y fait
 
-- **⚔️ Arène** — opposez deux bots (intégrés ou les vôtres), choisissez classes, carte et seed,
-  puis regardez le replay animé coup par coup (vitesse réglable, timeline scrubbable).
+- **IA contre IA** — accès direct dans la navigation : choisissez la classe, le niveau,
+  le stuff et l’IA de chaque personnage, puis lancez un duel unique. La même IA,
+  intégrée ou personnelle, peut piloter les deux camps, avec des personnages différents.
+  « Même IA que A » reprend uniquement l’IA. Personnalisation, carte, aléatoire et
+  replay animé restent disponibles ; chaque IA dispose de sa propre mémoire de combat.
 - **🎮 Jouer** — affrontez un bot vous-même : cases vertes pour bouger, sort puis case rouge
   pour lancer, chrono de tour 30 s. Vos invocations sont autonomes, comme en 1.29.
 - **Grimoire** — consultez les sorts de classe et de monstres, leurs six grades lorsqu’ils
@@ -281,9 +400,15 @@ Un bot en boucle infinie ne gèle jamais un match : le code est instrumenté à 
 compilation (budget d'itérations par `decide()`), l'arbitre passe son tour et le combat
 se termine toujours.
 
-Les poids existants de l’IA Maison n’ont pas été réentraînés après la révision
-des règles ci-dessous. La validation et les estimations de dégâts utilisent les
-mêmes règles que le moteur ; cela ne garantit pas une stratégie optimale.
+Le cerveau partagé prend en compte les invocateurs, la menace de leurs invocations,
+les zones visant une case vide, les enchaînements de PA et les boosts immédiats.
+Il anticipe aussi les protections et les chemins ; les rôles des invocations sont
+conservés, notamment le blocage au contact et les attaques sacrificielles.
+
+Les anciens profils restent disponibles et leur influence a été recalibrée sur
+864 duels. La recherche est bornée pour les salles à plusieurs monstres. Les résultats,
+la disponibilité réelle des anciens journaux et les limites sont détaillés dans
+[l’audit de l’IA](docs/ai-2026-10-10.md). Cela ne garantit pas une stratégie optimale.
 
 **Comment chaque classe apprend, et comment ré-entraîner après un changement de sort
 ou de caractéristiques → [`src/tuning/README.md`](src/tuning/README.md).**
@@ -755,10 +880,35 @@ sont proposés directement au maximum. Les exos, surjets et conversions
 Les informations hors combat (pods, prospection, titres, liens
 au compte) restent visibles mais ne modifient pas les combats. Neuf objets
 n’ont pas d’icône disponible dans cette installation et affichent un symbole
-de remplacement. Les chapeaux/capes/armes portés ne sont pas encore attachés
-aux sprites des personnages. Les limitations de sorts décrites plus haut
+de remplacement. Les coiffes, capes et familiers sont attachés aux sprites
+avec les bibliothèques et poses du client (voir ci-dessous). Les armes et
+montures ne disposent pas encore de cet affichage équipé. Les limitations de sorts décrites plus haut
 restent applicables ; ce simulateur ne prétend pas reproduire le serveur à
 l’identique.
+
+### Équipements visibles sur le terrain
+
+Les coiffes, capes (et sacs) et familiers utilisent les points d’attache des
+24 apparences des classes. Le client fournit leur position, profondeur,
+orientation et animation, y compris les cheveux sous la coiffe, les capes
+en mouvement et les poses de marche des familiers. Chaque combattant utilise
+son propre stuff et son apparence, conservés dans le replay ; les accessoires
+suivent sa visibilité et disparaissent avec lui. Ils ne créent aucune case
+occupée ni cible supplémentaire.
+
+L’import conserve les bibliothèques `clips/sprites/accessories/a1.swf` à
+`a9.swf` et leurs empreintes. Les liens `type_gfx` sont sélectionnés à partir
+des objets équipés ; le pont reprend `GAC.applyAccessory` de l’unité
+`init-20791` du client installé. Les poses et dessins Flash restent intacts.
+Six modèles du catalogue n’ont pas de symbole portable dans cette installation
+(`11049`, `11055`, `6707`, `11050`, `11056`, `7581`) : leur bonus fonctionne,
+mais aucun dessin de remplacement n’est ajouté au personnage.
+
+```bash
+npm run import:wearables  # mise à jour ciblée ; inclus aussi dans import:client
+npm run build
+npm run proof:wearables   # 12 classes, deux apparences, accessoires et mouvements
+```
 
 ### Complétude des équipements
 

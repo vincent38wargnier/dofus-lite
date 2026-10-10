@@ -59,7 +59,7 @@ export default function AutoDungeonFight({ config, active, onExit, onRematch }) 
       <h1>{error ? 'Simulation interrompue' : 'Simulation du donjon'}</h1>
       <p role={error ? 'alert' : 'status'}>{error || `Votre personnage joue avec ${config.controllerName} · Tour ${progress}`}</p>
       {!error && <p className="muted">Le combat complet se prépare. Vous pourrez ensuite le regarder ou voir directement le résultat.</p>}
-      <button className="btn" onClick={onExit}>{error ? 'Retour à la préparation' : 'Annuler'}</button>
+      <button className="btn" onClick={onExit}>{error ? config.mode === 'custom' ? 'Retour à l’atelier' : 'Retour à la préparation' : 'Annuler'}</button>
     </div>
   </div>;
 
@@ -73,7 +73,7 @@ export default function AutoDungeonFight({ config, active, onExit, onRematch }) 
         <div className="fight-heading"><div><h1>{MAPS[state.mapId].name.replace(/^🗺\s*/, '')}</h1>
           <p>Donjon automatique · {config.controllerName} · Tour {state.turn}</p></div>
           <div className="fight-heading-actions"><button className="btn" aria-expanded={showLog} aria-controls="auto-fight-log" onClick={() => setShowLog(value => !value)}>Journal</button>
-            <button className="btn" onClick={onExit}>Préparation</button></div>
+            <button className="btn" onClick={onExit}>{config.mode === 'custom' ? 'Retour à l’atelier' : 'Préparation'}</button></div>
         </div>
         <div className="fight-map"><BoardView fitToContainer state={state} frameEvents={frame.events} frameIdx={index}
           inspectionController={inspection} inspectionPanelId="auto-combat-stats" viewerTeam="A" showWinner={false} /></div>

@@ -58,7 +58,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
     assert.equal(await totals(), randomTotals);
     await select('select[aria-label="Qualité des jets"]', 'max');
     // Play and Arena share the same saved per-class loadouts.
-    await click('.tools-menu summary'); await click('.tools-dropdown button', 'Arène'); assert.match(await totals(), /9 PA/); assert.match(await totals(), /4 PM/);
+    await click('.tabs > button', 'IA contre IA'); await click('.arena-setup-actions button', 'Personnaliser'); assert.match(await totals(), /9 PA/); assert.match(await totals(), /4 PM/);
     await click('.tab', 'Jouer'); await click('.setup-navigation button', 'Stuff');
     await click('[data-slot="ring2"]'); await search('Gelano'); await click('[data-item-id="2469"]');
     await page.evaluate(() => scrollTo(0, 0)); await sleep(200);
@@ -95,7 +95,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
     await page.screenshot({ path: path.join(out, 'equipped-combat.png') });
     console.log('A real fight starts with 9 PA, 4 PM and the expected elemental stats; a spell casts and exports correctly.');
     await click('.btn', 'Abandonner');
-    await click('.tools-menu summary'); await click('.tools-dropdown button', 'Arène'); await click('.btn.primary', 'Lancer le combat');
+    await click('.tabs > button', 'IA contre IA'); await click('.arena-launch');
     await page.waitForFunction(() => [...document.querySelectorAll('.fighter-card')].filter(e => e.offsetParent).length === 2);
     await click('.combat-log-heading button', 'Exporter');
     const replay = await page.evaluate(async () => JSON.parse(await window.equipmentCombatExport.text()));

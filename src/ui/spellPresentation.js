@@ -5,7 +5,7 @@ export const SPELL_CATEGORIES = ['weapon', 'neutre', 'terre', 'feu', 'eau', 'air
 const LABELS = { weapon: 'Arme', neutre: 'Neutre', terre: 'Terre', feu: 'Feu', eau: 'Eau', air: 'Air',
   multi: 'Plusieurs éléments', boost: 'Boost / protection', heal: 'Soin', summon: 'Invocation',
   placement: 'Placement', debuff: 'Retrait / malus', utility: 'Utilitaire' };
-const PROTECTIONS = new Set(['armor', 'resistAllBuff', 'punishment', 'weaponMastery', 'invisibility',
+const PROTECTIONS = new Set(['armor', 'resistBuff', 'resistAllBuff', 'punishment', 'weaponMastery', 'invisibility',
   'dodgeMelee', 'damageReflection', 'spellReflection', 'ecaflipLuck', 'sacrifice', 'maxRolls']);
 
 function effectsOf(spell) {

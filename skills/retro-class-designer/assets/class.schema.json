@@ -1,0 +1,1552 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "dofus-lite custom class authoring package v1 (proposed import contract)",
+  "description": "Technical compatibility is not balance approval. Only level 200 and the closed v1 effect subset are supported.",
+  "type": "object",
+  "properties": {
+    "format": {
+      "const": "dofus-lite-class"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60,
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30,
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "author": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "credits": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1500
+    },
+    "baseClass": {
+      "enum": [
+        "FECA",
+        "OSAMODAS",
+        "ENUTROF",
+        "SRAM",
+        "XELOR",
+        "ECAFLIP",
+        "ENIRIPSA",
+        "IOP",
+        "CRA",
+        "SADIDA",
+        "SACRIEUR",
+        "PANDAWA"
+      ]
+    },
+    "profile": {
+      "const": "retro-200-v1"
+    },
+    "design": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "theme": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "primaryRole": {
+          "enum": [
+            "damage",
+            "control",
+            "protection",
+            "healing",
+            "summoning",
+            "placement",
+            "support"
+          ]
+        },
+        "secondaryRole": {
+          "enum": [
+            "damage",
+            "control",
+            "protection",
+            "healing",
+            "summoning",
+            "placement",
+            "support"
+          ]
+        },
+        "elements": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "neutre",
+              "terre",
+              "feu",
+              "eau",
+              "air"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true
+        },
+        "strengths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "minItems": 2,
+          "maxItems": 3
+        },
+        "weaknesses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "minItems": 2,
+          "maxItems": 4
+        },
+        "turnLoop": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "intendedRange": {
+          "enum": [
+            "melee",
+            "medium",
+            "long"
+          ]
+        },
+        "complexity": {
+          "enum": [
+            "beginner",
+            "intermediate",
+            "expert"
+          ]
+        }
+      },
+      "required": [
+        "identity",
+        "theme",
+        "primaryRole",
+        "secondaryRole",
+        "elements",
+        "strengths",
+        "weaknesses",
+        "turnLoop",
+        "intendedRange",
+        "complexity"
+      ],
+      "additionalProperties": false
+    },
+    "artwork": {
+      "type": "object",
+      "properties": {
+        "portrait": {
+          "const": "artwork/portrait.png"
+        },
+        "idle-front": {
+          "const": "artwork/idle-front.png"
+        },
+        "idle-back": {
+          "const": "artwork/idle-back.png"
+        },
+        "walk-front": {
+          "const": "artwork/walk-front.png"
+        },
+        "walk-back": {
+          "const": "artwork/walk-back.png"
+        },
+        "cast-front": {
+          "const": "artwork/cast-front.png"
+        },
+        "cast-back": {
+          "const": "artwork/cast-back.png"
+        },
+        "hit-front": {
+          "const": "artwork/hit-front.png"
+        },
+        "hit-back": {
+          "const": "artwork/hit-back.png"
+        }
+      },
+      "required": [
+        "portrait",
+        "idle-front",
+        "idle-back"
+      ],
+      "additionalProperties": false
+    },
+    "spells": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/spell"
+      },
+      "minItems": 1,
+      "maxItems": 10
+    }
+  },
+  "required": [
+    "format",
+    "schemaVersion",
+    "id",
+    "version",
+    "name",
+    "description",
+    "author",
+    "credits",
+    "baseClass",
+    "profile",
+    "design",
+    "artwork",
+    "spells"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "effect": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "damage"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "element": {
+              "enum": [
+                "neutre",
+                "terre",
+                "feu",
+                "eau",
+                "air"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 300
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 300
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 0
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "element",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "lifeSteal"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "element": {
+              "enum": [
+                "neutre",
+                "terre",
+                "feu",
+                "eau",
+                "air"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 300
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 300
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 0
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "element",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "heal"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 150
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 150
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 0
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "buffPa"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "buffPm"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "buffRange"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "removePa"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "removePm"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "debuffRange"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "buffPower"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "buffDamage"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "buffCrit"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "buffVitality"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "armor"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "buffStat"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "stat": {
+              "enum": [
+                "force",
+                "intelligence",
+                "chance",
+                "agilite",
+                "sagesse"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "stat",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "resistBuff"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "element": {
+              "enum": [
+                "neutre",
+                "terre",
+                "feu",
+                "eau",
+                "air"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 50
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 50
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "element",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "resistDebuff"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "element": {
+              "enum": [
+                "neutre",
+                "terre",
+                "feu",
+                "eau",
+                "air"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 50
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 50
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "element",
+            "min",
+            "max",
+            "duration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "push"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "distance": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 6
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "distance"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "pull"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            },
+            "distance": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 6
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone",
+            "distance"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "teleport"
+            },
+            "target": {
+              "enum": [
+                "self",
+                "ally",
+                "otherAlly",
+                "enemy",
+                "fighter"
+              ]
+            },
+            "zone": {
+              "enum": [
+                "Pa",
+                "Cb",
+                "Cc",
+                "Xb",
+                "Xc",
+                "Lb",
+                "Lc",
+                "Tb"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "zone"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "spell": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600
+        },
+        "role": {
+          "enum": [
+            "damage",
+            "control",
+            "protection",
+            "healing",
+            "summoning",
+            "placement",
+            "support"
+          ]
+        },
+        "pa": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "rangeMin": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 12
+        },
+        "rangeMax": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 12
+        },
+        "targetMode": {
+          "enum": [
+            "self",
+            "enemy",
+            "fighter",
+            "cell",
+            "freeCell"
+          ]
+        },
+        "lineOnly": {
+          "type": "boolean"
+        },
+        "needsLos": {
+          "type": "boolean"
+        },
+        "adjustableRange": {
+          "type": "boolean"
+        },
+        "emptyCellOnly": {
+          "type": "boolean"
+        },
+        "maxPerTurn": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "maxPerTarget": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "cooldown": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "initialCooldown": {
+          "const": 0
+        },
+        "critRate": {
+          "oneOf": [
+            {
+              "const": 0
+            },
+            {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 100
+            }
+          ]
+        },
+        "failRate": {
+          "oneOf": [
+            {
+              "const": 0
+            },
+            {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 1000
+            }
+          ]
+        },
+        "endsTurnOnFailure": {
+          "type": "boolean"
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/effect"
+          },
+          "minItems": 1,
+          "maxItems": 4
+        },
+        "critEffects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/effect"
+          },
+          "minItems": 0,
+          "maxItems": 4
+        },
+        "presentation": {
+          "type": "object",
+          "properties": {
+            "icon": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^icons/[a-z][a-z0-9_]*\\.png$"
+            },
+            "animationSpellId": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 999999
+            }
+          },
+          "required": [
+            "icon",
+            "animationSpellId"
+          ],
+          "additionalProperties": false
+        },
+        "design": {
+          "type": "object",
+          "properties": {
+            "purpose": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "counterplay": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "synergies": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "pattern": "^[a-z][a-z0-9_]*$"
+              },
+              "minItems": 0,
+              "maxItems": 9,
+              "uniqueItems": true
+            },
+            "references": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 999999
+                  },
+                  "grade": {
+                    "enum": [
+                      5,
+                      6
+                    ]
+                  },
+                  "note": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "id",
+                  "grade",
+                  "note"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 2,
+              "maxItems": 4
+            }
+          },
+          "required": [
+            "purpose",
+            "counterplay",
+            "synergies",
+            "references"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "key",
+        "name",
+        "description",
+        "role",
+        "pa",
+        "rangeMin",
+        "rangeMax",
+        "targetMode",
+        "lineOnly",
+        "needsLos",
+        "adjustableRange",
+        "emptyCellOnly",
+        "maxPerTurn",
+        "maxPerTarget",
+        "cooldown",
+        "initialCooldown",
+        "critRate",
+        "failRate",
+        "endsTurnOnFailure",
+        "effects",
+        "critEffects",
+        "presentation",
+        "design"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

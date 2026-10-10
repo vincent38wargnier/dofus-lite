@@ -1,0 +1,10 @@
+Character design prompt
+Create a single full-body character: [YOUR DESCRIPTION]. Three-quarter isometric game view, facing bottom-right (SE). Transparent background, no text, no scenery, no floor shadow. Keep the entire silhouette inside a 256x256 canvas. Midpoint between the feet at pixel (128,224); body mostly inside x32..224 and y24..224. Clear readable silhouette.
+
+Back view prompt
+Use the supplied front view as the character reference. Show the SAME character from behind, facing top-left (NW). Preserve proportions, outfit, colors, canvas and foot anchor. Transparent background.
+
+Animation prompt
+Using the reference character, draw [6 WALK / 6 CAST / 3 HIT] sequential frames in ONE horizontal row. Each frame is 256x256, with no gaps. Keep feet anchored at (128,224) inside each frame. Same direction, outfit, scale and lighting. Transparent background. [Walk: full loop. Cast: prepare, anticipate, wind up, release, follow through, recover. Hit: neutral, recoil, recover.]
+
+Image tools may not preserve exact dimensions and anchors: align and export frames in an image editor before importing. See index.html for the complete required-file checklist.

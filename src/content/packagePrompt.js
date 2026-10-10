@@ -1,0 +1,89 @@
+import { PACKAGE_SCHEMA, PACKAGE_LIMITS } from './packageSchema';
+import { packageExample } from './contentPackage';
+import { EFFECT_TYPES, EFFECT_ZONES } from '../engine/authoredSpells';
+import { SPELL_LIBRARY, CLASSES } from '../engine/classes';
+import MONSTERS from '../engine/monsterData.json';
+import { MAPS } from '../engine/maps';
+import ARTWORK from '../ui/characterArtworkSpec.json';
+
+export function packageReferenceCatalogue() {
+  return {
+    maps: Object.entries(MAPS).map(([id, map]) => ({ id, name: map.name })),
+    monsters: Object.values(MONSTERS.monsters).map(monster => {
+      const grade = Object.values(monster.grades).at(-1);
+      return { id: monster.id, name: monster.name, grade: grade.grade, level: grade.level,
+        hp: grade.baseHp, pa: grade.basePa, pm: grade.basePm, stats: grade.stats,
+        resistances: grade.resistances, resistancesFixed: grade.resistancesFixed,
+        dodgePa: grade.dodgePa, dodgePm: grade.dodgePm, initiative: grade.initiative };
+    }),
+    // Exact imported grade-six rows. Presentation IDs are independent of new
+    // mechanical identities, so reusing an effect never copies a native spell.
+    spells: Object.entries(SPELL_LIBRARY.classes).flatMap(([classId, ids]) => ids.map(id => {
+      const spell = SPELL_LIBRARY.spells[id], grade = spell.grades.find(value => value.grade === 6) || spell.grades.at(-1);
+      return { classId, className: CLASSES[classId].name, id, name: spell.name, ...grade };
+    })),
+  };
+}
+
+export const PACKAGE_RULES = `## Deliverable and import
+Produce ONE playable ZIP for the selected type, not merely a design document. Use content.json at the ZIP ROOT, with the exact schema below. UTF-8 JSON, no comments, no trailing commas, no unrecognised fields. Use lowercase ASCII keys and semver. Type class has only class; type dungeon has only dungeon. Required design metadata describes roles, synergies/turn loop, at least two weaknesses and practical counterplay.
+The user imports the ZIP in Atelier → Importer un ZIP. Images and JSON are saved together locally; no copying files or running commands is required. The original class.json authoring-kit format is not this runtime format. Do not put a parent folder around content.json.
+If you can create files, return the actual ZIP and a brief kit/room summary. If you cannot attach files, be honest and provide one complete Python script (stdlib zipfile, json; no downloads) that writes the exact ZIP, including all JSON. Do not claim to have created a file you cannot attach. Never invent a download link.
+
+## Creative freedom and supported scope
+Follow the user's theme for names, visual identity, personalities, tactics and spell combinations. You may combine any of the supported effects. All names/descriptions may be French. This version imports one class or one combat room, not a campaign. Choose any listed map; imported geometry/backgrounds are not supported yet. Each creature may have a different reference model, artwork and a unique spell kit. You define EVERY creature's spells; its original reference spellbook is replaced completely.
+Custom mechanics available in v1: damage, lifeSteal, heal, buffs (damage/power/stats/PA/PM/range/crit/vitality), armor, resistance buffs/debuffs, dodgeable PA/PM removal, range reduction, push, pull, teleport. New summons, poisons, traps, glyphs, conditional triggers, states, resurrection and scripted mechanics are NOT available in this ZIP version. Do not disguise an unsupported mechanic in a description or an animation ID. Adapt the theme honestly to supported mechanics. Existing UI catalogue spells remain available separately.
+
+## Enforced limits
+One class: 1–10 spells, equipped weapon additional; level 200, spell grade 6, no custom starting stat bonuses. baseClass supplies characteristic costs and fallback appearance only; equipment is chosen after import. sex 0=male, 1=female.
+One room: 1–8 creature definitions and 1–8 TOTAL placed enemies (sum of members.count ≤8). Each definition has 1–10 spells. Keys are unique per owner. members references every defined creature exactly once, with count for duplicates. No unused definitions. Map placements use that map's existing legal starting zones.
+Each creature takes level, HP, stats, resistance, initiative and dodge values from an exact monsterId/grade reference in the catalogue. Tuning: HP and stats 25–150% of reference, PA/PM offsets −2..+2. Effective PA must be 1–20 and PM 0–8. Stats include all six reference stats and are rounded; HP is rounded with minimum 1. Resistances/dodge/initiative are unchanged. Reference ID is for stats and appearance only: original spells and ID-specific mechanics are NOT inherited. A dangerous boss reference stays dangerous; choose a reference appropriate to the intended player/party, not the largest HP available.
+Spell cost 1–8 PA. Range min/max integer 0–12, min ≤ max. 1–3 casts/turn; 1–3 casts/target and ≤ casts/turn. Cooldown 0–10 turns, no initial cooldown. Critical: 0 disabled, otherwise denominator 2–100 (1/N); failure: 0 disabled, otherwise denominator 2–1000. No decimal fields. Normal variant 1–4 effects. Critical variant is a COMPLETE replacement list, not an addition: 1–4 effects if enabled, [] otherwise. Each variant independently respects every limit.
+Maximum direct damage per cast, adding ALL damage and lifeSteal lines at maximum roll: 12 raw damage/PA single-target, 9 if any damage line is area. Multiply by 2 for cooldown ≥2 and by 1.35 for a critical variant. Raw healing ≤15/PA, or 30/PA with cooldown ≥2. These are broad rejection ceilings, NOT recommended balance targets.
+Additional per-variant ceilings, summed across all lines of the same kind: buffPa 2; buffPm/removePa/removePm 3; buffDamage 20; buffPower/buffStat 150; armor 20; resistBuff/resistDebuff 30. Per-effect ceilings below also apply.
+Any buffPa requires maxPerTurn=1, cooldown > duration, and each PA gain strictly smaller than the spell's PA cost. A lasting buffDamage, buffPower, buffStat, armor, resistBuff or buffPm requires maxPerTurn=1 and cooldown > duration. These rules avoid unbounded stacking. The runtime has the standard forbidden states [1,3,18,19,41], no user-defined state prerequisites.
+
+## Targeting and effects
+targetMode enemy: occupied enemy cell and rangeMin≥1. fighter: an occupied cell (ally or enemy; effect target filters recipients). cell: any legal target cell, including empty, useful for zones. freeCell: unoccupied cell. self: rangeMin=rangeMax=0. Only self may have rangeMax=0. needsLos/lineOnly/adjustableRange are booleans; make constraints meaningful.
+Every effect has kind,min,max,duration,zone,target. target self affects caster, ally includes caster and allies, otherAlly excludes caster, enemy excludes allies, fighter affects all (friendly fire). Self effects MUST use Pa, regardless of aim point. Other effects apply their zone around the selected cell. A self-cast point effect cannot target enemy/otherAlly. An enemy-cast point effect can target enemy, fighter or self only. A freeCell point effect can only target self, because the destination is empty. Do not use targetMode fighter to promise ally-only legal targeting: PA can be spent on an enemy and its ally-filtered effects then do nothing.
+Optional element required ONLY for damage/lifeSteal/resistBuff/resistDebuff: neutre,terre,feu,eau,air. Optional stat required ONLY for buffStat: force,intelligence,chance,agilite,sagesse. Remove irrelevant element/stat fields. Values min/max are inclusive integers, min≤max; positive except teleport which requires both 0. Duration 0–5 for timed effects; 0 for instant damage/heal/movement. Duration 0 means current turn for a buff; enemy PA/PM removal still affects their next turn. Timed bonuses apply immediately.
+push/pull require min=max=fixed distance 1–6, target not self, targetMode not self. teleport is the only effect in BOTH variants, targetMode freeCell, effect target self, Pa, min=max=0, duration=0, adjustableRange=false; rangeMax is travel distance. Healing targets self/ally/otherAlly only.
+Zone codes: Pa one cell; Cb/Cc Manhattan diamond radius 1/2; Xb/Xc cross radius 1/2; Lb/Lc oriented line 2/3 cells; Tb perpendicular staff shape of 3 cells. Orientation comes from caster to aim point. Direct spell area damage uses 110% at aim cell, then 100%,90% by distance. Weapons have their own Retro rules.
+
+## Balance design, not just validity
+Use one clear primary role, optionally one secondary role, usually 1–2 damage elements, a short repeatable turn plan and explicit tradeoffs. A 6–10 spell class should have complementary tools, not ten stronger variants of the same nuke. A creature usually needs 2–5 spells, a boss 4–8. Ten is a limit, not a target. Give bosses pressure and exploitable weaknesses. Avoid eight healers/buffers multiplying one another, permanent locks, unavoidable long-range bursts and multi-hit attacks that scale excessively with flat damage.
+Compare each new spell with at least two actual grade-six class spells in the baseline below, matching PA cost, range, area, line of sight, cooldown and targeting. Typical starting raw MEAN damage/PA: ≤6 at range, ≤8 in melee (rangeMax≤2), ≤5 in an area. Use the baseline to tune, never treat maxima as entitlements. Reduce damage for lifesteal, flexible range, enemy-only areas, healing/control on the same cast, or synergy with boosts. Duration, uptime, AP economy, safe range and team support matter as much as a single hit.
+Combat scaling: floor(raw roll × (100 + element stat + power)/100 + flat damage), then zone/resistances/armor/other engine rules. Neutral/earth use force, fire intelligence, water chance, air agility. Flat damage applies to EACH line. LifeSteal heals half the actual HP removed. Heal scales with intelligence and healing bonuses. Armor scales with recipient characteristics. PA/PM removal can be dodged. Crit chance improves with agility/crit bonuses. Overkill and healing caps limit actual HP changes. Include these when estimating turns; no made-up displayed damage values.
+Test normal/critical variants, boosts→attack in same turn, three consecutive turns, cooldown downtime, obstacles, allies in area, resistance, low/high stats and flat-damage builds. For a dungeon test the entire team, focus fire, control chains, healing and movement on its chosen map. Compare against several original classes at equal level/stuff and multiple seeds. Specify intended player level/party/stuff and target difficulty in description/design. Report what was actually simulated; technical acceptance alone is NOT proof of balance. The game provides manual play and Tester avec l’IA after import.
+
+## Images, animations and archive
+Images OPTIONAL: omit artwork and icon fields to use existing native models/icons. This makes a text-only AI's ZIP directly playable. If artwork is declared, include ALL three required PNGs for that owner. The same artwork folder/icon may be shared. No empty images, absent referenced files, undeclared files or fake placeholders claiming finished theme art.
+artwork is a folder path, e.g. artwork/warden. Required portrait.png, idle-front.png, idle-back.png are 256×256. Feet anchor x=128,y=224; front faces screen down-right, back up-left, other directions are mirrored. Use consistent scale and leave headroom. Non-portrait frames must contain visible pixels and transparent background. Optional walk-front/back and cast-front/back strips are 1536×256 (6 horizontal 256×256 frames); optional hit-front/back strips 768×256 (3 frames). Walk12fps, cast10fps, hit10fps. Missing actions use idle; include animation strips for fully animated custom artwork.
+Optional spell icon path icons/<slug>.png: 64×64 visible PNG. PNGs must be RGBA 8-bit, non-interlaced, no APNG; each ≤2 MiB, character artwork set ≤12 MiB. visualSpellId must exist in the listed class catalogue; it chooses the original icon/effect/gesture/audio fallback and has NO influence on mechanics. Custom raster icons/characters are accepted; new Flash effects/audio are not imported.
+ZIP is standard STORE or DEFLATE, no passwords, symlinks, ZIP64, executables, external URLs or ../ paths. Limit 32 MiB packed, 48 MiB expanded, 180 entries including directories; content.json ≤512 KiB. Only content.json and declared icons/artwork PNGs belong in the ZIP; omit .DS_Store, __MACOSX, README, schemas and unused images. Directory entries are allowed. No manual installation is needed.
+Before delivering, validate the exact schema plus semantic limits above, all references, unique keys, total room count, spell counts, effect compatibility, image dimensions and actual PNG contents. A schema-only check is insufficient. Explain any remaining balance concerns separately from the ZIP.
+`;
+
+export function buildContentPrompt({ type = 'class', theme = '' } = {}) {
+  const catalogue = packageReferenceCatalogue();
+  const compactEffects = effects => effects.map(effect => ({ kind: effect.kind, min: effect.min, max: effect.max, duration: effect.duration,
+    zone: effect.zone, element: effect.element, stat: effect.stat, targetMask: effect.targetMask }));
+  // All visual IDs are included, while the mechanical baseline samples each
+  // class's attacks and support, with actual imported values rather than guesses.
+  const baseline = Object.keys(CLASSES).flatMap(classId => {
+    const spells = catalogue.spells.filter(spell => spell.classId === classId);
+    const useful = spells.filter(spell => spell.effects.some(effect => ['damage', 'lifeSteal', 'heal', 'buffDamage', 'buffPower', 'buffPa', 'buffPm', 'armor', 'teleport'].includes(effect.kind)));
+    const picks = [...useful.slice(0, 2), ...useful.slice(-2)];
+    return [...new Map(picks.map(spell => [spell.id, spell])).values()].map(spell => ({ class: classId, id: spell.id, name: spell.name,
+      grade: spell.grade, pa: spell.pa, range: [spell.rangeMin, spell.rangeMax], needsLos: spell.needsLos, lineOnly: spell.lineOnly,
+      adjustableRange: spell.adjustableRange, maxPerTurn: spell.maxPerTurn, maxPerTarget: spell.maxPerTarget, cooldown: spell.cooldown,
+      critRate: spell.critRate, effects: compactEffects(spell.effects), critEffects: compactEffects(spell.critEffects) }));
+  });
+  return `WHAT I WANT TO CREATE (edit only this section to change the theme):\n${theme.trim() || '[Describe the theme, names, roles, each creature and its desired spells, intended opponents and difficulty. For example: a Star Wars class, or a Game of Thrones dungeon room.]'}\n\nPACKAGE TYPE: ${type}\n\nYou are a tactical RPG class/encounter designer AND a content-package author. Create the requested theme for the local Dofus Lite Retro combat game using the exact runtime contract below. Do not require access to any website or repository; all needed rules, valid references and an example are included.\n\n${PACKAGE_RULES}\n## Per-effect numeric ceilings\n${Object.entries(EFFECT_TYPES).map(([kind, rule]) => `${kind}: min/max ${kind === 'teleport' ? 0 : 1}..${rule.max}; duration ${rule.timed ? '0..5' : '0'}${rule.element ? '; element required' : ''}${rule.stat ? '; stat required' : ''}.`).join('\n')}\n\n## Exact JSON Schema (and the semantic rules above)\n${JSON.stringify(PACKAGE_SCHEMA)}\n\n## Valid complete example, images omitted intentionally\n${JSON.stringify(packageExample(type), null, 2)}\n\n## Existing maps: id and name\n${catalogue.maps.map(map => JSON.stringify(map)).join('\n')}\n\n${type === 'dungeon' ? `## Monster stat/model references\nEach row is [id,name,grade,level,HP,PA,PM,[force,intelligence,chance,agilite,sagesse,vitalite],[neutral,earth,fire,water,air resistance %]]. Use exact id and grade. Fixed resistances, initiative and dodge also inherit from the reference; download the full reference spec from the builder to inspect these secondary fields if needed. These are references, not the final themed creatures.\n${catalogue.monsters.map(m => JSON.stringify([m.id, m.name, m.grade, m.level, m.hp, m.pa, m.pm, ['force','intelligence','chance','agilite','sagesse','vitalite'].map(k => m.stats?.[k] || 0), ['neutre','terre','feu','eau','air'].map(k => m.resistances?.[k] || 0)])).join('\n')}\n\n` : ''}## Valid visualSpellId references (original effects/icons/audio only)\n${catalogue.spells.map(spell => `${spell.id}: ${spell.className} / ${spell.name}`).join('\n')}\n\n## Imported grade-six balance comparisons\nOriginal spells can use mechanics or values outside this new-content profile. Compare constraints; do not copy unsupported raw native effect objects into content.json.\n${baseline.map(spell => JSON.stringify(spell)).join('\n')}\n\nReturn the ZIP, a concise role/spell overview and a comparison-based balance note. Clearly distinguish inspected rules, estimated balance and actually executed tests.\n`;
+}
+
+export function packageSpecDocument() {
+  return { format: 'dofus-lite-content', schemaVersion: 1, rules: PACKAGE_RULES, limits: PACKAGE_LIMITS,
+    effectLimits: EFFECT_TYPES, zones: EFFECT_ZONES, artwork: ARTWORK, schema: PACKAGE_SCHEMA,
+    examples: { class: packageExample('class'), dungeon: packageExample('dungeon') }, references: packageReferenceCatalogue() };
+}

@@ -31,7 +31,7 @@ export function castAnimation(event, assets) {
   if (event.itemId || event.spellId === 0 || event.weaponAnimation != null) {
     return `anim${event.weaponAnimation ?? 0}`;
   }
-  const spell = assets?.spells[event.spellId];
+  const spell = assets?.spells[event.visualSpellId ?? event.spellId];
   // GA300 -1 bypasses the entire visual action (not even a facing change).
   // -2 still dispatches the effect without a casting gesture.
   if (spell?.skipAnimation) return null;

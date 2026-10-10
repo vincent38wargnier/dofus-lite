@@ -255,16 +255,18 @@ def object_value(values):
 
 
 def animation_callback():
-    body = variable('_root') + push('idleLabel') + push('static') + method(variable('label'), 'substr', [push(-1)]) + action(0x47) + action(0x4f)
+    body = set_member(variable('_root'), 'mirrored', variable('mirrored'))
+    body += variable('_root') + push('idleLabel') + push('static') + method(variable('label'), 'substr', [push(-1)]) + action(0x47) + action(0x4f)
     # gotoAndStop on the current frame does not recreate its child. Repeated
     # casts of the same spell must restart the original exported clip too.
     actor = member(variable('_root'), 'actor')
     restart = method(actor, 'removeMovieClip', []) + action(0x17)
+    restart += set_member(variable('_root'), 'accessoryClips', object_value({}))
     restart += method(variable('_root'), 'attachMovie', [variable('label'), push('actor'), push(1)]) + action(0x17)
     body += when(member(variable('_root'), 'currentAnimation') + variable('label') + action(0x66), restart)
     body += method(variable('_root'), 'gotoAndStop', [variable('label')]) + action(0x17)
     body += member(variable('_root'), '_currentframe') + action(0x3e)
-    register = function('animate', ['label'], body)
+    register = function('animate', ['label', 'mirrored'], body)
     ei = member(member(variable('flash'), 'external'), 'ExternalInterface')
     register += method(ei, 'addCallback', [push('animate'), variable('_root'), variable('animate')]) + action(0x17)
     register += function('currentFrame', [], member(variable('_root'), '_currentframe') + action(0x3e))
@@ -283,7 +285,52 @@ def animation_callback():
     register += variable('_global') + push('GAC') + push(0) + action(0x43) + action(0x4f)
     for name in ('applyAnim', 'applyColor'):
         register += member(variable('_global'), 'GAC') + push(name) + variable(name) + action(0x4f)
+    register += accessory_callback()
     register += variable('_root') + push('idleLabel') + push('staticR') + action(0x4f)
+    return register
+
+
+def accessory_callback():
+    """GAC.applyAccessory, from the installed loader's init-20791.
+
+    The class timelines supply the original attachment transform, layer and
+    pose (R/L/F/B/S, RR/RL for capes, WR/WL/etc. for walking pets). Keep these
+    intact, including the head's short-hair frame and pet mirror correction.
+    Symbol imports and the three equipped graphics come from the host.
+    """
+    root, clip = variable('_root'), variable('clip')
+    graphic = root + push('accessory') + variable('slot') + action(0x47) + action(0x4e)
+    child = member(clip, 'clip')
+    body = push('graphic') + graphic + action(0x3c)
+    body += method(child, 'removeMovieClip', []) + action(0x17)
+    flip = variable('fixedOffset') + member(root, 'mirrored') + action(0x10)
+    body += when(flip, set_member(clip, '_x', push(0) + member(clip, '_x') + action(0x0b)))
+    # An absent item restores the unshortened head. A successful attachment
+    # selects frame 2, exactly as GAC does for a visible coiffe.
+    body += method(variable('head'), 'gotoAndStop', [push(1)]) + action(0x17)
+    attach = method(clip, 'attachMovie', [variable('graphic'), push('clip'), push(10)]) + action(0x17)
+    attach += method(child, 'gotoAndStop', [variable('pose')]) + action(0x17)
+    attach += when(child, method(variable('head'), 'gotoAndStop', [push(2)]) + action(0x17))
+    body += when(variable('graphic'), attach)
+    # Expose the actual attached clips for integration checks, not just the
+    # requested item IDs. Removed clips become undefined automatically.
+    body += member(root, 'accessoryClips') + variable('slot') + child + action(0x4f)
+    body += set_member(child, 'accessoryPose', variable('pose'))
+    body += set_member(child, 'accessoryGraphic', variable('graphic'))
+    register = function('applyAccessory', ['clip', 'slot', 'pose', 'head', 'fixedOffset'], body)
+    register += set_member(member(variable('_global'), 'GAC'), 'applyAccessory', variable('applyAccessory'))
+    register += set_member(root, 'accessoryClips', object_value({}))
+    props = {}
+    for slot, name in [(1, 'hat'), (2, 'cape'), (3, 'pet')]:
+        attached = member(member(root, 'accessoryClips'), str(slot))
+        props[name] = object_value({
+            'graphic': member(attached, 'accessoryGraphic'), 'pose': member(attached, 'accessoryPose'),
+            'frame': member(attached, '_currentframe'), 'width': member(attached, '_width'),
+            'height': member(attached, '_height'),
+        })
+    register += function('accessoryState', [], object_value(props) + action(0x3e))
+    ei = member(member(variable('flash'), 'external'), 'ExternalInterface')
+    register += method(ei, 'addCallback', [push('accessoryState'), root, variable('accessoryState')]) + action(0x17)
     return register
 
 
@@ -337,6 +384,7 @@ def adapt_sprite(path, target, bounds=(-100, 100, -140, 40)):
         actor = member(variable('_root'), 'actor')
         remove = method(actor, 'removeMovieClip', []) + action(0x17)
         reset = actor + action(0x12) + action(0x9d, struct.pack('<h', len(remove))) + remove
+        reset += set_member(variable('_root'), 'accessoryClips', object_value({}))
         reset += method(variable('_root'), 'attachMovie', [push(name), push('actor'), push(1)]) + action(0x17)
         reset += set_member(variable('_root'), 'currentAnimation', push(name))
         out += [tag(12, (animation_callback() if i == 0 else b'') + reset + b'\x07\0'), tag(1)]

@@ -1,0 +1,43 @@
+.arena-setup { margin-bottom: 18px; }
+.arena-setup-fields { min-width: 0; margin: 0; padding: 0; border: 0; }
+.arena-combatants { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.arena-combatant { min-width: 0; display: flex; flex-direction: column; gap: 14px; padding: 20px; border: 1px solid var(--border); border-top: 3px solid #6d94ac; border-radius: 9px; background: var(--bg-soft); }
+.arena-combatant.side-B { border-top-color: #bd785e; }
+.arena-combatant-heading { display: flex; align-items: center; gap: 13px; }
+.arena-combatant-heading .retro-portrait { width: 55px; height: 64px; flex: 0 0 55px; object-fit: contain; }
+.arena-combatant-heading h2 { margin: 0; font-size: 21px; }
+.arena-combatant-heading p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+.arena-side-badge { margin-left: auto; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; color: #426b82; background: #dae6e9; font-weight: 750; }
+.side-B .arena-side-badge { color: #9d5339; background: #efe0d7; }
+.arena-character-fields { display: grid; grid-template-columns: minmax(0, 1fr) 85px minmax(0, 1fr); gap: 12px; }
+.arena-combatant .field { min-width: 0; }
+.arena-combatant select { min-width: 0; width: 100%; }
+.arena-ai-choice { display: flex; align-items: flex-end; gap: 10px; }
+.arena-ai-choice .field { flex: 1; }
+.arena-ai-choice .btn { flex: 0 0 auto; font-size: 12px; }
+.arena-character-totals { display: flex; flex-wrap: wrap; gap: 8px 18px; color: #596d3d; font-size: 13px; font-weight: 650; }
+.arena-ai-note { margin: 17px 0; color: var(--muted); font-size: 13px; }
+.arena-match-options { display: flex; align-items: center; flex-wrap: wrap; gap: 16px 24px; padding-top: 16px; border-top: 1px solid var(--border); }
+.arena-match-options .map-picker { max-width: 100%; }
+.arena-match-options .map-picker select { max-width: 340px; }
+.arena-randomness { font-size: 12px; color: var(--muted); }
+.arena-randomness summary { cursor: pointer; }
+.arena-randomness > div { display: flex; align-items: flex-end; gap: 7px; margin-top: 10px; }
+.arena-randomness input { width: 115px; }
+.arena-setup-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-left: auto; }
+.arena-setup-actions .btn { min-height: 42px; }
+@media (max-width: 900px) {
+  .arena-character-fields { grid-template-columns: minmax(0, 1fr) 80px; }
+  .arena-character-fields > :last-child { grid-column: 1 / -1; }
+  .arena-combatants { gap: 12px; }
+  .arena-combatant { padding: 14px; }
+  .arena-ai-choice { flex-wrap: wrap; }
+  .arena-ai-choice .field { flex-basis: 100%; }
+  .arena-setup-actions { margin-left: 0; }
+}
+@media (max-width: 620px) {
+  .arena-combatants { grid-template-columns: minmax(0, 1fr); }
+  .arena-setup-actions { width: 100%; }
+  .arena-setup-actions .btn { flex: 1 1 100%; }
+  .arena-match-options .map-picker, .arena-match-options .map-picker select { width: 100%; }
+}

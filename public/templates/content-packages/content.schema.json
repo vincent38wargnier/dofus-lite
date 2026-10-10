@@ -1,0 +1,625 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Dofus Lite — themed class or dungeon",
+  "type": "object",
+  "properties": {
+    "format": {
+      "const": "dofus-lite-content"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "type": {
+      "enum": [
+        "class",
+        "dungeon"
+      ]
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 48,
+      "pattern": "^[a-z][a-z0-9_-]*$"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30,
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 800
+    },
+    "author": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "design": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "strengths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "minItems": 1,
+          "maxItems": 3
+        },
+        "weaknesses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "minItems": 2,
+          "maxItems": 4
+        },
+        "turnLoop": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 800
+        },
+        "counterplay": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 800
+        }
+      },
+      "required": [
+        "role",
+        "strengths",
+        "weaknesses",
+        "turnLoop",
+        "counterplay"
+      ],
+      "additionalProperties": false
+    },
+    "class": {
+      "type": "object",
+      "properties": {
+        "baseClass": {
+          "enum": [
+            "FECA",
+            "OSAMODAS",
+            "ENUTROF",
+            "SRAM",
+            "XELOR",
+            "ECAFLIP",
+            "ENIRIPSA",
+            "IOP",
+            "CRA",
+            "SADIDA",
+            "SACRIEUR",
+            "PANDAWA"
+          ]
+        },
+        "sex": {
+          "enum": [
+            0,
+            1
+          ]
+        },
+        "artwork": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "^artwork/[a-z][a-z0-9_-]*$"
+        },
+        "spells": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/spell"
+          },
+          "minItems": 1,
+          "maxItems": 10
+        }
+      },
+      "required": [
+        "baseClass",
+        "sex",
+        "spells"
+      ],
+      "additionalProperties": false
+    },
+    "dungeon": {
+      "type": "object",
+      "properties": {
+        "mapId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "monsters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 48,
+                "pattern": "^[a-z][a-z0-9_-]*$"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 800
+              },
+              "role": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "counterplay": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 800
+              },
+              "reference": {
+                "type": "object",
+                "properties": {
+                  "monsterId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100000
+                  },
+                  "grade": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 20
+                  }
+                },
+                "required": [
+                  "monsterId",
+                  "grade"
+                ],
+                "additionalProperties": false
+              },
+              "tuning": {
+                "type": "object",
+                "properties": {
+                  "hpPercent": {
+                    "type": "integer",
+                    "minimum": 25,
+                    "maximum": 150
+                  },
+                  "statsPercent": {
+                    "type": "integer",
+                    "minimum": 25,
+                    "maximum": 150
+                  },
+                  "paBonus": {
+                    "type": "integer",
+                    "minimum": -2,
+                    "maximum": 2
+                  },
+                  "pmBonus": {
+                    "type": "integer",
+                    "minimum": -2,
+                    "maximum": 2
+                  }
+                },
+                "required": [
+                  "hpPercent",
+                  "statsPercent",
+                  "paBonus",
+                  "pmBonus"
+                ],
+                "additionalProperties": false
+              },
+              "artwork": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100,
+                "pattern": "^artwork/[a-z][a-z0-9_-]*$"
+              },
+              "spells": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/spell"
+                },
+                "minItems": 1,
+                "maxItems": 10
+              }
+            },
+            "required": [
+              "key",
+              "name",
+              "description",
+              "role",
+              "counterplay",
+              "reference",
+              "tuning",
+              "spells"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 8
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "monster": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 48,
+                "pattern": "^[a-z][a-z0-9_-]*$"
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 8
+              }
+            },
+            "required": [
+              "monster",
+              "count"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 8
+        }
+      },
+      "required": [
+        "mapId",
+        "monsters",
+        "members"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "format",
+    "schemaVersion",
+    "type",
+    "id",
+    "version",
+    "name",
+    "description",
+    "author",
+    "design"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "spell": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 48,
+          "pattern": "^[a-z][a-z0-9_-]*$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 800
+        },
+        "counterplay": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 800
+        },
+        "pa": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "rangeMin": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 12
+        },
+        "rangeMax": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 12
+        },
+        "targetMode": {
+          "enum": [
+            "enemy",
+            "fighter",
+            "cell",
+            "freeCell",
+            "self"
+          ]
+        },
+        "needsLos": {
+          "type": "boolean"
+        },
+        "lineOnly": {
+          "type": "boolean"
+        },
+        "adjustableRange": {
+          "type": "boolean"
+        },
+        "maxPerTurn": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "maxPerTarget": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "cooldown": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "critRate": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "failRate": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "endsTurnOnFailure": {
+          "type": "boolean"
+        },
+        "visualSpellId": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "icon": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "^icons/[a-z][a-z0-9_-]*\\.png$"
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "damage",
+                  "lifeSteal",
+                  "heal",
+                  "buffDamage",
+                  "buffPower",
+                  "buffStat",
+                  "buffPa",
+                  "buffPm",
+                  "buffRange",
+                  "buffCrit",
+                  "buffVitality",
+                  "armor",
+                  "resistBuff",
+                  "removePa",
+                  "removePm",
+                  "debuffRange",
+                  "resistDebuff",
+                  "push",
+                  "pull",
+                  "teleport"
+                ]
+              },
+              "min": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 500
+              },
+              "max": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 500
+              },
+              "duration": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 5
+              },
+              "zone": {
+                "enum": [
+                  "Pa",
+                  "Cb",
+                  "Cc",
+                  "Xb",
+                  "Xc",
+                  "Lb",
+                  "Lc",
+                  "Tb"
+                ]
+              },
+              "target": {
+                "enum": [
+                  "self",
+                  "ally",
+                  "otherAlly",
+                  "enemy",
+                  "fighter"
+                ]
+              },
+              "element": {
+                "enum": [
+                  "neutre",
+                  "terre",
+                  "feu",
+                  "eau",
+                  "air"
+                ]
+              },
+              "stat": {
+                "enum": [
+                  "force",
+                  "intelligence",
+                  "chance",
+                  "agilite",
+                  "sagesse"
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "min",
+              "max",
+              "duration",
+              "zone",
+              "target"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 4
+        },
+        "critEffects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "damage",
+                  "lifeSteal",
+                  "heal",
+                  "buffDamage",
+                  "buffPower",
+                  "buffStat",
+                  "buffPa",
+                  "buffPm",
+                  "buffRange",
+                  "buffCrit",
+                  "buffVitality",
+                  "armor",
+                  "resistBuff",
+                  "removePa",
+                  "removePm",
+                  "debuffRange",
+                  "resistDebuff",
+                  "push",
+                  "pull",
+                  "teleport"
+                ]
+              },
+              "min": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 500
+              },
+              "max": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 500
+              },
+              "duration": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 5
+              },
+              "zone": {
+                "enum": [
+                  "Pa",
+                  "Cb",
+                  "Cc",
+                  "Xb",
+                  "Xc",
+                  "Lb",
+                  "Lc",
+                  "Tb"
+                ]
+              },
+              "target": {
+                "enum": [
+                  "self",
+                  "ally",
+                  "otherAlly",
+                  "enemy",
+                  "fighter"
+                ]
+              },
+              "element": {
+                "enum": [
+                  "neutre",
+                  "terre",
+                  "feu",
+                  "eau",
+                  "air"
+                ]
+              },
+              "stat": {
+                "enum": [
+                  "force",
+                  "intelligence",
+                  "chance",
+                  "agilite",
+                  "sagesse"
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "min",
+              "max",
+              "duration",
+              "zone",
+              "target"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "maxItems": 4
+        }
+      },
+      "required": [
+        "key",
+        "name",
+        "description",
+        "counterplay",
+        "pa",
+        "rangeMin",
+        "rangeMax",
+        "targetMode",
+        "needsLos",
+        "lineOnly",
+        "adjustableRange",
+        "maxPerTurn",
+        "maxPerTarget",
+        "cooldown",
+        "critRate",
+        "failRate",
+        "endsTurnOnFailure",
+        "visualSpellId",
+        "effects",
+        "critEffects"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

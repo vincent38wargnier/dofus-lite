@@ -1,0 +1,233 @@
+[
+  {
+    "name": "portrait.png",
+    "source": [
+      1254,
+      1254
+    ],
+    "width": 256,
+    "height": 256,
+    "cells": [
+      {
+        "opaque": 943464,
+        "transparent": 609564
+      }
+    ]
+  },
+  {
+    "name": "idle-front.png",
+    "source": [
+      1254,
+      1254
+    ],
+    "width": 256,
+    "height": 256,
+    "cells": [
+      {
+        "opaque": 283634,
+        "transparent": 1267442
+      }
+    ]
+  },
+  {
+    "name": "idle-back.png",
+    "source": [
+      1254,
+      1254
+    ],
+    "width": 256,
+    "height": 256,
+    "cells": [
+      {
+        "opaque": 255598,
+        "transparent": 1295003
+      }
+    ]
+  },
+  {
+    "name": "walk-front.png",
+    "source": [
+      1536,
+      1024
+    ],
+    "width": 1536,
+    "height": 256,
+    "cells": [
+      {
+        "opaque": 68484,
+        "transparent": 180218
+      },
+      {
+        "opaque": 65559,
+        "transparent": 182782
+      },
+      {
+        "opaque": 65050,
+        "transparent": 184339
+      },
+      {
+        "opaque": 68764,
+        "transparent": 179793
+      },
+      {
+        "opaque": 63455,
+        "transparent": 185438
+      },
+      {
+        "opaque": 63889,
+        "transparent": 184207
+      }
+    ]
+  },
+  {
+    "name": "walk-back.png",
+    "source": [
+      1536,
+      1024
+    ],
+    "width": 1536,
+    "height": 256,
+    "cells": [
+      {
+        "opaque": 66458,
+        "transparent": 175170
+      },
+      {
+        "opaque": 61684,
+        "transparent": 176872
+      },
+      {
+        "opaque": 67888,
+        "transparent": 168475
+      },
+      {
+        "opaque": 68979,
+        "transparent": 169527
+      },
+      {
+        "opaque": 63263,
+        "transparent": 174017
+      },
+      {
+        "opaque": 68248,
+        "transparent": 170885
+      }
+    ]
+  },
+  {
+    "name": "cast-front.png",
+    "source": [
+      1536,
+      1024
+    ],
+    "width": 1536,
+    "height": 256,
+    "cells": [
+      {
+        "opaque": 62402,
+        "transparent": 181037
+      },
+      {
+        "opaque": 60906,
+        "transparent": 181039
+      },
+      {
+        "opaque": 62375,
+        "transparent": 180835
+      },
+      {
+        "opaque": 70683,
+        "transparent": 157120
+      },
+      {
+        "opaque": 62615,
+        "transparent": 170269
+      },
+      {
+        "opaque": 62960,
+        "transparent": 174437
+      }
+    ]
+  },
+  {
+    "name": "cast-back.png",
+    "source": [
+      1536,
+      1024
+    ],
+    "width": 1536,
+    "height": 256,
+    "cells": [
+      {
+        "opaque": 55063,
+        "transparent": 190900
+      },
+      {
+        "opaque": 53994,
+        "transparent": 195794
+      },
+      {
+        "opaque": 58497,
+        "transparent": 181269
+      },
+      {
+        "opaque": 65840,
+        "transparent": 172390
+      },
+      {
+        "opaque": 59883,
+        "transparent": 179408
+      },
+      {
+        "opaque": 55037,
+        "transparent": 195466
+      }
+    ]
+  },
+  {
+    "name": "hit-front.png",
+    "source": [
+      2172,
+      724
+    ],
+    "width": 768,
+    "height": 256,
+    "cells": [
+      {
+        "opaque": 129383,
+        "transparent": 384807
+      },
+      {
+        "opaque": 142607,
+        "transparent": 368487
+      },
+      {
+        "opaque": 130363,
+        "transparent": 382154
+      }
+    ]
+  },
+  {
+    "name": "hit-back.png",
+    "source": [
+      2172,
+      724
+    ],
+    "width": 768,
+    "height": 256,
+    "cells": [
+      {
+        "opaque": 121033,
+        "transparent": 388932
+      },
+      {
+        "opaque": 136357,
+        "transparent": 370251
+      },
+      {
+        "opaque": 114150,
+        "transparent": 394837
+      }
+    ]
+  }
+]
