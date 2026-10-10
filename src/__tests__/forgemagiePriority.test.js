@@ -13,11 +13,10 @@ const findResult = (item, state, id, outcome, predicate = () => true) => {
 };
 
 test.each(['pa', 'pm', 'range'])('a weight-1 rune threatens an exotic %s far more than the identical natural point', stat => {
-  // Fo completes a natural force line near its maximum, so it can fail (cost 1).
-  const natural = template([[FM_STATS[stat].effect, 1, 1, ''], [118, 1, 10, '']]);
-  const exotic = template([[118, 1, 10, '']]);
+  const natural = template([[FM_STATS[stat].effect, 1, 1, '']]);
+  const exotic = template([]);
   const rate = item => {
-    const state = { ...initial(item), stats: { force: 9, [stat]: 1 } };
+    const state = { ...initial(item), stats: { [stat]: 1 } };
     let failures = 0, losses = 0;
     for (let seed = 0; seed < 3000; seed++) {
       const next = forgeAttempt(item, { ...state, rngState: seed }, rune(1519));
@@ -76,11 +75,10 @@ test.each(['SN', 'EC'])('working a different line takes from an over before the 
 });
 
 test.each(['SN', 'EC'])('continuing the same over uses the puits before that line on %s', outcome => {
-  // A light over (13 force at stake) keeps both neutral results and failures possible.
-  const item = template([[118, 1, 10, ''], [125, 100, 200, '']]);
-  const state = { ...initial(item), stats: { force: 12, vitalite: 150 }, puits: 20 };
+  const item = template([[118, 1, 60, ''], [125, 100, 200, '']]);
+  const state = { ...initial(item), stats: { force: 65, vitalite: 150 }, puits: 20 };
   const next = findResult(item, state, 1519, outcome);
-  expect(next.stats.force).toBe(outcome === 'SN' ? 13 : 12);
+  expect(next.stats.force).toBe(outcome === 'SN' ? 66 : 65);
   expect(next.stats.vitalite).toBe(150);
   expect(next.puits).toBe(19);
   expect(next.history.at(-1).loss).toMatchObject({ weight: 0, steps: [{ phase: 'puits', weight: 1 }] });
@@ -111,7 +109,7 @@ test('fractional losses across extra and natural phases are rounded once as a wh
   const item = template([[118, 1, 60, '']]);
   const state = { ...initial(item), stats: { force: 40, vitalite: 1 }, puits: 5 };
   const raIne = RUNES.find(r => r.stat === 'intelligence' && r.power === 10);
-  const next = findResult(item, state, raIne.id, 'EC', n => n.stats.force === 35);
+  const next = findResult(item, state, raIne.id, 'EC');
   expect(next.stats).toEqual({ force: 35, vitalite: 0 });
   expect(next.puits).toBe(1);
   expect(next.history.at(-1)).toMatchObject({ fromPuits: 5, loss: { rawWeight: 5.25, weight: 6,

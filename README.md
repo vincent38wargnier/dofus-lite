@@ -908,55 +908,26 @@ comparaison ne modifie pas les coefficients de passage et n'ajoute aucune
 exception au Gelano. Les détails anonymisés sont conservés localement dans
 `local-observations/forgemagie/gelano-sagesse-audit-20261010.json`.
 
-### Probabilités : une loi du poids en jeu (`retro-reconstruction-v4`)
+### Probabilités : interpolation versionnée
 
-Le modèle v4 remplace l'interpolation v3 par une seule loi, ajustée sur les
-tentatives serveur capturées (`scripts/fit_forgemagie.py`, résultat dans
-`src/engine/forgemagieCalibration.json`) :
+Le modèle `retro-reconstruction-v3` conserve l'interpolation SC/SN/EC de la
+version précédente ; cette correction porte sur les pertes. Il suppose un
+maître de niveau 100 et tient
+compte du niveau de l'objet, du nombre de lignes, de leur poids, de la qualité
+des autres jets, du franchissement de 80 % du jet naturel et des over/exos.
+Les petites runes sont pénalisées progressivement au-delà de 20 fois leur gain.
 
-```text
-X  = poids en jeu
-     ligne naturelle : poids de la rune (gain × poids unitaire)
-     over ou exo     : poids de toute la ligne après la rune
-r  = 1000 / X − 70            (score en %, plafonné par le devblog sur une ligne naturelle)
-SC = r borné entre 1 et 66 %
-N  = min(50, r + 50, 100 − SC), au moins 0
-EC = le reste
-```
+L'interpolation combine les repères historiques suivants : jusqu'à 66 % de SC
+en remontage simple, 43 % sur un jet parfait simple, 15 % sur un objet complexe,
+et au maximum 50 % de SN. La création d'un effet léger part d'un SC allant
+jusqu'à 32 %, réduit par la pression des excès. Les coefficients exacts sont
+visibles dans `forgeChances`, avec les facteurs de chaque essai dans son journal.
+Le puits sert de réserve : il n'est pas un bonus direct de probabilité.
 
-Le partage SC/N/EC reprend les devblogs Ankama de mars et mai 2009 (versions
-bêta et finale de la 1.27) : SC jamais sous 1 % hors tentative impossible,
-neutre au plus 50 % et proche de 50 % sauf pour les tentatives très faciles
-ou très difficiles. Tous les exemples chiffrés de ces devblogs (66/34/0,
-43/50/7, 15/50/35, 32/50/18, 1/22/77, 1/0/99) s'écrivent avec un seul score.
-Le devblog final classe les facteurs de difficulté ainsi : qualité globale de
-l'objet, qualité du jet modifié (palier à 80 %, malus d'over/exo), niveau de
-l'objet. Il ne cite pas le poids de la rune ; la version bêta liait la
-difficulté au « power rate » de l'effet et des effets non naturels.
-
-Ajustement sur 118 tentatives informatives (142 exploitables sur 165) :
-`K = 920` (IC 95 % : 736–1095), `M = 67,5` (54,7–78,4). Les valeurs retenues,
-1000 et 70, restent dans ces intervalles. Une loi en puissance
-(`SC = (5/X)²`, `N = (10/X)²`) s'ajuste aussi bien ; la forme du devblog a été
-retenue parce qu'elle respecte le plancher officiel de 1 % et le plafond de
-50 % du neutre. Prendre seulement le poids de la rune, ou seulement
-l'excès de la ligne, ajuste nettement moins bien les captures.
-
-Rejouées dans le moteur, les captures donnent une log-vraisemblance négative
-de 65,6 contre 91,1 pour le modèle v3
-(`src/__tests__/forgemagieCalibration.test.js`).
-
-Lecture des messages serveur retenue pour l'ajustement : aucun message = SC ;
-194 = neutre (y compris payé par le puits seul) ; 117 = échec non couvert par
-le puits (envoyé même sur un objet vide) ; 183 = rien n'a baissé (échec couvert
-par le puits, ou neutre que rien ne pouvait payer). Un neutre entièrement payé
-par sa propre ligne est désormais sans effet, comme sur le Gelano capturé.
-
-Limites : seuls un Gelano (objet à un seul jet, que le devblog dit plus facile)
-et un Blopanneau Coco Royal ont été mesurés. Les overs de lignes lourdes
-(sagesse, dommages, CC) et les objets complexes sont extrapolés. Le plafond des
-lignes naturelles reste l'heuristique v3 (complexité, qualité, palier). Le
-puits initial de chaque objet capturé est supposé nul.
+Pour les exotiques/surjets lourds (poids unitaire ≥ 30), cette version adopte
+la convention **1 % SC / 0 % SN / 99 % EC**. Le remontage d'un PA naturel ne
+prend pas ce taux. Cette convention et l'interpolation entière demandent
+encore validation sur Retro.
 
 Les 12 potions élémentaires utilisent explicitement la variante Ancestra :
 50/65/85 % avec arrondi inférieur de chaque borne (minimum 1), toutes les

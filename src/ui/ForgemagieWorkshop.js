@@ -1,19 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Anvil, FlaskConical, Gem, History, Sparkles } from 'lucide-react';
 import { EQUIPMENT_SLOTS, ITEMS, rolledEffects } from '../engine/equipment';
-import { RUNES, POTIONS, FORGE_SOURCES, FM_STATS, OUTCOMES, WEIGHT_LAW, createForgedItem, naturalBounds,
-  extraWeight, forgeRestriction, forgeChances, forgeAttempt, runeWeight, lawScore } from '../engine/forgemagie';
+import { RUNES, POTIONS, FORGE_SOURCES, FM_STATS, OUTCOMES, createForgedItem, naturalBounds,
+  extraWeight, forgeRestriction, forgeChances, forgeAttempt, runeWeight } from '../engine/forgemagie';
 import { matchingForge, validateForgedItem, convertedWeaponRows } from '../engine/forgedItems';
 import OBSERVATIONS from '../engine/forgemagieObservations.json';
-import CALIBRATION from '../engine/forgemagieCalibration.json';
 import EquipmentIcon from './EquipmentIcon';
 import ForgeRuneGrid, { forgeStatLabel as label } from './ForgeRuneGrid';
 import '../styles/forgemagie.css';
 
 const signed = n => `${n > 0 ? '+' : ''}${n}`;
 const percent = n => `${(n * 100).toLocaleString('fr-FR', { maximumFractionDigits: 1 })} %`;
-const decimal = n => n.toLocaleString('fr-FR', { maximumFractionDigits: 1 });
-const triple = counts => ['SC', 'SN', 'EC'].map(k => decimal(counts[k])).join(' / ');
 const deltaText = deltas => Object.entries(deltas).map(([s, n]) => `${signed(n)} ${label(s)}`).join(' · ') || 'Jets inchangés';
 const outcomeLabel = entry => entry.neutralized ? 'Neutre sans effet'
   : entry.outcome === 'EC' && !Object.keys(entry.deltas).length && entry.puitsBefore === entry.puitsAfter
@@ -176,9 +173,6 @@ export default function ForgemagieWorkshop({ loadout, change, initialSlot, saveE
             {chances.allowed ? <div className="fm-chances"><h4>Chances normales estimées</h4><div className="fm-probability-bar" aria-hidden="true">
               {['SC', 'SN', 'EC'].map(outcome => <span key={outcome} className={outcome.toLowerCase()} style={{ flex: chances[outcome] }} />)}</div>
               <dl>{['SC', 'SN', 'EC'].map(o => <div key={o}><dt title={{ SC: 'Gain sans perte.', SN: 'Gain compensé par le puits ou des pertes. Sans compensation suffisante, aucun effet.', EC: 'Aucun gain. Le puits et les jets sont exposés ; une ligne lourde peut être épargnée.' }[o]}>{o === 'SN' ? 'Neutre' : OUTCOMES[o]}</dt><dd>{percent(chances[o])}</dd></div>)}</dl>
-              {chances.factors ? <p className="fm-stake" title="Poids en jeu : celui de la rune sur une ligne naturelle, celui de toute la ligne après la rune pour un over ou un exo.">
-                Poids en jeu <strong>{decimal(chances.factors.stake)}</strong> · score {WEIGHT_LAW.K}/{decimal(chances.factors.stake)} − {WEIGHT_LAW.M} = {decimal(lawScore(chances.factors.stake))}
-                {chances.mode === 'normal' && chances.factors.score < lawScore(chances.factors.stake) - 1e-6 ? ` · plafonné à ${decimal(chances.factors.score)} (ligne naturelle)` : ''}</p> : null}
             </div> : null}
             {!chances.allowed ? <p className="fm-blocked" role="status">{chances.reason}</p> : null}
             <div className="fm-actions"><button type="button" className="btn primary fm-fuse" disabled={!chances.allowed || remaining > 0} onClick={fuse}><Sparkles size={17} /> Fusionner</button>
@@ -220,13 +214,11 @@ export default function ForgemagieWorkshop({ loadout, change, initialSlot, saveE
       </>}
     </>}
     <details className="fm-details fm-evidence"><summary>Règles, sources et tes captures</summary>
-      <p>Les puissances viennent des fichiers du client. Les poids Retro, le puits et les plafonds viennent des guides cités. Le choix des pertes est une reconstitution locale.</p>
-      <p>Les chances suivent une seule loi : <strong>score = {WEIGHT_LAW.K} / poids en jeu − {WEIGHT_LAW.M}</strong>. Le poids en jeu est celui de la rune sur une ligne naturelle, et celui de toute la ligne après la rune pour un over ou un exo. Le partage reprend le devblog Ankama de mai 2009 : SC égal au score entre 1 et 66 %, neutre jusqu’à 50 %, réduit seulement pour les tentatives très faciles ou très difficiles. Sur une ligne naturelle, le plafond du devblog s’applique aussi (66 %, moins près du maximum ou sur un objet complexe).</p>
-      <p>Constantes ajustées sur {CALIBRATION.attemptsFitted} de tes {CALIBRATION.attemptsObserved} tentatives capturées (intervalle à 95 % : {decimal(CALIBRATION.fit.ci95.K[0])}–{decimal(CALIBRATION.fit.ci95.K[1])} pour {WEIGHT_LAW.K}, {decimal(CALIBRATION.fit.ci95.M[0])}–{decimal(CALIBRATION.fit.ci95.M[1])} pour {WEIGHT_LAW.M}). Seuls un Gelano et un Blopanneau ont été mesurés : les autres objets sont extrapolés.</p>
-      <div className="fm-table-scroll"><table><thead><tr><th>Situation capturée</th><th>Essais</th><th>Observé SC / N / EC</th><th>Prévu par la loi</th></tr></thead><tbody>{CALIBRATION.conditions.filter(c => c.fitted).map(c => <tr key={c.condition}><td>{c.condition.replace(/^(.*?) · Rune /, '$1 · ').replace(' · natural', ' · naturel').replace(' · X=', ' · poids ')}</td><td>{c.n}</td><td>{triple(c.observed)}</td><td>{triple(c.expected)}</td></tr>)}</tbody></table></div>
+      <p>Les puissances viennent des fichiers du client. Les poids Retro, le puits et les plafonds viennent des guides cités. Le calcul des chances interpole les repères historiques ; le choix des pertes est une reconstitution locale.</p>
       <p>En cas de succès neutre ou d’échec, les overs et exos des autres lignes sont exposés avant le puits. Si tu continues la même ligne, le puits passe avant son over ou son exo. Un succès critique conserve tous les bonus et le puits.</p>
       <p>Un PA, PM ou autre bonus exotique est plus fragile qu’un bonus naturel de même poids. Il peut toutefois être épargné. La priorité est documentée ; sa probabilité exacte reste estimée dans ce simulateur. Un résultat neutre sans compensation suffisante ne modifie ni les jets ni le puits.</p>
-      <p>Lecture des messages serveur : sans message, succès critique ; « une caractéristique a baissé », succès neutre ; échec avec baisse de puissance, échec non couvert par le puits ; échec simple, puits suffisant ou neutre que rien ne pouvait payer. Le puits n’est pas transmis : il est réestimé à partir des pertes visibles. Les demandes sortantes ne sont pas décodées.</p>
+      <p>{OBSERVATIONS.attempts.length} tentatives serveur disponibles, dont {OBSERVATIONS.attempts.filter(a => a.before_known).length} avec un jet avant connu. Les demandes sortantes ne sont pas décodées ; le puits initial et le type exact de chaque rune ne sont pas établis. Cette série ne mesure pas un taux universel de réussite.</p>
+      <div className="fm-table-scroll"><table><thead><tr><th>Capture</th><th>Résultat serveur</th><th>Écart observé</th></tr></thead><tbody>{OBSERVATIONS.attempts.map((a, i) => <tr key={i}><td>{i + 1}</td><td>{a.result === 'success' ? 'Réussite' : 'Échec'}</td><td>{a.before_known ? deltaText(Object.fromEntries(Object.entries(FM_STATS).flatMap(([s, d]) => a.stat_deltas?.[d.effect] ? [[s, a.stat_deltas[d.effect]]] : []))) : 'Jet précédent non capturé'}</td></tr>)}</tbody></table></div>
       <p>Variantes non simulées : {RUNES.filter(r => !r.supported).map(r => r.name).join(', ')}. Signature, progression des métiers, brisage et économie des runes ne sont pas simulés.</p>
       <ul>{FORGE_SOURCES.map(s => <li key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.label}</a></li>)}</ul>
     </details>

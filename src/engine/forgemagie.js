@@ -1,5 +1,4 @@
 import DATA from './forgemagieData.json';
-import CALIBRATION from './forgemagieCalibration.json';
 import { createRng } from './rng';
 import { FM_STATS, FORGE_MODEL, naturalBounds, extraWeight, statLimit, validateForgedItem } from './forgedItems';
 
@@ -30,26 +29,8 @@ export function forgeCheck(item, state, reagent) {
   return '';
 }
 
-// One law for every rune (scripts/fit_forgemagie.py → forgemagieCalibration.json).
-// X, the weight at stake, is the rune's weight on a natural line and the whole
-// line's weight after the rune for an over or exo (the quantity the 101 cap limits).
-// The weight sets one score r = K / X − M (in %), which the 2009 devblog split
-// turns into the three results: SC = r within [1, 66]; N stays at 50 and only
-// shrinks when r leaves [0, 50] (very easy → SC, very hard → EC); EC = rest.
-// K and M are fitted on the captured server attempts and rounded inside their
-// 95 % interval; this is a measured reconstruction, not Ankama's source code.
-// Natural lines keep the devblog cap (66, 43 near the max, lower on complex items).
-export const WEIGHT_LAW = { K: CALIBRATION.adopted.K, M: CALIBRATION.adopted.M };
-
-export const lawScore = stake => WEIGHT_LAW.K / stake - WEIGHT_LAW.M;
-
-export function stakeWeight(item, state, reagent) {
-  const bounds = naturalBounds(item);
-  const current = state.stats[reagent.stat] || 0;
-  const natural = bounds[reagent.stat] && current + reagent.power <= Math.max(0, bounds[reagent.stat].max);
-  return round((natural ? reagent.power : current + reagent.power) * FM_STATS[reagent.stat].weight);
-}
-
+// Published historic anchors, interpolated for this simulator. These are NOT
+// Ankama's recovered formula and are not fitted to the 40 mixed observations.
 export function forgeChances(item, state, reagent, { guaranteedSuccess = false } = {}) {
   const reason = forgeCheck(item, state, reagent);
   if (reason) return { allowed: false, reason, SC: 0, SN: 0, EC: 1, estimated: true, model: FORGE_MODEL };
@@ -75,23 +56,27 @@ export function forgeChances(item, state, reagent, { guaranteedSuccess = false }
   const extra = extraWeight(item, state.stats);
   // Small runes become progressively unsuitable above ~20 times their gain.
   const sizePenalty = Math.exp(-Math.max(0, current / (power * 20) - 1));
-  let cap = .66;
+  let SC, SN;
   if (mode === 'normal') {
     const nearMax = bounds[stat].min !== bounds[stat].max && current + power > .8 * max;
-    cap = nearMax ? .43 - .28 * complexity : .66 - .30 * complexity * quality;
-    cap = clamp(cap * Math.exp(-extra / 50) * sizePenalty, .01, .66);
+    SC = nearMax ? .43 - .28 * complexity : .66 - .30 * complexity * quality;
+    SC = clamp(SC * Math.exp(-extra / 50) * sizePenalty, .01, .66);
+    SN = Math.min(.5, (1 - SC) * (SC >= .5 ? 1 : .9)) * Math.exp(-extra / 100) * sizePenalty;
+  } else if (FM_STATS[stat].weight >= 30) {
+    // Conventional heavy-exo reconstruction; a reservoir does not improve 1%.
+    SC = .01; SN = 0;
+  } else {
+    const pressure = clamp(extraWeight(item, { ...state.stats, [stat]: current + power }) / 101, 0, 1);
+    const difficulty = Math.pow(1 - pressure, 2) * sizePenalty;
+    SC = clamp((.32 - .17 * complexity) * difficulty, .01, .32);
+    SN = .5 * difficulty;
   }
-  const stake = stakeWeight(item, state, reagent);
-  const score = Math.min(100 * cap, lawScore(stake));
-  let SC = clamp(score, 1, 66);
-  let SN = clamp(Math.min(50, score + 50, 100 - SC), 0, 50);
-  // Nothing can pay a neutral result: the server reports it as a failure without effect.
   const canPay = state.puits > 0 || Object.entries(state.stats).some(([s, n]) => n > Math.min(0, bounds[s]?.min || 0));
   if (!canPay) SN = 0;
-  SC = round(SC / 100);
-  SN = round(SN / 100);
-  return { allowed: true, SC, SN, EC: round(Math.max(0, 1 - SC - SN)), estimated: true, mode, model: FORGE_MODEL,
-    factors: { stake, score: round(score), cap: round(cap), complexity: round(complexity), quality: round(quality), extraWeight: round(extra), sizePenalty: round(sizePenalty) } };
+  SN = round(clamp(SN, 0, Math.min(.5, 1 - SC)));
+  SC = round(SC);
+  return { allowed: true, SC, SN, EC: round(1 - SC - SN), estimated: true, mode, model: FORGE_MODEL,
+    factors: { complexity: round(complexity), quality: round(quality), extraWeight: round(extra), sizePenalty: round(sizePenalty) } };
 }
 
 export function statDeltas(before, after) {
@@ -194,10 +179,7 @@ export function forgeAttempt(item, state, reagent, options) {
     if (outcome !== 'SC') {
       // Assess losses against the existing item, not a provisional new bonus.
       ({ loss, fromPuits } = payLoss(item, stats, cost, puits, rng, reagent.stat));
-      // A neutral result that its own line pays in full leaves no gain: the server
-      // reports that case as a failure without loss (captured Gelano, Ra Vi 30 → 60).
-      const selfPaid = outcome === 'SN' && (stats[reagent.stat] || 0) + reagent.power <= (state.stats[reagent.stat] || 0);
-      if (outcome === 'SN' && (selfPaid || fromPuits + loss.weight < cost)) {
+      if (outcome === 'SN' && fromPuits + loss.weight < cost) {
         // The devblog describes an unfunded neutral result as no change. Never
         // create a free gain or a reservoir from a bonus that was not applied.
         neutralized = true;

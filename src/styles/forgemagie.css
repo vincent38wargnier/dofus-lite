@@ -92,7 +92,6 @@
 .fm-probability-bar .sc { background: #75964b; }.fm-probability-bar .sn { background: #c8ad5d; }.fm-probability-bar .ec { background: #b7715f; }
 .fm-chances dl { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 5px 0; }
 .fm-chances dt { font-size: 10px; color: #72775e; }.fm-chances dd { font-weight: 700; font-size: 17px; margin: 2px 0; }
-.fm-stake { margin: 2px 0 0; font-size: 11px; color: #585e3b; }
 .fm-actions { display: flex; flex-wrap: wrap; gap: 8px; }.fm-actions .btn { display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 12px; padding: 10px 12px; }
 .fm-actions .fm-fuse { flex: 1; background: #677d36; color: #fff; border-color: #5b702e; }
 .fm-actions .fm-stop { color: #9d3e2e; }

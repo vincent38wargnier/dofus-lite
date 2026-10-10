@@ -48,39 +48,6 @@ test('natural restoration and 101 caps distinguish a Gelano AP from an exotic AP
   expect(forgeChances(coco, { ...initial(), stats: { ...initial().stats, pa: 1 } }, rune(1558)).allowed).toBe(false);
 });
 
-test('one weight law: the weight at stake sets the score, the devblog split sets SC/SN/EC', () => {
-  const gelano = ITEMS[2469], state = initial(gelano);
-  const at = (stats, id, puits = 0) => forgeChances(gelano, { ...state, stats, puits }, rune(id));
-  // First Ra Vi on a PA-only Gelano: 7.5 at stake, score 1000/7.5 − 70 ≈ 63 (captured 7 SC / 4 N / 0 EC).
-  expect(at({ pa: 1 }, 1554)).toMatchObject({ SC: .633333, SN: .366667, EC: 0, mode: 'exo', factors: { stake: 7.5 } });
-  // The second Ra Vi puts the whole 60-vitality line at stake (captured 0 SC / 7 N / 7 EC).
-  expect(at({ pa: 1, vitalite: 30 }, 1554)).toMatchObject({ SC: .01, SN: .466667, EC: .523333, factors: { stake: 15 } });
-  // Ra Sa on an emptied Gelano: SC stays at the 1 % floor; nothing can pay a neutral result.
-  expect(at({ pa: 0 }, 1552)).toMatchObject({ SC: .01, SN: 0, EC: .99, factors: { stake: 30 } });
-  expect(at({ pa: 0 }, 1552, 10)).toMatchObject({ SC: .01, SN: .133333, EC: .856667 });
-  // Heavy stakes (exo PA/PM, PA restoration) end at the devblog minimum 1/0/99.
-  expect(at({ pa: 0 }, 1557, 10)).toMatchObject({ SC: .01, SN: 0, EC: .99, mode: 'normal', factors: { stake: 100 } });
-  expect(forgeChances(coco, initial(), rune(1557))).toMatchObject({ SC: .01, SN: 0, EC: .99, mode: 'exo' });
-  // Light runes on natural lines keep the devblog cap: the weight term does not bind.
-  const sa = forgeChances(coco, { ...initial(), stats: { ...initial().stats, sagesse: 12 } }, rune(1521));
-  expect(sa).toMatchObject({ mode: 'normal', factors: { stake: 3 } });
-  expect(sa.SC).toBeCloseTo(sa.factors.cap, 6);
-  // Over a natural maximum, the whole line is at stake: 16 sagesse weigh 48.
-  expect(forgeChances(coco, { ...initial(), stats: { ...initial().stats, sagesse: 15 } }, rune(1521)))
-    .toMatchObject({ mode: 'over', SC: .01, factors: { stake: 48 } });
-  // The heavier the stake, the lower the score and SC.
-  const ladder = [0, 30, 60, 90].map(v => at({ pa: 1, vitalite: v }, 1554).factors.score);
-  ladder.slice(1).forEach((score, i) => expect(score).toBeLessThan(ladder[i]));
-});
-
-test('a neutral result paid entirely by its own line leaves the item unchanged', () => {
-  const item = ITEMS[2469], state = { ...initial(item), stats: { pa: 1, vitalite: 30 } };
-  const next = findResult(item, state, rune(1554), 'SN', n => n.history.at(-1).neutralized);
-  expect(next.stats).toEqual(state.stats);
-  expect(next.puits).toBe(0);
-  expect(next.history.at(-1)).toMatchObject({ added: 0, deltas: {}, loss: { cancelled: true } });
-});
-
 test('SC adds the whole rune and never consumes the reservoir or other stats', () => {
   const state = { ...initial(), stats: { ...initial().stats, sagesse: 10 }, puits: 20 };
   const next = findResult(coco, state, rune(1521), 'SC');
@@ -152,31 +119,24 @@ test.each(['SN', 'EC'])('%s debits a reservoir first, preventing losses while su
   expect(statDeltas(state.stats, next.stats)).toEqual(outcome === 'SN' ? { sagesse: 1 } : {});
 });
 
-// Completing a natural line near its maximum lets a light rune fail.
-const nearMaxSagesse = effects => {
-  const item = { ...coco, effects: [...effects, [124, 1, 10, '']] };
-  return { item, state: { ...initial(item), stats: { ...initial(item).stats, sagesse: 9 } } };
-};
-
 test('losing one damage to a failed Sa rune creates 20 - 3 = 17 puits', () => {
-  const { item, state } = nearMaxSagesse([[112, 1, 3, '']]);
+  const item = { ...coco, effects: [[112, 1, 3, '']] }, state = initial(item);
   const next = findResult(item, state, rune(1521), 'EC', n => n.stats.damage < state.stats.damage);
-  expect(next.stats).toEqual({ ...state.stats, damage: 2 });
+  expect(next.stats.damage).toBe(2);
   expect(next.puits).toBe(17);
   expect(next.history.at(-1).loss).toMatchObject({ lost: { damage: 1 }, weight: 20 });
 });
 
 test('a partially funded attempt only pays the remaining cost from characteristics', () => {
-  const { item, state: base } = nearMaxSagesse([[112, 1, 3, '']]), state = { ...base, puits: 2 };
+  const item = { ...coco, effects: [[112, 1, 3, '']] }, state = { ...initial(item), puits: 2 };
   const next = findResult(item, state, rune(1521), 'EC', n => n.stats.damage < state.stats.damage);
   expect(next.puits).toBe(19);
   expect(next.history.at(-1).fromPuits).toBe(2);
 });
 
 test.each(['pa', 'pm', 'range', 'crit', 'damage'])('a light rune can spare an isolated heavy %s line on any item', stat => {
-  // Fo completes a 0–1 force line: the attempt can fail, and force (at 0) cannot pay.
-  const item = { ...coco, id: 900000, effects: [[FM_STATS[stat].effect, 1, 1, ''], [118, 0, 1, '']] };
-  const state = { ...initial(item), stats: { ...initial(item).stats, force: 0 } };
+  const item = { ...coco, id: 900000, effects: [[FM_STATS[stat].effect, 1, 1, '']] };
+  const state = initial(item);
   const spared = findResult(item, state, rune(1519), 'EC', n => n.stats[stat] === 1);
   expect(spared.stats).toEqual(state.stats);
   expect(spared.puits).toBe(0);
@@ -190,19 +150,20 @@ test.each(['pa', 'pm', 'range', 'crit', 'damage'])('a light rune can spare an is
   expect(dropped.history.at(-1).loss.checks[0].spared).toBe(false);
 });
 
-test('Gelano attempts expose PA progressively more with Fo, Pa Fo, Ra Fo and Ga Pme', () => {
+test('Gelano failures expose PA progressively more with Fo, Pa Fo, Ra Fo and Ga Pme', () => {
   const item = ITEMS[2469], state = initial(item);
-  // Independent attempts on the same initial jet, not an evolving item. Light
-  // runes never fail here; the PA can only pay for their neutral results.
+  // Independent attempts on the same initial jet, not an evolving item.
   const rates = [1519, 1545, 1551, 1558].map(id => {
-    let dropped = 0;
-    const attempts = 5000;
-    for (let seed = 0; seed < attempts; seed++) {
-      if (forgeAttempt(item, { ...state, rngState: seed }, rune(id)).stats.pa === 0) dropped++;
+    let failed = 0, dropped = 0;
+    for (let seed = 0; seed < 5000; seed++) {
+      const next = forgeAttempt(item, { ...state, rngState: seed }, rune(id));
+      if (next.history.at(-1).outcome !== 'EC') continue;
+      failed++;
+      if (next.stats.pa === 0) dropped++;
     }
     expect(dropped).toBeGreaterThan(0);
-    expect(dropped).toBeLessThan(attempts);
-    return dropped / attempts;
+    expect(dropped).toBeLessThan(failed);
+    return dropped / failed;
   });
   expect(rates[0]).toBeLessThan(.05);
   expect(rates[3]).toBeGreaterThan(.8);
@@ -220,8 +181,8 @@ test('a spared PA makes a neutral result inert, without a free bonus or fabricat
 });
 
 test('insufficient funding cancels a neutral result, including tentative losses and puits consumption', () => {
-  const item = ITEMS[2469], state = { ...initial(item), stats: { pa: 0, force: 5 }, puits: 20 };
-  const next = findResult(item, state, rune(1552), 'SN');
+  const item = ITEMS[2469], state = { ...initial(item), stats: { pa: 0, force: 30 }, puits: 20 };
+  const next = findResult(item, state, rune(1557), 'SN');
   expect(next.stats).toEqual(state.stats);
   expect(next.puits).toBe(20);
   expect(next.history.at(-1)).toMatchObject({ neutralized: true, added: 0, fromPuits: 0, deltas: {}, loss: { weight: 0 } });
@@ -236,23 +197,22 @@ test('remaining debt after puits can spare a heavy line without creating a negat
 });
 
 test('a spared line does not prevent losses on another available characteristic', () => {
-  const { item, state } = nearMaxSagesse([[111, 1, 1, ''], [118, 10, 10, '']]);
-  const next = findResult(item, state, rune(1521), 'EC', n => n.history.at(-1).loss.checks.some(c => c.stat === 'pa' && c.spared)
-    && n.stats.sagesse === 9);
-  expect(next.stats).toEqual({ pa: 1, force: 7, sagesse: 9 });
+  const item = { ...coco, effects: [[111, 1, 1, ''], [118, 10, 10, '']] }, state = initial(item);
+  const next = findResult(item, state, rune(1521), 'EC', n => n.history.at(-1).loss.checks.some(c => c.stat === 'pa' && c.spared));
+  expect(next.stats).toEqual({ pa: 1, force: 7 });
   expect(next.puits).toBe(0);
 });
 
 test('Gelano can lose PA, use the resulting puits, then restore PA while keeping its extra stat', () => {
   const item = ITEMS[2469];
-  const dropped = findResult(item, initial(item), rune(1551), 'EC', n => n.stats.pa === 0);
-  expect(dropped.puits).toBe(90);
+  const dropped = findResult(item, initial(item), rune(1521), 'EC', n => n.stats.pa === 0);
+  expect(dropped.puits).toBe(97);
   const boosted = findResult(item, dropped, rune(1545), 'SN');
   expect(boosted.stats).toEqual({ pa: 0, force: 3 });
-  expect(boosted.puits).toBe(87);
+  expect(boosted.puits).toBe(94);
   const restored = findResult(item, boosted, rune(1557), 'SC');
   expect(restored.stats).toEqual({ pa: 1, force: 3 });
-  expect(restored.puits).toBe(87);
+  expect(restored.puits).toBe(94);
   expect(validateForgedItem(item, restored)).toBe('');
 });
 

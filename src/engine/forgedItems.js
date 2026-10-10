@@ -3,7 +3,7 @@
 import DATA from './forgemagieData.json';
 
 export const FM_STATS = DATA.stats;
-export const FORGE_MODEL = 'retro-reconstruction-v4';
+export const FORGE_MODEL = 'retro-reconstruction-v3';
 const record = x => !!x && typeof x === 'object' && !Array.isArray(x);
 const integer = x => Number.isSafeInteger(x) && x >= 0;
 const blocked = new Set(DATA.nonMageableIds);
