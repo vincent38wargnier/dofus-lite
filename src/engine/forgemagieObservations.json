@@ -1,0 +1,1054 @@
+{
+  "version": 1,
+  "date": "2026-10-09",
+  "attempts": [
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": false,
+      "after_stats": {
+        "124": 12,
+        "119": 29,
+        "112": 5,
+        "174": 174,
+        "176": 2,
+        "125": 35
+      },
+      "information": [
+        117
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 12,
+        "119": 29,
+        "112": 5,
+        "174": 174,
+        "176": 2,
+        "125": 35
+      },
+      "after_stats": {
+        "124": 13,
+        "119": 29,
+        "112": 5,
+        "174": 174,
+        "176": 2,
+        "125": 35
+      },
+      "stat_deltas": {
+        "124": 1
+      },
+      "information": [],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 13,
+        "119": 29,
+        "112": 5,
+        "174": 174,
+        "176": 2,
+        "125": 35
+      },
+      "after_stats": {
+        "124": 14,
+        "119": 29,
+        "112": 5,
+        "174": 174,
+        "176": 2,
+        "125": 35
+      },
+      "stat_deltas": {
+        "124": 1
+      },
+      "information": [],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 14,
+        "119": 29,
+        "112": 5,
+        "174": 174,
+        "176": 2,
+        "125": 35
+      },
+      "after_stats": {
+        "124": 15,
+        "119": 27,
+        "112": 5,
+        "174": 174,
+        "176": 2,
+        "125": 31
+      },
+      "stat_deltas": {
+        "119": -2,
+        "124": 1,
+        "125": -4
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": true,
+      "before_stats": {
+        "124": 15,
+        "119": 27,
+        "112": 5,
+        "174": 174,
+        "176": 2,
+        "125": 31
+      },
+      "after_stats": {
+        "124": 15,
+        "119": 27,
+        "112": 4,
+        "174": 174,
+        "176": 2,
+        "125": 31
+      },
+      "stat_deltas": {
+        "112": -1
+      },
+      "information": [
+        117
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 15,
+        "119": 27,
+        "112": 4,
+        "174": 174,
+        "176": 2,
+        "125": 31
+      },
+      "after_stats": {
+        "124": 15,
+        "119": 30,
+        "112": 4,
+        "174": 174,
+        "176": 2,
+        "125": 31
+      },
+      "stat_deltas": {
+        "119": 3
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": true,
+      "before_stats": {
+        "124": 15,
+        "119": 30,
+        "112": 4,
+        "174": 174,
+        "176": 2,
+        "125": 31
+      },
+      "after_stats": {
+        "124": 15,
+        "119": 30,
+        "112": 4,
+        "174": 174,
+        "176": 2,
+        "125": 31
+      },
+      "stat_deltas": {},
+      "information": [
+        183
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": true,
+      "before_stats": {
+        "124": 15,
+        "119": 30,
+        "112": 4,
+        "174": 174,
+        "176": 2,
+        "125": 31
+      },
+      "after_stats": {
+        "124": 14,
+        "119": 30,
+        "112": 4,
+        "174": 174,
+        "176": 2,
+        "125": 31
+      },
+      "stat_deltas": {
+        "124": -1
+      },
+      "information": [
+        117
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": true,
+      "before_stats": {
+        "124": 14,
+        "119": 30,
+        "112": 4,
+        "174": 174,
+        "176": 2,
+        "125": 31
+      },
+      "after_stats": {
+        "124": 12,
+        "119": 30,
+        "112": 4,
+        "174": 174,
+        "176": 1,
+        "125": 31
+      },
+      "stat_deltas": {
+        "176": -1,
+        "124": -2
+      },
+      "information": [
+        117
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 12,
+        "119": 30,
+        "112": 4,
+        "174": 174,
+        "176": 1,
+        "125": 31
+      },
+      "after_stats": {
+        "124": 12,
+        "119": 30,
+        "112": 5,
+        "174": 174,
+        "176": 1,
+        "125": 31
+      },
+      "stat_deltas": {
+        "112": 1
+      },
+      "information": [],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 12,
+        "119": 30,
+        "112": 5,
+        "174": 174,
+        "176": 1,
+        "125": 31
+      },
+      "after_stats": {
+        "124": 13,
+        "119": 30,
+        "112": 5,
+        "174": 169,
+        "176": 1,
+        "125": 29
+      },
+      "stat_deltas": {
+        "174": -5,
+        "124": 1,
+        "125": -2
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 13,
+        "119": 30,
+        "112": 5,
+        "174": 169,
+        "176": 1,
+        "125": 29
+      },
+      "after_stats": {
+        "124": 14,
+        "119": 28,
+        "112": 5,
+        "174": 169,
+        "125": 29
+      },
+      "stat_deltas": {
+        "119": -2,
+        "176": -1,
+        "124": 1
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": true,
+      "before_stats": {
+        "124": 14,
+        "119": 28,
+        "112": 5,
+        "174": 169,
+        "125": 29
+      },
+      "after_stats": {
+        "124": 14,
+        "119": 27,
+        "112": 5,
+        "174": 169,
+        "125": 28
+      },
+      "stat_deltas": {
+        "119": -1,
+        "125": -1
+      },
+      "information": [
+        117
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": true,
+      "before_stats": {
+        "124": 14,
+        "119": 27,
+        "112": 5,
+        "174": 169,
+        "125": 28
+      },
+      "after_stats": {
+        "124": 14,
+        "119": 27,
+        "112": 5,
+        "174": 138,
+        "125": 28
+      },
+      "stat_deltas": {
+        "174": -31
+      },
+      "information": [
+        117
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 14,
+        "119": 27,
+        "112": 5,
+        "174": 138,
+        "125": 28
+      },
+      "after_stats": {
+        "124": 15,
+        "119": 27,
+        "112": 5,
+        "174": 138,
+        "125": 28
+      },
+      "stat_deltas": {
+        "124": 1
+      },
+      "information": [],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 15,
+        "119": 27,
+        "112": 5,
+        "174": 138,
+        "125": 28
+      },
+      "after_stats": {
+        "124": 15,
+        "119": 27,
+        "112": 5,
+        "174": 168,
+        "125": 28
+      },
+      "stat_deltas": {
+        "174": 30
+      },
+      "information": [],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": true,
+      "before_stats": {
+        "124": 15,
+        "119": 27,
+        "112": 5,
+        "174": 168,
+        "125": 28
+      },
+      "after_stats": {
+        "124": 15,
+        "119": 25,
+        "112": 5,
+        "174": 168,
+        "125": 22
+      },
+      "stat_deltas": {
+        "119": -2,
+        "125": -6
+      },
+      "information": [
+        117
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 15,
+        "119": 25,
+        "112": 5,
+        "174": 168,
+        "125": 22
+      },
+      "after_stats": {
+        "124": 15,
+        "119": 22,
+        "112": 5,
+        "174": 198,
+        "125": 19
+      },
+      "stat_deltas": {
+        "119": -3,
+        "174": 30,
+        "125": -3
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": true,
+      "before_stats": {
+        "124": 15,
+        "119": 22,
+        "112": 5,
+        "174": 198,
+        "125": 19
+      },
+      "after_stats": {
+        "124": 15,
+        "119": 22,
+        "112": 5,
+        "174": 198,
+        "125": 7
+      },
+      "stat_deltas": {
+        "125": -12
+      },
+      "information": [
+        117
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 15,
+        "119": 22,
+        "112": 5,
+        "174": 198,
+        "125": 7
+      },
+      "after_stats": {
+        "124": 14,
+        "119": 25,
+        "112": 5,
+        "174": 186
+      },
+      "stat_deltas": {
+        "119": 3,
+        "174": -12,
+        "124": -1,
+        "125": -7
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 14,
+        "119": 25,
+        "112": 5,
+        "174": 186
+      },
+      "after_stats": {
+        "124": 13,
+        "119": 28,
+        "112": 5,
+        "174": 186
+      },
+      "stat_deltas": {
+        "124": -1,
+        "119": 3
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 13,
+        "119": 28,
+        "112": 5,
+        "174": 186
+      },
+      "after_stats": {
+        "124": 14,
+        "119": 27,
+        "112": 5,
+        "174": 186
+      },
+      "stat_deltas": {
+        "124": 1,
+        "119": -1
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 14,
+        "119": 27,
+        "112": 5,
+        "174": 186
+      },
+      "after_stats": {
+        "124": 14,
+        "119": 30,
+        "112": 5,
+        "174": 186
+      },
+      "stat_deltas": {
+        "119": 3
+      },
+      "information": [],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 14,
+        "119": 30,
+        "112": 5,
+        "174": 186
+      },
+      "after_stats": {
+        "124": 12,
+        "119": 28,
+        "112": 5,
+        "174": 186,
+        "125": 30
+      },
+      "stat_deltas": {
+        "119": -2,
+        "124": -2,
+        "125": 30
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 12,
+        "119": 28,
+        "112": 5,
+        "174": 186,
+        "125": 30
+      },
+      "after_stats": {
+        "124": 13,
+        "119": 28,
+        "112": 5,
+        "174": 164,
+        "125": 26
+      },
+      "stat_deltas": {
+        "174": -22,
+        "124": 1,
+        "125": -4
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 13,
+        "119": 28,
+        "112": 5,
+        "174": 164,
+        "125": 26
+      },
+      "after_stats": {
+        "124": 12,
+        "119": 28,
+        "112": 5,
+        "174": 194,
+        "125": 26
+      },
+      "stat_deltas": {
+        "174": 30,
+        "124": -1
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 12,
+        "119": 28,
+        "112": 5,
+        "174": 194,
+        "125": 26
+      },
+      "after_stats": {
+        "124": 13,
+        "119": 28,
+        "112": 5,
+        "174": 194,
+        "125": 26
+      },
+      "stat_deltas": {
+        "124": 1
+      },
+      "information": [],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 13,
+        "119": 28,
+        "112": 5,
+        "174": 194,
+        "125": 26
+      },
+      "after_stats": {
+        "124": 14,
+        "119": 28,
+        "112": 5,
+        "174": 194,
+        "125": 26
+      },
+      "stat_deltas": {
+        "124": 1
+      },
+      "information": [],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 14,
+        "119": 28,
+        "112": 5,
+        "174": 194,
+        "125": 26
+      },
+      "after_stats": {
+        "124": 15,
+        "119": 28,
+        "112": 5,
+        "174": 194,
+        "125": 26
+      },
+      "stat_deltas": {
+        "124": 1
+      },
+      "information": [],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 15,
+        "119": 28,
+        "112": 5,
+        "174": 194,
+        "125": 26
+      },
+      "after_stats": {
+        "124": 15,
+        "119": 28,
+        "112": 5,
+        "174": 194,
+        "125": 36
+      },
+      "stat_deltas": {
+        "125": 10
+      },
+      "information": [],
+      "quantity_decrease_observed": 0
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 15,
+        "119": 28,
+        "112": 5,
+        "174": 194,
+        "125": 36
+      },
+      "after_stats": {
+        "124": 14,
+        "119": 28,
+        "112": 5,
+        "174": 194,
+        "125": 40
+      },
+      "stat_deltas": {
+        "124": -1,
+        "125": 4
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": true,
+      "before_stats": {
+        "124": 14,
+        "119": 28,
+        "112": 5,
+        "174": 194,
+        "125": 40
+      },
+      "after_stats": {
+        "124": 13,
+        "119": 28,
+        "112": 4,
+        "174": 190,
+        "125": 40
+      },
+      "stat_deltas": {
+        "174": -4,
+        "124": -1,
+        "112": -1
+      },
+      "information": [
+        117
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": true,
+      "before_stats": {
+        "124": 13,
+        "119": 28,
+        "112": 4,
+        "174": 190,
+        "125": 40
+      },
+      "after_stats": {
+        "124": 13,
+        "119": 28,
+        "112": 4,
+        "174": 190,
+        "125": 40
+      },
+      "stat_deltas": {},
+      "information": [
+        183
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": true,
+      "before_stats": {
+        "124": 13,
+        "119": 28,
+        "112": 4,
+        "174": 190,
+        "125": 40
+      },
+      "after_stats": {
+        "124": 13,
+        "119": 28,
+        "112": 4,
+        "174": 190,
+        "125": 40
+      },
+      "stat_deltas": {},
+      "information": [
+        183
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 13,
+        "119": 28,
+        "112": 4,
+        "174": 190,
+        "125": 40
+      },
+      "after_stats": {
+        "124": 13,
+        "119": 27,
+        "112": 4,
+        "174": 190,
+        "125": 48
+      },
+      "stat_deltas": {
+        "119": -1,
+        "125": 8
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": true,
+      "before_stats": {
+        "124": 13,
+        "119": 27,
+        "112": 4,
+        "174": 190,
+        "125": 48
+      },
+      "after_stats": {
+        "124": 13,
+        "119": 19,
+        "112": 4,
+        "174": 190,
+        "125": 48
+      },
+      "stat_deltas": {
+        "119": -8
+      },
+      "information": [
+        117
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 13,
+        "119": 19,
+        "112": 4,
+        "174": 190,
+        "125": 48
+      },
+      "after_stats": {
+        "124": 13,
+        "119": 19,
+        "112": 3,
+        "174": 169,
+        "125": 60
+      },
+      "stat_deltas": {
+        "174": -21,
+        "112": -1,
+        "125": 12
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": true,
+      "before_stats": {
+        "124": 13,
+        "119": 19,
+        "112": 3,
+        "174": 169,
+        "125": 60
+      },
+      "after_stats": {
+        "124": 13,
+        "119": 19,
+        "112": 3,
+        "174": 169,
+        "125": 60
+      },
+      "stat_deltas": {},
+      "information": [
+        183
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "success",
+      "before_known": true,
+      "before_stats": {
+        "124": 13,
+        "119": 19,
+        "112": 3,
+        "174": 169,
+        "125": 60
+      },
+      "after_stats": {
+        "124": 13,
+        "119": 19,
+        "112": 3,
+        "174": 169,
+        "125": 90
+      },
+      "stat_deltas": {
+        "125": 30
+      },
+      "information": [
+        194
+      ],
+      "quantity_decrease_observed": 1
+    },
+    {
+      "template": 9128,
+      "result": "failure",
+      "before_known": true,
+      "before_stats": {
+        "124": 13,
+        "119": 19,
+        "112": 3,
+        "174": 169,
+        "125": 90
+      },
+      "after_stats": {
+        "124": 13,
+        "119": 19,
+        "112": 3,
+        "174": 137,
+        "125": 84
+      },
+      "stat_deltas": {
+        "174": -32,
+        "125": -6
+      },
+      "information": [
+        117
+      ],
+      "quantity_decrease_observed": 1
+    }
+  ],
+  "initialPuitsKnown": false,
+  "runeIdentitiesDecoded": false,
+  "probabilitiesVerified": false,
+  "note": "Captured server outcomes only. Later unrecorded attempts cannot be reconstructed. No fit of pass probabilities."
+}

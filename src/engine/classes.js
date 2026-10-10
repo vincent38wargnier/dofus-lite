@@ -1,10 +1,11 @@
-// The 12 playable classes of Dofus 1.29, built from the REAL spell data
-// (src/engine/spellData.js — AncestraRemake `sorts` + `monsters` tables).
-// Numbers are authentic grade values; damage scales with characteristics.
+// Retro client definitions for all player spell grades. Server target rules
+// and summon stats are separately sourced; see spell-audit.json and README.
 
-import { REAL_SPELLS, REAL_SUMMONS } from './spellData';
+import LIBRARY from './spellLibrary.json';
+import { PARCHMENT_STAT } from './characteristicDefaults';
+export const SPELL_LIBRARY = LIBRARY;
 
-// Display metadata + targeting mode per spell (the dump has no target masks).
+// Stable display keys for the original arena kit; targeting comes from the dump.
 //   targetMode: 'enemy' | 'fighter' | 'cell' | 'freeCell' | 'self'
 const SPELL_META = {
   // Féca
@@ -99,20 +100,24 @@ export const DEFAULT_BUFF_TURNS = 2;
 // Effets qu'aucune ligne du moteur ne simule: filtrés à la construction.
 const isSimulated = (e) => e.kind !== 'ignore' && !e.kind.startsWith('unknown');
 
-function buildSpell(raw) {
+export function buildSpell(raw) {
   // Les 72 sorts historiques gardent leurs clés/émojis choisis à la main
   // (les bots intégrés et les tests s'y réfèrent); les nouveaux sorts du
   // roster complet utilisent les métadonnées dérivées par l'extracteur.
   const meta = SPELL_META[raw.id] || { key: raw.key, name: raw.name, emoji: raw.emoji, targetMode: raw.targetMode };
-  const effects = raw.effects.filter(isSimulated);
-  const critEffects = raw.critEffects.filter(isSimulated);
+  // Keep unimplemented probability rows: they still occupy an interval in
+  // the shared draw (notably Xelor's 90% no-op / 10% AP refund).
+  const effects = raw.effects.filter(e => isSimulated(e) || e.chance > 0);
+  const critEffects = raw.critEffects.filter(e => isSimulated(e) || e.chance > 0);
   const main = effects.find((e) => e.kind === 'damage' || e.kind === 'lifeSteal' || e.kind === 'poison');
   return {
     key: meta.key,
     id: raw.id,
     name: meta.name,
     emoji: meta.emoji,
-    targetMode: meta.targetMode,
+    targetMode: raw.rangeMax === 0 ? 'self' : raw.emptyCellOnly ? 'freeCell' : raw.targetMode,
+    grade: raw.grade,
+    requiredLevel: raw.requiredLevel,
     element: main ? main.element : null,
     pa: raw.pa,
     range: [raw.rangeMin, raw.rangeMax],
@@ -124,22 +129,62 @@ function buildSpell(raw) {
     failRate: raw.failRate,
     endsTurnOnFailure: raw.endsTurnOnFailure,
     usesPerTurn: raw.maxPerTurn,
+    usesPerTarget: raw.maxPerTarget || 0,
+    requiredStates: raw.requiredStates || [],
+    forbiddenStates: raw.forbiddenStates || [],
     cooldown: raw.cooldown,
+    initialCooldown: raw.initialCooldown || 0,
+    auditNotes: LIBRARY.spells[raw.id]?.auditNotes || [],
+    unsupportedEffects: [...new Set([...raw.effects, ...raw.critEffects]
+      .filter(e => !isSimulated(e) && ![666, 149].includes(e.id)).map(e => e.id))],
     effects,
     critEffects,
   };
 }
 
-function buildSpells(classId) {
-  const spells = {};
-  for (const raw of REAL_SPELLS[classId]) {
-    const s = buildSpell(raw);
-    // collision de clés dérivées (deux sorts au même nom) → suffixe par id
-    if (spells[s.key]) s.key = `${s.key}_${s.id}`;
-    spells[s.key] = s;
-  }
-  return spells;
+export function spellAtGrade(id, grade) {
+  const entry = LIBRARY.spells[id];
+  const raw = entry?.grades.find(g => g.grade === grade);
+  return raw ? buildSpell({ ...raw, id: Number(id), name: entry.name }) : null;
 }
+
+export function availableSpellGrades(id, level = 100) {
+  return LIBRARY.spells[id]?.grades.filter(g => g.requiredLevel <= level).map(g => g.grade) || [];
+}
+
+// Default arena preset. Explicit grades still follow the real unlock levels.
+export function defaultSpellGrade(id, level = 100) {
+  const desired = level >= 200 ? 6 : 5;
+  return availableSpellGrades(id, level).filter(grade => grade <= desired).pop();
+}
+
+export function resolveSpellLoadout(classId, loadout = {}) {
+  const level = loadout.level || 100;
+  const config = loadout.spells || {};
+  const errors = [];
+  const common = [...new Set(config.common || [])];
+  const ids = [...(LIBRARY.classes[classId] || []), ...common.filter(id => LIBRARY.common.includes(id))];
+  if (common.some(id => !LIBRARY.common.includes(id))) errors.push('Sort commun inconnu.');
+  const spells = {};
+  for (const id of ids) {
+    const grades = availableSpellGrades(id, level);
+    if (!grades.length) continue;
+    const selected = config.grades?.[id];
+    const grade = selected ?? defaultSpellGrade(id, level);
+    if (!grades.includes(grade)) { errors.push(`${LIBRARY.spells[id].name} : grade inaccessible.`); continue; }
+    const spell = spellAtGrade(id, grade);
+    if (spells[spell.key]) spell.key += `_${spell.id}`;
+    spells[spell.key] = spell;
+  }
+  const order = [...new Set(config.order || [])];
+  const sorted = Object.values(spells).sort((a, b) => {
+    const ai = order.indexOf(a.id), bi = order.indexOf(b.id);
+    return (ai < 0 ? 10000 : ai) - (bi < 0 ? 10000 : bi);
+  });
+  return { spells: Object.fromEntries(sorted.map(s => [s.key, s])), errors, valid: !errors.length };
+}
+
+function buildSpells(classId) { return resolveSpellLoadout(classId).spells; }
 
 export const FIGHTER_LEVEL = 100;
 const BASE_HP = 55 + 5 * (FIGHTER_LEVEL - 1);
@@ -186,10 +231,10 @@ for (const [id, [emoji, description, vita, stats, maxSummons]] of Object.entries
     name: NAMES[id],
     emoji,
     description,
-    baseHp: BASE_HP + vita,
+    baseHp: BASE_HP + vita + PARCHMENT_STAT,
     basePa: 8,
     basePm: 4,
-    stats,
+    stats: { ...Object.fromEntries(Object.entries(stats).map(([stat, value]) => [stat, value + PARCHMENT_STAT])), vitalite: vita + PARCHMENT_STAT },
     maxSummons,
     resistances: { ...NO_RES },
     resistancesFixed: { ...NO_RES },
@@ -203,42 +248,22 @@ export function getSpell(classId, spellKey) {
   return CLASSES[classId]?.spells[spellKey] || null;
 }
 
-// Summons: real monster stats (grade 5) + their real attack spell.
+// Monster stats/rosters come from the separate server SQL, one record per grade.
+const SUMMON_GRADES = {};
 export const SUMMONS = {};
-for (const m of Object.values(REAL_SUMMONS)) {
-  const atk = m.attack ? {
-    key: `atk_${m.key}`,
-    id: m.attack.id,
-    name: m.attack.name.replace('B?co', 'Béco').replace('D?coupage', 'Découpage'),
-    emoji: '🫦',
-    targetMode: 'enemy',
-    element: (m.attack.effects.find((e) => e.kind === 'damage' || e.kind === 'lifeSteal') || {}).element || null,
-    pa: m.attack.pa,
-    range: [m.attack.rangeMin, m.attack.rangeMax],
-    lineOnly: m.attack.lineOnly,
-    needsLos: m.attack.needsLos,
-    emptyCellOnly: false,
-    critRate: m.attack.critRate,
-    failRate: m.attack.failRate,
-    endsTurnOnFailure: m.attack.endsTurnOnFailure,
-    usesPerTurn: m.attack.maxPerTurn,
-    cooldown: m.attack.cooldown,
-    effects: m.attack.effects.filter((e) => e.kind !== 'ignore'),
-    critEffects: m.attack.critEffects.filter((e) => e.kind !== 'ignore'),
-  } : null;
-  SUMMONS[m.monsterId] = {
-    monsterId: m.monsterId,
-    key: m.key,
-    name: m.name,
-    emoji: m.emoji,
-    hp: m.hp,
-    pa: m.pa,
-    pm: m.pm,
-    stats: { ...m.stats },
-    spells: atk ? { [atk.key]: atk } : {},
-  };
+for (const m of Object.values(LIBRARY.summons)) {
+  SUMMON_GRADES[m.monsterId] = {};
+  for (const [grade, raw] of Object.entries(m.grades)) {
+    const spells = Object.fromEntries(raw.spells.map(s => {
+      const spell = buildSpell(s);
+      return [spell.key, spell];
+    }));
+    SUMMON_GRADES[m.monsterId][grade] = { ...m, ...raw, grades: undefined, spells };
+  }
+  SUMMONS[m.monsterId] = SUMMON_GRADES[m.monsterId][5] || Object.values(SUMMON_GRADES[m.monsterId])[0];
 }
 
-export function getSummonSpell(monsterId, spellKey) {
-  return SUMMONS[monsterId]?.spells[spellKey] || null;
+export function getSummon(monsterId, grade = 5) { return SUMMON_GRADES[monsterId]?.[grade] || null; }
+export function getSummonSpell(monsterId, spellKey, grade = 5) {
+  return getSummon(monsterId, grade)?.spells[spellKey] || null;
 }

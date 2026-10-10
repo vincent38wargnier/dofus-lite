@@ -29,6 +29,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 MAPS_JSON = ROOT / 'OblivionRetro/AivyDofus/Resources/Maps.json'
 OUT_JS = ROOT / 'src/engine/dofusMaps.js'
+PLACEMENTS_JSON = ROOT / 'scripts/map_placements.json'
+DEFAULT_MAPS = [5383, 1571, 6170, 6173, 1735, 2095, 2195, 6158,
+                6167, 9750, 4, 1720, 8313, 999, 1907, 2073, 7423, 952]
+PVP_MAPS = {7423: ('Astrub PvP', '[5,-23]'), 952: ('Amakna PvP', '[-1,0]')}
 
 ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'
 H = {c: i for i, c in enumerate(ALPHABET)}
@@ -40,6 +44,12 @@ FLOOR, BLOCK, WATER, VOID = 'floor', 'block', 'water', 'void'
 # VOID:  outside the playable diamond
 
 
+def cell_xy(cid, width):
+    row = cid // (width * 2 - 1)
+    y = row - ((cid - row * (width * 2 - 1)) % width)
+    return (cid - (width - 1) * y) // width, y
+
+
 def decode(m):
     data = m['MapData']
     w = m['Width']
@@ -49,9 +59,7 @@ def decode(m):
         active = (b[0] & 32) != 0
         see_through = (b[0] & 1) == 1
         walkable = ((b[2] & 56) >> 3) != 0
-        row = cid // (w * 2 - 1)
-        y = row - ((cid - row * (w * 2 - 1)) % w)
-        x = (cid - (w - 1) * y) // w
+        x, y = cell_xy(cid, w)
         if not active:
             kind = VOID
         elif walkable and see_through:
@@ -164,13 +172,16 @@ def score(a):
 
 def ascii_art(a):
     sym = {FLOOR: '·', BLOCK: '█', WATER: '~', VOID: ' '}
+    starts = a.get('startingCells', [[dict(zip(('x', 'y'), a['spawnA']))],
+                                    [dict(zip(('x', 'y'), a['spawnB']))]])
+    teams = [{(c['x'], c['y']) for c in team} for team in starts]
     rows = []
     for y, row in enumerate(a['grid']):
         line = ''
         for x, k in enumerate(row):
-            if (x, y) == a['spawnA']:
+            if (x, y) in teams[0]:
                 line += 'A'
-            elif (x, y) == a['spawnB']:
+            elif (x, y) in teams[1]:
                 line += 'B'
             else:
                 line += sym[k]
@@ -184,8 +195,66 @@ def slugify(name, map_id):
     return f"{s}_{map_id}"
 
 
+def decode_places(places):
+    """Server GP payload: two encoded team lists, two characters per cell."""
+    teams = places.split('|')
+    if len(teams) != 2 or any(not team or len(team) % 2 for team in teams):
+        raise ValueError('Starting places must contain two nonempty teams')
+    if any(c not in H for team in teams for c in team):
+        raise ValueError('Invalid character in starting places')
+    ids = [[H[team[i]] * 64 + H[team[i + 1]] for i in range(0, len(team), 2)]
+           for team in teams]
+    flat = ids[0] + ids[1]
+    if len(set(flat)) != len(flat):
+        raise ValueError('Duplicate or overlapping starting cells')
+    return ids
+
+
+def starting_placement(m, a, record):
+    """Never silently filter/fix a historical list or invent missing cells."""
+    if record['status'] != 'historical':
+        cells = [[{'x': a['spawnA'][0], 'y': a['spawnA'][1]}],
+                 [{'x': a['spawnB'][0], 'y': a['spawnB'][1]}]]
+        return cells, {'status': 'local', 'reason': record['reason']}
+    if (record['width'], record['height']) != (m['Width'], m['Height']):
+        raise ValueError(f"Map {m['MapId']}: placement dimensions mismatch")
+    decoded = decode(m)
+    occupied = [p for p, kind in decoded.items() if kind != VOID]
+    x0 = min(p[0] for p in occupied)
+    y0 = min(p[1] for p in occupied)
+    main = set(components(a['grid'])[0])
+    teams = []
+    for ids in decode_places(record['places']):
+        team = []
+        for cid in ids:
+            x, y = cell_xy(cid, m['Width'])
+            if not 0 <= cid < len(m['MapData']) // 10 or decoded.get((x, y)) != FLOOR:
+                raise ValueError(f"Map {m['MapId']}: blocked/invalid starting cell {cid}")
+            if (x - x0, y - y0) not in main:
+                raise ValueError(f"Map {m['MapId']}: disconnected starting cell {cid}")
+            team.append({'x': x - x0, 'y': y - y0, 'cellId': cid})
+        teams.append(team)
+    return teams, {k: record[k] for k in ('status', 'source', 'places', 'width', 'height')}
+
+
+def distance_between(grid, start, end):
+    distances = {tuple(start): 0}
+    queue = deque([tuple(start)])
+    while queue:
+        x, y = queue.popleft()
+        if (x, y) == tuple(end):
+            return distances[(x, y)]
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            p = x + dx, y + dy
+            if (0 <= p[1] < len(grid) and 0 <= p[0] < len(grid[0])
+                    and grid[p[1]][p[0]] == FLOOR and p not in distances):
+                distances[p] = distances[(x, y)] + 1
+                queue.append(p)
+    raise ValueError('Disconnected starting cells')
+
+
 def load():
-    return json.load(open(MAPS_JSON))
+    return json.loads(MAPS_JSON.read_text())
 
 
 def cmd_report():
@@ -216,17 +285,33 @@ def cmd_show(map_id):
     maps = load()
     m = next(x for x in maps if x['MapId'] == map_id)
     a = analyze(m)
+    record = json.loads(PLACEMENTS_JSON.read_text())['maps'].get(str(map_id), {
+        'status': 'local', 'reason': 'No reviewed historical starting cells available.',
+    })
+    a['startingCells'], metadata = starting_placement(m, a, record)
     print(f"{m['AreaName']} {m['Coordinate']} (mapId {map_id}) {a['w']}x{a['h']}")
+    print(f"Placement: {metadata['status']} — A / B mark the two starting zones")
     print(ascii_art(a))
 
 
 def cmd_generate(map_ids):
     maps = load()
     by_id = {m['MapId']: m for m in maps}
+    placements = json.loads(PLACEMENTS_JSON.read_text())
     entries = []
     for mid in map_ids:
         m = by_id[mid]
+        pvp = PVP_MAPS.get(mid)
+        if pvp and m['Coordinate'] != pvp[1]:
+            raise ValueError(f'Map {mid} does not match the requested PvP coordinates {pvp[1]}')
         a = analyze(m)
+        if not a or a['diameter'] < 8 or a['main_ratio'] < .9:
+            raise ValueError(f'Map {mid} has no suitable connected combat area')
+        record = placements['maps'].get(str(mid), {
+            'status': 'local', 'reason': 'No reviewed historical starting cells available.',
+        })
+        starting_cells, placement = starting_placement(m, a, record)
+        spawns = [{k: team[0][k] for k in ('x', 'y')} for team in starting_cells]
         obstacles = []
         for y, row in enumerate(a['grid']):
             for x, k in enumerate(row):
@@ -238,11 +323,17 @@ def cmd_generate(map_ids):
                     obstacles.append({'x': x, 'y': y, 't': 'VOID'})
         entries.append({
             'id': slugify(m['AreaName'], m['MapId']),
-            'name': f"{m['AreaName']} {m['Coordinate']}",
+            'name': f"{pvp[0] if pvp else m['AreaName']} {m['Coordinate']}",
+            **({'frameToCells': True} if pvp else {}),
+            'sourceId': mid, 'area': m['AreaName'], 'coordinate': m['Coordinate'],
+            'walkableCells': a['floor'],
+            'spawnDistance': distance_between(a['grid'],
+                                             (spawns[0]['x'], spawns[0]['y']),
+                                             (spawns[1]['x'], spawns[1]['y'])),
             'description': f"Carte Dofus authentique ({m['GlobalAreaName']}), mapId {m['MapId']}.",
             'width': a['w'], 'height': a['h'],
-            'spawns': [{'x': a['spawnA'][0], 'y': a['spawnA'][1]},
-                       {'x': a['spawnB'][0], 'y': a['spawnB'][1]}],
+            'spawns': spawns,
+            'startingCells': starting_cells, 'placement': placement,
             'obstacles': obstacles,
         })
 
@@ -264,6 +355,6 @@ if __name__ == '__main__':
     elif sys.argv[1] == 'show':
         cmd_show(int(sys.argv[2]))
     elif sys.argv[1] == 'generate':
-        cmd_generate([int(x) for x in sys.argv[2:]])
+        cmd_generate([int(x) for x in sys.argv[2:]] or DEFAULT_MAPS)
     else:
         print(__doc__)

@@ -23,7 +23,8 @@
 import TUNED from './cortexWeights.json';
 import { key, dist, spellZoneCells, hasLineOfSight } from '../engine/geometry';
 import { bfs } from '../engine/pathfinding';
-import { critDivisor, dodgeStat } from '../engine/formulas';
+import { critDivisor, pointRemovalScores, pointRemovalChance, damageAmount, applyResistances, armorReduction, statBuffTotal, healAmount } from '../engine/formulas';
+import { effectAcceptsTarget } from '../engine/engine';
 
 export const DEFAULT_WEIGHTS = {
   // valeur des effets
@@ -56,40 +57,24 @@ export const DEFAULT_WEIGHTS = {
 };
 
 const DMG_REF = 100; // un « bon coup » de référence au niveau 100
-const ELEM_STAT = {
-  neutre: 'force', terre: 'force', feu: 'intelligence', eau: 'chance', air: 'agilite',
-};
 const avg = (e) => ((e.min || 0) + (e.max || 0)) / 2;
 
 function statOf(f, name) {
-  const buff = (f.effects || [])
-    .filter((x) => x.kind === 'buff' && x.stat === name)
-    .reduce((s, x) => s + x.value, 0);
+  const buff = statBuffTotal(f, name);
   return ((f.stats && f.stats[name]) || 0) + buff;
 }
 
-function armorOf(f) {
-  return (f.effects || [])
-    .filter((x) => x.kind === 'buff' && x.stat === 'armor')
-    .reduce((s, x) => s + x.value, 0);
-}
-
 function hasBuffNamed(f, name) {
-  return (f.effects || []).some((x) => x.kind === 'buff' && x.name === name && x.turnsLeft > 1);
+  return (f.effects || []).some((x) => ['buff', 'armor'].includes(x.kind) && x.name === name && x.turnsLeft > 1);
 }
 
 // Dégâts espérés d'une ligne d'effet, fidèle aux formules du moteur:
 // jet moyen × (100 + carac + puissance)/100 + dommages fixes, puis
 // résistances % et fixes de la victime, puis armure.
-function expectedDamage(effect, caster, victim) {
-  const stat = statOf(caster, ELEM_STAT[effect.element] || 'force');
-  const power = statOf(caster, 'power');
-  const flat = statOf(caster, 'damage');
-  let dmg = Math.floor((avg(effect) * (100 + stat + power)) / 100) + flat;
-  const res = (victim.resistances && victim.resistances[effect.element]) || 0;
-  const resFixed = (victim.resistancesFixed && victim.resistancesFixed[effect.element]) || 0;
-  dmg = Math.floor((dmg * (100 - res)) / 100) - resFixed;
-  return Math.max(0, dmg - armorOf(victim));
+function expectedDamage(effect, caster, victim, fighters, spell = {}) {
+  return Math.max(0, applyResistances(damageAmount(avg(effect), effect.element, caster,
+    { trap: spell.trap, flatDamage: spell.flatDamage, weaponType: spell.weaponType }), effect.element, victim, caster)
+    - armorReduction(victim, effect.element, fighters));
 }
 
 // Profil d'un kit: distance idéale (portée max du meilleur sort de dégâts)
@@ -125,6 +110,7 @@ export function utilityDecide(view, api, weights) {
   const obstacles = new Map();
   for (const o of board.obstacles) obstacles.set(key(o.x, o.y), o);
   const occupied = new Map();
+  const fighters = Object.fromEntries([you, ...allies, ...enemies].map(f => [f.id, f]));
   for (const f of [you, ...allies, ...enemies]) occupied.set(key(f.pos.x, f.pos.y), f);
 
   const losBlocked = (x, y) => {
@@ -185,14 +171,13 @@ export function utilityDecide(view, api, weights) {
     return m;
   };
 
-  // Retrait PA/PM espéré (formule d'esquive du moteur, sans jet).
+  // Heuristic estimate from the first point's odds; later successes are harder.
   const expectedRemoval = (victim, points, kind) => {
-    const rd = Math.max(1, dodgeStat(statOf(you, 'sagesse')));
-    const vd = Math.max(1, dodgeStat(statOf(victim, 'sagesse')));
-    const cur = kind === 'pa' ? victim.pa : victim.pm;
+    const { attack, defense } = pointRemovalScores(you, victim, kind);
     const max = Math.max(1, kind === 'pa' ? victim.basePa : victim.basePm);
-    const p = Math.min(100, Math.max(0, Math.ceil((rd / vd) * (cur / max) * 50))) / 100;
-    return points * p;
+    const cur = victim.id === you.id ? victim[kind] : Math.max(0, max + statBuffTotal(victim, kind));
+    const p = pointRemovalChance(attack, defense, cur, max) / 100;
+    return Math.min(cur, points * p);
   };
 
   // ---- score d'un jeu de lignes d'effets sur une cible ----------------
@@ -205,13 +190,20 @@ export function utilityDecide(view, api, weights) {
       const seen = new Set();
       for (const c of cells) {
         const f = occupied.get(key(c.x, c.y));
-        if (f && f.hp > 0 && !seen.has(f.id)) { seen.add(f.id); victims.push(f); }
+        if (f && f.hp > 0 && !seen.has(f.id) && effectAcceptsTarget(e, you, f)) { seen.add(f.id); victims.push(f); }
       }
       switch (e.kind) {
+        case 'glyph':
+        case 'trap': {
+          if (!e.trigger || (view.hazards || []).some(h => h.owner === you.id && h.spellId === spell.id)) break;
+          const payload = e.trigger.effects.map(row => ({ ...row, zone: e.zone }));
+          score += scoreRows(payload, { ...spell, trap: e.kind === 'trap' }, targetPos, fromPos) * (e.kind === 'glyph' ? 1.1 : .7);
+          break;
+        }
         case 'damage':
         case 'lifeSteal': {
           for (const v of victims) {
-            const dmg = expectedDamage(e, you, v);
+            const dmg = expectedDamage(e, you, v, fighters, spell);
             if (v.team !== you.team) {
               let val = W.damage * (Math.min(dmg, v.hp) / DMG_REF) * victimValue(v);
               if (e.kind === 'lifeSteal') {
@@ -232,7 +224,7 @@ export function utilityDecide(view, api, weights) {
         case 'heal': {
           for (const v of victims) {
             if (v.team !== you.team) { score -= 0.3 * proba; continue; }
-            const jet = (avg(e) * (100 + statOf(you, 'intelligence'))) / 100;
+            const jet = healAmount(avg(e), you) + (spell.flatHeal || 0);
             const healed = Math.min(v.maxHp - v.hp, jet);
             const ratio = v.hp / Math.max(1, v.maxHp);
             if (ratio < W.healThreshold && healed > 0) {
@@ -287,7 +279,6 @@ export function utilityDecide(view, api, weights) {
         case 'buffDamage':
         case 'buffCrit':
         case 'buffStat': {
-          if (hasBuffNamed(you, spell.name)) break; // déjà actif: du PA gaspillé
           const factor = e.kind === 'buffPa' ? 1.5
             : e.kind === 'buffPm' ? 1.0
             : e.kind === 'buffPower' ? 0.9
@@ -296,7 +287,10 @@ export function utilityDecide(view, api, weights) {
             : 0.7;
           // un buff paie quand le combat est engagé
           const engaged = dist(you.pos, leader.pos) <= you.basePm + myKit.maxReach + 2;
-          score += W.buff * factor * (engaged ? 1 : 0.35) * proba;
+          for (const v of victims) {
+            if (v.team !== you.team) { score -= W.buff * factor; continue; }
+            if (!hasBuffNamed(v, spell.name)) score += W.buff * factor * (engaged ? 1 : .35) * proba * (v.id === you.id ? 1 : .8);
+          }
           break;
         }
         case 'stealPa':
@@ -324,7 +318,7 @@ export function utilityDecide(view, api, weights) {
         case 'poison': {
           for (const v of victims) {
             if (v.team === you.team) continue;
-            const perTick = expectedDamage(e, you, v);
+            const perTick = expectedDamage(e, you, v, fighters);
             score += W.damage * 0.8 * ((perTick * Math.min(e.duration || 3, 3)) / DMG_REF)
               * victimValue(v) * proba;
           }
@@ -410,8 +404,7 @@ export function utilityDecide(view, api, weights) {
             const ratio = you.hp / Math.max(1, you.maxHp);
             const radian = 2 * Math.PI * (ratio - 0.5);
             let dmg = Math.floor((((Math.cos(radian) + 1) ** 2) / 4) * ((e.p1 || 0) / 100) * you.maxHp);
-            const res = (v.resistances && v.resistances.neutre) || 0;
-            dmg = Math.max(0, Math.floor((dmg * (100 - res)) / 100) - armorOf(v));
+            dmg = Math.max(0, applyResistances(dmg, 'neutre', v) - armorReduction(v, 'neutre', fighters));
             let val = W.damage * (Math.min(dmg, v.hp) / DMG_REF) * victimValue(v);
             if (dmg >= v.hp && dmg > 0) val += W.kill * (v.leader ? 1 : 0.35);
             score += val * proba;
@@ -434,7 +427,7 @@ export function utilityDecide(view, api, weights) {
   const scoreCast = (s, targetPos) => {
     let score = scoreRows(s.effects, s, targetPos, you.pos);
     if (s.critRate > 0 && s.critEffects && s.critEffects.length > 0) {
-      const p = 1 / critDivisor(s.critRate, statOf(you, 'agilite'), statOf(you, 'crit'));
+      const p = 1 / critDivisor(s.critRate, statOf(you, 'agilite'), statOf(you, 'crit') + (s.critBonus || 0));
       score = score * (1 - p) + scoreRows(s.critEffects, s, targetPos, you.pos) * p;
     }
     if (s.failRate > 0) score *= 1 - 1 / s.failRate;
@@ -495,14 +488,13 @@ export function utilityDecide(view, api, weights) {
       let dmg = 0;
       for (const e of s.effects) {
         if (e.kind === 'damage' || e.kind === 'lifeSteal') {
-          dmg += expectedDamage(e, you, v) * (e.chance > 0 ? e.chance / 100 : 1);
+          dmg += expectedDamage(e, you, v, fighters, s) * (e.chance > 0 ? e.chance / 100 : 1);
         }
         if (e.kind === 'punitionDamage') {
           const ratio = you.hp / Math.max(1, you.maxHp);
           const radian = 2 * Math.PI * (ratio - 0.5);
           const raw = Math.floor((((Math.cos(radian) + 1) ** 2) / 4) * ((e.p1 || 0) / 100) * you.maxHp);
-          const res = (v.resistances && v.resistances.neutre) || 0;
-          dmg += Math.max(0, Math.floor((raw * (100 - res)) / 100) - armorOf(v));
+          dmg += Math.max(0, applyResistances(raw, 'neutre', v) - armorReduction(v, 'neutre', fighters));
         }
       }
       if (dmg > 0) options.push({ pa: s.pa, dmg, uses: s.usesLeft });

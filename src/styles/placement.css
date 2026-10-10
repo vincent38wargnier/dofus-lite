@@ -1,0 +1,26 @@
+.placement-controls { width: 100%; margin-top: 14px; padding: 16px 18px; background: var(--surface, #faf9f3); border: 1px solid #d5d9c7; border-radius: 14px; box-sizing: border-box; }
+.placement-instruction { display: flex; align-items: center; gap: 12px; }
+.placement-instruction > svg { color: #327996; flex-shrink: 0; }
+.placement-instruction > div { flex: 1; }
+.placement-instruction strong { font-size: 16px; }
+.placement-instruction p { margin: 4px 0 0; color: #707766; font-size: 13px; }
+.placement-ready { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-width: 98px; min-height: 44px; }
+.placement-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 14px; font-size: 12px; color: #525c4c; }
+.placement-legend > span { display: inline-flex; align-items: center; gap: 7px; }
+.placement-legend i { width: 12px; height: 9px; border: 1px solid; transform: skewY(-15deg); }
+.placement-legend .your-start { background: #338fcc; border-color: #226a9a; }
+.placement-legend .enemy-start { background: #d05749; border-color: #a63d34; }
+.placement-source { margin: 12px 0 0; color: #72796a; font-size: 11px; line-height: 1.5; }
+.map-placement-note { color: #707766; font-size: 11px; }
+.board .placement-layer { position: absolute; inset: 0; z-index: 2100; overflow: visible; pointer-events: none; }
+.placement-cell { stroke-width: 1.4; stroke-linejoin: round; }
+.placement-cell.yours { fill: #268dd7a6; stroke: #bce5ff; pointer-events: all; cursor: pointer; }
+.placement-cell.enemy { fill: #d74b3da6; stroke: #ffc4bb; }
+.placement-cell.yours:hover, .placement-cell.yours:focus-visible { fill: #73c8ffe6; stroke: #fff; stroke-width: 2; outline: none; }
+.placement-cell.selected { stroke: #fff; stroke-width: 2.5; }
+.placement-selection { fill: none; stroke: #fff; stroke-width: 1; pointer-events: none; }
+@media (max-width: 600px) {
+  .placement-controls { padding: 13px; }
+  .placement-instruction { flex-wrap: wrap; }
+  .placement-ready { width: 100%; }
+}

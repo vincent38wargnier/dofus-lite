@@ -23,13 +23,14 @@ export function runMatch({
   mapId = 'arene',
   seed = 1,
   collectFrames = true,
+  loadouts = {},
 }) {
   const init = createGame({
     mapId,
     seed,
     fighters: [
-      { id: 'A', name: bots.A.name, botName: bots.A.name, classId: classes.A },
-      { id: 'B', name: bots.B.name, botName: bots.B.name, classId: classes.B },
+      { id: 'A', name: bots.A.name, botName: bots.A.name, classId: classes.A, loadout: loadouts.A },
+      { id: 'B', name: bots.B.name, botName: bots.B.name, classId: classes.B, loadout: loadouts.B },
     ],
   });
 
@@ -167,7 +168,7 @@ export function runMatch({
   }
 
   return {
-    config: { mapId, seed, classes, botNames: { A: bots.A.name, B: bots.B.name } },
+    config: { mapId, seed, classes, loadouts: JSON.parse(JSON.stringify(loadouts)), botNames: { A: bots.A.name, B: bots.B.name } },
     winner: state.winner,          // 'A' | 'B' | null (draw)
     endReason: state.endReason,
     turns: state.turn,

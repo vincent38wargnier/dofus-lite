@@ -1,0 +1,103 @@
+const puppeteer = require('puppeteer-core');
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const out = '/tmp/dofus-lite-spells-proof';
+const url = process.env.RETRO_URL || 'http://127.0.0.1:3013';
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+(async () => {
+  fs.mkdirSync(out, { recursive: true });
+  const browser = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true, pipe: true, protocolTimeout: 30000 });
+  try {
+    const page = await browser.newPage(); await page.setViewport({ width: 1500, height: 1100 });
+    const errors = [], external = [];
+    page.on('pageerror', e => errors.push(e.message));
+    page.on('response', r => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
+    await page.setRequestInterception(true);
+    page.on('request', r => { if (r.url().startsWith(url) || /^(data|blob):/.test(r.url())) r.continue(); else { external.push(r.url()); r.abort(); } });
+    const click = (selector, text = '') => page.evaluate(({ selector, text }) => {
+      const e = [...document.querySelectorAll(selector)].find(e => e.offsetParent && e.textContent.includes(text));
+      if (!e) throw new Error(`Missing ${selector} ${text}`); e.click();
+    }, { selector, text });
+    const select = async (selector, value) => {
+      const h = await page.evaluateHandle(s => [...document.querySelectorAll(s)].find(e => e.offsetParent), selector);
+      await h.asElement().select(String(value)); await h.dispose();
+    };
+    const firstSpell = () => page.evaluate(() => [...document.querySelectorAll('.spell-loadout-order')].find(e => e.offsetParent).firstElementChild.dataset.spellId);
+    await page.goto(url, { waitUntil: 'networkidle0' }); await click('.tab', 'Jouer'); await click('.setup-navigation button', 'Stuff'); await click('.builder-navigation button', 'Sorts');
+    await click('input[aria-label="Apprendre Flamiche"]');
+    await click('input[aria-label="Apprendre Libération"]');
+    await click('input[aria-label="Apprendre Cawotte"]');
+    await select('select[aria-label="Grade de Flamiche"]', 3);
+    // Exercise both accessible arrows and native drag/drop handlers.
+    await click('button[aria-label="Monter Flamiche"]');
+    await page.evaluate(() => {
+      const list = [...document.querySelectorAll('.spell-loadout-order')].find(e => e.offsetParent);
+      const item = list.querySelector('[data-spell-id="350"]');
+      const transfer = new DataTransfer();
+      item.dispatchEvent(new DragEvent('dragstart', { bubbles: true, dataTransfer: transfer }));
+    });
+    await sleep(80);
+    await page.evaluate(() => {
+      const list = [...document.querySelectorAll('.spell-loadout-order')].find(e => e.offsetParent);
+      list.firstElementChild.dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer: new DataTransfer() }));
+    });
+    assert.equal(await firstSpell(), '350');
+    await page.reload({ waitUntil: 'networkidle0' }); await click('.tab', 'Jouer'); await click('.setup-navigation button', 'Stuff'); await click('.builder-navigation button', 'Sorts');
+    assert.equal(await firstSpell(), '350');
+    assert.equal(await page.evaluate(() => [...document.querySelectorAll('select[aria-label="Grade de Flamiche"]')].find(e => e.offsetParent).value), '3');
+    assert.equal(await page.evaluate(() => [...document.querySelectorAll('input[aria-label="Apprendre Cawotte"]')].find(e => e.offsetParent).checked), true);
+    const spellPanel = await page.evaluateHandle(() => [...document.querySelectorAll('.spell-loadout')].find(e => e.offsetParent));
+    await spellPanel.asElement().screenshot({ path: path.join(out, 'spell-preparation.png') }); await spellPanel.dispose();
+    console.log('Commons, grades, drag/drop and saved order verified.');
+    await click('.builder-navigation button', 'Équipements');
+    await select('select[aria-label="Panoplie à équiper"]', 55);
+    await click('.set-composition summary');
+    assert.ok(await page.evaluate(() => [...document.querySelectorAll('button')].find(e => e.offsetParent && e.textContent === 'Équiper la panoplie').disabled));
+    await select('select[aria-label="Niveau du personnage"]', 143);
+    await click('button', 'Équiper la panoplie');
+    const composition = await page.evaluate(() => [...document.querySelectorAll('.set-composition')].find(e => e.offsetParent).textContent);
+    assert.match(composition, /6 pièces/); assert.match(composition, /Meulette/);
+    assert.equal(await page.evaluate(() => [...document.querySelectorAll('.equipment-slot')].filter(e => e.offsetParent && /Meulou|Meulette/.test(e.title)).length), 6);
+    await page.evaluate(() => [...document.querySelectorAll('.loadout-toolbar')].find(e => e.offsetParent).scrollIntoView({ block: 'start' }));
+    await sleep(200); await page.screenshot({ path: path.join(out, 'meulou-complete.png') });
+    await select('select[aria-label="Panoplie à équiper"]', 141);
+    assert.match(await page.evaluate(() => [...document.querySelectorAll('.set-composition')].find(e => e.offsetParent).textContent), /absentes des données client/);
+    await select('select[aria-label="Panoplie à équiper"]', 55);
+    await click('.builder-navigation button', 'Sorts');
+    await page.setViewport({ width: 390, height: 844 });
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'Mobile overflow');
+    await page.evaluate(() => [...document.querySelectorAll('.spell-loadout')].find(e => e.offsetParent).scrollIntoView({ block: 'start' }));
+    await page.screenshot({ path: path.join(out, 'spell-preparation-mobile.png') });
+    await page.setViewport({ width: 1500, height: 1100 });
+    console.log('Meulou level gate, 6 pieces, missing templates and mobile layout verified.');
+    await click('.setup-navigation button', 'Combat'); await select('select[aria-label="Carte de combat"]', 'arene');
+    await click('.btn.primary', 'Jouer'); await page.waitForSelector('.spell-btn');
+    await page.waitForFunction(() => [...document.querySelectorAll('.spell-btn')].find(e => e.offsetParent && e.textContent.includes('Cawotte') && !e.disabled));
+    assert.match(await page.$eval('.spell-btn', e => e.textContent), /Flamiche/);
+    await click('.spell-btn', 'Cawotte'); await page.waitForSelector('.cell.hl-target');
+    await page.click('.cell.hl-target');
+    await page.waitForFunction(() => document.querySelectorAll('.token.summon').length > 0, { timeout: 10000 });
+    await sleep(1300); await page.screenshot({ path: path.join(out, 'common-spell-combat.png') });
+    await page.evaluate(() => { const original = URL.createObjectURL; URL.createObjectURL = blob => { window.exportedCombat = blob; return original(blob); }; });
+    await click('.combat-log-heading button', 'Exporter');
+    const record = await page.evaluate(async () => JSON.parse(await window.exportedCombat.text()));
+    assert.equal(record.rulesVersion, 4); assert.equal(record.state.fighters.A.level, 143);
+    assert.equal(record.state.fighters.A.loadout.spells.grades[350], 3);
+    assert.ok(record.events.some(e => e.t === 'cast' && e.spellId === 367));
+    assert.ok(record.state.fighters.As1.staticSummon); assert.equal(record.state.fighters.A.loadout.spells.order[0], 350);
+    fs.writeFileSync(path.join(out, 'combat.json'), JSON.stringify(record, null, 2));
+    await click('.tab', 'Grimoire'); await page.waitForSelector('.spellbook-item');
+    await select('select[aria-label="Classe du grimoire"]', 'COMMON');
+    assert.equal(await page.$$eval('.spellbook-item', es => es.length), 18);
+    await click('.spellbook-item', 'Flamiche'); await select('select[aria-label="Grade du sort"]', 6);
+    await click('.spellbook-detail button', 'animation originale');
+    await page.waitForSelector('.spellbook-detail .retro-spell-effect ruffle-player');
+    await sleep(400); await page.screenshot({ path: path.join(out, 'common-spellbook.png') });
+    assert.deepEqual(errors, []); assert.deepEqual(external, []);
+    fs.writeFileSync(path.join(out, 'proof.json'), JSON.stringify({ errors, external, checks: ['common selection', 'grade selection', 'drag/drop', 'reload persistence', 'level gate', 'complete Meulou', 'missing set templates', 'mobile', 'spell bar order', 'Cawotte cast', 'combat export', 'common grimoire', 'original Flamiche animation'] }, null, 2));
+    console.log(`Spells browser proof complete: ${out}`);
+  } finally {
+    const process = browser.process(); await browser.disconnect(); if (process?.exitCode === null) process.kill('SIGKILL');
+  }
+})().catch(e => { console.error(e); process.exitCode = 1; }).finally(() => process.exit(process.exitCode || 0));

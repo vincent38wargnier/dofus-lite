@@ -1,0 +1,530 @@
+{
+  "schemaVersion": 1,
+  "notes": "Starting cells are sent by the server in GP packets, not stored in the installed terrain SWFs. Historical emulator records are not a verification of current official PvP placements. Missing, repeated generic and incompatible records are not treated as original placements.",
+  "sources": {
+    "GDCore": {
+      "path": "emulators/GDCore/data/map/gameMaps.xml",
+      "repository": "https://github.com/BotanAtomic/GDCore",
+      "revision": "219b915de771b39957d8b2bcdb676619163a24d2",
+      "field": "GameMap/places",
+      "encoding": "Two 6-bit characters per cell; teams separated by |"
+    }
+  },
+  "maps": {
+    "5383": {
+      "status": "local",
+      "reason": "GDCore starting cells incompatible with this terrain (7 blocked cells); other sources repeat generic positions.",
+      "rejectedRecords": [
+        {
+          "source": "AncestraRemake",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            268
+          ]
+        },
+        {
+          "source": "Nao",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            268
+          ]
+        },
+        {
+          "source": "gofus",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            268
+          ]
+        },
+        {
+          "source": "Shivas",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            268
+          ]
+        },
+        {
+          "source": "sundofus",
+          "places": "",
+          "invalidCellIds": []
+        },
+        {
+          "source": "GDCore",
+          "places": "bebfbIbJcaeveJfa|fifxgagogpgCgDgR",
+          "invalidCellIds": [
+            68,
+            69,
+            98,
+            99,
+            128,
+            291,
+            320
+          ]
+        }
+      ]
+    },
+    "1571": {
+      "status": "historical",
+      "source": "GDCore",
+      "width": 13,
+      "height": 15,
+      "places": "c_cNcBcpcCcOc0dm|dOdCdqdedrdDdPd1"
+    },
+    "6170": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps.",
+      "rejectedRecords": [
+        {
+          "source": "AncestraRemake",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            282
+          ]
+        },
+        {
+          "source": "Nao",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            282
+          ]
+        },
+        {
+          "source": "gofus",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            282
+          ]
+        },
+        {
+          "source": "Shivas",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            282
+          ]
+        },
+        {
+          "source": "sundofus",
+          "places": "",
+          "invalidCellIds": []
+        },
+        {
+          "source": "GDCore",
+          "places": "|",
+          "invalidCellIds": []
+        }
+      ]
+    },
+    "6173": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps.",
+      "rejectedRecords": [
+        {
+          "source": "AncestraRemake",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            266,
+            122,
+            136,
+            137,
+            151
+          ]
+        },
+        {
+          "source": "Nao",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            266,
+            122,
+            136,
+            137,
+            151
+          ]
+        },
+        {
+          "source": "gofus",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            266,
+            122,
+            136,
+            137,
+            151
+          ]
+        },
+        {
+          "source": "Shivas",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            266,
+            122,
+            136,
+            137,
+            151
+          ]
+        },
+        {
+          "source": "sundofus",
+          "places": "",
+          "invalidCellIds": []
+        },
+        {
+          "source": "GDCore",
+          "places": "|",
+          "invalidCellIds": []
+        }
+      ]
+    },
+    "1735": {
+      "status": "historical",
+      "source": "GDCore",
+      "width": 15,
+      "height": 17,
+      "places": "dWd-emeBd9eAeOe2|ejdqezfHfJe5eRdg"
+    },
+    "2095": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps.",
+      "rejectedRecords": [
+        {
+          "source": "AncestraRemake",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            136
+          ]
+        },
+        {
+          "source": "Nao",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            136
+          ]
+        },
+        {
+          "source": "gofus",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            136
+          ]
+        },
+        {
+          "source": "Shivas",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            136
+          ]
+        },
+        {
+          "source": "sundofus",
+          "places": "",
+          "invalidCellIds": []
+        },
+        {
+          "source": "GDCore",
+          "places": "|",
+          "invalidCellIds": []
+        }
+      ]
+    },
+    "2195": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps.",
+      "rejectedRecords": [
+        {
+          "source": "AncestraRemake",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            268,
+            283
+          ]
+        },
+        {
+          "source": "Nao",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            268,
+            283
+          ]
+        },
+        {
+          "source": "gofus",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            268,
+            283
+          ]
+        },
+        {
+          "source": "Shivas",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            268,
+            283
+          ]
+        },
+        {
+          "source": "sundofus",
+          "places": "",
+          "invalidCellIds": []
+        },
+        {
+          "source": "GDCore",
+          "places": "|",
+          "invalidCellIds": []
+        }
+      ]
+    },
+    "6158": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps.",
+      "rejectedRecords": [
+        {
+          "source": "AncestraRemake",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": []
+        },
+        {
+          "source": "Nao",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": []
+        },
+        {
+          "source": "gofus",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": []
+        },
+        {
+          "source": "Shivas",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": []
+        },
+        {
+          "source": "sundofus",
+          "places": "",
+          "invalidCellIds": []
+        },
+        {
+          "source": "GDCore",
+          "places": "|",
+          "invalidCellIds": []
+        }
+      ]
+    },
+    "6167": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps.",
+      "rejectedRecords": [
+        {
+          "source": "AncestraRemake",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": []
+        },
+        {
+          "source": "Nao",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": []
+        },
+        {
+          "source": "gofus",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": []
+        },
+        {
+          "source": "Shivas",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": []
+        },
+        {
+          "source": "sundofus",
+          "places": "",
+          "invalidCellIds": []
+        },
+        {
+          "source": "GDCore",
+          "places": "|",
+          "invalidCellIds": []
+        }
+      ]
+    },
+    "9750": {
+      "status": "historical",
+      "source": "GDCore",
+      "width": 15,
+      "height": 17,
+      "places": "eiekexeyezeMeNe1feft|bGbVb9b-clcmcncAcBcQ"
+    },
+    "4": {
+      "status": "historical",
+      "source": "GDCore",
+      "width": 15,
+      "height": 17,
+      "places": "dRdDdpdbeKeweid6|fMf0gsgegFfYgago"
+    },
+    "1720": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps.",
+      "rejectedRecords": [
+        {
+          "source": "AncestraRemake",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            267,
+            122,
+            268,
+            282,
+            283,
+            297
+          ]
+        },
+        {
+          "source": "Nao",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            267,
+            122,
+            268,
+            282,
+            283,
+            297
+          ]
+        },
+        {
+          "source": "gofus",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            267,
+            122,
+            268,
+            282,
+            283,
+            297
+          ]
+        },
+        {
+          "source": "Shivas",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            267,
+            122,
+            268,
+            282,
+            283,
+            297
+          ]
+        },
+        {
+          "source": "sundofus",
+          "places": "",
+          "invalidCellIds": []
+        },
+        {
+          "source": "GDCore",
+          "places": "|",
+          "invalidCellIds": []
+        }
+      ]
+    },
+    "8313": {
+      "status": "historical",
+      "source": "GDCore",
+      "width": 15,
+      "height": 17,
+      "places": "dDfreOgogdesb7b-|ehfWc0gEfkeQcOc6"
+    },
+    "999": {
+      "status": "local",
+      "reason": "Original placement list unavailable; retain the existing fixed local starts.",
+      "rejectedRecords": [
+        {
+          "source": "GDCore",
+          "places": "|",
+          "invalidCellIds": []
+        }
+      ]
+    },
+    "1907": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps.",
+      "rejectedRecords": [
+        {
+          "source": "AncestraRemake",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            238,
+            280,
+            122,
+            136,
+            137,
+            151
+          ]
+        },
+        {
+          "source": "Nao",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            238,
+            280,
+            122,
+            136,
+            137,
+            151
+          ]
+        },
+        {
+          "source": "gofus",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            238,
+            280,
+            122,
+            136,
+            137,
+            151
+          ]
+        },
+        {
+          "source": "Shivas",
+          "places": "c0drdUekeleyezeN|b6cicjcxemeAeBeP",
+          "invalidCellIds": [
+            238,
+            280,
+            122,
+            136,
+            137,
+            151
+          ]
+        },
+        {
+          "source": "sundofus",
+          "places": "",
+          "invalidCellIds": []
+        },
+        {
+          "source": "GDCore",
+          "places": "|",
+          "invalidCellIds": []
+        }
+      ]
+    },
+    "2073": {
+      "status": "historical",
+      "source": "GDCore",
+      "width": 15,
+      "height": 17,
+      "places": "eZfcfTf8gAgCgPgR|cAcPcQc5dgdvdwdL"
+    },
+    "7423": {
+      "status": "historical",
+      "source": "GDCore",
+      "width": 15,
+      "height": 17,
+      "places": "bPb3b4cfcgctcucI|dsdGdHdUdVd8d9el"
+    },
+    "952": {
+      "status": "historical",
+      "source": "GDCore",
+      "width": 15,
+      "height": 17,
+      "places": "dbd6fmfrgIgPhihl|cMcOc4dweqfkfMfZej"
+    }
+  }
+}

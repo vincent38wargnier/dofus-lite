@@ -6,6 +6,11 @@ export const DOFUS_MAPS_RAW = [
   {
     "id": "territoire_des_dopeuls_5383",
     "name": "Territoire des Dopeuls [-32,-8]",
+    "sourceId": 5383,
+    "area": "Territoire des Dopeuls",
+    "coordinate": "[-32,-8]",
+    "walkableCells": 163,
+    "spawnDistance": 23,
     "description": "Carte Dofus authentique (Continent Amaknien), mapId 5383.",
     "width": 15,
     "height": 14,
@@ -19,6 +24,24 @@ export const DOFUS_MAPS_RAW = [
         "y": 2
       }
     ],
+    "startingCells": [
+      [
+        {
+          "x": 13,
+          "y": 13
+        }
+      ],
+      [
+        {
+          "x": 1,
+          "y": 2
+        }
+      ]
+    ],
+    "placement": {
+      "status": "local",
+      "reason": "GDCore starting cells incompatible with this terrain (7 blocked cells); other sources repeat generic positions."
+    },
     "obstacles": [
       {
         "x": 0,
@@ -260,19 +283,117 @@ export const DOFUS_MAPS_RAW = [
   {
     "id": "amakna_1571",
     "name": "Amakna [5,19]",
+    "sourceId": 1571,
+    "area": "Amakna",
+    "coordinate": "[5,19]",
+    "walkableCells": 112,
+    "spawnDistance": 7,
     "description": "Carte Dofus authentique (Continent Amaknien), mapId 1571.",
     "width": 12,
     "height": 13,
     "spawns": [
       {
-        "x": 10,
-        "y": 9
+        "x": 2,
+        "y": 8
       },
       {
-        "x": 0,
-        "y": 1
+        "x": 7,
+        "y": 6
       }
     ],
+    "startingCells": [
+      [
+        {
+          "x": 2,
+          "y": 8,
+          "cellId": 191
+        },
+        {
+          "x": 2,
+          "y": 6,
+          "cellId": 167
+        },
+        {
+          "x": 2,
+          "y": 5,
+          "cellId": 155
+        },
+        {
+          "x": 2,
+          "y": 4,
+          "cellId": 143
+        },
+        {
+          "x": 3,
+          "y": 4,
+          "cellId": 156
+        },
+        {
+          "x": 3,
+          "y": 5,
+          "cellId": 168
+        },
+        {
+          "x": 3,
+          "y": 6,
+          "cellId": 180
+        },
+        {
+          "x": 3,
+          "y": 8,
+          "cellId": 204
+        }
+      ],
+      [
+        {
+          "x": 7,
+          "y": 6,
+          "cellId": 232
+        },
+        {
+          "x": 7,
+          "y": 5,
+          "cellId": 220
+        },
+        {
+          "x": 7,
+          "y": 4,
+          "cellId": 208
+        },
+        {
+          "x": 7,
+          "y": 3,
+          "cellId": 196
+        },
+        {
+          "x": 8,
+          "y": 3,
+          "cellId": 209
+        },
+        {
+          "x": 8,
+          "y": 4,
+          "cellId": 221
+        },
+        {
+          "x": 8,
+          "y": 5,
+          "cellId": 233
+        },
+        {
+          "x": 8,
+          "y": 6,
+          "cellId": 245
+        }
+      ]
+    ],
+    "placement": {
+      "status": "historical",
+      "source": "GDCore",
+      "places": "c_cNcBcpcCcOc0dm|dOdCdqdedrdDdPd1",
+      "width": 13,
+      "height": 15
+    },
     "obstacles": [
       {
         "x": 0,
@@ -499,6 +620,11 @@ export const DOFUS_MAPS_RAW = [
   {
     "id": "brakmar_6170",
     "name": "Brâkmar [-23,38]",
+    "sourceId": 6170,
+    "area": "Brâkmar",
+    "coordinate": "[-23,38]",
+    "walkableCells": 170,
+    "spawnDistance": 25,
     "description": "Carte Dofus authentique (Continent Amaknien), mapId 6170.",
     "width": 16,
     "height": 14,
@@ -512,6 +638,24 @@ export const DOFUS_MAPS_RAW = [
         "y": 1
       }
     ],
+    "startingCells": [
+      [
+        {
+          "x": 14,
+          "y": 13
+        }
+      ],
+      [
+        {
+          "x": 1,
+          "y": 1
+        }
+      ]
+    ],
+    "placement": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps."
+    },
     "obstacles": [
       {
         "x": 0,
@@ -788,6 +932,11 @@ export const DOFUS_MAPS_RAW = [
   {
     "id": "bonta_6173",
     "name": "Bonta [-31,-59]",
+    "sourceId": 6173,
+    "area": "Bonta",
+    "coordinate": "[-31,-59]",
+    "walkableCells": 111,
+    "spawnDistance": 24,
     "description": "Carte Dofus authentique (Continent Amaknien), mapId 6173.",
     "width": 13,
     "height": 16,
@@ -801,6 +950,24 @@ export const DOFUS_MAPS_RAW = [
         "y": 1
       }
     ],
+    "startingCells": [
+      [
+        {
+          "x": 1,
+          "y": 14
+        }
+      ],
+      [
+        {
+          "x": 12,
+          "y": 1
+        }
+      ]
+    ],
+    "placement": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps."
+    },
     "obstacles": [
       {
         "x": 0,
@@ -1292,19 +1459,117 @@ export const DOFUS_MAPS_RAW = [
   {
     "id": "l_ile_des_wabbits_1735",
     "name": "L'île des Wabbits [23,-8]",
+    "sourceId": 1735,
+    "area": "L'île des Wabbits",
+    "coordinate": "[23,-8]",
+    "walkableCells": 124,
+    "spawnDistance": 8,
     "description": "Carte Dofus authentique (Continent Amaknien), mapId 1735.",
     "width": 13,
     "height": 16,
     "spawns": [
       {
-        "x": 11,
-        "y": 13
+        "x": 6,
+        "y": 6
       },
       {
         "x": 3,
-        "y": 1
+        "y": 11
       }
     ],
+    "startingCells": [
+      [
+        {
+          "x": 6,
+          "y": 6,
+          "cellId": 240
+        },
+        {
+          "x": 6,
+          "y": 7,
+          "cellId": 254
+        },
+        {
+          "x": 6,
+          "y": 8,
+          "cellId": 268
+        },
+        {
+          "x": 7,
+          "y": 8,
+          "cellId": 283
+        },
+        {
+          "x": 5,
+          "y": 8,
+          "cellId": 253
+        },
+        {
+          "x": 6,
+          "y": 9,
+          "cellId": 282
+        },
+        {
+          "x": 6,
+          "y": 10,
+          "cellId": 296
+        },
+        {
+          "x": 6,
+          "y": 11,
+          "cellId": 310
+        }
+      ],
+      [
+        {
+          "x": 3,
+          "y": 11,
+          "cellId": 265
+        },
+        {
+          "x": 2,
+          "y": 8,
+          "cellId": 208
+        },
+        {
+          "x": 5,
+          "y": 10,
+          "cellId": 281
+        },
+        {
+          "x": 7,
+          "y": 13,
+          "cellId": 353
+        },
+        {
+          "x": 9,
+          "y": 11,
+          "cellId": 355
+        },
+        {
+          "x": 9,
+          "y": 8,
+          "cellId": 313
+        },
+        {
+          "x": 9,
+          "y": 7,
+          "cellId": 299
+        },
+        {
+          "x": 6,
+          "y": 3,
+          "cellId": 198
+        }
+      ]
+    ],
+    "placement": {
+      "status": "historical",
+      "source": "GDCore",
+      "places": "dWd-emeBd9eAeOe2|ejdqezfHfJe5eRdg",
+      "width": 15,
+      "height": 17
+    },
     "obstacles": [
       {
         "x": 0,
@@ -1724,6 +1989,15714 @@ export const DOFUS_MAPS_RAW = [
       {
         "x": 12,
         "y": 15,
+        "t": "VOID"
+      }
+    ]
+  },
+  {
+    "id": "amakna_2095",
+    "name": "Amakna [14,20]",
+    "sourceId": 2095,
+    "area": "Amakna",
+    "coordinate": "[14,20]",
+    "walkableCells": 211,
+    "spawnDistance": 23,
+    "description": "Carte Dofus authentique (Continent Amaknien), mapId 2095.",
+    "width": 17,
+    "height": 23,
+    "spawns": [
+      {
+        "x": 0,
+        "y": 16
+      },
+      {
+        "x": 13,
+        "y": 6
+      }
+    ],
+    "startingCells": [
+      [
+        {
+          "x": 0,
+          "y": 16
+        }
+      ],
+      [
+        {
+          "x": 13,
+          "y": 6
+        }
+      ]
+    ],
+    "placement": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps."
+    },
+    "obstacles": [
+      {
+        "x": 0,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 22,
+        "t": "VOID"
+      }
+    ]
+  },
+  {
+    "id": "astrub_2195",
+    "name": "Astrub [1,-9]",
+    "sourceId": 2195,
+    "area": "Astrub",
+    "coordinate": "[1,-9]",
+    "walkableCells": 118,
+    "spawnDistance": 21,
+    "description": "Carte Dofus authentique (Continent Amaknien), mapId 2195.",
+    "width": 16,
+    "height": 11,
+    "spawns": [
+      {
+        "x": 14,
+        "y": 9
+      },
+      {
+        "x": 1,
+        "y": 1
+      }
+    ],
+    "startingCells": [
+      [
+        {
+          "x": 14,
+          "y": 9
+        }
+      ],
+      [
+        {
+          "x": 1,
+          "y": 1
+        }
+      ]
+    ],
+    "placement": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps."
+    },
+    "obstacles": [
+      {
+        "x": 0,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 1,
+        "t": "ROCK"
+      },
+      {
+        "x": 14,
+        "y": 1,
+        "t": "ROCK"
+      },
+      {
+        "x": 15,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 3,
+        "t": "ROCK"
+      },
+      {
+        "x": 15,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 5,
+        "t": "ROCK"
+      },
+      {
+        "x": 8,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 7,
+        "t": "ROCK"
+      },
+      {
+        "x": 15,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 9,
+        "t": "ROCK"
+      },
+      {
+        "x": 15,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 10,
+        "t": "WATER"
+      }
+    ]
+  },
+  {
+    "id": "bonta_6158",
+    "name": "Bonta [-33,-57]",
+    "sourceId": 6158,
+    "area": "Bonta",
+    "coordinate": "[-33,-57]",
+    "walkableCells": 209,
+    "spawnDistance": 27,
+    "description": "Carte Dofus authentique (Continent Amaknien), mapId 6158.",
+    "width": 15,
+    "height": 21,
+    "spawns": [
+      {
+        "x": 11,
+        "y": 19
+      },
+      {
+        "x": 2,
+        "y": 1
+      }
+    ],
+    "startingCells": [
+      [
+        {
+          "x": 11,
+          "y": 19
+        }
+      ],
+      [
+        {
+          "x": 2,
+          "y": 1
+        }
+      ]
+    ],
+    "placement": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps."
+    },
+    "obstacles": [
+      {
+        "x": 0,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 5,
+        "t": "ROCK"
+      },
+      {
+        "x": 5,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 5,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 16,
+        "t": "ROCK"
+      },
+      {
+        "x": 8,
+        "y": 16,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 17,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 17,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 20,
+        "t": "VOID"
+      }
+    ]
+  },
+  {
+    "id": "brakmar_6167",
+    "name": "Brâkmar [-23,38]",
+    "sourceId": 6167,
+    "area": "Brâkmar",
+    "coordinate": "[-23,38]",
+    "walkableCells": 186,
+    "spawnDistance": 25,
+    "description": "Carte Dofus authentique (Continent Amaknien), mapId 6167.",
+    "width": 17,
+    "height": 16,
+    "spawns": [
+      {
+        "x": 15,
+        "y": 14
+      },
+      {
+        "x": 3,
+        "y": 1
+      }
+    ],
+    "startingCells": [
+      [
+        {
+          "x": 15,
+          "y": 14
+        }
+      ],
+      [
+        {
+          "x": 3,
+          "y": 1
+        }
+      ]
+    ],
+    "placement": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps."
+    },
+    "obstacles": [
+      {
+        "x": 0,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "t": "ROCK"
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 1,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 1,
+        "t": "ROCK"
+      },
+      {
+        "x": 16,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "t": "ROCK"
+      },
+      {
+        "x": 16,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "t": "ROCK"
+      },
+      {
+        "x": 16,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 10,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 10,
+        "t": "ROCK"
+      },
+      {
+        "x": 13,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 11,
+        "t": "ROCK"
+      },
+      {
+        "x": 5,
+        "y": 11,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 11,
+        "t": "ROCK"
+      },
+      {
+        "x": 16,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 12,
+        "t": "ROCK"
+      },
+      {
+        "x": 16,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 13,
+        "t": "ROCK"
+      },
+      {
+        "x": 16,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 15,
+        "t": "VOID"
+      }
+    ]
+  },
+  {
+    "id": "donjon_des_bworks_9750",
+    "name": "Donjon des Bworks [-5,10]",
+    "sourceId": 9750,
+    "area": "Donjon des Bworks",
+    "coordinate": "[-5,10]",
+    "walkableCells": 173,
+    "spawnDistance": 14,
+    "description": "Carte Dofus authentique (Continent Amaknien), mapId 9750.",
+    "width": 20,
+    "height": 19,
+    "spawns": [
+      {
+        "x": 3,
+        "y": 14
+      },
+      {
+        "x": 3,
+        "y": 2
+      }
+    ],
+    "startingCells": [
+      [
+        {
+          "x": 3,
+          "y": 14,
+          "cellId": 264
+        },
+        {
+          "x": 5,
+          "y": 12,
+          "cellId": 266
+        },
+        {
+          "x": 4,
+          "y": 14,
+          "cellId": 279
+        },
+        {
+          "x": 5,
+          "y": 13,
+          "cellId": 280
+        },
+        {
+          "x": 6,
+          "y": 12,
+          "cellId": 281
+        },
+        {
+          "x": 5,
+          "y": 14,
+          "cellId": 294
+        },
+        {
+          "x": 6,
+          "y": 13,
+          "cellId": 295
+        },
+        {
+          "x": 6,
+          "y": 14,
+          "cellId": 309
+        },
+        {
+          "x": 7,
+          "y": 14,
+          "cellId": 324
+        },
+        {
+          "x": 8,
+          "y": 14,
+          "cellId": 339
+        }
+      ],
+      [
+        {
+          "x": 3,
+          "y": 2,
+          "cellId": 96
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "cellId": 111
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "cellId": 125
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "cellId": 126
+        },
+        {
+          "x": 4,
+          "y": 4,
+          "cellId": 139
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "cellId": 140
+        },
+        {
+          "x": 6,
+          "y": 2,
+          "cellId": 141
+        },
+        {
+          "x": 5,
+          "y": 4,
+          "cellId": 154
+        },
+        {
+          "x": 6,
+          "y": 3,
+          "cellId": 155
+        },
+        {
+          "x": 7,
+          "y": 3,
+          "cellId": 170
+        }
+      ]
+    ],
+    "placement": {
+      "status": "historical",
+      "source": "GDCore",
+      "places": "eiekexeyezeMeNe1feft|bGbVb9b-clcmcncAcBcQ",
+      "width": 15,
+      "height": 17
+    },
+    "obstacles": [
+      {
+        "x": 0,
+        "y": 0,
+        "t": "ROCK"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "t": "ROCK"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "t": "ROCK"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "t": "ROCK"
+      },
+      {
+        "x": 4,
+        "y": 0,
+        "t": "ROCK"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "t": "ROCK"
+      },
+      {
+        "x": 6,
+        "y": 0,
+        "t": "ROCK"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "t": "ROCK"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "t": "ROCK"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "t": "ROCK"
+      },
+      {
+        "x": 10,
+        "y": 0,
+        "t": "ROCK"
+      },
+      {
+        "x": 11,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "t": "ROCK"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "t": "ROCK"
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "t": "ROCK"
+      },
+      {
+        "x": 7,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "t": "ROCK"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "t": "ROCK"
+      },
+      {
+        "x": 8,
+        "y": 3,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "t": "ROCK"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 5,
+        "t": "ROCK"
+      },
+      {
+        "x": 1,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "t": "ROCK"
+      },
+      {
+        "x": 1,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 7,
+        "t": "ROCK"
+      },
+      {
+        "x": 8,
+        "y": 7,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "t": "ROCK"
+      },
+      {
+        "x": 3,
+        "y": 8,
+        "t": "ROCK"
+      },
+      {
+        "x": 8,
+        "y": 8,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 9,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 9,
+        "t": "ROCK"
+      },
+      {
+        "x": 0,
+        "y": 10,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 11,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 12,
+        "t": "ROCK"
+      },
+      {
+        "x": 1,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 12,
+        "t": "ROCK"
+      },
+      {
+        "x": 8,
+        "y": 12,
+        "t": "ROCK"
+      },
+      {
+        "x": 9,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 13,
+        "t": "ROCK"
+      },
+      {
+        "x": 1,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 14,
+        "t": "ROCK"
+      },
+      {
+        "x": 1,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 14,
+        "t": "ROCK"
+      },
+      {
+        "x": 14,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 15,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 16,
+        "t": "ROCK"
+      },
+      {
+        "x": 3,
+        "y": 16,
+        "t": "ROCK"
+      },
+      {
+        "x": 8,
+        "y": 16,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 17,
+        "t": "ROCK"
+      },
+      {
+        "x": 3,
+        "y": 17,
+        "t": "ROCK"
+      },
+      {
+        "x": 8,
+        "y": 17,
+        "t": "ROCK"
+      },
+      {
+        "x": 9,
+        "y": 17,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 18,
+        "t": "ROCK"
+      },
+      {
+        "x": 12,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 18,
+        "t": "VOID"
+      }
+    ]
+  },
+  {
+    "id": "foret_des_abraknydes_4",
+    "name": "Forêt des Abraknydes [-9,-12]",
+    "sourceId": 4,
+    "area": "Forêt des Abraknydes",
+    "coordinate": "[-9,-12]",
+    "walkableCells": 208,
+    "spawnDistance": 14,
+    "description": "Carte Dofus authentique (Continent Amaknien), mapId 4.",
+    "width": 16,
+    "height": 23,
+    "spawns": [
+      {
+        "x": 2,
+        "y": 13
+      },
+      {
+        "x": 13,
+        "y": 10
+      }
+    ],
+    "startingCells": [
+      [
+        {
+          "x": 2,
+          "y": 13,
+          "cellId": 235
+        },
+        {
+          "x": 2,
+          "y": 12,
+          "cellId": 221
+        },
+        {
+          "x": 2,
+          "y": 11,
+          "cellId": 207
+        },
+        {
+          "x": 2,
+          "y": 10,
+          "cellId": 193
+        },
+        {
+          "x": 3,
+          "y": 16,
+          "cellId": 292
+        },
+        {
+          "x": 3,
+          "y": 15,
+          "cellId": 278
+        },
+        {
+          "x": 3,
+          "y": 14,
+          "cellId": 264
+        },
+        {
+          "x": 3,
+          "y": 13,
+          "cellId": 250
+        }
+      ],
+      [
+        {
+          "x": 13,
+          "y": 10,
+          "cellId": 358
+        },
+        {
+          "x": 13,
+          "y": 11,
+          "cellId": 372
+        },
+        {
+          "x": 15,
+          "y": 11,
+          "cellId": 402
+        },
+        {
+          "x": 15,
+          "y": 10,
+          "cellId": 388
+        },
+        {
+          "x": 14,
+          "y": 13,
+          "cellId": 415
+        },
+        {
+          "x": 11,
+          "y": 13,
+          "cellId": 370
+        },
+        {
+          "x": 11,
+          "y": 14,
+          "cellId": 384
+        },
+        {
+          "x": 11,
+          "y": 15,
+          "cellId": 398
+        }
+      ]
+    ],
+    "placement": {
+      "status": "historical",
+      "source": "GDCore",
+      "places": "dRdDdpdbeKeweid6|fMf0gsgegFfYgago",
+      "width": 15,
+      "height": 17
+    },
+    "obstacles": [
+      {
+        "x": 0,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "t": "ROCK"
+      },
+      {
+        "x": 4,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 6,
+        "t": "ROCK"
+      },
+      {
+        "x": 0,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 7,
+        "t": "ROCK"
+      },
+      {
+        "x": 13,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 8,
+        "t": "ROCK"
+      },
+      {
+        "x": 0,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 9,
+        "t": "ROCK"
+      },
+      {
+        "x": 9,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 12,
+        "t": "ROCK"
+      },
+      {
+        "x": 0,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 22,
+        "t": "VOID"
+      }
+    ]
+  },
+  {
+    "id": "l_ile_des_wabbits_1720",
+    "name": "L'île des Wabbits [25,-7]",
+    "sourceId": 1720,
+    "area": "L'île des Wabbits",
+    "coordinate": "[25,-7]",
+    "walkableCells": 132,
+    "spawnDistance": 24,
+    "description": "Carte Dofus authentique (Continent Amaknien), mapId 1720.",
+    "width": 16,
+    "height": 17,
+    "spawns": [
+      {
+        "x": 1,
+        "y": 14
+      },
+      {
+        "x": 13,
+        "y": 2
+      }
+    ],
+    "startingCells": [
+      [
+        {
+          "x": 1,
+          "y": 14
+        }
+      ],
+      [
+        {
+          "x": 13,
+          "y": 2
+        }
+      ]
+    ],
+    "placement": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps."
+    },
+    "obstacles": [
+      {
+        "x": 0,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 7,
+        "t": "ROCK"
+      },
+      {
+        "x": 7,
+        "y": 7,
+        "t": "ROCK"
+      },
+      {
+        "x": 9,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 8,
+        "t": "ROCK"
+      },
+      {
+        "x": 9,
+        "y": 8,
+        "t": "ROCK"
+      },
+      {
+        "x": 10,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 8,
+        "t": "ROCK"
+      },
+      {
+        "x": 13,
+        "y": 8,
+        "t": "ROCK"
+      },
+      {
+        "x": 15,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 9,
+        "t": "ROCK"
+      },
+      {
+        "x": 8,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 9,
+        "t": "ROCK"
+      },
+      {
+        "x": 10,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 10,
+        "t": "ROCK"
+      },
+      {
+        "x": 9,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 13,
+        "t": "ROCK"
+      },
+      {
+        "x": 14,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 16,
+        "t": "VOID"
+      }
+    ]
+  },
+  {
+    "id": "pandala_donjon_8313",
+    "name": "Pandala Donjon [32,-38]",
+    "sourceId": 8313,
+    "area": "Pandala Donjon",
+    "coordinate": "[32,-38]",
+    "walkableCells": 255,
+    "spawnDistance": 3,
+    "description": "Carte Dofus authentique (Continent Amaknien), mapId 8313.",
+    "width": 26,
+    "height": 26,
+    "spawns": [
+      {
+        "x": 11,
+        "y": 18
+      },
+      {
+        "x": 11,
+        "y": 21
+      }
+    ],
+    "startingCells": [
+      [
+        {
+          "x": 11,
+          "y": 18,
+          "cellId": 221
+        },
+        {
+          "x": 15,
+          "y": 22,
+          "cellId": 337
+        },
+        {
+          "x": 16,
+          "y": 18,
+          "cellId": 296
+        },
+        {
+          "x": 20,
+          "y": 21,
+          "cellId": 398
+        },
+        {
+          "x": 23,
+          "y": 17,
+          "cellId": 387
+        },
+        {
+          "x": 22,
+          "y": 10,
+          "cellId": 274
+        },
+        {
+          "x": 11,
+          "y": 11,
+          "cellId": 123
+        },
+        {
+          "x": 14,
+          "y": 8,
+          "cellId": 126
+        }
+      ],
+      [
+        {
+          "x": 11,
+          "y": 21,
+          "cellId": 263
+        },
+        {
+          "x": 18,
+          "y": 21,
+          "cellId": 368
+        },
+        {
+          "x": 12,
+          "y": 14,
+          "cellId": 180
+        },
+        {
+          "x": 22,
+          "y": 20,
+          "cellId": 414
+        },
+        {
+          "x": 22,
+          "y": 14,
+          "cellId": 330
+        },
+        {
+          "x": 18,
+          "y": 16,
+          "cellId": 298
+        },
+        {
+          "x": 14,
+          "y": 11,
+          "cellId": 168
+        },
+        {
+          "x": 18,
+          "y": 8,
+          "cellId": 186
+        }
+      ]
+    ],
+    "placement": {
+      "status": "historical",
+      "source": "GDCore",
+      "places": "dDfreOgogdesb7b-|ehfWc0gEfkeQcOc6",
+      "width": 15,
+      "height": 17
+    },
+    "obstacles": [
+      {
+        "x": 0,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 5,
+        "t": "ROCK"
+      },
+      {
+        "x": 19,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 20,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 20,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 21,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 21,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 22,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 21,
+        "y": 8,
+        "t": "ROCK"
+      },
+      {
+        "x": 22,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 23,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 9,
+        "t": "ROCK"
+      },
+      {
+        "x": 23,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 24,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 24,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 20,
+        "y": 11,
+        "t": "ROCK"
+      },
+      {
+        "x": 25,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 20,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 20,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 16,
+        "t": "ROCK"
+      },
+      {
+        "x": 13,
+        "y": 16,
+        "t": "ROCK"
+      },
+      {
+        "x": 25,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 17,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 17,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 17,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 17,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 17,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 17,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 17,
+        "t": "ROCK"
+      },
+      {
+        "x": 13,
+        "y": 17,
+        "t": "ROCK"
+      },
+      {
+        "x": 20,
+        "y": 17,
+        "t": "ROCK"
+      },
+      {
+        "x": 25,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 20,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 19,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 19,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 19,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 19,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 19,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 20,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 20,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 20,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 21,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 21,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 21,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 22,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 22,
+        "t": "WATER"
+      },
+      {
+        "x": 24,
+        "y": 22,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 23,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 23,
+        "t": "WATER"
+      },
+      {
+        "x": 23,
+        "y": 23,
+        "t": "WATER"
+      },
+      {
+        "x": 24,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 24,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 24,
+        "t": "WATER"
+      },
+      {
+        "x": 22,
+        "y": 24,
+        "t": "WATER"
+      },
+      {
+        "x": 23,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 25,
+        "t": "VOID"
+      }
+    ]
+  },
+  {
+    "id": "prison_999",
+    "name": "Prison [12,-7]",
+    "sourceId": 999,
+    "area": "Prison",
+    "coordinate": "[12,-7]",
+    "walkableCells": 104,
+    "spawnDistance": 20,
+    "description": "Carte Dofus authentique (Continent Amaknien), mapId 999.",
+    "width": 15,
+    "height": 17,
+    "spawns": [
+      {
+        "x": 13,
+        "y": 14
+      },
+      {
+        "x": 4,
+        "y": 3
+      }
+    ],
+    "startingCells": [
+      [
+        {
+          "x": 13,
+          "y": 14
+        }
+      ],
+      [
+        {
+          "x": 4,
+          "y": 3
+        }
+      ]
+    ],
+    "placement": {
+      "status": "local",
+      "reason": "Original placement list unavailable; retain the existing fixed local starts."
+    },
+    "obstacles": [
+      {
+        "x": 0,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 4,
+        "t": "ROCK"
+      },
+      {
+        "x": 9,
+        "y": 4,
+        "t": "ROCK"
+      },
+      {
+        "x": 14,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 7,
+        "t": "ROCK"
+      },
+      {
+        "x": 14,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 8,
+        "t": "ROCK"
+      },
+      {
+        "x": 8,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 16,
+        "t": "VOID"
+      }
+    ]
+  },
+  {
+    "id": "sufokia_1907",
+    "name": "Sufokia [12,24]",
+    "sourceId": 1907,
+    "area": "Sufokia",
+    "coordinate": "[12,24]",
+    "walkableCells": 103,
+    "spawnDistance": 21,
+    "description": "Carte Dofus authentique (Continent Amaknien), mapId 1907.",
+    "width": 11,
+    "height": 15,
+    "spawns": [
+      {
+        "x": 10,
+        "y": 14
+      },
+      {
+        "x": 2,
+        "y": 1
+      }
+    ],
+    "startingCells": [
+      [
+        {
+          "x": 10,
+          "y": 14
+        }
+      ],
+      [
+        {
+          "x": 2,
+          "y": 1
+        }
+      ]
+    ],
+    "placement": {
+      "status": "local",
+      "reason": "No reliable map-specific list: empty records or the same generic positions reused across unrelated maps."
+    },
+    "obstacles": [
+      {
+        "x": 0,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "t": "ROCK"
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 1,
+        "t": "ROCK"
+      },
+      {
+        "x": 8,
+        "y": 1,
+        "t": "ROCK"
+      },
+      {
+        "x": 9,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 4,
+        "t": "ROCK"
+      },
+      {
+        "x": 0,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 14,
+        "t": "ROCK"
+      },
+      {
+        "x": 2,
+        "y": 14,
+        "t": "ROCK"
+      }
+    ]
+  },
+  {
+    "id": "tainela_2073",
+    "name": "Tainéla [2,-34]",
+    "sourceId": 2073,
+    "area": "Tainéla",
+    "coordinate": "[2,-34]",
+    "walkableCells": 205,
+    "spawnDistance": 13,
+    "description": "Carte Dofus authentique (Continent Amaknien), mapId 2073.",
+    "width": 20,
+    "height": 22,
+    "spawns": [
+      {
+        "x": 9,
+        "y": 18
+      },
+      {
+        "x": 10,
+        "y": 6
+      }
+    ],
+    "startingCells": [
+      [
+        {
+          "x": 9,
+          "y": 18,
+          "cellId": 307
+        },
+        {
+          "x": 10,
+          "y": 18,
+          "cellId": 322
+        },
+        {
+          "x": 11,
+          "y": 20,
+          "cellId": 365
+        },
+        {
+          "x": 12,
+          "y": 20,
+          "cellId": 380
+        },
+        {
+          "x": 14,
+          "y": 20,
+          "cellId": 410
+        },
+        {
+          "x": 16,
+          "y": 18,
+          "cellId": 412
+        },
+        {
+          "x": 15,
+          "y": 20,
+          "cellId": 425
+        },
+        {
+          "x": 17,
+          "y": 18,
+          "cellId": 427
+        }
+      ],
+      [
+        {
+          "x": 10,
+          "y": 6,
+          "cellId": 154
+        },
+        {
+          "x": 11,
+          "y": 6,
+          "cellId": 169
+        },
+        {
+          "x": 12,
+          "y": 5,
+          "cellId": 170
+        },
+        {
+          "x": 13,
+          "y": 5,
+          "cellId": 185
+        },
+        {
+          "x": 12,
+          "y": 7,
+          "cellId": 198
+        },
+        {
+          "x": 13,
+          "y": 7,
+          "cellId": 213
+        },
+        {
+          "x": 14,
+          "y": 6,
+          "cellId": 214
+        },
+        {
+          "x": 15,
+          "y": 6,
+          "cellId": 229
+        }
+      ]
+    ],
+    "placement": {
+      "status": "historical",
+      "source": "GDCore",
+      "places": "eZfcfTf8gAgCgPgR|cAcPcQc5dgdvdwdL",
+      "width": 15,
+      "height": 17
+    },
+    "obstacles": [
+      {
+        "x": 0,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 2,
+        "t": "ROCK"
+      },
+      {
+        "x": 7,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 2,
+        "t": "ROCK"
+      },
+      {
+        "x": 14,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 8,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 9,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 10,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 7,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 12,
+        "t": "ROCK"
+      },
+      {
+        "x": 2,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 1,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 3,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 19,
+        "t": "ROCK"
+      },
+      {
+        "x": 14,
+        "y": 19,
+        "t": "ROCK"
+      },
+      {
+        "x": 18,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 21,
+        "t": "VOID"
+      }
+    ]
+  },
+  {
+    "id": "astrub_7423",
+    "name": "Astrub PvP [5,-23]",
+    "frameToCells": true,
+    "sourceId": 7423,
+    "area": "Astrub",
+    "coordinate": "[5,-23]",
+    "walkableCells": 404,
+    "spawnDistance": 7,
+    "description": "Carte Dofus authentique (Continent Amaknien), mapId 7423.",
+    "width": 31,
+    "height": 31,
+    "spawns": [
+      {
+        "x": 7,
+        "y": 14
+      },
+      {
+        "x": 14,
+        "y": 14
+      }
+    ],
+    "startingCells": [
+      [
+        {
+          "x": 7,
+          "y": 14,
+          "cellId": 105
+        },
+        {
+          "x": 7,
+          "y": 15,
+          "cellId": 119
+        },
+        {
+          "x": 8,
+          "y": 14,
+          "cellId": 120
+        },
+        {
+          "x": 7,
+          "y": 16,
+          "cellId": 133
+        },
+        {
+          "x": 8,
+          "y": 15,
+          "cellId": 134
+        },
+        {
+          "x": 7,
+          "y": 17,
+          "cellId": 147
+        },
+        {
+          "x": 8,
+          "y": 16,
+          "cellId": 148
+        },
+        {
+          "x": 8,
+          "y": 17,
+          "cellId": 162
+        }
+      ],
+      [
+        {
+          "x": 14,
+          "y": 14,
+          "cellId": 210
+        },
+        {
+          "x": 14,
+          "y": 15,
+          "cellId": 224
+        },
+        {
+          "x": 15,
+          "y": 14,
+          "cellId": 225
+        },
+        {
+          "x": 14,
+          "y": 16,
+          "cellId": 238
+        },
+        {
+          "x": 15,
+          "y": 15,
+          "cellId": 239
+        },
+        {
+          "x": 14,
+          "y": 17,
+          "cellId": 252
+        },
+        {
+          "x": 15,
+          "y": 16,
+          "cellId": 253
+        },
+        {
+          "x": 15,
+          "y": 17,
+          "cellId": 267
+        }
+      ]
+    ],
+    "placement": {
+      "status": "historical",
+      "source": "GDCore",
+      "places": "bPb3b4cfcgctcucI|dsdGdHdUdVd8d9el",
+      "width": 15,
+      "height": 17
+    },
+    "obstacles": [
+      {
+        "x": 0,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 12,
+        "y": 5,
+        "t": "ROCK"
+      },
+      {
+        "x": 18,
+        "y": 5,
+        "t": "ROCK"
+      },
+      {
+        "x": 19,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 20,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 20,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 21,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 21,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 22,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 22,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 23,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 23,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 24,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 24,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 26,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 12,
+        "t": "ROCK"
+      },
+      {
+        "x": 6,
+        "y": 12,
+        "t": "ROCK"
+      },
+      {
+        "x": 26,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 27,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 27,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 28,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 28,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 29,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 15,
+        "t": "ROCK"
+      },
+      {
+        "x": 29,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 30,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 28,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 29,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 30,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 17,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 17,
+        "t": "ROCK"
+      },
+      {
+        "x": 29,
+        "y": 17,
+        "t": "WATER"
+      },
+      {
+        "x": 30,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 28,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 29,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 19,
+        "t": "WATER"
+      },
+      {
+        "x": 27,
+        "y": 19,
+        "t": "WATER"
+      },
+      {
+        "x": 28,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 20,
+        "t": "WATER"
+      },
+      {
+        "x": 26,
+        "y": 20,
+        "t": "WATER"
+      },
+      {
+        "x": 27,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 21,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 21,
+        "t": "WATER"
+      },
+      {
+        "x": 26,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 22,
+        "t": "WATER"
+      },
+      {
+        "x": 24,
+        "y": 22,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 23,
+        "t": "WATER"
+      },
+      {
+        "x": 23,
+        "y": 23,
+        "t": "WATER"
+      },
+      {
+        "x": 24,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 24,
+        "t": "WATER"
+      },
+      {
+        "x": 22,
+        "y": 24,
+        "t": "WATER"
+      },
+      {
+        "x": 23,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 25,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 25,
+        "t": "ROCK"
+      },
+      {
+        "x": 18,
+        "y": 25,
+        "t": "WATER"
+      },
+      {
+        "x": 21,
+        "y": 25,
+        "t": "WATER"
+      },
+      {
+        "x": 22,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 26,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 26,
+        "t": "ROCK"
+      },
+      {
+        "x": 20,
+        "y": 26,
+        "t": "WATER"
+      },
+      {
+        "x": 21,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 27,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 27,
+        "t": "WATER"
+      },
+      {
+        "x": 20,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 28,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 28,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 29,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 29,
+        "t": "ROCK"
+      },
+      {
+        "x": 17,
+        "y": 29,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 30,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 30,
+        "t": "VOID"
+      }
+    ]
+  },
+  {
+    "id": "amakna_952",
+    "name": "Amakna PvP [-1,0]",
+    "frameToCells": true,
+    "sourceId": 952,
+    "area": "Amakna",
+    "coordinate": "[-1,0]",
+    "walkableCells": 387,
+    "spawnDistance": 4,
+    "description": "Carte Dofus authentique (Continent Amaknien), mapId 952.",
+    "width": 31,
+    "height": 31,
+    "spawns": [
+      {
+        "x": 11,
+        "y": 16
+      },
+      {
+        "x": 12,
+        "y": 13
+      }
+    ],
+    "startingCells": [
+      [
+        {
+          "x": 11,
+          "y": 16,
+          "cellId": 193
+        },
+        {
+          "x": 12,
+          "y": 19,
+          "cellId": 250
+        },
+        {
+          "x": 24,
+          "y": 12,
+          "cellId": 332
+        },
+        {
+          "x": 15,
+          "y": 22,
+          "cellId": 337
+        },
+        {
+          "x": 26,
+          "y": 16,
+          "cellId": 418
+        },
+        {
+          "x": 19,
+          "y": 24,
+          "cellId": 425
+        },
+        {
+          "x": 22,
+          "y": 23,
+          "cellId": 456
+        },
+        {
+          "x": 25,
+          "y": 20,
+          "cellId": 459
+        }
+      ],
+      [
+        {
+          "x": 12,
+          "y": 13,
+          "cellId": 166
+        },
+        {
+          "x": 14,
+          "y": 11,
+          "cellId": 168
+        },
+        {
+          "x": 16,
+          "y": 10,
+          "cellId": 184
+        },
+        {
+          "x": 18,
+          "y": 10,
+          "cellId": 214
+        },
+        {
+          "x": 20,
+          "y": 12,
+          "cellId": 272
+        },
+        {
+          "x": 22,
+          "y": 14,
+          "cellId": 330
+        },
+        {
+          "x": 22,
+          "y": 16,
+          "cellId": 358
+        },
+        {
+          "x": 21,
+          "y": 18,
+          "cellId": 371
+        },
+        {
+          "x": 13,
+          "y": 19,
+          "cellId": 265
+        }
+      ]
+    ],
+    "placement": {
+      "status": "historical",
+      "source": "GDCore",
+      "places": "dbd6fmfrgIgPhihl|cMcOc4dweqfkfMfZej",
+      "width": 15,
+      "height": 17
+    },
+    "obstacles": [
+      {
+        "x": 0,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 0,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 0,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 1,
+        "t": "WATER"
+      },
+      {
+        "x": 16,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 17,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 1,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 14,
+        "y": 2,
+        "t": "ROCK"
+      },
+      {
+        "x": 16,
+        "y": 2,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 2,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 3,
+        "t": "ROCK"
+      },
+      {
+        "x": 16,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 3,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 3,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 4,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 4,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 11,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 13,
+        "y": 5,
+        "t": "ROCK"
+      },
+      {
+        "x": 14,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 5,
+        "t": "WATER"
+      },
+      {
+        "x": 20,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 5,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 6,
+        "t": "ROCK"
+      },
+      {
+        "x": 19,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 20,
+        "y": 6,
+        "t": "WATER"
+      },
+      {
+        "x": 21,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 6,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 21,
+        "y": 7,
+        "t": "WATER"
+      },
+      {
+        "x": 22,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 7,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 22,
+        "y": 8,
+        "t": "WATER"
+      },
+      {
+        "x": 23,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 8,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 6,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 21,
+        "y": 9,
+        "t": "ROCK"
+      },
+      {
+        "x": 23,
+        "y": 9,
+        "t": "WATER"
+      },
+      {
+        "x": 24,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 9,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 5,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 24,
+        "y": 10,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 10,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 11,
+        "t": "WATER"
+      },
+      {
+        "x": 26,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 11,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 26,
+        "y": 12,
+        "t": "WATER"
+      },
+      {
+        "x": 27,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 12,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 4,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 27,
+        "y": 13,
+        "t": "WATER"
+      },
+      {
+        "x": 28,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 13,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 14,
+        "t": "ROCK"
+      },
+      {
+        "x": 20,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 28,
+        "y": 14,
+        "t": "WATER"
+      },
+      {
+        "x": 29,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 14,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 2,
+        "y": 15,
+        "t": "ROCK"
+      },
+      {
+        "x": 17,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 20,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 29,
+        "y": 15,
+        "t": "WATER"
+      },
+      {
+        "x": 30,
+        "y": 15,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 16,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 16,
+        "t": "ROCK"
+      },
+      {
+        "x": 18,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 16,
+        "t": "ROCK"
+      },
+      {
+        "x": 20,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 30,
+        "y": 16,
+        "t": "WATER"
+      },
+      {
+        "x": 0,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 17,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 17,
+        "t": "ROCK"
+      },
+      {
+        "x": 29,
+        "y": 17,
+        "t": "WATER"
+      },
+      {
+        "x": 30,
+        "y": 17,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 28,
+        "y": 18,
+        "t": "WATER"
+      },
+      {
+        "x": 29,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 18,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 19,
+        "t": "WATER"
+      },
+      {
+        "x": 27,
+        "y": 19,
+        "t": "WATER"
+      },
+      {
+        "x": 28,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 19,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 20,
+        "t": "WATER"
+      },
+      {
+        "x": 26,
+        "y": 20,
+        "t": "WATER"
+      },
+      {
+        "x": 27,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 20,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 21,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 21,
+        "t": "WATER"
+      },
+      {
+        "x": 26,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 21,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 22,
+        "t": "WATER"
+      },
+      {
+        "x": 24,
+        "y": 22,
+        "t": "WATER"
+      },
+      {
+        "x": 25,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 22,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 23,
+        "t": "WATER"
+      },
+      {
+        "x": 23,
+        "y": 23,
+        "t": "WATER"
+      },
+      {
+        "x": 24,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 23,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 24,
+        "t": "WATER"
+      },
+      {
+        "x": 22,
+        "y": 24,
+        "t": "WATER"
+      },
+      {
+        "x": 23,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 24,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 25,
+        "t": "WATER"
+      },
+      {
+        "x": 21,
+        "y": 25,
+        "t": "WATER"
+      },
+      {
+        "x": 22,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 25,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 26,
+        "t": "WATER"
+      },
+      {
+        "x": 20,
+        "y": 26,
+        "t": "WATER"
+      },
+      {
+        "x": 21,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 26,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 27,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 27,
+        "t": "WATER"
+      },
+      {
+        "x": 20,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 27,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 28,
+        "t": "WATER"
+      },
+      {
+        "x": 15,
+        "y": 28,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 28,
+        "t": "ROCK"
+      },
+      {
+        "x": 18,
+        "y": 28,
+        "t": "WATER"
+      },
+      {
+        "x": 19,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 28,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 29,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 29,
+        "t": "WATER"
+      },
+      {
+        "x": 18,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 29,
+        "t": "VOID"
+      },
+      {
+        "x": 0,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 1,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 2,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 3,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 4,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 5,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 6,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 7,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 8,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 9,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 10,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 11,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 12,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 13,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 14,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 15,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 16,
+        "y": 30,
+        "t": "WATER"
+      },
+      {
+        "x": 17,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 18,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 19,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 20,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 21,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 22,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 23,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 24,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 25,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 26,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 27,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 28,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 29,
+        "y": 30,
+        "t": "VOID"
+      },
+      {
+        "x": 30,
+        "y": 30,
         "t": "VOID"
       }
     ]

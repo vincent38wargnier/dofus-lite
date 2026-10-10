@@ -1,0 +1,198 @@
+/* Offline stuff builder: library, paper doll, catalogue and live comparison. */
+.loadout-picker [hidden] { display: none !important; }
+.loadout-picker button:focus-visible, .loadout-picker input:focus-visible, .loadout-picker select:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.loadout-picker .loadout-heading { margin-bottom: 16px; }
+.loadout-picker .loadout-heading h2 { font-size: 22px; }
+.loadout-picker .loadout-sides { margin-bottom: 18px; }
+.loadout-picker .loadout-errors { margin: 14px 0; }
+.stuff-library { border: 1px solid #665034; background: linear-gradient(105deg, #382c1d, #2c231a); border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+.stuff-savebar { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.stuff-current { min-width: 0; }
+.stuff-current h3 { font-size: 20px; margin: 5px 0; overflow-wrap: anywhere; }
+.stuff-current p { font-size: 11px; color: var(--muted); margin: 0; line-height: 1.5; }
+.stuff-dirty { color: var(--gold); font-size: 11px; margin-left: 8px; vertical-align: middle; }
+.stuff-save-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; min-width: 0; max-width: 100%; }
+.stuff-save-actions .btn { font-size: 12px; }
+.stuff-library-toggle span { background: #17130e; border-radius: 4px; padding: 2px 6px; margin-left: 6px; color: var(--gold); }
+.stuff-library-toggle.selected { border-color: var(--gold); }
+.stuff-quick-row { display: flex; align-items: center; gap: 18px; margin-top: 14px; padding-top: 13px; border-top: 1px solid #66503480; }
+.stuff-quick-row label { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--gold); min-width: 0; }
+.stuff-quick-row select { width: 290px; max-width: 100%; font-size: 12px; }
+.stuff-quick-row > span { font-size: 11px; color: var(--muted); line-height: 1.5; }
+.stuff-name-form { display: flex; align-items: flex-end; gap: 8px; padding: 14px 0 0; }
+.stuff-name-form label { flex: 1; display: flex; flex-direction: column; gap: 5px; font-size: 12px; }
+.stuff-name-form input { width: 100%; }
+.stuff-notice { display: flex; align-items: center; gap: 10px; background: #253729; color: #b8dbb5; padding: 8px 12px; border-radius: 6px; font-size: 12px; margin-top: 12px; }
+.stuff-notice .btn { font-size: 11px; padding: 4px 8px; margin-left: auto; }
+.stuff-dismiss { font-size: 20px; line-height: 1; color: inherit; border: 0; background: none; cursor: pointer; margin-left: auto; }
+.stuff-storage-error { font-size: 12px; line-height: 1.6; margin-bottom: 0; }
+.stuff-library-panel { padding-top: 20px; }
+.stuff-library-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.stuff-library-heading h3 { margin: 0 0 5px; font-size: 20px; }
+.stuff-library-heading p { font-size: 12px; line-height: 1.5; color: var(--muted); margin: 0 0 14px; max-width: 650px; }
+.stuff-library-filters { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.stuff-library-filters input { flex: 1; }
+.stuff-library-filters span { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.stuff-card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; max-height: 620px; overflow-y: auto; padding: 2px; }
+.stuff-card { padding: 14px; border: 1px solid var(--border); border-radius: 8px; background: #211a13; min-width: 0; }
+.stuff-card.active { border-color: var(--gold-soft); }
+.stuff-card-heading { display: flex; align-items: center; gap: 8px; }
+.stuff-card-heading .retro-portrait { width: 44px; height: 44px; flex-shrink: 0; }
+.stuff-card-heading h4 { margin: 0; font-size: 14px; overflow-wrap: anywhere; }
+.stuff-card-heading p { margin: 4px 0 0; font-size: 10px; color: var(--muted); }
+.stuff-card-items { display: flex; align-items: center; gap: 2px; min-height: 52px; margin: 10px 0; flex-wrap: wrap; }
+.stuff-card-items .equipment-icon { width: 27px; height: 27px; }
+.stuff-card-totals { display: flex; flex-wrap: wrap; gap: 10px; font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; }
+.stuff-card .stuff-load { width: 100%; font-size: 12px; }
+.stuff-card-actions { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.stuff-card-actions button { border: 0; background: none; padding: 3px 0; cursor: pointer; color: var(--muted); font-size: 11px; }
+.stuff-card-actions button:hover { color: var(--text); text-decoration: underline; }
+.stuff-card-actions .penalty { color: #d88e7e; }
+.stuff-library-empty { text-align: center; padding: 28px 14px; border: 1px dashed #665034; border-radius: 8px; }
+.stuff-library-empty strong { color: var(--gold); font-size: 15px; }
+.stuff-library-empty p { font-size: 12px; line-height: 1.7; color: var(--muted); max-width: 560px; margin: 8px auto 0; }
+.stuff-library-note { margin: 12px 0 0; font-size: 10px; color: var(--muted); }
+.builder-navigation { display: flex; gap: 24px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.builder-navigation button { position: relative; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted); padding: 0 2px 13px; cursor: pointer; font-size: 13px; font-weight: 650; }
+.builder-navigation button.selected { border-bottom-color: var(--gold); color: var(--gold); }
+.loadout-picker > .loadout-toolbar { margin-bottom: 12px; }
+.loadout-picker > .loadout-toolbar label { flex-direction: row; align-items: center; gap: 10px; }
+.loadout-picker .builder-set-tools { gap: 10px; margin-bottom: 10px; }
+.builder-set-tools label { flex-direction: row; align-items: center; }
+.loadout-picker .set-composition { margin: 0 0 16px; border: none; border-bottom: 1px solid var(--border-soft); padding: 0 0 12px; font-size: 11px; color: var(--muted); }
+.loadout-picker .loadout-workbench { grid-template-columns: 292px minmax(0, 1fr); gap: 20px; align-items: start; }
+.loadout-picker .loadout-character { border: 1px solid var(--border); border-radius: 10px; padding: 12px; background: #201912; }
+.equipment-paperdoll { display: grid; grid-template-columns: 58px minmax(0, 1fr) 58px; grid-template-rows: repeat(5, 60px); gap: 7px; background: radial-gradient(ellipse, #68533450, transparent 72%); }
+.equipment-paperdoll [data-slot="hat"] { grid-area: 1 / 1; }
+.equipment-paperdoll [data-slot="cape"] { grid-area: 2 / 1; }
+.equipment-paperdoll [data-slot="amulet"] { grid-area: 3 / 1; }
+.equipment-paperdoll [data-slot="ring1"] { grid-area: 4 / 1; }
+.equipment-paperdoll [data-slot="belt"] { grid-area: 5 / 1; }
+.equipment-paperdoll [data-slot="weapon"] { grid-area: 1 / 3; }
+.equipment-paperdoll [data-slot="shield"] { grid-area: 2 / 3; }
+.equipment-paperdoll [data-slot="ring2"] { grid-area: 3 / 3; }
+.equipment-paperdoll [data-slot="boots"] { grid-area: 4 / 3; }
+.equipment-paperdoll [data-slot="pet"] { grid-area: 5 / 3; }
+.equipment-character-art { grid-area: 1 / 2 / 6 / 3; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; text-align: center; }
+.equipment-character-art .retro-portrait { width: 132px; height: 132px; max-width: 130%; object-fit: contain; filter: drop-shadow(0 12px 15px #0005); }
+.equipment-character-art strong { font-size: 18px; margin-top: 8px; color: var(--gold); }
+.equipment-character-art span, .equipment-character-art small { margin-top: 6px; font-size: 11px; color: var(--muted); }
+.equipment-character-art small { font-size: 10px; margin-top: 14px; }
+.loadout-picker .equipment-slot { padding: 3px 1px; gap: 1px; justify-content: center; border-color: #5a472d; }
+.loadout-picker .equipment-slot:hover { background: #403221; border-color: var(--gold-soft); }
+.loadout-picker .equipment-slot.selected { border-color: var(--gold); box-shadow: 0 0 0 1px #e6b35a66; }
+.loadout-picker .equipment-slot .equipment-icon, .loadout-picker .slot-empty { width: 36px; height: 36px; }
+.equipment-dofus-slots { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; margin-top: 12px; }
+.equipment-dofus-slots .equipment-slot { border-radius: 18px 18px 7px 7px; }
+.equipment-dofus-slots .equipment-slot .equipment-icon, .equipment-dofus-slots .slot-empty { width: 30px; height: 34px; }
+.equipment-dofus-slots .equipment-slot span:last-child { font-size: 8px; }
+.loadout-picker .loadout-totals { margin: 12px 0; }
+.loadout-picker .loadout-totals span { padding: 7px 1px; }
+.loadout-picker .loadout-characteristics { row-gap: 8px; }
+.loadout-picker .loadout-characteristics dd small { display: inline; margin-left: 6px; font-size: 9px; }
+.loadout-picker .loadout-character .loadout-characteristics dd small { display: none; }
+.builder-stats-link { width: 100%; padding: 8px 5px; font-size: 10px; margin-top: 14px; white-space: normal; }
+.loadout-picker .equipment-inventory { padding: 0; border: 0; }
+.equipment-inventory-heading { display: flex; align-items: center; justify-content: space-between; margin: 0 0 15px; }
+.equipment-inventory-heading h3 { margin: 4px 0 0; font-size: 21px; }
+.equipment-inventory-heading > span { color: var(--muted); font-size: 11px; }
+.loadout-picker .equipment-search { grid-template-columns: minmax(0, 1fr) 170px; gap: 10px; }
+.equipment-filter-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 12px 0 14px; font-size: 10px; color: var(--muted); }
+.loadout-picker .equipment-level-filter { margin: 0; white-space: nowrap; font-size: 10px; }
+.equipment-level-range { display: flex; align-items: center; gap: 5px; }
+.loadout-picker .equipment-level-range input { width: 48px; padding: 6px 3px; text-align: center; }
+.loadout-picker .equipment-filter-row select { padding: 6px; margin-left: auto; }
+.equipment-filter-row .btn { padding: 5px 7px; font-size: 10px; }
+.loadout-picker .equipment-browser { grid-template-columns: minmax(0, 1fr) 244px; gap: 14px; }
+.loadout-picker .equipment-results { min-height: 330px; max-height: 500px; gap: 6px; }
+.loadout-picker .equipment-result { padding: 9px; min-height: 72px; border-color: var(--border-soft); flex-shrink: 0; }
+.loadout-picker .equipment-result.selected { border-color: var(--gold-soft); }
+.loadout-picker .equipment-result .equipment-icon { width: 44px; height: 44px; }
+.loadout-picker .equipment-result-text strong { font-size: 12px; line-height: 1.4; }
+.loadout-picker .equipment-result-text small { font-size: 10px; }
+.equipment-item-level small { display: block; color: var(--gold); margin-top: 5px; font-size: 9px; }
+.loadout-picker .equipment-inspector { border-color: #655033; padding: 14px; }
+.loadout-picker .equipment-inspector-head { margin-bottom: 12px; }
+.loadout-picker .equipment-inspector h3 { font-size: 15px; }
+.equipment-effects-title { text-transform: uppercase; letter-spacing: 1px; font-size: 9px; color: var(--muted); margin: 14px 0 7px; }
+.equipment-equipped-label { font-size: 10px; color: var(--gold); margin: 10px 0; text-align: center; }
+.equipment-comparison { padding: 10px; border-radius: 6px; background: #19160f; }
+.equipment-comparison h4 { margin: 0 0 8px; font-size: 11px; font-weight: 500; color: var(--muted); line-height: 1.5; }
+.equipment-comparison table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.equipment-comparison th { font-size: 8px; font-weight: 400; color: var(--muted); }
+.equipment-comparison td, .equipment-comparison th { padding: 4px 0; text-align: right; font-variant-numeric: tabular-nums; }
+.equipment-comparison td:first-child, .equipment-comparison th:first-child { text-align: left; }
+.equipment-comparison .gain { color: #9ed39d; font-weight: 600; }
+.equipment-comparison .penalty { font-weight: 600; }
+.equipment-comparison > small { display: block; font-size: 9px; line-height: 1.5; color: var(--muted); margin-top: 8px; }
+.equipment-comparison p { font-size: 10px; line-height: 1.6; }
+.loadout-picker .equipment-catalog-note { margin: 14px 0 0; font-size: 10px; line-height: 1.7; color: var(--muted); }
+.builder-stats-heading h3 { font-size: 20px; margin: 24px 0 8px; }
+.builder-stats-heading p { color: var(--gold); font-size: 13px; }
+.builder-stats-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+.builder-stats-columns .loadout-details { border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin: 0; background: var(--bg-soft); }
+.loadout-picker .spell-loadout { border: 0; padding-top: 10px; margin-top: 0; }
+@media (max-width: 1100px) {
+  .stuff-savebar { flex-wrap: wrap; }
+  .stuff-save-actions { justify-content: flex-start; }
+  .loadout-picker .loadout-workbench { grid-template-columns: 254px minmax(0, 1fr); gap: 14px; }
+  .loadout-picker .equipment-browser { grid-template-columns: minmax(0, 1fr) 210px; gap: 10px; }
+  .loadout-picker .equipment-result { flex-wrap: wrap; }
+  .loadout-picker .equipment-item-level { margin-left: 0; }
+  .equipment-paperdoll { grid-template-columns: 53px minmax(0, 1fr) 53px; }
+  .equipment-character-art .retro-portrait { width: 100px; height: 110px; }
+  .stuff-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 850px) {
+  .loadout-picker .loadout-workbench { grid-template-columns: 1fr; }
+  .loadout-picker .loadout-character { display: grid; grid-template-columns: 260px 1fr; column-gap: 20px; }
+  .equipment-paperdoll { grid-column: 1; grid-row: 1 / 4; }
+  .equipment-dofus-slots { grid-column: 1; grid-row: 4; }
+  .loadout-picker .loadout-totals { grid-column: 2; align-self: start; margin-top: 0; }
+  .loadout-picker .loadout-characteristics { grid-column: 2; }
+  .builder-stats-link { grid-column: 2; align-self: end; }
+  .loadout-picker .equipment-browser { grid-template-columns: minmax(0, 1fr) 250px; }
+  .loadout-picker .equipment-result { flex-wrap: nowrap; }
+  .loadout-picker .equipment-item-level { margin-left: auto; }
+  .stuff-quick-row { flex-wrap: wrap; gap: 8px; }
+}
+@media (max-width: 580px) {
+  .loadout-picker { padding: 12px; }
+  .loadout-picker .loadout-heading h2 { font-size: 18px; }
+  .loadout-picker .loadout-side { padding: 7px; gap: 6px; }
+  .loadout-picker .loadout-side .retro-portrait { width: 30px; height: 36px; }
+  .loadout-picker .loadout-side strong { font-size: 12px; }
+  .loadout-picker .loadout-side small { font-size: 9px; }
+  .stuff-library { padding: 12px; }
+  .stuff-current h3 { font-size: 18px; }
+  .stuff-save-actions { gap: 6px; }
+  .stuff-save-actions .btn { font-size: 11px; padding: 8px 10px; }
+  .stuff-quick-row label { width: 100%; display: block; }
+  .stuff-quick-row select { display: block; margin-top: 6px; width: 100%; }
+  .stuff-name-form { flex-wrap: wrap; }
+  .stuff-name-form label { flex: 1 1 100%; }
+  .stuff-card-grid { grid-template-columns: 1fr; }
+  .stuff-library-filters { flex-wrap: wrap; }
+  .stuff-library-filters input { flex: 1 1 100%; }
+  .stuff-library-filters select { flex: 1; }
+  .stuff-notice { flex-wrap: wrap; }
+  .builder-navigation { gap: 0; justify-content: space-between; }
+  .builder-navigation button { font-size: 11px; }
+  .loadout-picker .loadout-toolbar label { flex-wrap: wrap; font-size: 10px; }
+  .loadout-picker .loadout-toolbar select { max-width: 100%; }
+  .loadout-picker .builder-set-tools label { width: 100%; }
+  .builder-set-tools select { width: 100%; }
+  .loadout-picker .loadout-character { display: block; }
+  .equipment-paperdoll { grid-template-columns: 60px minmax(0, 1fr) 60px; }
+  .equipment-character-art .retro-portrait { width: 130px; height: 150px; }
+  .loadout-picker .loadout-totals { margin-top: 12px; }
+  .loadout-picker .equipment-search { grid-template-columns: 1fr; }
+  .loadout-picker .equipment-browser { grid-template-columns: 1fr; }
+  .loadout-picker .equipment-results { max-height: 310px; min-height: 120px; }
+  .loadout-picker .equipment-inspector { margin-top: 5px; }
+  .loadout-picker .equipment-result-text strong { font-size: 12px; }
+  .loadout-picker .equipment-filter-row select { margin-left: 0; }
+  .builder-stats-columns { grid-template-columns: 1fr; }
+  .builder-stats-columns .loadout-details { min-width: 0; }
+  .loadout-picker .set-piece-list button { max-width: 100%; white-space: normal; }
+}

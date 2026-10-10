@@ -1,8 +1,16 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MAPS } from '../engine/maps';
+import { COMBAT_RULES_VERSION } from '../engine/engine';
+import { effectDescription } from './combatEffects';
 
 function line(e, nameOf) {
   switch (e.t) {
+    case 'placement_start':
+      return { cls: 'turn', text: `Placement sur ${MAPS[e.mapId]?.name || e.mapId} — choisissez votre case de départ.` };
+    case 'placement_move':
+      return { cls: 'info', text: `${nameOf(e.fighter)} change de case de départ.` };
+    case 'placement_ready':
+      return { cls: 'info', text: `${nameOf(e.fighter)} est prêt pour le combat.` };
     case 'match_start': {
       const order = e.order.map((o) => `${o.name} (${o.initiative})`).join(' puis ');
       return { cls: 'turn', text: `🏟️ ${MAPS[e.mapId]?.name || e.mapId} — initiative: ${order}` };
@@ -17,6 +25,26 @@ function line(e, nameOf) {
       return { cls: 'info', text: `🏃 ${nameOf(e.fighter)} s'échappe du contact (${e.chance}%)` };
     case 'cast':
       return { cls: 'info', text: `${nameOf(e.fighter)} lance ${e.emoji} ${e.spellName}${e.crit ? ' — COUP CRITIQUE !' : ''}` };
+    case 'non_combat_effect':
+      return [413, 414].includes(e.spellId) ? { cls: 'info', text: `${e.name} : pas de capture dans cette arène.` } : null;
+    case 'turn_skipped':
+      return { cls: 'turn', text: `${nameOf(e.fighter)} passe son tour sous l’effet d’un sort.` };
+    case 'carry':
+      return { cls: 'info', text: `${nameOf(e.fighter)} porte ${nameOf(e.target)}.` };
+    case 'reveal':
+      return { cls: 'info', text: `${nameOf(e.fighter)} redevient visible.` };
+    case 'spell_reflected':
+      return { cls: 'info', text: `${nameOf(e.fighter)} renvoie le sort sur ${nameOf(e.target)}.` };
+    case 'unsupported_effects':
+      return { cls: 'error', text: `${e.name} : certains effets restent à reproduire (${e.effects.join(', ')}).` };
+    case 'state_change':
+      return { cls: 'info', text: `${nameOf(e.fighter)} : ${e.name}, état ${e.stateId} ${e.active ? 'activé' : 'retiré'}.` };
+    case 'hazard_add':
+      return { cls: 'info', text: `${nameOf(e.fighter)} pose ${e.name}${e.turns ? ` (${e.turns} tours)` : ''}.` };
+    case 'hazard_trigger':
+      return { cls: 'dmg', text: `${e.name} se déclenche sur ${nameOf(e.target)}.` };
+    case 'hazard_end':
+      return { cls: 'info', text: `${e.name} disparaît.` };
     case 'spell_fail':
       return { cls: 'error', text: `💫 ÉCHEC CRITIQUE de ${nameOf(e.fighter)} sur ${e.spellName}${e.endsTurn ? ' — le tour s’arrête !' : ''}` };
     case 'point_removal':
@@ -24,6 +52,8 @@ function line(e, nameOf) {
         cls: 'info',
         text: `🐌 ${e.name} : ${nameOf(e.target)} perd ${e.removed} ${e.stat}${e.dodged > 0 ? ` (${e.dodged} esquivé${e.dodged > 1 ? 's' : ''})` : ''}`,
       };
+    case 'pa_refund':
+      return { cls: 'info', text: `${nameOf(e.fighter)} récupère ${e.value} PA (${e.name}).` };
     case 'pull':
       return { cls: 'info', text: `🧲 ${nameOf(e.target)} est attiré` };
     case 'swap':
@@ -46,7 +76,7 @@ function line(e, nameOf) {
     case 'teleport':
       return { cls: 'info', text: `🦘 ${nameOf(e.fighter)} bondit` };
     case 'effect_add':
-      return { cls: 'info', text: `✨ ${nameOf(e.fighter)} : ${e.name} pendant ${e.turns} tour${e.turns > 1 ? 's' : ''}` };
+      return { cls: 'info', text: `✨ ${nameOf(e.fighter)} : ${['buff', 'punishment'].includes(e.kind) ? `${effectDescription(e)} — ` : ''}${e.name} (${e.turns} tour${e.turns > 1 ? 's' : ''})` };
     case 'effect_end':
       return { cls: 'info', text: `${e.name} se dissipe sur ${nameOf(e.fighter)}` };
     case 'say':
@@ -71,23 +101,46 @@ function line(e, nameOf) {
   }
 }
 
-export default function LogPanel({ events, namesById }) {
+export function combatRecord(events, namesById, state) {
+  return { format: 'dofus-lite-combat', version: 1, rulesVersion: COMBAT_RULES_VERSION,
+    mapId: state?.mapId || events.find(e => e.t === 'match_start')?.mapId,
+    seed: state?.seed ?? events.find(e => e.t === 'match_start')?.seed,
+    names: namesById, events: events.map((event, sequence) => ({ sequence, ...event })),
+    state: state || null };
+}
+
+export default function LogPanel({ events, namesById, state }) {
   const ref = useRef(null);
+  const [details, setDetails] = useState(false);
   const nameOf = (id) => namesById[id] || id;
 
   useEffect(() => {
     if (ref.current) ref.current.scrollTop = ref.current.scrollHeight;
   }, [events.length]);
 
+  const download = () => {
+    const record = combatRecord(events, namesById, state);
+    const url = URL.createObjectURL(new Blob([JSON.stringify(record, null, 2)], { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url; a.download = `combat-${record.seed || 'local'}.json`; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+
   return (
     <div className="panel">
-      <h3>Journal du combat</h3>
+      <div className="combat-log-heading"><h3>Journal du combat <small className="muted">{events.length} événements</small></h3>
+        <label><input type="checkbox" checked={details} onChange={e => setDetails(e.target.checked)} /> Détails des jets</label>
+        <button className="btn" onClick={download} disabled={!events.length}>Exporter le journal</button>
+      </div>
       <div className="log" ref={ref}>
         {events.length === 0
           ? <span className="muted small">Lancez un combat pour voir le déroulé…</span>
           : events.map((e, i) => {
             const l = line(e, nameOf);
-            return l ? <div key={i} className={`entry ${l.cls}`}>{l.text}</div> : null;
+            if (details && e.t === 'effect_roll') return <div key={i} className="entry info">Jet {e.roll}/99 · effet {e.effectId} · {e.chance}% · {e.selected ? 'retenu' : 'écarté'}</div>;
+            return l ? <div key={i} className={`entry ${l.cls}`}>{l.text}
+              {details && e.calculation && <div className="muted small">Jet {e.calculation.jet}{e.calculation.boost ? ` + charge ${e.calculation.boost}` : ''} → {e.calculation.raw} après caractéristiques → {e.calculation.afterRes} après résistances → armure −{e.calculation.armor}</div>}
+            </div> : null;
           })}
       </div>
     </div>

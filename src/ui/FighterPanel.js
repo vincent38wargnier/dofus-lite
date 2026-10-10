@@ -1,33 +1,33 @@
 import React from 'react';
 import { CLASSES } from '../engine/classes';
-import { ELEMENT_EMOJI } from '../engine/formulas';
+import { ELEMENT_EMOJI, effectiveStat } from '../engine/formulas';
+import { RetroPortrait, RetroSpellIcon } from './RetroAssets';
+import { spellsOf } from '../engine/engine';
+import { ITEMS } from '../engine/equipment';
+import { EquipmentIcon } from './LoadoutPicker';
+import FighterEffects from './FighterEffects';
+import FighterCombatStats from './FighterCombatStats';
+import { combatStatLabel, signed, statTone, temporaryBonuses } from './combatEffects';
 
 // Live sheet of one fighter for the current replay frame:
 // HP (érosion comprise), PA / PM, caractéristiques, effets, sorts.
-export default function FighterPanel({ fighter, side, isActive }) {
+export default function FighterPanel({ fighter, fighters, side, isActive, compact = false }) {
   const cls = CLASSES[fighter.classId];
   const hpPct = Math.max(0, Math.round((fighter.hp / fighter.maxHp) * 100));
   const eroded = fighter.baseMaxHp && fighter.maxHp < fighter.baseMaxHp;
 
-  const effectLabel = (e) => {
-    if (e.kind === 'poison') return `☠️ ${e.name} (${e.turnsLeft}t)`;
-    if (e.kind === 'punishment') return `⛓️ ${e.name} (${e.turnsLeft}t)`;
-    const statName = {
-      pa: 'PA', pm: 'PM', power: '% dmg', damage: 'dmg', crit: 'crit',
-      vitalite: 'vita', range: 'PO', armor: 'armure',
-      res_terre: '% rés. terre', res_feu: '% rés. feu', res_eau: '% rés. eau',
-      res_air: '% rés. air', res_neutre: '% rés. neutre',
-    }[e.stat] || e.stat;
-    return `${e.value > 0 ? '+' : ''}${e.value} ${statName} (${e.turnsLeft}t)`;
-  };
+  const bonuses = temporaryBonuses(fighter);
+  const spells = Object.values(spellsOf(fighter)).sort((a, b) => Number(!!b.isWeapon) - Number(!!a.isWeapon));
 
   return (
-    <div className={`panel fighter-card${isActive ? ' is-active' : ''}`}>
+    <div className={`panel fighter-card${isActive ? ' is-active' : ''}`} data-fighter-id={fighter.id}>
       <div className="fighter-head">
-        <div className={`face side-${side}-border`}>{cls.emoji}</div>
+        <div className={`face side-${side}-border`}>{fighter.isSummon ? <span aria-hidden="true">{fighter.emoji || '✦'}</span>
+          : <RetroPortrait classId={fighter.classId} side={side} fallback={cls.emoji} />}</div>
         <div className="who">
           <div className="bot-name">{fighter.name}</div>
-          <div className="class-name">{cls.name} · niv. {fighter.level}</div>
+          <div className="class-name">{fighter.isSummon ? (fighter.isDouble ? 'Double' : fighter.staticSummon ? 'Invocation statique' : 'Invocation') : cls.name} · niv. {fighter.level}</div>
+          {fighter.ownerId && <div className="class-name">Invoquée par {fighters?.[fighter.ownerId]?.name || fighter.ownerId}</div>}
         </div>
         {isActive ? <span className="turn-chip">à lui de jouer</span> : null}
       </div>
@@ -47,28 +47,33 @@ export default function FighterPanel({ fighter, side, isActive }) {
         </span>
       </div>
 
-      <div className="muted small">
-        🟤 {fighter.stats.force} force · 🔥 {fighter.stats.intelligence} intel ·
-        {' '}💧 {fighter.stats.chance} chance · 💨 {fighter.stats.agilite} agi ·
-        {' '}🦉 {fighter.stats.sagesse} sagesse
-      </div>
+      <dl className="fighter-live-stats" aria-label="Caractéristiques actuelles, bonus temporaires inclus">
+        {['force', 'intelligence', 'chance', 'agilite', 'sagesse', 'vitalite'].map(stat => {
+          const bonus = bonuses[stat] || 0;
+          const base = effectiveStat({ ...fighter, effects: [] }, stat);
+          return <div key={stat} className="fighter-live-stat" data-live-stat={stat}
+            title={`${combatStatLabel(stat)} : ${base} de base et équipement${bonus ? `, ${signed(bonus)} temporaire` : ''}`}>
+            <dt>{combatStatLabel(stat)}</dt><dd>{effectiveStat(fighter, stat)}
+              {bonus !== 0 && <small className={statTone(stat, bonus)} aria-label={`${signed(bonus)} temporaire`}>{signed(bonus)}</small>}
+            </dd>
+          </div>;
+        })}
+      </dl>
 
-      <div className="effects">
-        {fighter.effects.length === 0
-          ? <span className="chip">aucun effet</span>
-          : fighter.effects.map((e, i) => (
-            <span key={i} className={`chip ${e.kind === 'poison' ? 'poison' : 'buff'}`}>
-              {effectLabel(e)}
-            </span>
-          ))}
-      </div>
+      {compact && <FighterCombatStats fighter={fighter} />}
+      <FighterEffects fighter={fighter} fighters={fighters} isActive={isActive} />
 
-      <div className="spell-list">
-        {Object.values(cls.spells).map((s) => {
+      {!compact && fighter.equipment ? <details className="fighter-equipment"><summary>{fighter.equipment.items.length} objets équipés</summary>
+        {fighter.equipment.items.map(item => <div key={item.slot}><EquipmentIcon item={ITEMS[item.id]} /><span>{item.name}</span></div>)}
+        {fighter.equipment.sets.filter(set => set.effects.length).map(set => <p key={set.id}>{set.name} · {set.count}/{set.total}</p>)}
+      </details> : null}
+
+      {(!compact || fighter.isSummon) && <details className="fighter-spells"><summary>{fighter.isSummon ? 'Sorts de l’invocation' : 'Sorts et arme'} · {spells.length}</summary><div className="spell-list">
+        {spells.map((s) => {
           const cd = fighter.cooldowns?.[s.key] || 0;
           return (
             <div key={s.key} className={`spell-row${cd > 0 ? ' on-cd' : ''}`}>
-              <span>{s.emoji}</span>
+              <RetroSpellIcon spell={s} />
               <span>{s.name}</span>
               {s.element ? <span title={s.element}>{ELEMENT_EMOJI[s.element]}</span> : null}
               {cd > 0 ? <span className="cd">⏳{cd}</span> : null}
@@ -76,7 +81,7 @@ export default function FighterPanel({ fighter, side, isActive }) {
             </div>
           );
         })}
-      </div>
+      </div></details>}
     </div>
   );
 }

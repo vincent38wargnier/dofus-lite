@@ -1,0 +1,38 @@
+.fighter-live-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin: 0; }
+.fighter-live-stat { min-width: 0; padding: 7px 9px; border: 1px solid var(--border-soft); border-radius: 7px; background: var(--bg-soft); }
+.fighter-live-stat dt { font-size: 10px; color: var(--muted); }
+.fighter-live-stat dd { display: flex; align-items: baseline; flex-wrap: wrap; gap: 5px; margin: 2px 0 0; font-size: 15px; font-weight: 750; font-variant-numeric: tabular-nums; }
+.fighter-live-stat small { font-size: 10px; font-weight: 650; }
+.fighter-card .positive { color: #426c32; }
+.fighter-card .negative { color: #a23e35; }
+.fighter-card .neutral { color: var(--muted); }
+.fighter-effects { border-top: 1px solid var(--border); padding-top: 12px; min-width: 0; }
+.fighter-effects-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+.fighter-card .fighter-effects-heading h3 { margin: 0; font-size: 13px; font-weight: 750; letter-spacing: 0; text-transform: none; }
+.fighter-effects-heading > span { background: var(--panel-2); border-radius: 5px; padding: 1px 6px; font-size: 11px; font-weight: 700; }
+.fighter-effects-empty { font-size: 12px; color: var(--muted); margin: 0; }
+.combat-bonus-totals { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.combat-bonus { font-size: 11px; font-weight: 750; border-radius: 5px; padding: 4px 7px; background: #e7efde; font-variant-numeric: tabular-nums; }
+.combat-bonus.negative { background: #f7e6df; }
+.combat-effect-list { display: flex; flex-direction: column; gap: 8px; max-height: 370px; overflow-y: auto; padding-right: 3px; scrollbar-width: thin; scrollbar-color: #acb497 transparent; }
+.combat-effect-list:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+.combat-effect { padding: 9px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-soft); }
+.combat-effect-heading { display: flex; align-items: center; gap: 7px; min-width: 0; margin-bottom: 7px; }
+.combat-effect-heading .retro-spell-icon { width: 25px; height: 25px; flex: 0 0 25px; }
+.combat-effect-heading h4 { margin: 0; font-size: 12px; font-weight: 750; overflow-wrap: anywhere; }
+.combat-effect small { display: block; font-size: 10px; color: var(--muted); line-height: 1.5; }
+.combat-effect ul { list-style: none; margin: 0; padding: 0; }
+.combat-effect-row + .combat-effect-row { margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--border-soft); }
+.combat-effect-description { display: flex; justify-content: space-between; gap: 6px; align-items: baseline; font-size: 11px; font-weight: 650; line-height: 1.5; }
+.combat-effect-description > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.combat-effect-duration { flex-shrink: 0; border-radius: 4px; background: var(--panel); border: 1px solid var(--border-soft); padding: 1px 4px; color: var(--muted); font-size: 9px; font-weight: 600; }
+.punishment-progress { margin-top: 7px; }
+.punishment-progress > div { display: flex; justify-content: space-between; gap: 4px; font-size: 10px; color: var(--muted); }
+.punishment-progress strong { color: var(--text); font-variant-numeric: tabular-nums; }
+.punishment-progress progress { display: block; width: 100%; height: 5px; margin: 5px 0; border: 0; border-radius: 3px; overflow: hidden; background: var(--border-soft); accent-color: #6e8b50; }
+.punishment-progress progress::-webkit-progress-bar { background: var(--border-soft); }
+.punishment-progress progress::-webkit-progress-value { background: #6e8b50; border-radius: 3px; }
+.punishment-progress progress::-moz-progress-bar { background: #6e8b50; border-radius: 3px; }
+.fighter-spells > summary { cursor: pointer; color: var(--muted); font-size: 12px; }
+.fighter-spells .spell-list { margin-top: 9px; }
+@media (prefers-reduced-motion: reduce) { .fighter-live-stat * { animation: none; } }

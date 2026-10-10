@@ -16,12 +16,15 @@ export const REAL_SPELLS = {
           "id": 265,
           "kind": "armor",
           "zone": "Cc",
+          "raw": "265;11;-1;-1;4;0;0d0+11",
           "min": 11,
           "max": 11,
           "p1": 11,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -29,12 +32,15 @@ export const REAL_SPELLS = {
           "id": 265,
           "kind": "armor",
           "zone": "Cc",
+          "raw": "265;12;-1;-1;4;0;0d0+12",
           "min": 12,
           "max": 12,
           "p1": 12,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -47,9 +53,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 9,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 2,
@@ -63,24 +78,30 @@ export const REAL_SPELLS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 100,
           "kind": "damage",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "100;3;7;-1;0;0;1d5+2",
           "min": 3,
           "max": 7,
           "p1": 3,
           "p2": 7,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -88,24 +109,30 @@ export const REAL_SPELLS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;2;3;-1;1;0;1d2+1",
           "min": 2,
           "max": 3,
           "p1": 2,
           "p2": 3,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 100,
           "kind": "damage",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "100;8;-1;-1;0;0;0d0+8",
           "min": 8,
           "max": 8,
           "p1": 8,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -117,10 +144,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 6,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 3,
@@ -135,12 +171,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;7;11;-1;0;0;1d5+6",
           "min": 7,
           "max": 11,
           "p1": 7,
           "p2": 11,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -149,12 +188,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;13;-1;-1;0;0;0d0+13",
           "min": 13,
           "max": 13,
           "p1": 13,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -167,9 +209,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 5,
@@ -183,12 +234,15 @@ export const REAL_SPELLS = {
           "id": 105,
           "kind": "armor",
           "zone": "C_",
+          "raw": "105;750;-1;-1;2;0;0d0+750",
           "min": 750,
           "max": 750,
           "p1": 750,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -196,12 +250,15 @@ export const REAL_SPELLS = {
           "id": 105,
           "kind": "armor",
           "zone": "C_",
+          "raw": "105;850;-1;-1;2;0;0d0+850",
           "min": 850,
           "max": 850,
           "p1": 850,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -214,9 +271,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 9,
       "requiredLevel": 36,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 6,
@@ -230,12 +296,15 @@ export const REAL_SPELLS = {
           "id": 265,
           "kind": "armor",
           "zone": "Cc",
+          "raw": "265;13;-1;-1;4;0;0d0+13",
           "min": 13,
           "max": 13,
           "p1": 13,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -243,12 +312,15 @@ export const REAL_SPELLS = {
           "id": 265,
           "kind": "armor",
           "zone": "Cc",
+          "raw": "265;14;-1;-1;4;0;0d0+14",
           "min": 14,
           "max": 14,
           "p1": 14,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -261,9 +333,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 7,
@@ -271,67 +352,82 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "bouclier_feca",
       "emoji": "🛡️",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 212,
           "kind": "resistBuff",
           "element": "air",
           "zone": "Pa",
+          "raw": "212;38;-1;-1;4;0;0d0+38",
           "min": 38,
           "max": 38,
           "p1": 38,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 211,
           "kind": "resistBuff",
           "element": "eau",
           "zone": "Pa",
+          "raw": "211;38;-1;-1;4;0;0d0+38",
           "min": 38,
           "max": 38,
           "p1": 38,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 213,
           "kind": "resistBuff",
           "element": "feu",
           "zone": "Pa",
+          "raw": "213;38;-1;-1;4;0;0d0+38",
           "min": 38,
           "max": 38,
           "p1": 38,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 210,
           "kind": "resistBuff",
           "element": "terre",
           "zone": "Pa",
+          "raw": "210;38;-1;-1;4;0;0d0+38",
           "min": 38,
           "max": 38,
           "p1": 38,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 214,
           "kind": "resistBuff",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "214;38;-1;-1;4;0;0d0+38",
           "min": 38,
           "max": 38,
           "p1": 38,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -340,60 +436,75 @@ export const REAL_SPELLS = {
           "kind": "resistBuff",
           "element": "air",
           "zone": "Pa",
+          "raw": "212;45;-1;-1;4;0;0d0+45",
           "min": 45,
           "max": 45,
           "p1": 45,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 211,
           "kind": "resistBuff",
           "element": "eau",
           "zone": "Pa",
+          "raw": "211;45;-1;-1;4;0;0d0+45",
           "min": 45,
           "max": 45,
           "p1": 45,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 213,
           "kind": "resistBuff",
           "element": "feu",
           "zone": "Pa",
+          "raw": "213;45;-1;-1;4;0;0d0+45",
           "min": 45,
           "max": 45,
           "p1": 45,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 210,
           "kind": "resistBuff",
           "element": "terre",
           "zone": "Pa",
+          "raw": "210;45;-1;-1;4;0;0d0+45",
           "min": 45,
           "max": 45,
           "p1": 45,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 214,
           "kind": "resistBuff",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "214;45;-1;-1;4;0;0d0+45",
           "min": 45,
           "max": 45,
           "p1": 45,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -406,9 +517,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 80,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 8,
@@ -423,23 +543,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "100;16;30;-1;0;0;1d15+15",
           "min": 16,
           "max": 30,
           "p1": 16,
           "p2": 30,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 271,
-          "kind": "ignore",
+          "kind": "stealStat",
+          "stat": "force",
           "zone": "Pa",
+          "raw": "271;15;-1;-1;3;0;0d0+15",
           "min": 15,
           "max": 15,
           "p1": 15,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -448,23 +575,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "100;26;32;-1;0;0;1d7+25",
           "min": 26,
           "max": 32,
           "p1": 26,
           "p2": 32,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 271,
-          "kind": "ignore",
+          "kind": "stealStat",
+          "stat": "force",
           "zone": "Pa",
+          "raw": "271;15;-1;-1;4;0;0d0+15",
           "min": 15,
           "max": 15,
           "p1": 15,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -476,10 +610,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 48,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 9,
@@ -494,12 +637,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;7;18;-1;0;0;1d12+6",
           "min": 7,
           "max": 18,
           "p1": 7,
           "p2": 18,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -508,12 +654,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;20;-1;-1;0;0;0d0+20",
           "min": 20,
           "max": 20,
           "p1": 20,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -526,9 +675,126 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 13,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Glyphe Enflammé",
+      "grade": 5,
+      "key": "glyphe_enflamme",
+      "emoji": "✨",
+      "targetMode": "freeCell",
+      "effects": [
+        {
+          "id": 401,
+          "kind": "glyph",
+          "zone": "Cd",
+          "raw": "401;351;5;4;2;0",
+          "min": 351,
+          "max": 5,
+          "p1": 351,
+          "p2": 5,
+          "p3": 4,
+          "duration": 2,
+          "chance": 0,
+          "targetMask": 0,
+          "trigger": {
+            "id": 351,
+            "name": "Glyphe Enflammé",
+            "grade": 5,
+            "effects": [
+              {
+                "id": 99,
+                "kind": "damage",
+                "element": "feu",
+                "zone": "Pa",
+                "raw": "99;27;35;-1;0;0;1d9+26",
+                "min": 27,
+                "max": 35,
+                "p1": 27,
+                "p2": 35,
+                "p3": -1,
+                "duration": 0,
+                "chance": 0,
+                "targetMask": 0
+              }
+            ],
+            "critEffects": [
+              {
+                "id": 99,
+                "kind": "damage",
+                "element": "feu",
+                "zone": "Pa",
+                "raw": "99;36;44;-1;0;0;1d9+35",
+                "min": 36,
+                "max": 44,
+                "p1": 36,
+                "p2": 44,
+                "p3": -1,
+                "duration": 0,
+                "chance": 0,
+                "targetMask": 0
+              }
+            ],
+            "pa": 8,
+            "rangeMin": 0,
+            "rangeMax": 2,
+            "critRate": 50,
+            "failRate": 50,
+            "lineOnly": true,
+            "needsLos": true,
+            "emptyCellOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 0,
+            "maxPerTarget": 0,
+            "cooldown": 0,
+            "requiredLevel": 1,
+            "endsTurnOnFailure": true,
+            "requiredStates": [],
+            "forbiddenStates": [
+              18,
+              19,
+              3,
+              1,
+              41
+            ]
+          }
+        }
+      ],
+      "critEffects": [],
+      "pa": 3,
+      "rangeMin": 1,
+      "rangeMax": 4,
+      "critRate": 0,
+      "failRate": 100,
+      "lineOnly": true,
+      "needsLos": false,
+      "emptyCellOnly": true,
+      "adjustableRange": false,
+      "maxPerTurn": 0,
+      "maxPerTarget": 0,
+      "cooldown": 3,
+      "requiredLevel": 70,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 11,
@@ -542,12 +808,15 @@ export const REAL_SPELLS = {
           "id": 4,
           "kind": "teleport",
           "zone": "Pa",
+          "raw": "4;8;-1;0;1;0",
           "min": 8,
           "max": 8,
           "p1": 8,
           "p2": -1,
+          "p3": 0,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -561,9 +830,201 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 60,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        7,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Glyphe d'Aveuglement",
+      "grade": 5,
+      "key": "glyphe_d_aveuglement",
+      "emoji": "✨",
+      "targetMode": "freeCell",
+      "effects": [
+        {
+          "id": 401,
+          "kind": "glyph",
+          "zone": "Cc",
+          "raw": "401;1505;5;3;3;0",
+          "min": 1505,
+          "max": 5,
+          "p1": 1505,
+          "p2": 5,
+          "p3": 3,
+          "duration": 3,
+          "chance": 0,
+          "targetMask": 0,
+          "trigger": {
+            "id": 1505,
+            "name": "Glyphe d'Aveuglement",
+            "grade": 5,
+            "effects": [
+              {
+                "id": 101,
+                "kind": "removePa",
+                "zone": "Pa",
+                "raw": "101;2;3;-1;1;0;1d2+1",
+                "min": 2,
+                "max": 3,
+                "p1": 2,
+                "p2": 3,
+                "p3": -1,
+                "duration": 1,
+                "chance": 0,
+                "targetMask": 0
+              }
+            ],
+            "critEffects": [],
+            "pa": 0,
+            "rangeMin": 0,
+            "rangeMax": 0,
+            "critRate": 0,
+            "failRate": 0,
+            "lineOnly": false,
+            "needsLos": true,
+            "emptyCellOnly": false,
+            "adjustableRange": true,
+            "maxPerTurn": 0,
+            "maxPerTarget": 0,
+            "cooldown": 0,
+            "requiredLevel": 0,
+            "endsTurnOnFailure": true,
+            "requiredStates": [],
+            "forbiddenStates": [
+              18,
+              19,
+              3,
+              1,
+              41
+            ]
+          }
+        }
+      ],
+      "critEffects": [],
+      "pa": 3,
+      "rangeMin": 0,
+      "rangeMax": 4,
+      "critRate": 0,
+      "failRate": 100,
+      "lineOnly": true,
+      "needsLos": false,
+      "emptyCellOnly": true,
+      "adjustableRange": false,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
+      "cooldown": 0,
+      "requiredLevel": 54,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Glyphe de Silence",
+      "grade": 5,
+      "key": "glyphe_de_silence",
+      "emoji": "✨",
+      "targetMode": "freeCell",
+      "effects": [
+        {
+          "id": 401,
+          "kind": "glyph",
+          "zone": "Cd",
+          "raw": "401;908;5;6;3;0",
+          "min": 908,
+          "max": 5,
+          "p1": 908,
+          "p2": 5,
+          "p3": 6,
+          "duration": 3,
+          "chance": 0,
+          "targetMask": 0,
+          "trigger": {
+            "id": 908,
+            "name": "Glyphe de Silence",
+            "grade": 5,
+            "effects": [
+              {
+                "id": 101,
+                "kind": "removePa",
+                "zone": "Pa",
+                "raw": "101;5;-1;-1;1;0;0d0+5",
+                "min": 5,
+                "max": 5,
+                "p1": 5,
+                "p2": -1,
+                "p3": -1,
+                "duration": 1,
+                "chance": 0,
+                "targetMask": 0
+              }
+            ],
+            "critEffects": [],
+            "pa": 10,
+            "rangeMin": 0,
+            "rangeMax": 0,
+            "critRate": 0,
+            "failRate": 0,
+            "lineOnly": false,
+            "needsLos": true,
+            "emptyCellOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 0,
+            "maxPerTarget": 0,
+            "cooldown": 0,
+            "requiredLevel": 0,
+            "endsTurnOnFailure": false,
+            "requiredStates": [],
+            "forbiddenStates": [
+              18,
+              19,
+              3,
+              1,
+              41
+            ]
+          }
+        }
+      ],
+      "critEffects": [],
+      "pa": 6,
+      "rangeMin": 0,
+      "rangeMax": 2,
+      "critRate": 0,
+      "failRate": 100,
+      "lineOnly": true,
+      "needsLos": false,
+      "emptyCellOnly": true,
+      "adjustableRange": false,
+      "maxPerTurn": 0,
+      "maxPerTarget": 0,
+      "cooldown": 7,
+      "requiredLevel": 100,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 14,
@@ -577,23 +1038,30 @@ export const REAL_SPELLS = {
           "id": 265,
           "kind": "armor",
           "zone": "Cc",
+          "raw": "265;13;-1;-1;4;0;0d0+13",
           "min": 13,
           "max": 13,
           "p1": 13,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 161,
-          "kind": "ignore",
+          "kind": "buffStat",
+          "stat": "dodgePm",
           "zone": "Cc",
+          "raw": "161;40;-1;-1;4;0;0d0+40",
           "min": 40,
           "max": 40,
           "p1": 40,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -601,23 +1069,30 @@ export const REAL_SPELLS = {
           "id": 265,
           "kind": "armor",
           "zone": "Cc",
+          "raw": "265;14;-1;-1;4;0;0d0+14",
           "min": 14,
           "max": 14,
           "p1": 14,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 161,
-          "kind": "ignore",
+          "kind": "buffStat",
+          "stat": "dodgePm",
           "zone": "Cc",
+          "raw": "161;45;-1;-1;4;0;0d0+45",
           "min": 45,
           "max": 45,
           "p1": 45,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -630,9 +1105,265 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 26,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Glyphe d'immobilisation",
+      "grade": 5,
+      "key": "glyphe_d_immobilisation",
+      "emoji": "✨",
+      "targetMode": "freeCell",
+      "effects": [
+        {
+          "id": 401,
+          "kind": "glyph",
+          "zone": "Ce",
+          "raw": "401;907;5;5;2;0",
+          "min": 907,
+          "max": 5,
+          "p1": 907,
+          "p2": 5,
+          "p3": 5,
+          "duration": 2,
+          "chance": 0,
+          "targetMask": 0,
+          "trigger": {
+            "id": 907,
+            "name": "Glyphe d'immobilisation",
+            "grade": 5,
+            "effects": [
+              {
+                "id": 127,
+                "kind": "removePm",
+                "zone": "Pa",
+                "raw": "127;4;-1;-1;1;0;0d0+4",
+                "min": 4,
+                "max": 4,
+                "p1": 4,
+                "p2": -1,
+                "p3": -1,
+                "duration": 1,
+                "chance": 0,
+                "targetMask": 0
+              }
+            ],
+            "critEffects": [],
+            "pa": 10,
+            "rangeMin": 0,
+            "rangeMax": 0,
+            "critRate": 0,
+            "failRate": 0,
+            "lineOnly": false,
+            "needsLos": true,
+            "emptyCellOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 0,
+            "maxPerTarget": 0,
+            "cooldown": 0,
+            "requiredLevel": 0,
+            "endsTurnOnFailure": false,
+            "requiredStates": [],
+            "forbiddenStates": [
+              18,
+              19,
+              3,
+              1,
+              41
+            ]
+          }
+        }
+      ],
+      "critEffects": [],
+      "pa": 3,
+      "rangeMin": 0,
+      "rangeMax": 5,
+      "critRate": 0,
+      "failRate": 0,
+      "lineOnly": false,
+      "needsLos": true,
+      "emptyCellOnly": true,
+      "adjustableRange": false,
+      "maxPerTurn": 0,
+      "maxPerTarget": 0,
+      "cooldown": 6,
+      "requiredLevel": 90,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Science du bâton",
+      "grade": 5,
+      "key": "science_du_baton",
+      "emoji": "✨",
+      "targetMode": "fighter",
+      "effects": [
+        {
+          "id": 142,
+          "kind": "buffStat",
+          "stat": "physicalDamage",
+          "zone": "Pa",
+          "raw": "142;15;-1;-1;5;0;0d0+15",
+          "min": 15,
+          "max": 15,
+          "p1": 15,
+          "p2": -1,
+          "p3": -1,
+          "duration": 5,
+          "chance": 0,
+          "targetMask": 0
+        }
+      ],
+      "critEffects": [
+        {
+          "id": 142,
+          "kind": "buffStat",
+          "stat": "physicalDamage",
+          "zone": "Pa",
+          "raw": "142;20;-1;-1;5;0;0d0+20",
+          "min": 20,
+          "max": 20,
+          "p1": 20,
+          "p2": -1,
+          "p3": -1,
+          "duration": 5,
+          "chance": 0,
+          "targetMask": 0
+        }
+      ],
+      "pa": 3,
+      "rangeMin": 0,
+      "rangeMax": 5,
+      "critRate": 40,
+      "failRate": 100,
+      "lineOnly": false,
+      "needsLos": false,
+      "emptyCellOnly": false,
+      "adjustableRange": true,
+      "maxPerTurn": 0,
+      "maxPerTarget": 0,
+      "cooldown": 6,
+      "requiredLevel": 42,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Glyphe Agressif",
+      "grade": 5,
+      "key": "glyphe_agressif",
+      "emoji": "✨",
+      "targetMode": "freeCell",
+      "effects": [
+        {
+          "id": 401,
+          "kind": "glyph",
+          "zone": "Cc",
+          "raw": "401;1503;5;2;3;0",
+          "min": 1503,
+          "max": 5,
+          "p1": 1503,
+          "p2": 5,
+          "p3": 2,
+          "duration": 3,
+          "chance": 0,
+          "targetMask": 0,
+          "trigger": {
+            "id": 1503,
+            "name": "Glyphe Agressif",
+            "grade": 5,
+            "effects": [
+              {
+                "id": 99,
+                "kind": "damage",
+                "element": "feu",
+                "zone": "Pa",
+                "raw": "99;6;8;-1;0;0;1d3+5",
+                "min": 6,
+                "max": 8,
+                "p1": 6,
+                "p2": 8,
+                "p3": -1,
+                "duration": 0,
+                "chance": 0,
+                "targetMask": 0
+              }
+            ],
+            "critEffects": [],
+            "pa": 0,
+            "rangeMin": 0,
+            "rangeMax": 0,
+            "critRate": 0,
+            "failRate": 0,
+            "lineOnly": false,
+            "needsLos": true,
+            "emptyCellOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 0,
+            "maxPerTarget": 0,
+            "cooldown": 0,
+            "requiredLevel": 0,
+            "endsTurnOnFailure": false,
+            "requiredStates": [],
+            "forbiddenStates": [
+              18,
+              19,
+              3,
+              1,
+              41
+            ]
+          }
+        }
+      ],
+      "critEffects": [],
+      "pa": 3,
+      "rangeMin": 1,
+      "rangeMax": 7,
+      "critRate": 0,
+      "failRate": 100,
+      "lineOnly": false,
+      "needsLos": false,
+      "emptyCellOnly": true,
+      "adjustableRange": true,
+      "maxPerTurn": 0,
+      "maxPerTarget": 0,
+      "cooldown": 2,
+      "requiredLevel": 1,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 18,
@@ -646,23 +1377,30 @@ export const REAL_SPELLS = {
           "id": 265,
           "kind": "armor",
           "zone": "Cc",
+          "raw": "265;13;-1;-1;4;0;0d0+13",
           "min": 13,
           "max": 13,
           "p1": 13,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 160,
-          "kind": "ignore",
+          "kind": "buffStat",
+          "stat": "dodgePa",
           "zone": "Cc",
+          "raw": "160;40;-1;-1;4;0;0d0+40",
           "min": 40,
           "max": 40,
           "p1": 40,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -670,23 +1408,30 @@ export const REAL_SPELLS = {
           "id": 265,
           "kind": "armor",
           "zone": "Cc",
+          "raw": "265;14;-1;-1;4;0;0d0+14",
           "min": 14,
           "max": 14,
           "p1": 14,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 160,
-          "kind": "ignore",
+          "kind": "buffStat",
+          "stat": "dodgePa",
           "zone": "Cc",
+          "raw": "160;45;-1;-1;4;0;0d0+45",
           "min": 45,
           "max": 45,
           "p1": 45,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -699,9 +1444,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 17,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 19,
@@ -716,12 +1470,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;13;21;-1;0;0;1d9+12",
           "min": 13,
           "max": 21,
           "p1": 13,
           "p2": 21,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -730,12 +1487,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;15;23;-1;0;0;1d9+14",
           "min": 15,
           "max": 23,
           "p1": 15,
           "p2": 23,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -747,10 +1507,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 31,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 20,
@@ -758,18 +1527,21 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "immunite",
       "emoji": "🛡️",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 105,
           "kind": "armor",
           "zone": "Pa",
+          "raw": "105;1500;-1;-1;1;0;0d0+1500",
           "min": 1500,
           "max": 1500,
           "p1": 1500,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -783,9 +1555,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 7,
       "requiredLevel": 21,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   ],
   "OSAMODAS": [
@@ -802,12 +1583,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;9;12;-1;0;0;1d4+8",
           "min": 9,
           "max": 12,
           "p1": 9,
           "p2": 12,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -816,12 +1600,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;11;16;-1;0;0;5d2+6",
           "min": 11,
           "max": 16,
           "p1": 11,
           "p2": 16,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -834,9 +1621,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 22,
@@ -844,29 +1640,35 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "deplacement_felin",
       "emoji": "💨",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "Xb",
+          "raw": "128;4;-1;-1;7;0;0d0+4",
           "min": 4,
           "max": 4,
           "p1": 4,
           "p2": -1,
+          "p3": -1,
           "duration": 7,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "Xb",
+          "raw": "128;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -874,23 +1676,29 @@ export const REAL_SPELLS = {
           "id": 128,
           "kind": "buffPm",
           "zone": "Xb",
+          "raw": "128;5;-1;-1;7;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 7,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "Xb",
+          "raw": "128;2;-1;-1;2;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -903,9 +1711,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 6,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 23,
@@ -913,29 +1730,35 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "cri_de_l_ours",
       "emoji": "💪",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Xb",
+          "raw": "112;7;12;-1;11;0;1d6+6",
           "min": 7,
           "max": 12,
           "p1": 7,
           "p2": 12,
+          "p3": -1,
           "duration": 11,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 8
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Xb",
+          "raw": "112;7;-1;-1;2;0;0d0+7",
           "min": 7,
           "max": 7,
           "p1": 7,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 18
         }
       ],
       "critEffects": [
@@ -943,23 +1766,29 @@ export const REAL_SPELLS = {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Xb",
+          "raw": "112;16;-1;-1;11;0;0d0+16",
           "min": 16,
           "max": 16,
           "p1": 16,
           "p2": -1,
+          "p3": -1,
           "duration": 11,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 8
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Xb",
+          "raw": "112;9;-1;-1;2;0;0d0+9",
           "min": 9,
           "max": 9,
           "p1": 9,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 18
         }
       ],
       "pa": 2,
@@ -972,9 +1801,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 3,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 24,
@@ -989,12 +1827,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;1;7;-1;0;0;1d7+0",
           "min": 1,
           "max": 7,
           "p1": 1,
           "p2": 7,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -1003,12 +1844,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;7;9;-1;0;0;2d2+5",
           "min": 7,
           "max": 9,
           "p1": 7,
           "p2": 9,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -1021,9 +1865,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 31,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 25,
@@ -1037,23 +1890,29 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;27;32;-1;0;0;1d6+26",
           "min": 27,
           "max": 32,
           "p1": 27,
           "p2": 32,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;22;28;-1;0;0;1d7+21",
           "min": 22,
           "max": 28,
           "p1": 22,
           "p2": 28,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -1061,23 +1920,29 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;53;64;-1;0;0;1d12+52",
           "min": 53,
           "max": 64,
           "p1": 53,
           "p2": 64,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;28;29;-1;0;0;1d2+27",
           "min": 28,
           "max": 29,
           "p1": 28,
           "p2": 29,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -1090,9 +1955,82 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 42,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 26,
+      "name": "Bénédiction Animale",
+      "grade": 5,
+      "key": "benediction_animale",
+      "emoji": "✨",
+      "targetMode": "fighter",
+      "effects": [
+        {
+          "id": 182,
+          "kind": "buffStat",
+          "stat": "summons",
+          "zone": "Pa",
+          "raw": "182;3;-1;-1;5;0;0d0+3",
+          "min": 3,
+          "max": 3,
+          "p1": 3,
+          "p2": -1,
+          "p3": -1,
+          "duration": 5,
+          "chance": 0,
+          "targetMask": 0
+        }
+      ],
+      "critEffects": [
+        {
+          "id": 182,
+          "kind": "buffStat",
+          "stat": "summons",
+          "zone": "Pa",
+          "raw": "182;4;-1;-1;5;0;0d0+4",
+          "min": 4,
+          "max": 4,
+          "p1": 4,
+          "p2": -1,
+          "p3": -1,
+          "duration": 5,
+          "chance": 0,
+          "targetMask": 0
+        }
+      ],
+      "pa": 3,
+      "rangeMin": 0,
+      "rangeMax": 1,
+      "critRate": 50,
+      "failRate": 100,
+      "lineOnly": false,
+      "needsLos": false,
+      "emptyCellOnly": false,
+      "adjustableRange": false,
+      "maxPerTurn": 0,
+      "maxPerTarget": 0,
+      "cooldown": 6,
+      "requiredLevel": 3,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 27,
@@ -1100,29 +2038,35 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "piqure_motivante",
       "emoji": "⚡",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 111,
           "kind": "buffPa",
           "zone": "Xb",
+          "raw": "111;3;-1;-1;5;0;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 18
         },
         {
           "id": 111,
           "kind": "buffPa",
           "zone": "Xb",
+          "raw": "111;2;-1;-1;2;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 8
         }
       ],
       "critEffects": [
@@ -1130,23 +2074,29 @@ export const REAL_SPELLS = {
           "id": 111,
           "kind": "buffPa",
           "zone": "Xb",
+          "raw": "111;4;-1;-1;5;0;0d0+4",
           "min": 4,
           "max": 4,
           "p1": 4,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 18
         },
         {
           "id": 111,
           "kind": "buffPa",
           "zone": "Xb",
+          "raw": "111;2;-1;-1;3;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 8
         }
       ],
       "pa": 3,
@@ -1159,9 +2109,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 4,
       "requiredLevel": 26,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 28,
@@ -1169,29 +2128,35 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "crapaud",
       "emoji": "🛡️",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 105,
           "kind": "armor",
           "zone": "Pa",
+          "raw": "105;18;-1;-1;7;0;0d0+18",
           "min": 18,
           "max": 18,
           "p1": 18,
           "p2": -1,
+          "p3": -1,
           "duration": 7,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 105,
           "kind": "armor",
           "zone": "Pa",
+          "raw": "105;12;-1;-1;2;0;0d0+12",
           "min": 12,
           "max": 12,
           "p1": 12,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -1199,23 +2164,29 @@ export const REAL_SPELLS = {
           "id": 105,
           "kind": "armor",
           "zone": "Pa",
+          "raw": "105;24;-1;-1;7;0;0d0+24",
           "min": 24,
           "max": 24,
           "p1": 24,
           "p2": -1,
+          "p3": -1,
           "duration": 7,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 105,
           "kind": "armor",
           "zone": "Pa",
+          "raw": "105;17;-1;-1;2;0;0d0+17",
           "min": 17,
           "max": 17,
           "p1": 17,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -1227,10 +2198,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 4,
       "requiredLevel": 13,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 29,
@@ -1238,29 +2218,35 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "crocs_du_mulou",
       "emoji": "🔥",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 138,
           "kind": "buffPower",
           "zone": "Xb",
+          "raw": "138;80;-1;-1;6;0;0d0+80",
           "min": 80,
           "max": 80,
           "p1": 80,
           "p2": -1,
+          "p3": -1,
           "duration": 6,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 8
         },
         {
           "id": 138,
           "kind": "buffPower",
           "zone": "Xb",
+          "raw": "138;50;-1;-1;2;0;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 18
         }
       ],
       "critEffects": [
@@ -1268,23 +2254,29 @@ export const REAL_SPELLS = {
           "id": 138,
           "kind": "buffPower",
           "zone": "Xb",
+          "raw": "138;110;-1;-1;6;0;0d0+110",
           "min": 110,
           "max": 110,
           "p1": 110,
           "p2": -1,
+          "p3": -1,
           "duration": 6,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 8
         },
         {
           "id": 138,
           "kind": "buffPower",
           "zone": "Xb",
+          "raw": "138;55;-1;-1;2;0;0d0+55",
           "min": 55,
           "max": 55,
           "p1": 55,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 18
         }
       ],
       "pa": 2,
@@ -1297,9 +2289,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 70,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 30,
@@ -1314,12 +2315,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "100;151;155;-1;0;0;1d5+150",
           "min": 151,
           "max": 155,
           "p1": 151,
           "p2": 155,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 8
         }
       ],
       "critEffects": [
@@ -1328,12 +2332,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "100;301;310;-1;0;0;1d10+300",
           "min": 301,
           "max": 310,
           "p1": 301,
           "p2": 310,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 8
         }
       ],
       "pa": 1,
@@ -1346,9 +2353,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 1,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 21,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 31,
@@ -1362,12 +2378,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;239;5;-1;0;0",
           "min": 239,
           "max": 5,
           "p1": 239,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -1381,9 +2400,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 10,
       "requiredLevel": 100,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 32,
@@ -1391,29 +2419,35 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "resistance_naturelle",
       "emoji": "❤️",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 125,
           "kind": "buffVitality",
           "zone": "Pa",
+          "raw": "125;121;150;-1;7;0;1d30+120",
           "min": 121,
           "max": 150,
           "p1": 121,
           "p2": 150,
+          "p3": -1,
           "duration": 7,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 125,
           "kind": "buffVitality",
           "zone": "Pa",
+          "raw": "125;151;180;-1;5;0;1d30+150",
           "min": 151,
           "max": 180,
           "p1": 151,
           "p2": 180,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -1421,23 +2455,29 @@ export const REAL_SPELLS = {
           "id": 125,
           "kind": "buffVitality",
           "zone": "Pa",
+          "raw": "125;170;-1;-1;7;0;0d0+170",
           "min": 170,
           "max": 170,
           "p1": 170,
           "p2": -1,
+          "p3": -1,
           "duration": 7,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 125,
           "kind": "buffVitality",
           "zone": "Pa",
+          "raw": "125;200;-1;-1;5;0;0d0+200",
           "min": 200,
           "max": 200,
           "p1": 200,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -1450,9 +2490,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 3,
       "requiredLevel": 60,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 33,
@@ -1467,12 +2516,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;11;14;-1;0;0;1d4+10",
           "min": 11,
           "max": 14,
           "p1": 11,
           "p2": 14,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -1481,12 +2533,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;14;17;-1;0;0;1d4+13",
           "min": 14,
           "max": 17,
           "p1": 14,
           "p2": 17,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -1499,9 +2554,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 36,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 34,
@@ -1515,12 +2579,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;43;5;-1;0;0",
           "min": 43,
           "max": 5,
           "p1": 43,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -1534,9 +2601,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 1,
       "requiredLevel": 1,
-      "endsTurnOnFailure": true
+      "endsTurnOnFailure": true,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 35,
@@ -1550,12 +2626,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;36;5;-1;0;0",
           "min": 36,
           "max": 5,
           "p1": 36,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -1569,9 +2648,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 3,
       "requiredLevel": 9,
-      "endsTurnOnFailure": true
+      "endsTurnOnFailure": true,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 36,
@@ -1586,12 +2674,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Cc",
+          "raw": "99;18;37;-1;0;0;1d20+17",
           "min": 18,
           "max": 37,
           "p1": 18,
           "p2": 37,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -1600,12 +2691,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Cc",
+          "raw": "99;39;-1;-1;0;0;0d0+39",
           "min": 39,
           "max": 39,
           "p1": 39,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -1618,9 +2712,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 54,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 37,
@@ -1634,12 +2737,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;41;5;-1;0;0",
           "min": 41,
           "max": 5,
           "p1": 41,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -1653,9 +2759,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 17,
-      "endsTurnOnFailure": true
+      "endsTurnOnFailure": true,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 38,
@@ -1669,12 +2784,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;40;5;-1;0;0",
           "min": 40,
           "max": 5,
           "p1": 40,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -1688,9 +2806,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 48,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 39,
@@ -1704,12 +2831,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;44;5;-1;0;0",
           "min": 44,
           "max": 5,
           "p1": 44,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -1722,10 +2852,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": true,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 80,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 40,
@@ -1739,12 +2878,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;37;5;-1;0;0",
           "min": 37,
           "max": 5,
           "p1": 37,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -1758,9 +2900,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 90,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   ],
   "ENUTROF": [
@@ -1776,12 +2927,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;237;5;-1;0;0",
           "min": 237,
           "max": 5,
           "p1": 237,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -1795,9 +2949,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 10,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 42,
@@ -1805,19 +2968,22 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "chance",
       "emoji": "✨",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 123,
           "kind": "buffStat",
           "stat": "chance",
           "zone": "Pa",
+          "raw": "123;51;60;-1;5;0;1d10+50",
           "min": 51,
           "max": 60,
           "p1": 51,
           "p2": 60,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -1826,12 +2992,15 @@ export const REAL_SPELLS = {
           "kind": "buffStat",
           "stat": "chance",
           "zone": "Pa",
+          "raw": "123;111;-1;-1;5;0;0d0+111",
           "min": 111,
           "max": 111,
           "p1": 111,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -1844,9 +3013,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 6,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 43,
@@ -1861,12 +3039,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;8;13;-1;0;0;1d6+7",
           "min": 8,
           "max": 13,
           "p1": 8,
           "p2": 13,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -1875,12 +3056,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;21;-1;-1;0;0;0d0+21",
           "min": 21,
           "max": 21,
           "p1": 21,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -1893,9 +3077,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 44,
@@ -1910,12 +3103,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;6;12;-1;0;0;1d7+5",
           "min": 6,
           "max": 12,
           "p1": 6,
           "p2": 12,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -1924,12 +3120,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;12;-1;-1;0;0;0d0+12",
           "min": 12,
           "max": 12,
           "p1": 12,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -1942,9 +3141,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 36,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 45,
@@ -1958,12 +3166,15 @@ export const REAL_SPELLS = {
           "id": 116,
           "kind": "debuffRange",
           "zone": "Pa",
+          "raw": "116;4;5;-1;5;0;1d2+3",
           "min": 4,
           "max": 5,
           "p1": 4,
           "p2": 5,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -1971,12 +3182,15 @@ export const REAL_SPELLS = {
           "id": 116,
           "kind": "debuffRange",
           "zone": "Pa",
+          "raw": "116;4;5;-1;6;0;1d2+3",
           "min": 4,
           "max": 5,
           "p1": 4,
           "p2": 5,
+          "p3": -1,
           "duration": 6,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 1,
@@ -1988,10 +3202,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 6,
       "requiredLevel": 17,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 46,
@@ -2006,12 +3229,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;51;110;-1;0;0;1d60+50",
           "min": 51,
           "max": 110,
           "p1": 51,
           "p2": 110,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 8
         }
       ],
       "critEffects": [
@@ -2020,12 +3246,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;121;-1;-1;0;0;0d0+121",
           "min": 121,
           "max": 121,
           "p1": 121,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 8
         }
       ],
       "pa": 4,
@@ -2037,10 +3266,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 1,
       "requiredLevel": 26,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 47,
@@ -2054,23 +3292,29 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;1;18;-1;0;50;1d18+0",
           "min": 1,
           "max": 18,
           "p1": 1,
           "p2": 18,
+          "p3": -1,
           "duration": 0,
-          "chance": 50
+          "chance": 50,
+          "targetMask": 0
         },
         {
           "id": 115,
           "kind": "buffCrit",
           "zone": "Pa",
+          "raw": "115;8;-1;-1;3;50;0d0+8",
           "min": 8,
           "max": 8,
           "p1": 8,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 50
+          "chance": 50,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2078,23 +3322,29 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;20;-1;-1;0;50;0d0+20",
           "min": 20,
           "max": 20,
           "p1": 20,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 50
+          "chance": 50,
+          "targetMask": 0
         },
         {
           "id": 115,
           "kind": "buffCrit",
           "zone": "Pa",
+          "raw": "115;9;-1;-1;3;50;0d0+9",
           "min": 9,
           "max": 9,
           "p1": 9,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 50
+          "chance": 50,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -2107,9 +3357,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 3,
       "requiredLevel": 9,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 48,
@@ -2124,12 +3383,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Xc",
+          "raw": "97;6;11;-1;0;0;1d6+5",
           "min": 6,
           "max": 11,
           "p1": 6,
           "p2": 11,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2138,12 +3400,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Xc",
+          "raw": "97;13;-1;-1;0;0;0d0+13",
           "min": 13,
           "max": 13,
           "p1": 13,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -2156,9 +3421,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 13,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 49,
@@ -2173,12 +3447,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;10;14;-1;0;0;1d5+9",
           "min": 10,
           "max": 14,
           "p1": 10,
           "p2": 14,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2186,24 +3463,30 @@ export const REAL_SPELLS = {
           "id": 132,
           "kind": "dispel",
           "zone": "Pa",
+          "raw": "132;-1;-1;-1;0;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 99,
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;10;14;-1;0;0;1d5+9",
           "min": 10,
           "max": 14,
           "p1": 10,
           "p2": 14,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -2216,9 +3499,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 3,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 50,
@@ -2232,12 +3524,15 @@ export const REAL_SPELLS = {
           "id": 127,
           "kind": "removePm",
           "zone": "Pa",
+          "raw": "127;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2245,12 +3540,15 @@ export const REAL_SPELLS = {
           "id": 127,
           "kind": "removePm",
           "zone": "Pa",
+          "raw": "127;3;-1;-1;1;0;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 1,
@@ -2262,10 +3560,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 42,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 51,
@@ -2280,12 +3587,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;1;6;-1;0;0;1d6+0",
           "min": 1,
           "max": 6,
           "p1": 1,
           "p2": 6,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2294,12 +3604,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;14;-1;-1;0;0;0d0+14",
           "min": 14,
           "max": 14,
           "p1": 14,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -2311,10 +3624,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 3,
+      "maxPerTurn": 0,
+      "maxPerTarget": 3,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 52,
@@ -2329,24 +3651,30 @@ export const REAL_SPELLS = {
           "kind": "buffStat",
           "stat": "force",
           "zone": "C_",
+          "raw": "118;100;-1;-1;5;0;0d0+100",
           "min": 100,
           "max": 100,
           "p1": 100,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 126,
           "kind": "buffStat",
           "stat": "intelligence",
           "zone": "C_",
+          "raw": "126;100;-1;-1;5;0;0d0+100",
           "min": 100,
           "max": 100,
           "p1": 100,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2355,24 +3683,30 @@ export const REAL_SPELLS = {
           "kind": "buffStat",
           "stat": "force",
           "zone": "C_",
+          "raw": "118;150;-1;-1;5;0;0d0+150",
           "min": 150,
           "max": 150,
           "p1": 150,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 126,
           "kind": "buffStat",
           "stat": "intelligence",
           "zone": "C_",
+          "raw": "126;150;-1;-1;5;0;0d0+150",
           "min": 150,
           "max": 150,
           "p1": 150,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -2385,9 +3719,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 31,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 53,
@@ -2402,23 +3745,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;16;20;-1;0;0;1d5+15",
           "min": 16,
           "max": 20,
           "p1": 16,
           "p2": 20,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 77,
           "kind": "stealPm",
           "zone": "Pa",
+          "raw": "77;1;-1;-1;0;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2427,23 +3776,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;19;23;-1;0;0;1d5+18",
           "min": 19,
           "max": 23,
           "p1": 19,
           "p2": 23,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 77,
           "kind": "stealPm",
           "zone": "Pa",
+          "raw": "77;2;-1;-1;0;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -2455,10 +3810,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 21,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 54,
@@ -2472,12 +3836,15 @@ export const REAL_SPELLS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Ci",
+          "raw": "101;1;3;-1;3;0;1d3+0",
           "min": 1,
           "max": 3,
           "p1": 1,
           "p2": 3,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2485,12 +3852,15 @@ export const REAL_SPELLS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Ci",
+          "raw": "101;2;4;-1;3;0;1d3+1",
           "min": 2,
           "max": 4,
           "p1": 2,
           "p2": 4,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 6,
@@ -2503,9 +3873,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 20,
       "requiredLevel": 48,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 55,
@@ -2513,18 +3892,21 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "acceleration",
       "emoji": "💨",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "Pa",
+          "raw": "128;2;3;-1;3;0;1d2+1",
           "min": 2,
           "max": 3,
           "p1": 2,
           "p2": 3,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2532,12 +3914,15 @@ export const REAL_SPELLS = {
           "id": 128,
           "kind": "buffPm",
           "zone": "Pa",
+          "raw": "128;3;4;-1;3;0;1d2+2",
           "min": 3,
           "max": 4,
           "p1": 3,
           "p2": 4,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -2550,9 +3935,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 8,
       "requiredLevel": 54,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 56,
@@ -2567,12 +3961,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;10;18;-1;0;0;2d5+8",
           "min": 10,
           "max": 18,
           "p1": 10,
           "p2": 18,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2581,23 +3978,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;13;21;-1;0;0;2d5+11",
           "min": 13,
           "max": 21,
           "p1": 13,
           "p2": 21,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 127,
           "kind": "removePm",
           "zone": "Pa",
+          "raw": "127;3;-1;-1;1;0;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -2610,9 +4013,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 60,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 57,
@@ -2626,12 +4038,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;238;5;-1;0;0",
           "min": 238,
           "max": 5,
           "p1": 238,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -2645,9 +4060,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 90,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 58,
@@ -2662,12 +4086,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;37;42;-1;0;0;1d6+36",
           "min": 37,
           "max": 42,
           "p1": 37,
           "p2": 42,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2676,12 +4103,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;44;49;-1;0;0;1d6+43",
           "min": 44,
           "max": 49,
           "p1": 44,
           "p2": 49,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -2693,10 +4123,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 70,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 59,
@@ -2710,45 +4149,57 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;100;-1;-1;0;0;0d0+100",
           "min": 100,
           "max": 100,
           "p1": 100,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 140,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "140;1;-1;-1;1;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 950,
-          "kind": "ignore",
+          "kind": "state",
           "zone": "C_",
+          "raw": "950;-1;-1;40;4;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 40,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;240;-1;-1;0;0;0d0+240",
           "min": 240,
           "max": 240,
           "p1": 240,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2756,45 +4207,57 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;80;-1;-1;0;0;0d0+80",
           "min": 80,
           "max": 80,
           "p1": 80,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 140,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "140;1;-1;-1;0;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 950,
-          "kind": "ignore",
+          "kind": "state",
           "zone": "C_",
+          "raw": "950;-1;-1;40;4;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 40,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;260;-1;-1;0;0;0d0+260",
           "min": 260,
           "max": 260,
           "p1": 260,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 7,
@@ -2806,10 +4269,20 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 80,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        40,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 60,
@@ -2823,12 +4296,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;285;5;-1;0;0",
           "min": 285,
           "max": 5,
           "p1": 285,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -2842,9 +4318,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 63,
       "requiredLevel": 100,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   ],
   "SRAM": [
@@ -2861,12 +4346,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;6;8;-1;0;0;1d3+5",
           "min": 6,
           "max": 8,
           "p1": 6,
           "p2": 8,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2875,12 +4363,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;8;10;-1;0;0;1d3+7",
           "min": 8,
           "max": 10,
           "p1": 8,
           "p2": 10,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -2893,9 +4384,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 62,
@@ -2903,19 +4403,22 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "concentration_de_chakra",
       "emoji": "✨",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 118,
           "kind": "buffStat",
           "stat": "force",
           "zone": "Pa",
+          "raw": "118;60;-1;-1;5;0;0d0+60",
           "min": 60,
           "max": 60,
           "p1": 60,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2924,12 +4427,15 @@ export const REAL_SPELLS = {
           "kind": "buffStat",
           "stat": "force",
           "zone": "Pa",
+          "raw": "118;85;-1;-1;5;0;0d0+85",
           "min": 85,
           "max": 85,
           "p1": 85,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -2942,9 +4448,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 36,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 63,
@@ -2959,23 +4474,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;8;12;-1;0;0;2d3+6",
           "min": 8,
           "max": 12,
           "p1": 8,
           "p2": 12,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;3;-1;-1;0;0",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -2984,23 +4505,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;11;15;-1;0;0;2d3+9",
           "min": 11,
           "max": 15,
           "p1": 11,
           "p2": 15,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;4;-1;-1;0;0",
           "min": 4,
           "max": 4,
           "p1": 4,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -3013,9 +4540,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 9,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 64,
@@ -3023,29 +4559,35 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "reperage",
       "emoji": "🔭",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 202,
           "kind": "ignore",
           "zone": "Cg",
+          "raw": "202;-1;-1;-1;0;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 117,
           "kind": "buffRange",
           "zone": "Pa",
+          "raw": "117;1;-1;-1;2;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -3053,23 +4595,29 @@ export const REAL_SPELLS = {
           "id": 202,
           "kind": "ignore",
           "zone": "Cg",
+          "raw": "202;-1;-1;-1;0;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 117,
           "kind": "buffRange",
           "zone": "Pa",
+          "raw": "117;2;-1;-1;2;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -3082,9 +4630,126 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 3,
       "requiredLevel": 17,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 65,
+      "name": "Piège Sournois",
+      "grade": 5,
+      "key": "piege_sournois",
+      "emoji": "✨",
+      "targetMode": "freeCell",
+      "effects": [
+        {
+          "id": 400,
+          "kind": "trap",
+          "zone": "Ca",
+          "raw": "400;2007;5;7;0;0",
+          "min": 2007,
+          "max": 5,
+          "p1": 2007,
+          "p2": 5,
+          "p3": 7,
+          "duration": 0,
+          "chance": 0,
+          "targetMask": 0,
+          "trigger": {
+            "id": 2007,
+            "name": "Piège Sournois",
+            "grade": 5,
+            "effects": [
+              {
+                "id": 97,
+                "kind": "damage",
+                "element": "terre",
+                "zone": "Ca",
+                "raw": "97;9;13;-1;0;0;1d5+8",
+                "min": 9,
+                "max": 13,
+                "p1": 9,
+                "p2": 13,
+                "p3": -1,
+                "duration": 0,
+                "chance": 0,
+                "targetMask": 0
+              }
+            ],
+            "critEffects": [
+              {
+                "id": 97,
+                "kind": "damage",
+                "element": "terre",
+                "zone": "Ca",
+                "raw": "97;11;15;-1;0;0;1d5+10",
+                "min": 11,
+                "max": 15,
+                "p1": 11,
+                "p2": 15,
+                "p3": -1,
+                "duration": 0,
+                "chance": 0,
+                "targetMask": 0
+              }
+            ],
+            "pa": 3,
+            "rangeMin": 1,
+            "rangeMax": 2,
+            "critRate": 40,
+            "failRate": 100,
+            "lineOnly": false,
+            "needsLos": true,
+            "emptyCellOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 0,
+            "maxPerTarget": 0,
+            "cooldown": 0,
+            "requiredLevel": 1,
+            "endsTurnOnFailure": false,
+            "requiredStates": [],
+            "forbiddenStates": [
+              18,
+              19,
+              3,
+              1,
+              41
+            ]
+          }
+        }
+      ],
+      "critEffects": [],
+      "pa": 2,
+      "rangeMin": 1,
+      "rangeMax": 7,
+      "critRate": 0,
+      "failRate": 100,
+      "lineOnly": false,
+      "needsLos": false,
+      "emptyCellOnly": true,
+      "adjustableRange": true,
+      "maxPerTurn": 5,
+      "maxPerTarget": 0,
+      "cooldown": 0,
+      "requiredLevel": 1,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 66,
@@ -3099,12 +4764,15 @@ export const REAL_SPELLS = {
           "kind": "poison",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;5;6;-1;2;0;1d2+4",
           "min": 5,
           "max": 6,
           "p1": 5,
           "p2": 6,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -3113,12 +4781,15 @@ export const REAL_SPELLS = {
           "kind": "poison",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;7;8;-1;2;0;1d2+6",
           "min": 7,
           "max": 8,
           "p1": 7,
           "p2": 8,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -3130,10 +4801,19 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 3,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 68,
@@ -3148,34 +4828,45 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Xb",
+          "raw": "98;10;19;-1;0;0;1d10+9",
           "min": 10,
           "max": 19,
           "p1": 10,
           "p2": 19,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 2
         },
         {
           "id": 268,
-          "kind": "ignore",
+          "kind": "stealStat",
+          "stat": "agilite",
           "zone": "Xb",
+          "raw": "268;15;-1;-1;3;0;0d0+15",
           "min": 15,
           "max": 15,
           "p1": 15,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 2
         },
         {
           "id": 271,
-          "kind": "ignore",
+          "kind": "stealStat",
+          "stat": "force",
           "zone": "Xb",
+          "raw": "271;15;-1;-1;3;0;0d0+15",
           "min": 15,
           "max": 15,
           "p1": 15,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 2
         }
       ],
       "critEffects": [
@@ -3184,34 +4875,45 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Xb",
+          "raw": "98;12;21;-1;0;0;1d10+11",
           "min": 12,
           "max": 21,
           "p1": 12,
           "p2": 21,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 2
         },
         {
           "id": 268,
-          "kind": "ignore",
+          "kind": "stealStat",
+          "stat": "agilite",
           "zone": "Xb",
+          "raw": "268;20;-1;-1;3;0;0d0+20",
           "min": 20,
           "max": 20,
           "p1": 20,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 2
         },
         {
           "id": 271,
-          "kind": "ignore",
+          "kind": "stealStat",
+          "stat": "force",
           "zone": "Xb",
+          "raw": "271;20;-1;-1;3;0;0d0+20",
           "min": 20,
           "max": 20,
           "p1": 20,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 2
         }
       ],
       "pa": 5,
@@ -3224,9 +4926,123 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 6,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 69,
+      "name": "Piège d'Immobilisation",
+      "grade": 5,
+      "key": "piege_d_immobilisation",
+      "emoji": "✨",
+      "targetMode": "freeCell",
+      "effects": [
+        {
+          "id": 400,
+          "kind": "trap",
+          "zone": "Cd",
+          "raw": "400;909;5;10;0;0",
+          "min": 909,
+          "max": 5,
+          "p1": 909,
+          "p2": 5,
+          "p3": 10,
+          "duration": 0,
+          "chance": 0,
+          "targetMask": 0,
+          "trigger": {
+            "id": 909,
+            "name": "Piège d'Immobilisation",
+            "grade": 5,
+            "effects": [
+              {
+                "id": 127,
+                "kind": "removePm",
+                "zone": "Cd",
+                "raw": "127;4;-1;-1;1;0;0d0+4",
+                "min": 4,
+                "max": 4,
+                "p1": 4,
+                "p2": -1,
+                "p3": -1,
+                "duration": 1,
+                "chance": 0,
+                "targetMask": 0
+              },
+              {
+                "id": 127,
+                "kind": "removePm",
+                "zone": "Cd",
+                "raw": "127;4;-1;-1;3;0;0d0+4",
+                "min": 4,
+                "max": 4,
+                "p1": 4,
+                "p2": -1,
+                "p3": -1,
+                "duration": 3,
+                "chance": 0,
+                "targetMask": 0
+              }
+            ],
+            "critEffects": [],
+            "pa": 10,
+            "rangeMin": 0,
+            "rangeMax": 0,
+            "critRate": 0,
+            "failRate": 0,
+            "lineOnly": false,
+            "needsLos": true,
+            "emptyCellOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 0,
+            "maxPerTarget": 0,
+            "cooldown": 0,
+            "requiredLevel": 0,
+            "endsTurnOnFailure": false,
+            "requiredStates": [],
+            "forbiddenStates": [
+              18,
+              19,
+              3,
+              1,
+              41
+            ]
+          }
+        }
+      ],
+      "critEffects": [],
+      "pa": 5,
+      "rangeMin": 1,
+      "rangeMax": 4,
+      "critRate": 0,
+      "failRate": 100,
+      "lineOnly": true,
+      "needsLos": false,
+      "emptyCellOnly": true,
+      "adjustableRange": true,
+      "maxPerTurn": 0,
+      "maxPerTarget": 0,
+      "cooldown": 5,
+      "requiredLevel": 42,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 70,
@@ -3240,24 +5056,30 @@ export const REAL_SPELLS = {
           "id": 130,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "130;1;250;-1;0;0;1d250+0",
           "min": 1,
           "max": 250,
           "p1": 1,
           "p2": 250,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 98,
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;18;32;-1;0;0;1d15+17",
           "min": 18,
           "max": 32,
           "p1": 18,
           "p2": 32,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -3266,23 +5088,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;35;-1;-1;0;0;0d0+35",
           "min": 35,
           "max": 35,
           "p1": 35,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 130,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "130;1;500;-1;0;0;1d500+0",
           "min": 1,
           "max": 500,
           "p1": 1,
           "p2": 500,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -3294,10 +5122,111 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 70,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 71,
+      "name": "Piège Empoisonné",
+      "grade": 5,
+      "key": "piege_empoisonne",
+      "emoji": "✨",
+      "targetMode": "freeCell",
+      "effects": [
+        {
+          "id": 400,
+          "kind": "trap",
+          "zone": "Cb",
+          "raw": "400;1495;5;9;0;0",
+          "min": 1495,
+          "max": 5,
+          "p1": 1495,
+          "p2": 5,
+          "p3": 9,
+          "duration": 0,
+          "chance": 0,
+          "targetMask": 0,
+          "trigger": {
+            "id": 1495,
+            "name": "Piège Empoisonné",
+            "grade": 5,
+            "effects": [
+              {
+                "id": 97,
+                "kind": "poison",
+                "element": "terre",
+                "zone": "Cb",
+                "raw": "97;7;-1;-1;3;0;0d0+7",
+                "min": 7,
+                "max": 7,
+                "p1": 7,
+                "p2": -1,
+                "p3": -1,
+                "duration": 3,
+                "chance": 0,
+                "targetMask": 0
+              }
+            ],
+            "critEffects": [],
+            "pa": 4,
+            "rangeMin": 1,
+            "rangeMax": 3,
+            "critRate": 0,
+            "failRate": 0,
+            "lineOnly": false,
+            "needsLos": true,
+            "emptyCellOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 0,
+            "maxPerTarget": 0,
+            "cooldown": 0,
+            "requiredLevel": 0,
+            "endsTurnOnFailure": false,
+            "requiredStates": [],
+            "forbiddenStates": [
+              18,
+              19,
+              3,
+              1,
+              41
+            ]
+          }
+        }
+      ],
+      "critEffects": [],
+      "pa": 3,
+      "rangeMin": 1,
+      "rangeMax": 3,
+      "critRate": 0,
+      "failRate": 100,
+      "lineOnly": false,
+      "needsLos": false,
+      "emptyCellOnly": true,
+      "adjustableRange": true,
+      "maxPerTurn": 0,
+      "maxPerTarget": 0,
+      "cooldown": 3,
+      "requiredLevel": 31,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 72,
@@ -3311,23 +5240,29 @@ export const REAL_SPELLS = {
           "id": 150,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "150;-1;-1;-1;3;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "Pa",
+          "raw": "128;1;-1;-1;3;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -3341,9 +5276,109 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 7,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 73,
+      "name": "Piège répulsif",
+      "grade": 5,
+      "key": "piege_repulsif",
+      "emoji": "✨",
+      "targetMode": "freeCell",
+      "effects": [
+        {
+          "id": 400,
+          "kind": "trap",
+          "zone": "Cb",
+          "raw": "400;1688;1;12;0;0",
+          "min": 1688,
+          "max": 1,
+          "p1": 1688,
+          "p2": 1,
+          "p3": 12,
+          "duration": 0,
+          "chance": 0,
+          "targetMask": 0,
+          "trigger": {
+            "id": 1688,
+            "name": "Piège répulsif",
+            "grade": 1,
+            "effects": [
+              {
+                "id": 5,
+                "kind": "push",
+                "zone": "Xb",
+                "raw": "5;2;-1;-1;0;0",
+                "min": 2,
+                "max": 2,
+                "p1": 2,
+                "p2": -1,
+                "p3": -1,
+                "duration": 0,
+                "chance": 0,
+                "targetMask": 0
+              }
+            ],
+            "critEffects": [],
+            "pa": 5,
+            "rangeMin": 0,
+            "rangeMax": 0,
+            "critRate": 0,
+            "failRate": 0,
+            "lineOnly": true,
+            "needsLos": false,
+            "emptyCellOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 0,
+            "maxPerTarget": 0,
+            "cooldown": 0,
+            "requiredLevel": 0,
+            "endsTurnOnFailure": false,
+            "requiredStates": [],
+            "forbiddenStates": [
+              18,
+              19,
+              3,
+              1,
+              41
+            ]
+          }
+        }
+      ],
+      "critEffects": [],
+      "pa": 3,
+      "rangeMin": 1,
+      "rangeMax": 6,
+      "critRate": 0,
+      "failRate": 100,
+      "lineOnly": false,
+      "needsLos": false,
+      "emptyCellOnly": true,
+      "adjustableRange": true,
+      "maxPerTurn": 0,
+      "maxPerTarget": 0,
+      "cooldown": 2,
+      "requiredLevel": 54,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 75,
@@ -3351,18 +5386,21 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "pulsion_de_chakra",
       "emoji": "🎯",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 115,
           "kind": "buffCrit",
           "zone": "Pa",
+          "raw": "115;9;-1;-1;4;0;0d0+9",
           "min": 9,
           "max": 9,
           "p1": 9,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -3370,12 +5408,15 @@ export const REAL_SPELLS = {
           "id": 115,
           "kind": "buffCrit",
           "zone": "Pa",
+          "raw": "115;9;-1;-1;5;0;0d0+9",
           "min": 9,
           "max": 9,
           "p1": 9,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -3388,9 +5429,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 80,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 76,
@@ -3405,12 +5455,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;41;60;-1;0;0;1d20+40",
           "min": 41,
           "max": 60,
           "p1": 41,
           "p2": 60,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -3419,12 +5472,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;131;150;-1;0;0;1d20+130",
           "min": 131,
           "max": 150,
           "p1": 131,
           "p2": 150,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -3436,10 +5492,294 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 90,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 77,
+      "name": "Piège de Silence",
+      "grade": 5,
+      "key": "piege_de_silence",
+      "emoji": "✨",
+      "targetMode": "freeCell",
+      "effects": [
+        {
+          "id": 400,
+          "kind": "trap",
+          "zone": "Cc",
+          "raw": "400;1497;5;11;0;0",
+          "min": 1497,
+          "max": 5,
+          "p1": 1497,
+          "p2": 5,
+          "p3": 11,
+          "duration": 0,
+          "chance": 0,
+          "targetMask": 0,
+          "trigger": {
+            "id": 1497,
+            "name": "Piège de Silence",
+            "grade": 5,
+            "effects": [
+              {
+                "id": 101,
+                "kind": "removePa",
+                "zone": "Cc",
+                "raw": "101;5;-1;-1;1;0;0d0+5",
+                "min": 5,
+                "max": 5,
+                "p1": 5,
+                "p2": -1,
+                "p3": -1,
+                "duration": 1,
+                "chance": 0,
+                "targetMask": 0
+              }
+            ],
+            "critEffects": [],
+            "pa": 1,
+            "rangeMin": 0,
+            "rangeMax": 0,
+            "critRate": 0,
+            "failRate": 0,
+            "lineOnly": false,
+            "needsLos": true,
+            "emptyCellOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 0,
+            "maxPerTarget": 0,
+            "cooldown": 0,
+            "requiredLevel": 0,
+            "endsTurnOnFailure": false,
+            "requiredStates": [],
+            "forbiddenStates": [
+              18,
+              19,
+              3,
+              1,
+              41
+            ]
+          }
+        }
+      ],
+      "critEffects": [],
+      "pa": 3,
+      "rangeMin": 1,
+      "rangeMax": 3,
+      "critRate": 0,
+      "failRate": 100,
+      "lineOnly": true,
+      "needsLos": false,
+      "emptyCellOnly": true,
+      "adjustableRange": true,
+      "maxPerTurn": 0,
+      "maxPerTarget": 0,
+      "cooldown": 5,
+      "requiredLevel": 48,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 79,
+      "name": "Piège de Masse",
+      "grade": 5,
+      "key": "piege_de_masse",
+      "emoji": "✨",
+      "targetMode": "freeCell",
+      "effects": [
+        {
+          "id": 400,
+          "kind": "trap",
+          "zone": "Cc",
+          "raw": "400;1493;5;8;0;0",
+          "min": 1493,
+          "max": 5,
+          "p1": 1493,
+          "p2": 5,
+          "p3": 8,
+          "duration": 0,
+          "chance": 0,
+          "targetMask": 0,
+          "trigger": {
+            "id": 1493,
+            "name": "Piège de Masse",
+            "grade": 5,
+            "effects": [
+              {
+                "id": 97,
+                "kind": "damage",
+                "element": "terre",
+                "zone": "Cc",
+                "raw": "97;9;17;-1;0;0;2d5+7",
+                "min": 9,
+                "max": 17,
+                "p1": 9,
+                "p2": 17,
+                "p3": -1,
+                "duration": 0,
+                "chance": 0,
+                "targetMask": 0
+              }
+            ],
+            "critEffects": [],
+            "pa": 0,
+            "rangeMin": 0,
+            "rangeMax": 0,
+            "critRate": 0,
+            "failRate": 0,
+            "lineOnly": false,
+            "needsLos": true,
+            "emptyCellOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 0,
+            "maxPerTarget": 0,
+            "cooldown": 0,
+            "requiredLevel": 0,
+            "endsTurnOnFailure": false,
+            "requiredStates": [],
+            "forbiddenStates": [
+              18,
+              19,
+              3,
+              1,
+              41
+            ]
+          }
+        }
+      ],
+      "critEffects": [],
+      "pa": 5,
+      "rangeMin": 1,
+      "rangeMax": 5,
+      "critRate": 0,
+      "failRate": 100,
+      "lineOnly": true,
+      "needsLos": false,
+      "emptyCellOnly": true,
+      "adjustableRange": true,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
+      "cooldown": 0,
+      "requiredLevel": 21,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 80,
+      "name": "Piège Mortel",
+      "grade": 5,
+      "key": "piege_mortel",
+      "emoji": "✨",
+      "targetMode": "freeCell",
+      "effects": [
+        {
+          "id": 400,
+          "kind": "trap",
+          "zone": "Ca",
+          "raw": "400;1499;5;13;0;0",
+          "min": 1499,
+          "max": 5,
+          "p1": 1499,
+          "p2": 5,
+          "p3": 13,
+          "duration": 0,
+          "chance": 0,
+          "targetMask": 0,
+          "trigger": {
+            "id": 1499,
+            "name": "Piège Mortel",
+            "grade": 5,
+            "effects": [
+              {
+                "id": 97,
+                "kind": "damage",
+                "element": "terre",
+                "zone": "Ca",
+                "raw": "97;41;60;-1;0;0;1d20+40",
+                "min": 41,
+                "max": 60,
+                "p1": 41,
+                "p2": 60,
+                "p3": -1,
+                "duration": 0,
+                "chance": 0,
+                "targetMask": 0
+              }
+            ],
+            "critEffects": [],
+            "pa": 1,
+            "rangeMin": 1,
+            "rangeMax": 1,
+            "critRate": 0,
+            "failRate": 0,
+            "lineOnly": false,
+            "needsLos": true,
+            "emptyCellOnly": false,
+            "adjustableRange": false,
+            "maxPerTurn": 0,
+            "maxPerTarget": 0,
+            "cooldown": 0,
+            "requiredLevel": 0,
+            "endsTurnOnFailure": false,
+            "requiredStates": [],
+            "forbiddenStates": [
+              18,
+              19,
+              3,
+              1,
+              41
+            ]
+          }
+        }
+      ],
+      "critEffects": [],
+      "pa": 4,
+      "rangeMin": 1,
+      "rangeMax": 3,
+      "critRate": 0,
+      "failRate": 100,
+      "lineOnly": true,
+      "needsLos": false,
+      "emptyCellOnly": true,
+      "adjustableRange": true,
+      "maxPerTurn": 0,
+      "maxPerTarget": 0,
+      "cooldown": 1,
+      "requiredLevel": 100,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   ],
   "XELOR": [
@@ -3455,34 +5795,43 @@ export const REAL_SPELLS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -3495,10 +5844,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 4,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 83,
@@ -3513,34 +5871,43 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;8;12;-1;0;0;2d3+6",
           "min": 8,
           "max": 12,
           "p1": 8,
           "p2": 12,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -3549,34 +5916,43 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;13;-1;-1;0;0;0d0+13",
           "min": 13,
           "max": 13,
           "p1": 13,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -3589,9 +5965,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 84,
@@ -3606,45 +5991,57 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;9;14;-1;0;0;1d6+8",
           "min": 9,
           "max": 14,
           "p1": 9,
           "p2": 14,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -3653,45 +6050,57 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;15;-1;-1;0;0;0d0+15",
           "min": 15,
           "max": 15,
           "p1": 15,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -3703,10 +6112,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 3,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 85,
@@ -3720,45 +6138,57 @@ export const REAL_SPELLS = {
           "id": 168,
           "kind": "debuffPa",
           "zone": "Ce",
+          "raw": "168;2;-1;-1;2;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         },
         {
           "id": 950,
-          "kind": "ignore",
+          "kind": "state",
           "zone": "C_",
+          "raw": "950;-1;-1;39;5;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 39,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -3772,9 +6202,19 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 21,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        39,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 86,
@@ -3788,34 +6228,43 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;250;5;-1;0;0",
           "min": 250,
           "max": 5,
           "p1": 250,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -3828,10 +6277,95 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": true,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 36,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 87,
+      "name": "Démotivation",
+      "grade": 5,
+      "key": "demotivation",
+      "emoji": "✨",
+      "targetMode": "enemy",
+      "effects": [
+        {
+          "id": 162,
+          "kind": "debuffStat",
+          "stat": "dodgePa",
+          "zone": "Pa",
+          "raw": "162;6;-1;-1;6;0;0d0+6",
+          "min": 6,
+          "max": 6,
+          "p1": 6,
+          "p2": -1,
+          "p3": -1,
+          "duration": 6,
+          "chance": 0,
+          "targetMask": 0
+        },
+        {
+          "id": 666,
+          "kind": "ignore",
+          "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
+          "min": -1,
+          "max": -1,
+          "p1": -1,
+          "p2": -1,
+          "p3": -1,
+          "duration": 0,
+          "chance": 90,
+          "targetMask": 0
+        },
+        {
+          "id": 120,
+          "kind": "refundPa",
+          "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
+          "min": 1,
+          "max": 1,
+          "p1": 1,
+          "p2": -1,
+          "p3": -1,
+          "duration": 0,
+          "chance": 10,
+          "targetMask": 0
+        }
+      ],
+      "critEffects": [],
+      "pa": 1,
+      "rangeMin": 1,
+      "rangeMax": 12,
+      "critRate": 0,
+      "failRate": 100,
+      "lineOnly": false,
+      "needsLos": false,
+      "emptyCellOnly": false,
+      "adjustableRange": false,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
+      "cooldown": 0,
+      "requiredLevel": 54,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 88,
@@ -3845,34 +6379,43 @@ export const REAL_SPELLS = {
           "id": 4,
           "kind": "teleport",
           "zone": "Pa",
+          "raw": "4;16;-1;0;1;0",
           "min": 16,
           "max": 16,
           "p1": 16,
           "p2": -1,
+          "p3": 0,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -3886,9 +6429,19 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 15,
       "requiredLevel": 13,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        7,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 89,
@@ -3902,45 +6455,57 @@ export const REAL_SPELLS = {
           "id": 111,
           "kind": "buffPa",
           "zone": "Xc",
+          "raw": "111;2;-1;-1;2;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;3;-1;-1;1;0;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -3954,9 +6519,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 3,
       "requiredLevel": 42,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 90,
@@ -3970,34 +6544,43 @@ export const REAL_SPELLS = {
           "id": 4,
           "kind": "teleport",
           "zone": "Pa",
+          "raw": "4;1;-1;1;0;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": 1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -4010,10 +6593,20 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": true,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 5,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 48,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        7,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 91,
@@ -4028,34 +6621,43 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;41;45;-1;0;0;1d5+40",
           "min": 41,
           "max": 45,
           "p1": 41,
           "p2": 45,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -4064,34 +6666,43 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;46;50;-1;0;0;1d5+45",
           "min": 46,
           "max": 50,
           "p1": 46,
           "p2": 50,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -4103,10 +6714,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 90,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 92,
@@ -4121,45 +6741,58 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;9;17;-1;0;0;8d2+1",
           "min": 9,
           "max": 17,
           "p1": 9,
           "p2": 17,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         },
         {
           "id": 320,
-          "kind": "ignore",
+          "kind": "stealStat",
+          "stat": "range",
           "zone": "Pa",
+          "raw": "320;1;-1;-1;1;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -4168,45 +6801,58 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;14;22;-1;0;0;8d2+6",
           "min": 14,
           "max": 22,
           "p1": 14,
           "p2": 22,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         },
         {
           "id": 320,
-          "kind": "ignore",
+          "kind": "stealStat",
+          "stat": "range",
           "zone": "Pa",
+          "raw": "320;1;-1;-1;2;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -4219,9 +6865,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 9,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 93,
@@ -4236,34 +6891,43 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;12;19;-1;0;0;1d8+11",
           "min": 12,
           "max": 19,
           "p1": 12,
           "p2": 19,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -4272,34 +6936,43 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;14;21;-1;0;0;1d8+13",
           "min": 14,
           "max": 21,
           "p1": 14,
           "p2": 21,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -4312,9 +6985,108 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 17,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 94,
+      "name": "Protection Aveuglante",
+      "grade": 5,
+      "key": "protection_aveuglante",
+      "emoji": "✨",
+      "targetMode": "fighter",
+      "effects": [
+        {
+          "id": 160,
+          "kind": "buffStat",
+          "stat": "dodgePa",
+          "zone": "Pa",
+          "raw": "160;60;-1;-1;3;0;0d0+60",
+          "min": 60,
+          "max": 60,
+          "p1": 60,
+          "p2": -1,
+          "p3": -1,
+          "duration": 3,
+          "chance": 0,
+          "targetMask": 0
+        },
+        {
+          "id": 107,
+          "kind": "ignore",
+          "zone": "Pa",
+          "raw": "107;6;-1;-1;3;0;0d0+6",
+          "min": 6,
+          "max": 6,
+          "p1": 6,
+          "p2": -1,
+          "p3": -1,
+          "duration": 3,
+          "chance": 0,
+          "targetMask": 0
+        },
+        {
+          "id": 666,
+          "kind": "ignore",
+          "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
+          "min": -1,
+          "max": -1,
+          "p1": -1,
+          "p2": -1,
+          "p3": -1,
+          "duration": 0,
+          "chance": 90,
+          "targetMask": 0
+        },
+        {
+          "id": 120,
+          "kind": "refundPa",
+          "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
+          "min": 1,
+          "max": 1,
+          "p1": 1,
+          "p2": -1,
+          "p3": -1,
+          "duration": 0,
+          "chance": 10,
+          "targetMask": 0
+        }
+      ],
+      "critEffects": [],
+      "pa": 2,
+      "rangeMin": 0,
+      "rangeMax": 1,
+      "critRate": 0,
+      "failRate": 100,
+      "lineOnly": false,
+      "needsLos": false,
+      "emptyCellOnly": false,
+      "adjustableRange": false,
+      "maxPerTurn": 0,
+      "maxPerTarget": 0,
+      "cooldown": 6,
+      "requiredLevel": 60,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 95,
@@ -4329,45 +7101,57 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;31;35;-1;0;0;1d5+30",
           "min": 31,
           "max": 35,
           "p1": 31,
           "p2": 35,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 84,
           "kind": "stealPa",
           "zone": "Pa",
+          "raw": "84;1;-1;-1;0;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -4376,45 +7160,57 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;36;40;-1;0;0;1d5+35",
           "min": 36,
           "max": 40,
           "p1": 36,
           "p2": 40,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 84,
           "kind": "stealPa",
           "zone": "Pa",
+          "raw": "84;1;2;-1;0;0;1d2+0",
           "min": 1,
           "max": 2,
           "p1": 1,
           "p2": 2,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -4427,9 +7223,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 80,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 96,
@@ -4443,46 +7248,58 @@ export const REAL_SPELLS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Cc",
+          "raw": "101;1;-1;-1;1;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 99,
           "kind": "damage",
           "element": "feu",
           "zone": "Cc",
+          "raw": "99;6;15;-1;0;0;1d10+5",
           "min": 6,
           "max": 15,
           "p1": 6,
           "p2": 15,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -4490,46 +7307,58 @@ export const REAL_SPELLS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Cc",
+          "raw": "101;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 99,
           "kind": "damage",
           "element": "feu",
           "zone": "Cc",
+          "raw": "99;10;19;-1;0;0;1d10+9",
           "min": 10,
           "max": 19,
           "p1": 10,
           "p2": 19,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "pa": 6,
@@ -4542,9 +7371,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 26,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 97,
@@ -4558,34 +7396,43 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;264;5;-1;0;0",
           "min": 264,
           "max": 5,
           "p1": 264,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -4599,9 +7446,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 10,
       "requiredLevel": 100,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 98,
@@ -4615,34 +7471,43 @@ export const REAL_SPELLS = {
           "id": 84,
           "kind": "stealPa",
           "zone": "Pa",
+          "raw": "84;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -4655,10 +7520,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 31,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 99,
@@ -4672,89 +7546,114 @@ export const REAL_SPELLS = {
           "id": 149,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "149;-1;-1;8002;5;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 8002,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 169,
           "kind": "debuffPm",
           "zone": "Pa",
+          "raw": "169;1;-1;-1;5;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 160,
-          "kind": "ignore",
+          "kind": "buffStat",
+          "stat": "dodgePa",
           "zone": "Pa",
+          "raw": "160;100;-1;-1;5;0;0d0+100",
           "min": 100,
           "max": 100,
           "p1": 100,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Pa",
+          "raw": "112;7;-1;-1;5;0;0d0+7",
           "min": 7,
           "max": 7,
           "p1": 7,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 105,
           "kind": "armor",
           "zone": "Pa",
+          "raw": "105;22;-1;-1;5;0;0d0+22",
           "min": 22,
           "max": 22,
           "p1": 22,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 105,
           "kind": "armor",
           "zone": "Pa",
+          "raw": "105;22;-1;-1;5;0;0d0+22",
           "min": 22,
           "max": 22,
           "p1": 22,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -4768,9 +7667,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 16,
       "requiredLevel": 70,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 100,
@@ -4785,45 +7693,57 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;3;10;-1;0;0;1d8+2",
           "min": 3,
           "max": 10,
           "p1": 3,
           "p2": 10,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;1;2;-1;1;0;1d2+0",
           "min": 1,
           "max": 2,
           "p1": 1,
           "p2": 2,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -4832,45 +7752,57 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;6;13;-1;0;0;1d8+5",
           "min": 6,
           "max": 13,
           "p1": 6,
           "p2": 13,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;1;2;-1;1;0;1d2+0",
           "min": 1,
           "max": 2,
           "p1": 1,
           "p2": 2,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;90",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 90
+          "chance": 90,
+          "targetMask": 0
         },
         {
           "id": 120,
-          "kind": "ignore",
+          "kind": "refundPa",
           "zone": "Pa",
+          "raw": "120;1;-1;-1;0;10;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 10
+          "chance": 10,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -4882,10 +7814,19 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 6,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   ],
   "ECAFLIP": [
@@ -4901,431 +7842,545 @@ export const REAL_SPELLS = {
           "id": 128,
           "kind": "buffPm",
           "zone": "C_",
+          "raw": "128;2;3;-1;1;2;1d2+1",
           "min": 2,
           "max": 3,
           "p1": 2,
           "p2": 3,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 111,
           "kind": "buffPa",
           "zone": "C_",
+          "raw": "111;2;3;-1;1;2;1d2+1",
           "min": 2,
           "max": 3,
           "p1": 2,
           "p2": 3,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "C_",
+          "raw": "112;50;-1;-1;1;2;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 178,
           "kind": "ignore",
           "zone": "C_",
+          "raw": "178;50;-1;-1;1;2;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 119,
           "kind": "buffStat",
           "stat": "agilite",
           "zone": "C_",
+          "raw": "119;400;-1;-1;1;2;0d0+400",
           "min": 400,
           "max": 400,
           "p1": 400,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 126,
           "kind": "buffStat",
           "stat": "intelligence",
           "zone": "C_",
+          "raw": "126;400;-1;-1;1;2;0d0+400",
           "min": 400,
           "max": 400,
           "p1": 400,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 123,
           "kind": "buffStat",
           "stat": "chance",
           "zone": "C_",
+          "raw": "123;400;-1;-1;1;2;0d0+400",
           "min": 400,
           "max": 400,
           "p1": 400,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 118,
           "kind": "buffStat",
           "stat": "force",
           "zone": "C_",
+          "raw": "118;400;-1;-1;1;2;0d0+400",
           "min": 400,
           "max": 400,
           "p1": 400,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 115,
           "kind": "buffCrit",
           "zone": "C_",
+          "raw": "115;50;-1;-1;1;2;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 132,
           "kind": "dispel",
           "zone": "C_",
+          "raw": "132;-1;-1;-1;0;2",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 117,
           "kind": "buffRange",
           "zone": "C_",
+          "raw": "117;5;-1;-1;1;2;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 140,
           "kind": "ignore",
           "zone": "C_",
+          "raw": "140;-1;-1;-1;0;2",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "C_",
+          "raw": "128;2;3;-1;1;2;1d2+1",
           "min": 2,
           "max": 3,
           "p1": 2,
           "p2": 3,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 111,
           "kind": "buffPa",
           "zone": "C_",
+          "raw": "111;2;3;-1;1;2;1d2+1",
           "min": 2,
           "max": 3,
           "p1": 2,
           "p2": 3,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "C_",
+          "raw": "112;50;-1;-1;1;2;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 178,
           "kind": "ignore",
           "zone": "C_",
+          "raw": "178;50;-1;-1;1;2;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 119,
           "kind": "buffStat",
           "stat": "agilite",
           "zone": "C_",
+          "raw": "119;400;-1;-1;1;2;0d0+400",
           "min": 400,
           "max": 400,
           "p1": 400,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 126,
           "kind": "buffStat",
           "stat": "intelligence",
           "zone": "C_",
+          "raw": "126;400;-1;-1;1;2;0d0+400",
           "min": 400,
           "max": 400,
           "p1": 400,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 123,
           "kind": "buffStat",
           "stat": "chance",
           "zone": "C_",
+          "raw": "123;400;-1;-1;1;2;0d0+400",
           "min": 400,
           "max": 400,
           "p1": 400,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 118,
           "kind": "buffStat",
           "stat": "force",
           "zone": "C_",
+          "raw": "118;400;-1;-1;1;2;0d0+400",
           "min": 400,
           "max": 400,
           "p1": 400,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 115,
           "kind": "buffCrit",
           "zone": "C_",
+          "raw": "115;50;-1;-1;1;2;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 132,
           "kind": "dispel",
           "zone": "C_",
+          "raw": "132;-1;-1;-1;0;2",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 117,
           "kind": "buffRange",
           "zone": "C_",
+          "raw": "117;5;-1;-1;1;2;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 140,
           "kind": "ignore",
           "zone": "C_",
+          "raw": "140;-1;-1;-1;0;2",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "C_",
+          "raw": "128;2;3;-1;1;2;1d2+1",
           "min": 2,
           "max": 3,
           "p1": 2,
           "p2": 3,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 111,
           "kind": "buffPa",
           "zone": "C_",
+          "raw": "111;2;3;-1;1;2;1d2+1",
           "min": 2,
           "max": 3,
           "p1": 2,
           "p2": 3,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "C_",
+          "raw": "112;50;-1;-1;1;2;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 178,
           "kind": "ignore",
           "zone": "C_",
+          "raw": "178;50;-1;-1;1;2;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 119,
           "kind": "buffStat",
           "stat": "agilite",
           "zone": "C_",
+          "raw": "119;400;-1;-1;1;2;0d0+400",
           "min": 400,
           "max": 400,
           "p1": 400,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 126,
           "kind": "buffStat",
           "stat": "intelligence",
           "zone": "C_",
+          "raw": "126;400;-1;-1;1;2;0d0+400",
           "min": 400,
           "max": 400,
           "p1": 400,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 123,
           "kind": "buffStat",
           "stat": "chance",
           "zone": "C_",
+          "raw": "123;400;-1;-1;1;2;0d0+400",
           "min": 400,
           "max": 400,
           "p1": 400,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 118,
           "kind": "buffStat",
           "stat": "force",
           "zone": "C_",
+          "raw": "118;400;-1;-1;1;2;0d0+400",
           "min": 400,
           "max": 400,
           "p1": 400,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 115,
           "kind": "buffCrit",
           "zone": "C_",
+          "raw": "115;50;-1;-1;1;2;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 132,
           "kind": "dispel",
           "zone": "C_",
+          "raw": "132;-1;-1;-1;0;2",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 117,
           "kind": "buffRange",
           "zone": "C_",
+          "raw": "117;5;-1;-1;1;2;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 140,
           "kind": "ignore",
           "zone": "C_",
+          "raw": "140;-1;-1;-1;0;2",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;5000;-1;-1;0;2;0d0+5000",
           "min": 5000,
           "max": 5000,
           "p1": 5000,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 32
         },
         {
           "id": 111,
           "kind": "buffPa",
           "zone": "Pa",
+          "raw": "111;1;-1;-1;0;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 32
         }
       ],
       "critEffects": [
@@ -5333,431 +8388,545 @@ export const REAL_SPELLS = {
           "id": 128,
           "kind": "buffPm",
           "zone": "C_",
+          "raw": "128;3;-1;-1;1;2;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 111,
           "kind": "buffPa",
           "zone": "C_",
+          "raw": "111;3;-1;-1;1;2;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "C_",
+          "raw": "112;60;-1;-1;1;2;0d0+60",
           "min": 60,
           "max": 60,
           "p1": 60,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 178,
           "kind": "ignore",
           "zone": "C_",
+          "raw": "178;60;-1;-1;1;2;0d0+60",
           "min": 60,
           "max": 60,
           "p1": 60,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 119,
           "kind": "buffStat",
           "stat": "agilite",
           "zone": "C_",
+          "raw": "119;500;-1;-1;1;2;0d0+500",
           "min": 500,
           "max": 500,
           "p1": 500,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 126,
           "kind": "buffStat",
           "stat": "intelligence",
           "zone": "C_",
+          "raw": "126;500;-1;-1;1;2;0d0+500",
           "min": 500,
           "max": 500,
           "p1": 500,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 123,
           "kind": "buffStat",
           "stat": "chance",
           "zone": "C_",
+          "raw": "123;500;-1;-1;1;2;0d0+500",
           "min": 500,
           "max": 500,
           "p1": 500,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 118,
           "kind": "buffStat",
           "stat": "force",
           "zone": "C_",
+          "raw": "118;500;-1;-1;1;2;0d0+500",
           "min": 500,
           "max": 500,
           "p1": 500,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 115,
           "kind": "buffCrit",
           "zone": "C_",
+          "raw": "115;60;-1;-1;1;2;0d0+60",
           "min": 60,
           "max": 60,
           "p1": 60,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 132,
           "kind": "dispel",
           "zone": "C_",
+          "raw": "132;-1;-1;-1;0;2",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 117,
           "kind": "buffRange",
           "zone": "C_",
+          "raw": "117;6;-1;-1;1;2;0d0+6",
           "min": 6,
           "max": 6,
           "p1": 6,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 140,
           "kind": "ignore",
           "zone": "C_",
+          "raw": "140;-1;-1;-1;0;2",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 4
         },
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "C_",
+          "raw": "128;3;-1;-1;1;2;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 111,
           "kind": "buffPa",
           "zone": "C_",
+          "raw": "111;3;-1;-1;1;2;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "C_",
+          "raw": "112;60;-1;-1;1;2;0d0+60",
           "min": 60,
           "max": 60,
           "p1": 60,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 178,
           "kind": "ignore",
           "zone": "C_",
+          "raw": "178;60;-1;-1;1;2;0d0+60",
           "min": 60,
           "max": 60,
           "p1": 60,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 119,
           "kind": "buffStat",
           "stat": "agilite",
           "zone": "C_",
+          "raw": "119;500;-1;-1;1;2;0d0+500",
           "min": 500,
           "max": 500,
           "p1": 500,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 126,
           "kind": "buffStat",
           "stat": "intelligence",
           "zone": "C_",
+          "raw": "126;500;-1;-1;1;2;0d0+500",
           "min": 500,
           "max": 500,
           "p1": 500,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 123,
           "kind": "buffStat",
           "stat": "chance",
           "zone": "C_",
+          "raw": "123;500;-1;-1;1;2;0d0+500",
           "min": 500,
           "max": 500,
           "p1": 500,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 118,
           "kind": "buffStat",
           "stat": "force",
           "zone": "C_",
+          "raw": "118;500;-1;-1;1;2;0d0+500",
           "min": 500,
           "max": 500,
           "p1": 500,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 115,
           "kind": "buffCrit",
           "zone": "C_",
+          "raw": "115;60;-1;-1;1;2;0d0+60",
           "min": 60,
           "max": 60,
           "p1": 60,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 132,
           "kind": "dispel",
           "zone": "C_",
+          "raw": "132;-1;-1;-1;0;2",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 117,
           "kind": "buffRange",
           "zone": "C_",
+          "raw": "117;6;-1;-1;1;2;0d0+6",
           "min": 6,
           "max": 6,
           "p1": 6,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 140,
           "kind": "ignore",
           "zone": "C_",
+          "raw": "140;-1;-1;-1;0;2",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 3
         },
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "C_",
+          "raw": "128;3;-1;-1;1;2;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 111,
           "kind": "buffPa",
           "zone": "C_",
+          "raw": "111;3;-1;-1;1;2;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "C_",
+          "raw": "112;60;-1;-1;1;2;0d0+60",
           "min": 60,
           "max": 60,
           "p1": 60,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 178,
           "kind": "ignore",
           "zone": "C_",
+          "raw": "178;60;-1;-1;1;2;0d0+60",
           "min": 60,
           "max": 60,
           "p1": 60,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 119,
           "kind": "buffStat",
           "stat": "agilite",
           "zone": "C_",
+          "raw": "119;500;-1;-1;1;2;0d0+500",
           "min": 500,
           "max": 500,
           "p1": 500,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 126,
           "kind": "buffStat",
           "stat": "intelligence",
           "zone": "C_",
+          "raw": "126;500;-1;-1;1;2;0d0+500",
           "min": 500,
           "max": 500,
           "p1": 500,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 123,
           "kind": "buffStat",
           "stat": "chance",
           "zone": "C_",
+          "raw": "123;500;-1;-1;1;2;0d0+500",
           "min": 500,
           "max": 500,
           "p1": 500,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 118,
           "kind": "buffStat",
           "stat": "force",
           "zone": "C_",
+          "raw": "118;500;-1;-1;1;2;0d0+500",
           "min": 500,
           "max": 500,
           "p1": 500,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 115,
           "kind": "buffCrit",
           "zone": "C_",
+          "raw": "115;60;-1;-1;1;2;0d0+60",
           "min": 60,
           "max": 60,
           "p1": 60,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 132,
           "kind": "dispel",
           "zone": "C_",
+          "raw": "132;-1;-1;-1;0;2",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 117,
           "kind": "buffRange",
           "zone": "C_",
+          "raw": "117;6;-1;-1;1;2;0d0+6",
           "min": 6,
           "max": 6,
           "p1": 6,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 140,
           "kind": "ignore",
           "zone": "C_",
+          "raw": "140;-1;-1;-1;0;2",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "C_",
+          "raw": "108;5000;-1;-1;0;2;0d0+5000",
           "min": 5000,
           "max": 5000,
           "p1": 5000,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 2
+          "chance": 2,
+          "targetMask": 32
         },
         {
           "id": 111,
           "kind": "buffPa",
           "zone": "Pa",
+          "raw": "111;1;-1;-1;0;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 32
         }
       ],
       "pa": 1,
@@ -5770,9 +8939,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 2,
       "requiredLevel": 21,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 102,
@@ -5787,23 +8965,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;4;15;-1;0;0;1d12+3",
           "min": 4,
           "max": 15,
           "p1": 4,
           "p2": 15,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;4;11;-1;0;0;1d8+3",
           "min": 4,
           "max": 11,
           "p1": 4,
           "p2": 11,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -5812,23 +8996,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;4;17;-1;0;0;1d14+3",
           "min": 4,
           "max": 17,
           "p1": 4,
           "p2": 17,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;1;5;-1;0;0;1d5+0",
           "min": 1,
           "max": 5,
           "p1": 1,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -5841,9 +9031,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 104,
@@ -5851,18 +9050,21 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "trefle",
       "emoji": "🎯",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 115,
           "kind": "buffCrit",
           "zone": "Pa",
+          "raw": "115;7;-1;-1;5;0;0d0+7",
           "min": 7,
           "max": 7,
           "p1": 7,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -5870,12 +9072,15 @@ export const REAL_SPELLS = {
           "id": 115,
           "kind": "buffCrit",
           "zone": "Pa",
+          "raw": "115;8;-1;-1;5;0;0d0+8",
           "min": 8,
           "max": 8,
           "p1": 8,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -5888,9 +9093,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 13,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 105,
@@ -5904,12 +9118,15 @@ export const REAL_SPELLS = {
           "id": 4,
           "kind": "teleport",
           "zone": "Pa",
+          "raw": "4;1;-1;0;0;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": 0,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -5922,10 +9139,20 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": true,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 5,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        7,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 106,
@@ -5933,29 +9160,35 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "roue_de_la_fortune",
       "emoji": "🔥",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 138,
           "kind": "buffPower",
           "zone": "Pa",
+          "raw": "138;100;-1;-1;2;0;0d0+100",
           "min": 100,
           "max": 100,
           "p1": 100,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 89,
-          "kind": "ignore",
+          "kind": "percentLifeDamage",
           "zone": "Pa",
+          "raw": "89;1;5;-1;0;0;1d5+0",
           "min": 1,
           "max": 5,
           "p1": 1,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -5963,12 +9196,15 @@ export const REAL_SPELLS = {
           "id": 138,
           "kind": "buffPower",
           "zone": "Pa",
+          "raw": "138;200;-1;-1;2;0;0d0+200",
           "min": 200,
           "max": 200,
           "p1": 200,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -5981,9 +9217,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 4,
       "requiredLevel": 36,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 107,
@@ -5998,12 +9243,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;18;30;-1;0;0;4d4+14",
           "min": 18,
           "max": 30,
           "p1": 18,
           "p2": 30,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -6012,12 +9260,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;20;32;-1;0;0;4d4+16",
           "min": 20,
           "max": 32,
           "p1": 20,
           "p2": 32,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -6030,9 +9281,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 26,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 108,
@@ -6047,35 +9307,44 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;26;40;-1;0;0;1d15+25",
           "min": 26,
           "max": 40,
           "p1": 26,
           "p2": 40,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 97,
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;26;40;-1;0;50;1d15+25",
           "min": 26,
           "max": 40,
           "p1": 26,
           "p2": 40,
+          "p3": -1,
           "duration": 0,
-          "chance": 50
+          "chance": 50,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;50",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 50
+          "chance": 50,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -6084,35 +9353,44 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;40;-1;-1;0;0;0d0+40",
           "min": 40,
           "max": 40,
           "p1": 40,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 97,
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;40;-1;-1;0;50;0d0+40",
           "min": 40,
           "max": 40,
           "p1": 40,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 50
+          "chance": 50,
+          "targetMask": 0
         },
         {
           "id": 666,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "666;-1;-1;-1;0;50",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 50
+          "chance": 50,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -6124,10 +9402,19 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 48,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 109,
@@ -6142,24 +9429,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;1;45;-1;0;50;1d45+0",
           "min": 1,
           "max": 45,
           "p1": 1,
           "p2": 45,
+          "p3": -1,
           "duration": 0,
-          "chance": 50
+          "chance": 50,
+          "targetMask": 0
         },
         {
           "id": 98,
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;1;45;-1;0;50;1d45+0",
           "min": 1,
           "max": 45,
           "p1": 1,
           "p2": 45,
+          "p3": -1,
           "duration": 0,
-          "chance": 50
+          "chance": 50,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -6168,24 +9461,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;50;-1;-1;0;50;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 50
+          "chance": 50,
+          "targetMask": 0
         },
         {
           "id": 96,
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;50;-1;-1;0;50;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 50
+          "chance": 50,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -6198,9 +9497,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 3,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 110,
@@ -6215,12 +9523,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Ld",
+          "raw": "97;21;26;-1;0;0;5d2+16",
           "min": 21,
           "max": 26,
           "p1": 21,
           "p2": 26,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -6229,12 +9540,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Ld",
+          "raw": "97;30;-1;-1;0;0;0d0+30",
           "min": 30,
           "max": 30,
           "p1": 30,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -6246,10 +9560,19 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 0,
+      "maxPerTurn": 2,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 70,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 111,
@@ -6257,29 +9580,35 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "contrecoup",
       "emoji": "❤️",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 125,
           "kind": "buffVitality",
           "zone": "Pa",
+          "raw": "125;120;200;-1;5;0;1d81+119",
           "min": 120,
           "max": 200,
           "p1": 120,
           "p2": 200,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 89,
-          "kind": "ignore",
+          "kind": "percentLifeDamage",
           "zone": "Pa",
+          "raw": "89;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -6293,9 +9622,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 3,
       "requiredLevel": 9,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 112,
@@ -6310,12 +9648,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;15;39;-1;0;0;3d9+12",
           "min": 15,
           "max": 39,
           "p1": 15,
           "p2": 39,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -6323,24 +9664,30 @@ export const REAL_SPELLS = {
           "id": 168,
           "kind": "debuffPa",
           "zone": "Pa",
+          "raw": "168;1;-1;-1;7;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 7,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 97,
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;15;39;-1;0;0;3d9+12",
           "min": 15,
           "max": 39,
           "p1": 15,
           "p2": 39,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -6353,9 +9700,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 80,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 113,
@@ -6369,23 +9725,29 @@ export const REAL_SPELLS = {
           "id": 202,
           "kind": "ignore",
           "zone": "Ch",
+          "raw": "202;-1;-1;-1;0;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Pa",
+          "raw": "112;4;9;-1;2;0;1d6+3",
           "min": 4,
           "max": 9,
           "p1": 4,
           "p2": 9,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -6393,23 +9755,29 @@ export const REAL_SPELLS = {
           "id": 202,
           "kind": "ignore",
           "zone": "Ch",
+          "raw": "202;-1;-1;-1;0;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Pa",
+          "raw": "112;10;-1;-1;2;0;0d0+10",
           "min": 10,
           "max": 10,
           "p1": 10,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -6422,9 +9790,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 2,
       "requiredLevel": 6,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 114,
@@ -6438,12 +9815,15 @@ export const REAL_SPELLS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;1;-1;-1;1;100;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -6452,48 +9832,60 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;12;41;-1;0;0;1d30+11",
           "min": 12,
           "max": 41,
           "p1": 12,
           "p2": 41,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 98,
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;12;41;-1;0;0;1d30+11",
           "min": 12,
           "max": 41,
           "p1": 12,
           "p2": 41,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 99,
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;12;41;-1;0;0;1d30+11",
           "min": 12,
           "max": 41,
           "p1": 12,
           "p2": 41,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 97,
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;12;41;-1;0;0;1d30+11",
           "min": 12,
           "max": 41,
           "p1": 12,
           "p2": 41,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -6506,9 +9898,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 90,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 115,
@@ -6522,45 +9923,57 @@ export const REAL_SPELLS = {
           "id": 168,
           "kind": "debuffPa",
           "zone": "Cf",
+          "raw": "168;1;4;-1;3;0;1d4+0",
           "min": 1,
           "max": 4,
           "p1": 1,
           "p2": 4,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 111,
           "kind": "buffPa",
           "zone": "Cf",
+          "raw": "111;2;5;-1;3;0;1d4+1",
           "min": 2,
           "max": 5,
           "p1": 2,
           "p2": 5,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 169,
           "kind": "debuffPm",
           "zone": "Cf",
+          "raw": "169;1;4;-1;3;0;1d4+0",
           "min": 1,
           "max": 4,
           "p1": 1,
           "p2": 4,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "Cf",
+          "raw": "128;2;5;-1;3;0;1d4+1",
           "min": 2,
           "max": 5,
           "p1": 2,
           "p2": 5,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -6568,45 +9981,57 @@ export const REAL_SPELLS = {
           "id": 168,
           "kind": "debuffPa",
           "zone": "Cf",
+          "raw": "168;1;4;-1;6;0;1d4+0",
           "min": 1,
           "max": 4,
           "p1": 1,
           "p2": 4,
+          "p3": -1,
           "duration": 6,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 111,
           "kind": "buffPa",
           "zone": "Cf",
+          "raw": "111;2;5;-1;6;0;1d4+1",
           "min": 2,
           "max": 5,
           "p1": 2,
           "p2": 5,
+          "p3": -1,
           "duration": 6,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 169,
           "kind": "debuffPm",
           "zone": "Cf",
+          "raw": "169;1;4;-1;6;0;1d4+0",
           "min": 1,
           "max": 4,
           "p1": 1,
           "p2": 4,
+          "p3": -1,
           "duration": 6,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "Cf",
+          "raw": "128;2;5;-1;6;0;1d4+1",
           "min": 2,
           "max": 5,
           "p1": 2,
           "p2": 5,
+          "p3": -1,
           "duration": 6,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 6,
@@ -6619,9 +10044,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 10,
       "requiredLevel": 54,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 116,
@@ -6636,12 +10070,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Xb",
+          "raw": "99;11;20;-1;0;0;1d10+10",
           "min": 11,
           "max": 20,
           "p1": 11,
           "p2": 20,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -6649,24 +10086,30 @@ export const REAL_SPELLS = {
           "id": 116,
           "kind": "debuffRange",
           "zone": "Xb",
+          "raw": "116;1;-1;-1;10;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 10,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 99,
           "kind": "damage",
           "element": "feu",
           "zone": "Xb",
+          "raw": "99;13;22;-1;0;0;1d10+12",
           "min": 13,
           "max": 22,
           "p1": 13,
           "p2": 22,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -6679,9 +10122,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 31,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 117,
@@ -6695,12 +10147,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;45;5;-1;0;0",
           "min": 45,
           "max": 5,
           "p1": 45,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -6714,9 +10169,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 8,
       "requiredLevel": 42,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 118,
@@ -6724,19 +10188,22 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "reflexes",
       "emoji": "✨",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 119,
           "kind": "buffStat",
           "stat": "agilite",
           "zone": "Pa",
+          "raw": "119;45;90;-1;5;0;5d10+40",
           "min": 45,
           "max": 90,
           "p1": 45,
           "p2": 90,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -6745,12 +10212,15 @@ export const REAL_SPELLS = {
           "kind": "buffStat",
           "stat": "agilite",
           "zone": "Pa",
+          "raw": "119;50;140;-1;5;0;10d10+40",
           "min": 50,
           "max": 140,
           "p1": 50,
           "p2": 140,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -6763,9 +10233,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 60,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 119,
@@ -6780,34 +10259,43 @@ export const REAL_SPELLS = {
           "kind": "poison",
           "element": "neutre",
           "zone": "Ci",
+          "raw": "100;4;28;-1;2;0;1d25+3",
           "min": 4,
           "max": 28,
           "p1": 4,
           "p2": 28,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Ci",
+          "raw": "108;4;28;-1;2;0;1d25+3",
           "min": 4,
           "max": 28,
           "p1": 4,
           "p2": 28,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Ci",
+          "raw": "108;11;40;-1;2;0;1d30+10",
           "min": 11,
           "max": 40,
           "p1": 11,
           "p2": 40,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -6816,34 +10304,43 @@ export const REAL_SPELLS = {
           "kind": "poison",
           "element": "neutre",
           "zone": "Ci",
+          "raw": "100;7;56;-1;2;0;1d50+6",
           "min": 7,
           "max": 56,
           "p1": 7,
           "p2": 56,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Ci",
+          "raw": "108;7;56;-1;2;0;1d50+6",
           "min": 7,
           "max": 56,
           "p1": 7,
           "p2": 56,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Ci",
+          "raw": "108;21;80;-1;2;0;1d60+20",
           "min": 21,
           "max": 80,
           "p1": 21,
           "p2": 80,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -6856,9 +10353,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 4,
       "requiredLevel": 17,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 120,
@@ -6873,12 +10379,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;13;37;-1;0;0;1d25+12",
           "min": 13,
           "max": 37,
           "p1": 13,
           "p2": 37,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -6887,34 +10396,43 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;13;75;-1;0;0;1d63+12",
           "min": 13,
           "max": 75,
           "p1": 13,
           "p2": 75,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;5;-1;-1;0;0",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 169,
           "kind": "debuffPm",
           "zone": "Pa",
+          "raw": "169;1;-1;-1;8;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 8,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -6927,9 +10445,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 100,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   ],
   "ENIRIPSA": [
@@ -6945,12 +10472,15 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;13;19;-1;0;0;1d7+12",
           "min": 13,
           "max": 19,
           "p1": 13,
           "p2": 19,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -6958,12 +10488,15 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;32;-1;-1;0;0;0d0+32",
           "min": 32,
           "max": 32,
           "p1": 32,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -6975,10 +10508,20 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        50,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 122,
@@ -6993,12 +10536,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;12;14;-1;0;0;1d3+11",
           "min": 12,
           "max": 14,
           "p1": 12,
           "p2": 14,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7007,12 +10553,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;15;-1;-1;0;0;0d0+15",
           "min": 15,
           "max": 15,
           "p1": 15,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -7025,9 +10574,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 6,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 123,
@@ -7041,23 +10599,29 @@ export const REAL_SPELLS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;1;3;-1;1;0;1d3+0",
           "min": 1,
           "max": 3,
           "p1": 1,
           "p2": 3,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 89,
-          "kind": "ignore",
+          "kind": "percentLifeDamage",
           "zone": "Pa",
+          "raw": "89;2;-1;-1;0;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7065,12 +10629,15 @@ export const REAL_SPELLS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;1;3;-1;1;0;1d3+0",
           "min": 1,
           "max": 3,
           "p1": 1,
           "p2": 3,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -7082,10 +10649,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 17,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 124,
@@ -7099,12 +10675,15 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;8;11;-1;0;0;1d4+7",
           "min": 8,
           "max": 11,
           "p1": 8,
           "p2": 11,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7112,12 +10691,15 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;19;-1;-1;0;0;0d0+19",
           "min": 19,
           "max": 19,
           "p1": 19,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -7129,10 +10711,20 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 3,
+      "maxPerTurn": 0,
+      "maxPerTarget": 3,
       "cooldown": 0,
       "requiredLevel": 3,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        50,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 125,
@@ -7147,12 +10739,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;8;13;-1;0;0;1d6+7",
           "min": 8,
           "max": 13,
           "p1": 8,
           "p2": 13,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7161,12 +10756,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;19;-1;-1;0;0;0d0+19",
           "min": 19,
           "max": 19,
           "p1": 19,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -7179,9 +10777,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 126,
@@ -7195,23 +10802,29 @@ export const REAL_SPELLS = {
           "id": 111,
           "kind": "buffPa",
           "zone": "Xe",
+          "raw": "111;1;2;-1;5;0;1d2+0",
           "min": 1,
           "max": 2,
           "p1": 1,
           "p2": 2,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 4
         },
         {
           "id": 89,
-          "kind": "ignore",
+          "kind": "percentLifeDamage",
           "zone": "Pa",
+          "raw": "89;10;-1;-1;0;0;0d0+10",
           "min": 10,
           "max": 10,
           "p1": 10,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7219,12 +10832,15 @@ export const REAL_SPELLS = {
           "id": 111,
           "kind": "buffPa",
           "zone": "Xe",
+          "raw": "111;2;-1;-1;5;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 4
         }
       ],
       "pa": 2,
@@ -7237,9 +10853,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 9,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 127,
@@ -7247,18 +10872,21 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "mot_de_prevention",
       "emoji": "🛡️",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 105,
           "kind": "armor",
           "zone": "Pa",
+          "raw": "105;23;-1;-1;2;0;0d0+23",
           "min": 23,
           "max": 23,
           "p1": 23,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7266,12 +10894,15 @@ export const REAL_SPELLS = {
           "id": 105,
           "kind": "armor",
           "zone": "Pa",
+          "raw": "105;30;-1;-1;2;0;0d0+30",
           "min": 30,
           "max": 30,
           "p1": 30,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -7284,9 +10915,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 7,
       "requiredLevel": 13,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 128,
@@ -7300,12 +10940,15 @@ export const REAL_SPELLS = {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;1;-1;-1;0;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -7318,10 +10961,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 3,
+      "maxPerTurn": 0,
+      "maxPerTarget": 3,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 129,
@@ -7335,12 +10987,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;39;5;-1;0;0",
           "min": 39,
           "max": 5,
           "p1": 39,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -7354,9 +11009,19 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 7,
       "requiredLevel": 54,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        50,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 130,
@@ -7370,12 +11035,15 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Cd",
+          "raw": "108;1;9;-1;0;0;1d9+0",
           "min": 1,
           "max": 9,
           "p1": 1,
           "p2": 9,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7383,12 +11051,15 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Cd",
+          "raw": "108;10;-1;-1;0;0;0d0+10",
           "min": 10,
           "max": 10,
           "p1": 10,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -7400,10 +11071,20 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 0,
+      "maxPerTurn": 3,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 21,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        50,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 131,
@@ -7417,12 +11098,15 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;1;4;-1;4;0;1d4+0",
           "min": 1,
           "max": 4,
           "p1": 1,
           "p2": 4,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7430,12 +11114,15 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;5;-1;-1;4;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -7447,10 +11134,20 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 26,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        50,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 133,
@@ -7464,12 +11161,15 @@ export const REAL_SPELLS = {
           "id": 132,
           "kind": "dispel",
           "zone": "Pa",
+          "raw": "132;-1;-1;-1;0;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -7483,9 +11183,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 36,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 134,
@@ -7500,12 +11209,15 @@ export const REAL_SPELLS = {
           "kind": "lifeSteal",
           "element": "eau",
           "zone": "Pa",
+          "raw": "91;21;30;-1;0;0;1d10+20",
           "min": 21,
           "max": 30,
           "p1": 21,
           "p2": 30,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7514,12 +11226,15 @@ export const REAL_SPELLS = {
           "kind": "lifeSteal",
           "element": "eau",
           "zone": "Pa",
+          "raw": "91;31;-1;-1;0;0;0d0+31",
           "min": 31,
           "max": 31,
           "p1": 31,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -7531,10 +11246,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 42,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 135,
@@ -7546,25 +11270,31 @@ export const REAL_SPELLS = {
       "effects": [
         {
           "id": 109,
-          "kind": "ignore",
+          "kind": "selfDamage",
           "zone": "Pa",
+          "raw": "109;31;40;-1;0;0;1d10+30",
           "min": 31,
           "max": 40,
           "p1": 31,
           "p2": 40,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;31;40;-1;0;0;1d10+30",
           "min": 31,
           "max": 40,
           "p1": 31,
           "p2": 40,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7572,12 +11302,15 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;31;40;-1;0;0;1d10+30",
           "min": 31,
           "max": 40,
           "p1": 31,
           "p2": 40,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -7589,10 +11322,20 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 48,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        50,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 136,
@@ -7606,12 +11349,15 @@ export const REAL_SPELLS = {
           "id": 127,
           "kind": "removePm",
           "zone": "Pa",
+          "raw": "127;4;-1;-1;3;0;0d0+4",
           "min": 4,
           "max": 4,
           "p1": 4,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7619,12 +11365,15 @@ export const REAL_SPELLS = {
           "id": 127,
           "kind": "removePm",
           "zone": "Pa",
+          "raw": "127;4;-1;-1;4;0;0d0+4",
           "min": 4,
           "max": 4,
           "p1": 4,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -7636,10 +11385,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 10,
       "requiredLevel": 60,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 137,
@@ -7647,18 +11405,21 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "mot_d_envol",
       "emoji": "🔭",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 117,
           "kind": "buffRange",
           "zone": "Pa",
+          "raw": "117;2;3;-1;1;0;1d2+1",
           "min": 2,
           "max": 3,
           "p1": 2,
           "p2": 3,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7666,12 +11427,15 @@ export const REAL_SPELLS = {
           "id": 117,
           "kind": "buffRange",
           "zone": "Pa",
+          "raw": "117;2;3;-1;2;0;1d2+1",
           "min": 2,
           "max": 3,
           "p1": 2,
           "p2": 3,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 1,
@@ -7683,10 +11447,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 70,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 138,
@@ -7700,12 +11473,15 @@ export const REAL_SPELLS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Cd",
+          "raw": "101;5;-1;-1;1;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7713,12 +11489,15 @@ export const REAL_SPELLS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Cd",
+          "raw": "101;6;-1;-1;1;0;0d0+6",
           "min": 6,
           "max": 6,
           "p1": 6,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -7731,9 +11510,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 3,
       "requiredLevel": 80,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 139,
@@ -7747,23 +11535,29 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "C_",
+          "raw": "108;70;110;-1;0;0;1d41+69",
           "min": 70,
           "max": 110,
           "p1": 70,
           "p2": 110,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 950,
-          "kind": "ignore",
+          "kind": "state",
           "zone": "C_",
+          "raw": "950;-1;-1;50;5;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 50,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7771,23 +11565,29 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "C_",
+          "raw": "108;111;-1;-1;0;0;0d0+111",
           "min": 111,
           "max": 111,
           "p1": 111,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 950,
-          "kind": "ignore",
+          "kind": "state",
           "zone": "C_",
+          "raw": "950;-1;-1;50;5;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 50,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 6,
@@ -7800,9 +11600,19 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 7,
       "requiredLevel": 90,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        50,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 140,
@@ -7816,12 +11626,15 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;301;400;-1;0;0;1d100+300",
           "min": 301,
           "max": 400,
           "p1": 301,
           "p2": 400,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7829,12 +11642,15 @@ export const REAL_SPELLS = {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;651;-1;-1;0;0;0d0+651",
           "min": 651,
           "max": 651,
           "p1": 651,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 6,
@@ -7847,9 +11663,19 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 7,
       "requiredLevel": 100,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        50,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   ],
   "IOP": [
@@ -7866,12 +11692,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;8;12;-1;0;0;1d5+7",
           "min": 8,
           "max": 12,
           "p1": 8,
           "p2": 12,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7880,12 +11709,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;10;14;-1;0;0;1d5+9",
           "min": 10,
           "max": 14,
           "p1": 10,
           "p2": 14,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -7898,9 +11730,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 142,
@@ -7914,12 +11755,15 @@ export const REAL_SPELLS = {
           "id": 4,
           "kind": "teleport",
           "zone": "Pa",
+          "raw": "4;5;-1;0;0;0",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": 0,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -7933,9 +11777,19 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        7,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 143,
@@ -7950,23 +11804,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "100;5;6;-1;0;0;1d2+4",
           "min": 5,
           "max": 6,
           "p1": 5,
           "p2": 6,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;3;-1;-1;0;0",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -7975,23 +11835,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "100;6;7;-1;0;0;1d2+5",
           "min": 6,
           "max": 7,
           "p1": 6,
           "p2": 7,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;3;-1;-1;0;0",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -8004,9 +11870,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 144,
@@ -8014,18 +11889,21 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "compulsion",
       "emoji": "💪",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Pa",
+          "raw": "112;6;11;-1;5;0;1d6+5",
           "min": 6,
           "max": 11,
           "p1": 6,
           "p2": 11,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -8033,12 +11911,15 @@ export const REAL_SPELLS = {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Pa",
+          "raw": "112;7;12;-1;5;0;1d6+6",
           "min": 7,
           "max": 12,
           "p1": 7,
           "p2": 12,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -8051,9 +11932,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 3,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 145,
@@ -8068,23 +11958,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Xb",
+          "raw": "98;9;18;-1;0;0;1d10+8",
           "min": 9,
           "max": 18,
           "p1": 9,
           "p2": 18,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 2
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Xb",
+          "raw": "112;2;-1;-1;3;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 32
         }
       ],
       "critEffects": [
@@ -8093,12 +11989,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Xb",
+          "raw": "98;19;-1;-1;0;0;0d0+19",
           "min": 19,
           "max": 19,
           "p1": 19,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 2
         }
       ],
       "pa": 4,
@@ -8111,9 +12010,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 6,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 146,
@@ -8128,12 +12036,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "L-",
+          "raw": "99;8;15;-1;0;0;1d8+7",
           "min": 8,
           "max": 15,
           "p1": 8,
           "p2": 15,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -8142,12 +12053,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "L-",
+          "raw": "99;16;-1;-1;0;0;0d0+16",
           "min": 16,
           "max": 16,
           "p1": 16,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -8159,10 +12073,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 2,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 9,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 147,
@@ -8176,12 +12099,15 @@ export const REAL_SPELLS = {
           "id": 112,
           "kind": "buffDamage",
           "zone": "C_",
+          "raw": "112;1;6;-1;2;0;1d6+0",
           "min": 1,
           "max": 6,
           "p1": 1,
           "p2": 6,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -8189,12 +12115,15 @@ export const REAL_SPELLS = {
           "id": 112,
           "kind": "buffDamage",
           "zone": "C_",
+          "raw": "112;12;-1;-1;2;0;0d0+12",
           "min": 12,
           "max": 12,
           "p1": 12,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -8207,9 +12136,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 1,
+      "maxPerTarget": 1,
       "cooldown": 3,
       "requiredLevel": 13,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 148,
@@ -8217,18 +12155,21 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "amplification",
       "emoji": "💪",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Pa",
+          "raw": "112;7;8;-1;1;0;1d2+6",
           "min": 7,
           "max": 8,
           "p1": 7,
           "p2": 8,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -8236,12 +12177,15 @@ export const REAL_SPELLS = {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Pa",
+          "raw": "112;7;8;-1;2;0;1d2+6",
           "min": 7,
           "max": 8,
           "p1": 7,
           "p2": 8,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 1,
@@ -8253,75 +12197,101 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 17,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 149,
       "name": "Mutilation",
       "grade": 5,
       "key": "mutilation",
-      "emoji": "🔥",
+      "emoji": "✨",
       "targetMode": "self",
       "effects": [
         {
           "id": 142,
-          "kind": "ignore",
+          "kind": "buffStat",
+          "stat": "physicalDamage",
           "zone": "Pa",
+          "raw": "142;40;-1;-1;0;0;0d0+40",
           "min": 40,
           "max": 40,
           "p1": 40,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 89,
-          "kind": "ignore",
+          "kind": "percentLifeDamage",
           "zone": "Pa",
+          "raw": "89;1;-1;-1;0;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 138,
           "kind": "buffPower",
           "zone": "Pa",
+          "raw": "138;40;-1;-1;0;0;0d0+40",
           "min": 40,
           "max": 40,
           "p1": 40,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
         {
           "id": 142,
-          "kind": "ignore",
+          "kind": "buffStat",
+          "stat": "physicalDamage",
           "zone": "Pa",
+          "raw": "142;50;-1;-1;0;0;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 138,
           "kind": "buffPower",
           "zone": "Pa",
+          "raw": "138;50;-1;-1;0;0;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -8333,10 +12303,19 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 4,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 54,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 150,
@@ -8351,23 +12330,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Lc",
+          "raw": "99;8;13;-1;0;0;1d6+7",
           "min": 8,
           "max": 13,
           "p1": 8,
           "p2": 13,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 127,
           "kind": "removePm",
           "zone": "Lc",
+          "raw": "127;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -8376,23 +12361,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Lc",
+          "raw": "99;13;-1;-1;0;0;0d0+13",
           "min": 13,
           "max": 13,
           "p1": 13,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 127,
           "kind": "removePm",
           "zone": "Lc",
+          "raw": "127;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -8405,9 +12396,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 26,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 151,
@@ -8421,12 +12421,15 @@ export const REAL_SPELLS = {
           "id": 5,
           "kind": "push",
           "zone": "Xb",
+          "raw": "5;1;-1;-1;0;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -8440,9 +12443,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 3,
       "requiredLevel": 31,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 152,
@@ -8457,36 +12469,45 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;1;40;-1;0;0;1d40+0",
           "min": 1,
           "max": 40,
           "p1": 1,
           "p2": 40,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 91,
           "kind": "lifeSteal",
           "element": "eau",
           "zone": "Pa",
+          "raw": "91;1;3;-1;0;0;1d3+0",
           "min": 1,
           "max": 3,
           "p1": 1,
           "p2": 3,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 94,
           "kind": "lifeSteal",
           "element": "feu",
           "zone": "Pa",
+          "raw": "94;1;3;-1;0;0;1d3+0",
           "min": 1,
           "max": 3,
           "p1": 1,
           "p2": 3,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -8495,36 +12516,45 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;1;45;-1;0;0;1d45+0",
           "min": 1,
           "max": 45,
           "p1": 1,
           "p2": 45,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 91,
           "kind": "lifeSteal",
           "element": "eau",
           "zone": "Pa",
+          "raw": "91;4;-1;-1;0;0;0d0+4",
           "min": 4,
           "max": 4,
           "p1": 4,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 94,
           "kind": "lifeSteal",
           "element": "feu",
           "zone": "Pa",
+          "raw": "94;4;-1;-1;0;0;0d0+4",
           "min": 4,
           "max": 4,
           "p1": 4,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -8537,9 +12567,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 42,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 153,
@@ -8547,18 +12586,21 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "puissance",
       "emoji": "🔥",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 138,
           "kind": "buffPower",
           "zone": "Pa",
+          "raw": "138;70;-1;-1;5;0;0d0+70",
           "min": 70,
           "max": 70,
           "p1": 70,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -8566,12 +12608,15 @@ export const REAL_SPELLS = {
           "id": 138,
           "kind": "buffPower",
           "zone": "Pa",
+          "raw": "138;70;-1;-1;7;0;0d0+70",
           "min": 70,
           "max": 70,
           "p1": 70,
           "p2": -1,
+          "p3": -1,
           "duration": 7,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -8584,9 +12629,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 48,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 154,
@@ -8601,23 +12655,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;10;36;-1;0;0;1d27+9",
           "min": 10,
           "max": 36,
           "p1": 10,
           "p2": 36,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 171,
-          "kind": "ignore",
+          "kind": "debuffStat",
+          "stat": "crit",
           "zone": "Pa",
+          "raw": "171;2;-1;-1;2;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -8626,23 +12687,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;37;38;-1;0;0;1d2+36",
           "min": 37,
           "max": 38,
           "p1": 37,
           "p2": 38,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 171,
-          "kind": "ignore",
+          "kind": "debuffStat",
+          "stat": "crit",
           "zone": "Pa",
+          "raw": "171;2;-1;-1;3;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -8655,9 +12723,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 21,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 155,
@@ -8665,18 +12742,21 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "vitalite",
       "emoji": "❤️",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 125,
           "kind": "buffVitality",
           "zone": "Pa",
+          "raw": "125;151;180;-1;20;0;1d30+150",
           "min": 151,
           "max": 180,
           "p1": 151,
           "p2": 180,
+          "p3": -1,
           "duration": 20,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -8684,12 +12764,15 @@ export const REAL_SPELLS = {
           "id": 125,
           "kind": "buffVitality",
           "zone": "Pa",
+          "raw": "125;200;-1;-1;20;0;0d0+200",
           "min": 200,
           "max": 200,
           "p1": 200,
           "p2": -1,
+          "p3": -1,
           "duration": 20,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -8702,9 +12785,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 36,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 156,
@@ -8719,12 +12811,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;36;40;-1;0;0;1d5+35",
           "min": 36,
           "max": 40,
           "p1": 36,
           "p2": 40,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -8733,12 +12828,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;41;45;-1;0;0;1d5+40",
           "min": 41,
           "max": 45,
           "p1": 41,
           "p2": 45,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -8750,10 +12848,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 3,
+      "maxPerTurn": 0,
+      "maxPerTarget": 3,
       "cooldown": 0,
       "requiredLevel": 60,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 157,
@@ -8768,12 +12875,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Cc",
+          "raw": "98;26;40;-1;0;0;1d15+25",
           "min": 26,
           "max": 40,
           "p1": 26,
           "p2": 40,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -8782,12 +12892,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Cc",
+          "raw": "98;41;55;-1;0;0;1d15+40",
           "min": 41,
           "max": 55,
           "p1": 41,
           "p2": 55,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -8800,9 +12913,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 70,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 158,
@@ -8817,12 +12939,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;9;17;-1;0;0;2d5+7",
           "min": 9,
           "max": 17,
           "p1": 9,
           "p2": 17,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -8831,12 +12956,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;14;22;-1;0;0;2d5+12",
           "min": 14,
           "max": 22,
           "p1": 14,
           "p2": 22,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -8848,10 +12976,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 3,
+      "maxPerTurn": 0,
+      "maxPerTarget": 3,
       "cooldown": 0,
       "requiredLevel": 80,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 159,
@@ -8866,23 +13003,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;47;66;-1;0;0;1d20+46",
           "min": 47,
           "max": 66,
           "p1": 47,
           "p2": 66,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 293,
-          "kind": "ignore",
+          "kind": "spellBoost",
           "zone": "Pa",
+          "raw": "293;159;-1;240;4;0",
           "min": 159,
           "max": 159,
           "p1": 159,
           "p2": -1,
+          "p3": 240,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -8891,23 +13034,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;57;76;-1;0;0;1d20+56",
           "min": 57,
           "max": 76,
           "p1": 57,
           "p2": 76,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 293,
-          "kind": "ignore",
+          "kind": "spellBoost",
           "zone": "Pa",
+          "raw": "293;159;-1;250;4;0",
           "min": 159,
           "max": 159,
           "p1": 159,
           "p2": -1,
+          "p3": 250,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 7,
@@ -8920,9 +13069,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 4,
       "requiredLevel": 100,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 160,
@@ -8937,12 +13095,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Xd",
+          "raw": "97;13;39;-1;0;0;13d3+0",
           "min": 13,
           "max": 39,
           "p1": 13,
           "p2": 39,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -8951,12 +13112,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Xd",
+          "raw": "97;18;44;-1;0;0;13d3+5",
           "min": 18,
           "max": 44,
           "p1": 18,
           "p2": 44,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -8968,10 +13132,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 0,
+      "maxPerTurn": 2,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 90,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   ],
   "CRA": [
@@ -8988,23 +13161,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;13;15;-1;0;0;1d3+12",
           "min": 13,
           "max": 15,
           "p1": 13,
           "p2": 15,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 320,
-          "kind": "ignore",
+          "kind": "stealStat",
+          "stat": "range",
           "zone": "Pa",
+          "raw": "320;1;-1;-1;1;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9013,23 +13193,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;15;17;-1;0;0;1d3+14",
           "min": 15,
           "max": 17,
           "p1": 15,
           "p2": 17,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 320,
-          "kind": "ignore",
+          "kind": "stealStat",
+          "stat": "range",
           "zone": "Pa",
+          "raw": "320;1;-1;-1;1;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -9041,10 +13228,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 162,
@@ -9052,18 +13248,21 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "tir_critique",
       "emoji": "🎯",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 115,
           "kind": "buffCrit",
           "zone": "Pa",
+          "raw": "115;13;-1;-1;3;0;0d0+13",
           "min": 13,
           "max": 13,
           "p1": 13,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9071,23 +13270,29 @@ export const REAL_SPELLS = {
           "id": 115,
           "kind": "buffCrit",
           "zone": "Pa",
+          "raw": "115;13;-1;-1;3;0;0d0+13",
           "min": 13,
           "max": 13,
           "p1": 13,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 138,
           "kind": "buffPower",
           "zone": "Pa",
+          "raw": "138;30;-1;-1;3;0;0d0+30",
           "min": 30,
           "max": 30,
           "p1": 30,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -9100,9 +13305,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 21,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 163,
@@ -9117,23 +13331,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;8;10;-1;0;0;1d3+7",
           "min": 8,
           "max": 10,
           "p1": 8,
           "p2": 10,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9142,23 +13362,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;11;13;-1;0;0;1d3+10",
           "min": 11,
           "max": 13,
           "p1": 11,
           "p2": 13,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -9170,10 +13396,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 3,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 164,
@@ -9188,12 +13423,15 @@ export const REAL_SPELLS = {
           "kind": "poison",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "100;6;7;-1;2;0;1d2+5",
           "min": 6,
           "max": 7,
           "p1": 6,
           "p2": 7,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9202,12 +13440,15 @@ export const REAL_SPELLS = {
           "kind": "poison",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "100;9;-1;-1;2;0;0d0+9",
           "min": 9,
           "max": 9,
           "p1": 9,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -9219,10 +13460,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 165,
@@ -9237,23 +13487,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Le",
+          "raw": "99;17;19;-1;0;0;1d3+16",
           "min": 17,
           "max": 19,
           "p1": 17,
           "p2": 19,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Le",
+          "raw": "5;1;-1;-1;0;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9262,23 +13518,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Le",
+          "raw": "99;22;24;-1;0;0;1d3+21",
           "min": 22,
           "max": 24,
           "p1": 22,
           "p2": 24,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Le",
+          "raw": "5;1;-1;-1;0;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -9290,10 +13552,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 0,
+      "maxPerTurn": 2,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 6,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 166,
@@ -9301,18 +13572,21 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "tir_puissant",
       "emoji": "🔥",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 138,
           "kind": "buffPower",
           "zone": "Pa",
+          "raw": "138;150;-1;-1;2;0;0d0+150",
           "min": 150,
           "max": 150,
           "p1": 150,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9320,12 +13594,15 @@ export const REAL_SPELLS = {
           "id": 138,
           "kind": "buffPower",
           "zone": "Pa",
+          "raw": "138;170;-1;-1;2;0;0d0+170",
           "min": 170,
           "max": 170,
           "p1": 170,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -9338,9 +13615,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 36,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 167,
@@ -9355,34 +13641,43 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;31;33;-1;0;0;1d3+30",
           "min": 31,
           "max": 33,
           "p1": 31,
           "p2": 33,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 950,
-          "kind": "ignore",
+          "kind": "state",
           "zone": "Pa",
+          "raw": "950;-1;-1;7;1;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 7,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 293,
-          "kind": "ignore",
+          "kind": "spellBoost",
           "zone": "Pa",
+          "raw": "293;167;-1;32;3;0",
           "min": 167,
           "max": 167,
           "p1": 167,
           "p2": -1,
+          "p3": 32,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9391,34 +13686,43 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;37;39;-1;0;0;1d3+36",
           "min": 37,
           "max": 39,
           "p1": 37,
           "p2": 39,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 950,
-          "kind": "ignore",
+          "kind": "state",
           "zone": "Pa",
+          "raw": "950;-1;-1;7;1;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 7,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 293,
-          "kind": "ignore",
+          "kind": "spellBoost",
           "zone": "Pa",
+          "raw": "293;167;-1;38;3;0",
           "min": 167,
           "max": 167,
           "p1": 167,
           "p2": -1,
+          "p3": 38,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -9431,9 +13735,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 3,
       "requiredLevel": 13,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 168,
@@ -9447,24 +13760,30 @@ export const REAL_SPELLS = {
           "id": 116,
           "kind": "debuffRange",
           "zone": "Cc",
+          "raw": "116;6;-1;-1;3;0;0d0+6",
           "min": 6,
           "max": 6,
           "p1": 6,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 91,
           "kind": "lifeSteal",
           "element": "eau",
           "zone": "Cc",
+          "raw": "91;12;14;-1;0;0;1d3+11",
           "min": 12,
           "max": 14,
           "p1": 12,
           "p2": 14,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9472,24 +13791,30 @@ export const REAL_SPELLS = {
           "id": 116,
           "kind": "debuffRange",
           "zone": "Cc",
+          "raw": "116;6;-1;-1;3;0;0d0+6",
           "min": 6,
           "max": 6,
           "p1": 6,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 91,
           "kind": "lifeSteal",
           "element": "eau",
           "zone": "Cc",
+          "raw": "91;15;17;-1;0;0;1d3+14",
           "min": 15,
           "max": 17,
           "p1": 15,
           "p2": 17,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -9502,9 +13827,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 4,
       "requiredLevel": 17,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 169,
@@ -9519,23 +13853,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;15;18;-1;0;0;1d4+14",
           "min": 15,
           "max": 18,
           "p1": 15,
           "p2": 18,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;3;-1;-1;0;0",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9544,23 +13884,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;18;21;-1;0;0;1d4+17",
           "min": 18,
           "max": 21,
           "p1": 18,
           "p2": 21,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;3;-1;-1;0;0",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -9572,10 +13918,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 170,
@@ -9590,23 +13945,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;7;8;-1;0;0;1d2+6",
           "min": 7,
           "max": 8,
           "p1": 7,
           "p2": 8,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 77,
           "kind": "stealPm",
           "zone": "Pa",
+          "raw": "77;1;-1;-1;0;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9615,23 +13976,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;10;11;-1;0;0;1d2+9",
           "min": 10,
           "max": 11,
           "p1": 10,
           "p2": 11,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 77,
           "kind": "stealPm",
           "zone": "Pa",
+          "raw": "77;1;-1;-1;0;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -9643,10 +14010,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 26,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 171,
@@ -9661,23 +14037,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;25;27;-1;0;0;1d3+24",
           "min": 25,
           "max": 27,
           "p1": 25,
           "p2": 27,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 293,
-          "kind": "ignore",
+          "kind": "spellBoost",
           "zone": "Pa",
+          "raw": "293;171;-1;26;2;0",
           "min": 171,
           "max": 171,
           "p1": 171,
           "p2": -1,
+          "p3": 26,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9686,23 +14068,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;30;32;-1;0;0;1d3+29",
           "min": 30,
           "max": 32,
           "p1": 30,
           "p2": 32,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 293,
-          "kind": "ignore",
+          "kind": "spellBoost",
           "zone": "Pa",
+          "raw": "293;171;-1;31;2;0",
           "min": 171,
           "max": 171,
           "p1": 171,
           "p2": -1,
+          "p3": 31,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -9715,9 +14103,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 2,
       "requiredLevel": 31,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 172,
@@ -9731,12 +14128,15 @@ export const REAL_SPELLS = {
           "id": 117,
           "kind": "buffRange",
           "zone": "Cc",
+          "raw": "117;5;-1;-1;3;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9744,12 +14144,15 @@ export const REAL_SPELLS = {
           "id": 117,
           "kind": "buffRange",
           "zone": "Cc",
+          "raw": "117;6;-1;-1;3;0;0d0+6",
           "min": 6,
           "max": 6,
           "p1": 6,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -9762,9 +14165,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 9,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 173,
@@ -9779,12 +14191,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;9;11;-1;0;0;1d3+8",
           "min": 9,
           "max": 11,
           "p1": 9,
           "p2": 11,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9793,12 +14208,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;12;14;-1;0;0;1d3+11",
           "min": 12,
           "max": 14,
           "p1": 12,
           "p2": 14,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -9810,10 +14228,19 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 42,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 174,
@@ -9827,24 +14254,30 @@ export const REAL_SPELLS = {
           "id": 169,
           "kind": "debuffPm",
           "zone": "Pa",
+          "raw": "169;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 97,
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;10;11;-1;0;0;1d2+9",
           "min": 10,
           "max": 11,
           "p1": 10,
           "p2": 11,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9852,24 +14285,30 @@ export const REAL_SPELLS = {
           "id": 169,
           "kind": "debuffPm",
           "zone": "Pa",
+          "raw": "169;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 97,
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;13;14;-1;0;0;1d2+12",
           "min": 13,
           "max": 14,
           "p1": 13,
           "p2": 14,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -9881,10 +14320,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 48,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 175,
@@ -9899,23 +14347,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;21;23;-1;0;0;1d3+20",
           "min": 21,
           "max": 23,
           "p1": 21,
           "p2": 23,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 145,
-          "kind": "ignore",
+          "kind": "debuffStat",
+          "stat": "damage",
           "zone": "Pa",
+          "raw": "145;15;-1;-1;1;0;0d0+15",
           "min": 15,
           "max": 15,
           "p1": 15,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9924,23 +14379,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;29;31;-1;0;0;1d3+28",
           "min": 29,
           "max": 31,
           "p1": 29,
           "p2": 31,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 145,
-          "kind": "ignore",
+          "kind": "debuffStat",
+          "stat": "damage",
           "zone": "Pa",
+          "raw": "145;15;-1;-1;1;0;0d0+15",
           "min": 15,
           "max": 15,
           "p1": 15,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -9952,10 +14414,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 60,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 176,
@@ -9970,24 +14441,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;6;8;-1;0;0;1d3+5",
           "min": 6,
           "max": 8,
           "p1": 6,
           "p2": 8,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 98,
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;6;8;-1;0;0;1d3+5",
           "min": 6,
           "max": 8,
           "p1": 6,
           "p2": 8,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -9996,24 +14473,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;9;11;-1;0;0;1d3+8",
           "min": 9,
           "max": 11,
           "p1": 9,
           "p2": 11,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 98,
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;9;11;-1;0;0;1d3+8",
           "min": 9,
           "max": 11,
           "p1": 9,
           "p2": 11,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -10025,10 +14508,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 54,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 177,
@@ -10042,24 +14534,30 @@ export const REAL_SPELLS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Cc",
+          "raw": "101;2;-1;-1;0;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 96,
           "kind": "damage",
           "element": "eau",
           "zone": "Cc",
+          "raw": "96;21;23;-1;0;0;1d3+20",
           "min": 21,
           "max": 23,
           "p1": 21,
           "p2": 23,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -10067,24 +14565,30 @@ export const REAL_SPELLS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Cc",
+          "raw": "101;2;-1;-1;0;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 96,
           "kind": "damage",
           "element": "eau",
           "zone": "Cc",
+          "raw": "96;29;31;-1;0;0;1d3+28",
           "min": 29,
           "max": 31,
           "p1": 29,
           "p2": 31,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -10096,10 +14600,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 0,
+      "maxPerTurn": 2,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 80,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 178,
@@ -10114,12 +14627,15 @@ export const REAL_SPELLS = {
           "kind": "lifeSteal",
           "element": "air",
           "zone": "Pa",
+          "raw": "93;21;23;-1;0;0;1d3+20",
           "min": 21,
           "max": 23,
           "p1": 21,
           "p2": 23,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -10128,12 +14644,15 @@ export const REAL_SPELLS = {
           "kind": "lifeSteal",
           "element": "air",
           "zone": "Pa",
+          "raw": "93;29;31;-1;0;0;1d3+28",
           "min": 29,
           "max": 31,
           "p1": 29,
           "p2": 31,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -10145,10 +14664,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 70,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 179,
@@ -10163,12 +14691,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Cc",
+          "raw": "99;20;24;-1;0;0;1d5+19",
           "min": 20,
           "max": 24,
           "p1": 20,
           "p2": 24,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -10177,12 +14708,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Cc",
+          "raw": "99;28;32;-1;0;0;1d5+27",
           "min": 28,
           "max": 32,
           "p1": 28,
           "p2": 32,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -10194,10 +14728,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 0,
+      "maxPerTurn": 2,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 90,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 180,
@@ -10205,18 +14748,21 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "maitrise_de_l_arc",
       "emoji": "💪",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Pa",
+          "raw": "112;40;-1;-1;2;0;0d0+40",
           "min": 40,
           "max": 40,
           "p1": 40,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -10224,12 +14770,15 @@ export const REAL_SPELLS = {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Pa",
+          "raw": "112;50;-1;-1;2;0;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -10242,9 +14791,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 100,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   ],
   "SADIDA": [
@@ -10261,12 +14819,15 @@ export const REAL_SPELLS = {
           "kind": "poison",
           "element": "feu",
           "zone": "Cj",
+          "raw": "99;5;-1;-1;4;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -10275,12 +14836,15 @@ export const REAL_SPELLS = {
           "kind": "poison",
           "element": "feu",
           "zone": "Cj",
+          "raw": "99;10;-1;-1;4;0;0d0+10",
           "min": 10,
           "max": 10,
           "p1": 10,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -10292,10 +14856,19 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 26,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 182,
@@ -10309,12 +14882,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;114;5;-1;0;0",
           "min": 114,
           "max": 5,
           "p1": 114,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -10327,10 +14903,19 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": true,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 2,
       "requiredLevel": 9,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 183,
@@ -10345,12 +14930,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;10;17;-1;0;0;1d8+9",
           "min": 10,
           "max": 17,
           "p1": 10,
           "p2": 17,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -10359,12 +14947,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;20;-1;-1;0;0;0d0+20",
           "min": 20,
           "max": 20,
           "p1": 20,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -10376,10 +14967,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 184,
@@ -10394,24 +14994,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;6;10;-1;0;0;1d5+5",
           "min": 6,
           "max": 10,
           "p1": 6,
           "p2": 10,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 96,
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;6;10;-1;0;0;1d5+5",
           "min": 6,
           "max": 10,
           "p1": 6,
           "p2": 10,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -10420,24 +15026,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;11;-1;-1;0;0;0d0+11",
           "min": 11,
           "max": 11,
           "p1": 11,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 96,
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;11;-1;-1;0;0;0d0+11",
           "min": 11,
           "max": 11,
           "p1": 11,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -10450,9 +15062,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 80,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 185,
@@ -10466,24 +15087,30 @@ export const REAL_SPELLS = {
           "id": 127,
           "kind": "removePm",
           "zone": "Cc",
+          "raw": "127;2;4;-1;1;0;1d3+1",
           "min": 2,
           "max": 4,
           "p1": 2,
           "p2": 4,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 99,
           "kind": "damage",
           "element": "feu",
           "zone": "Cc",
+          "raw": "99;6;10;-1;0;0;1d5+5",
           "min": 6,
           "max": 10,
           "p1": 6,
           "p2": 10,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -10491,24 +15118,30 @@ export const REAL_SPELLS = {
           "id": 127,
           "kind": "removePm",
           "zone": "Cc",
+          "raw": "127;3;5;-1;1;0;1d3+2",
           "min": 3,
           "max": 5,
           "p1": 3,
           "p2": 5,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 99,
           "kind": "damage",
           "element": "feu",
           "zone": "Cc",
+          "raw": "99;16;-1;-1;0;0;0d0+16",
           "min": 16,
           "max": 16,
           "p1": 16,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -10520,10 +15153,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 70,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 187,
@@ -10537,12 +15179,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;42;5;-1;1;0",
           "min": 42,
           "max": 5,
           "p1": 42,
           "p2": 5,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -10555,10 +15200,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": true,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 100,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 188,
@@ -10572,12 +15226,15 @@ export const REAL_SPELLS = {
           "id": 132,
           "kind": "dispel",
           "zone": "Pa",
+          "raw": "132;-1;-1;-1;1;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -10591,9 +15248,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 3,
       "requiredLevel": 90,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 189,
@@ -10607,12 +15273,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;116;5;-1;0;0",
           "min": 116,
           "max": 5,
           "p1": 116,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -10625,10 +15294,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": true,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 2,
       "requiredLevel": 21,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 190,
@@ -10642,12 +15320,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;117;5;-1;0;0",
           "min": 117,
           "max": 5,
           "p1": 117,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -10660,10 +15341,19 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": true,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 2,
       "requiredLevel": 54,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 191,
@@ -10678,12 +15368,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Ce",
+          "raw": "97;12;14;-1;0;0;1d3+11",
           "min": 12,
           "max": 14,
           "p1": 12,
           "p2": 14,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -10692,12 +15385,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Ce",
+          "raw": "97;15;-1;-1;0;0;0d0+15",
           "min": 15,
           "max": 15,
           "p1": 15,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -10709,10 +15405,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 36,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 192,
@@ -10726,34 +15431,43 @@ export const REAL_SPELLS = {
           "id": 169,
           "kind": "debuffPm",
           "zone": "Pa",
+          "raw": "169;4;-1;-1;2;0;0d0+4",
           "min": 4,
           "max": 4,
           "p1": 4,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;3;12;-1;0;0;1d10+2",
           "min": 3,
           "max": 12,
           "p1": 3,
           "p2": 12,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;59;63;-1;0;0;1d5+58",
           "min": 59,
           "max": 63,
           "p1": 59,
           "p2": 63,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -10761,34 +15475,43 @@ export const REAL_SPELLS = {
           "id": 169,
           "kind": "debuffPm",
           "zone": "Pa",
+          "raw": "169;4;-1;-1;2;0;0d0+4",
           "min": 4,
           "max": 4,
           "p1": 4,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;2;-1;-1;0;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;64;-1;-1;0;0;0d0+64",
           "min": 64,
           "max": 64,
           "p1": 64,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -10800,10 +15523,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 4,
       "requiredLevel": 13,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 193,
@@ -10817,12 +15549,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;115;5;-1;0;0",
           "min": 115,
           "max": 5,
           "p1": 115,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -10835,10 +15570,19 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": true,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 2,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 194,
@@ -10853,12 +15597,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;6;50;-1;0;0;1d45+5",
           "min": 6,
           "max": 50,
           "p1": 6,
           "p2": 50,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -10867,12 +15614,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;56;-1;-1;0;0;0d0+56",
           "min": 56,
           "max": 56,
           "p1": 56,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -10884,10 +15634,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 60,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 195,
@@ -10902,12 +15661,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;14;24;-1;0;0;1d11+13",
           "min": 14,
           "max": 24,
           "p1": 14,
           "p2": 24,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -10916,12 +15678,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;24;25;-1;0;0;1d2+23",
           "min": 24,
           "max": 25,
           "p1": 24,
           "p2": 25,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -10934,9 +15699,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 6,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 196,
@@ -10951,23 +15725,30 @@ export const REAL_SPELLS = {
           "kind": "poison",
           "element": "neutre",
           "zone": "Cj",
+          "raw": "100;5;-1;-1;6;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 6,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 155,
-          "kind": "ignore",
+          "kind": "debuffStat",
+          "stat": "intelligence",
           "zone": "Cj",
+          "raw": "155;130;-1;-1;6;0;0d0+130",
           "min": 130,
           "max": 130,
           "p1": 130,
           "p2": -1,
+          "p3": -1,
           "duration": 6,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -10976,23 +15757,30 @@ export const REAL_SPELLS = {
           "kind": "poison",
           "element": "neutre",
           "zone": "Cj",
+          "raw": "100;6;-1;-1;6;0;0d0+6",
           "min": 6,
           "max": 6,
           "p1": 6,
           "p2": -1,
+          "p3": -1,
           "duration": 6,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 155,
-          "kind": "ignore",
+          "kind": "debuffStat",
+          "stat": "intelligence",
           "zone": "Cj",
+          "raw": "155;260;-1;-1;6;0;0d0+260",
           "min": 260,
           "max": 260,
           "p1": 260,
           "p2": -1,
+          "p3": -1,
           "duration": 6,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -11004,10 +15792,19 @@ export const REAL_SPELLS = {
       "needsLos": false,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 7,
       "requiredLevel": 48,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 197,
@@ -11021,67 +15818,85 @@ export const REAL_SPELLS = {
           "id": 149,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "149;-1;-1;8005;4;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 8005,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 169,
           "kind": "debuffPm",
           "zone": "Pa",
+          "raw": "169;100;-1;-1;4;0;0d0+100",
           "min": 100,
           "max": 100,
           "p1": 100,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 183,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "183;1000;-1;-1;4;0;0d0+1000",
           "min": 1000,
           "max": 1000,
           "p1": 1000,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 184,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "184;1000;-1;-1;4;0;0d0+1000",
           "min": 1000,
           "max": 1000,
           "p1": 1000,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 168,
           "kind": "debuffPa",
           "zone": "Pa",
+          "raw": "168;100;-1;-1;4;0;0d0+100",
           "min": 100,
           "max": 100,
           "p1": 100,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 108,
           "kind": "heal",
           "zone": "Pa",
+          "raw": "108;14;-1;-1;4;0;0d0+14",
           "min": 14,
           "max": 14,
           "p1": 14,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -11095,9 +15910,19 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 11,
       "requiredLevel": 17,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        8,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 198,
@@ -11112,12 +15937,15 @@ export const REAL_SPELLS = {
           "kind": "lifeSteal",
           "element": "air",
           "zone": "Pa",
+          "raw": "93;26;30;-1;0;0;1d5+25",
           "min": 26,
           "max": 30,
           "p1": 26,
           "p2": 30,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 8
         }
       ],
       "critEffects": [
@@ -11126,12 +15954,15 @@ export const REAL_SPELLS = {
           "kind": "lifeSteal",
           "element": "air",
           "zone": "Pa",
+          "raw": "93;31;35;-1;0;0;1d5+30",
           "min": 31,
           "max": 35,
           "p1": 31,
           "p2": 35,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 8
         }
       ],
       "pa": 4,
@@ -11143,10 +15974,83 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 3,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 199,
+      "name": "Connaissance des Poupées",
+      "grade": 5,
+      "key": "connaissance_des_poupees",
+      "emoji": "✨",
+      "targetMode": "fighter",
+      "effects": [
+        {
+          "id": 182,
+          "kind": "buffStat",
+          "stat": "summons",
+          "zone": "Pa",
+          "raw": "182;3;-1;-1;5;0;0d0+3",
+          "min": 3,
+          "max": 3,
+          "p1": 3,
+          "p2": -1,
+          "p3": -1,
+          "duration": 5,
+          "chance": 0,
+          "targetMask": 0
+        }
+      ],
+      "critEffects": [
+        {
+          "id": 182,
+          "kind": "buffStat",
+          "stat": "summons",
+          "zone": "Pa",
+          "raw": "182;4;-1;-1;5;0;0d0+4",
+          "min": 4,
+          "max": 4,
+          "p1": 4,
+          "p2": -1,
+          "p3": -1,
+          "duration": 5,
+          "chance": 0,
+          "targetMask": 0
+        }
+      ],
+      "pa": 3,
+      "rangeMin": 0,
+      "rangeMax": 1,
+      "critRate": 50,
+      "failRate": 100,
+      "lineOnly": false,
+      "needsLos": false,
+      "emptyCellOnly": false,
+      "adjustableRange": false,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
+      "cooldown": 6,
+      "requiredLevel": 31,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   ],
   "SACRIEUR": [
@@ -11163,23 +16067,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;10;18;-1;0;0;1d9+9",
           "min": 10,
           "max": 18,
           "p1": 10,
           "p2": 18,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 268,
-          "kind": "ignore",
+          "kind": "stealStat",
+          "stat": "agilite",
           "zone": "Pa",
+          "raw": "268;15;-1;-1;3;0;0d0+15",
           "min": 15,
           "max": 15,
           "p1": 15,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -11188,23 +16099,30 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;20;-1;-1;0;0;0d0+20",
           "min": 20,
           "max": 20,
           "p1": 20,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 268,
-          "kind": "ignore",
+          "kind": "stealStat",
+          "stat": "agilite",
           "zone": "Pa",
+          "raw": "268;15;-1;-1;4;0;0d0+15",
           "min": 15,
           "max": 15,
           "p1": 15,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -11217,9 +16135,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 433,
@@ -11233,23 +16160,29 @@ export const REAL_SPELLS = {
           "id": 788,
           "kind": "punishment",
           "zone": "Pa",
+          "raw": "788;123;140;5;5;0",
           "min": 123,
           "max": 140,
           "p1": 123,
           "p2": 140,
+          "p3": 5,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 776,
           "kind": "damageSuffer",
           "zone": "Pa",
+          "raw": "776;5;-1;-1;5;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -11257,23 +16190,29 @@ export const REAL_SPELLS = {
           "id": 788,
           "kind": "punishment",
           "zone": "Pa",
+          "raw": "788;123;150;5;5;0",
           "min": 123,
           "max": 150,
           "p1": 123,
           "p2": 150,
+          "p3": 5,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 776,
           "kind": "damageSuffer",
           "zone": "Pa",
+          "raw": "776;5;-1;-1;5;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -11286,9 +16225,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 21,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 434,
@@ -11302,12 +16250,15 @@ export const REAL_SPELLS = {
           "id": 6,
           "kind": "pull",
           "zone": "Pa",
+          "raw": "6;6;-1;-1;0;0",
           "min": 6,
           "max": 6,
           "p1": 6,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -11320,10 +16271,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 436,
@@ -11338,12 +16298,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;11;15;-1;0;0;1d5+10",
           "min": 11,
           "max": 15,
           "p1": 11,
           "p2": 15,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -11352,12 +16315,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;16;20;-1;0;0;1d5+15",
           "min": 16,
           "max": 20,
           "p1": 16,
           "p2": 20,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -11370,9 +16336,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 9,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 437,
@@ -11386,23 +16361,29 @@ export const REAL_SPELLS = {
           "id": 788,
           "kind": "punishment",
           "zone": "Pa",
+          "raw": "788;119;140;5;5;0",
           "min": 119,
           "max": 140,
           "p1": 119,
           "p2": 140,
+          "p3": 5,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 776,
           "kind": "damageSuffer",
           "zone": "Pa",
+          "raw": "776;5;-1;-1;5;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -11410,23 +16391,29 @@ export const REAL_SPELLS = {
           "id": 788,
           "kind": "punishment",
           "zone": "Pa",
+          "raw": "788;119;150;5;5;0",
           "min": 119,
           "max": 150,
           "p1": 119,
           "p2": 150,
+          "p3": 5,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 776,
           "kind": "damageSuffer",
           "zone": "Pa",
+          "raw": "776;5;-1;-1;5;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -11439,9 +16426,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 13,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 438,
@@ -11455,12 +16451,15 @@ export const REAL_SPELLS = {
           "id": 8,
           "kind": "swap",
           "zone": "Pa",
+          "raw": "8;-1;-1;-1;0;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -11474,9 +16473,19 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 4,
       "requiredLevel": 54,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        7,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 439,
@@ -11491,12 +16500,15 @@ export const REAL_SPELLS = {
           "kind": "lifeSteal",
           "element": "eau",
           "zone": "Xb",
+          "raw": "91;16;20;-1;0;0;1d5+15",
           "min": 16,
           "max": 20,
           "p1": 16,
           "p2": 20,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 2
         }
       ],
       "critEffects": [
@@ -11505,12 +16517,15 @@ export const REAL_SPELLS = {
           "kind": "lifeSteal",
           "element": "eau",
           "zone": "Xb",
+          "raw": "91;18;22;-1;0;0;1d5+17",
           "min": 18,
           "max": 22,
           "p1": 18,
           "p2": 22,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 2
         }
       ],
       "pa": 4,
@@ -11522,10 +16537,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 2,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 17,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 441,
@@ -11539,23 +16563,29 @@ export const REAL_SPELLS = {
           "id": 788,
           "kind": "punishment",
           "zone": "Pa",
+          "raw": "788;108;140;2;2;0",
           "min": 108,
           "max": 140,
           "p1": 108,
           "p2": 140,
+          "p3": 2,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 950,
-          "kind": "ignore",
+          "kind": "state",
           "zone": "Pa",
+          "raw": "950;-1;-1;42;2;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 42,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -11563,23 +16593,29 @@ export const REAL_SPELLS = {
           "id": 788,
           "kind": "punishment",
           "zone": "Pa",
+          "raw": "788;108;150;2;2;0",
           "min": 108,
           "max": 150,
           "p1": 108,
           "p2": 150,
+          "p3": 2,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 950,
-          "kind": "ignore",
+          "kind": "state",
           "zone": "Pa",
+          "raw": "950;-1;-1;42;2;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 42,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -11592,9 +16628,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 4,
       "requiredLevel": 42,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 442,
@@ -11609,12 +16654,15 @@ export const REAL_SPELLS = {
           "kind": "lifeSteal",
           "element": "feu",
           "zone": "Pa",
+          "raw": "94;17;21;-1;0;0;1d5+16",
           "min": 17,
           "max": 21,
           "p1": 17,
           "p2": 21,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -11623,12 +16671,15 @@ export const REAL_SPELLS = {
           "kind": "lifeSteal",
           "element": "feu",
           "zone": "Pa",
+          "raw": "94;22;26;-1;0;0;1d5+21",
           "min": 22,
           "max": 26,
           "p1": 22,
           "p2": 26,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -11640,10 +16691,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 36,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 443,
@@ -11657,23 +16717,29 @@ export const REAL_SPELLS = {
           "id": 788,
           "kind": "punishment",
           "zone": "Pa",
+          "raw": "788;126;140;5;5;0",
           "min": 126,
           "max": 140,
           "p1": 126,
           "p2": 140,
+          "p3": 5,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 776,
           "kind": "damageSuffer",
           "zone": "Pa",
+          "raw": "776;5;-1;-1;5;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -11681,23 +16747,29 @@ export const REAL_SPELLS = {
           "id": 788,
           "kind": "punishment",
           "zone": "Pa",
+          "raw": "788;126;150;5;5;0",
           "min": 126,
           "max": 150,
           "p1": 126,
           "p2": 150,
+          "p3": 5,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 776,
           "kind": "damageSuffer",
           "zone": "Pa",
+          "raw": "776;5;-1;-1;5;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -11710,9 +16782,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 26,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 444,
@@ -11726,12 +16807,15 @@ export const REAL_SPELLS = {
           "id": 9,
           "kind": "swapAlly",
           "zone": "Pa",
+          "raw": "9;100;1;-1;1;0",
           "min": 100,
           "max": 1,
           "p1": 100,
           "p2": 1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -11739,12 +16823,15 @@ export const REAL_SPELLS = {
           "id": 9,
           "kind": "swapAlly",
           "zone": "Pa",
+          "raw": "9;100;1;-1;2;0",
           "min": 100,
           "max": 1,
           "p1": 100,
           "p2": 1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -11757,9 +16844,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 3,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 445,
@@ -11773,12 +16869,15 @@ export const REAL_SPELLS = {
           "id": 8,
           "kind": "swap",
           "zone": "Pa",
+          "raw": "8;-1;-1;-1;0;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -11792,9 +16891,19 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 4,
       "requiredLevel": 48,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        7,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 446,
@@ -11808,12 +16917,15 @@ export const REAL_SPELLS = {
           "id": 672,
           "kind": "punitionDamage",
           "zone": "Pa",
+          "raw": "672;30;-1;-1;0;0;0d0+30",
           "min": 30,
           "max": 30,
           "p1": 30,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -11821,12 +16933,15 @@ export const REAL_SPELLS = {
           "id": 672,
           "kind": "punitionDamage",
           "zone": "Pa",
+          "raw": "672;35;-1;-1;0;0;0d0+35",
           "min": 35,
           "max": 35,
           "p1": 35,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -11839,9 +16954,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 2,
       "requiredLevel": 60,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 447,
@@ -11856,34 +16980,43 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Xb",
+          "raw": "96;9;13;-1;0;0;1d5+8",
           "min": 9,
           "max": 13,
           "p1": 9,
           "p2": 13,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Pa",
+          "raw": "112;8;-1;-1;3;0;0d0+8",
           "min": 8,
           "max": 8,
           "p1": 8,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 32
         },
         {
           "id": 89,
-          "kind": "ignore",
+          "kind": "percentLifeDamage",
           "zone": "Pa",
+          "raw": "89;1;-1;-1;1;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 32
         }
       ],
       "critEffects": [
@@ -11892,34 +17025,43 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Xb",
+          "raw": "96;11;15;-1;0;0;1d5+10",
           "min": 11,
           "max": 15,
           "p1": 11,
           "p2": 15,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Pa",
+          "raw": "112;8;-1;-1;4;0;0d0+8",
           "min": 8,
           "max": 8,
           "p1": 8,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 32
         },
         {
           "id": 89,
-          "kind": "ignore",
+          "kind": "percentLifeDamage",
           "zone": "Pa",
+          "raw": "89;1;-1;-1;1;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 32
         }
       ],
       "pa": 4,
@@ -11932,9 +17074,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 70,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 448,
@@ -11948,12 +17099,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;434;5;-1;0;0",
           "min": 434,
           "max": 5,
           "p1": 434,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -11967,9 +17121,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 80,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 449,
@@ -11983,12 +17146,15 @@ export const REAL_SPELLS = {
           "id": 8,
           "kind": "swap",
           "zone": "Pa",
+          "raw": "8;-1;-1;-1;0;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -12001,10 +17167,20 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 5,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 6,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        7,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 451,
@@ -12018,12 +17194,15 @@ export const REAL_SPELLS = {
           "id": 105,
           "kind": "armor",
           "zone": "Pa",
+          "raw": "105;35;-1;-1;-1;0;0d0+35",
           "min": 35,
           "max": 35,
           "p1": 35,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -12037,9 +17216,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 63,
       "requiredLevel": 0,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   ],
   "PANDAWA": [
@@ -12053,180 +17241,225 @@ export const REAL_SPELLS = {
       "effects": [
         {
           "id": 950,
-          "kind": "ignore",
+          "kind": "state",
           "zone": "Pa",
+          "raw": "950;-1;-1;1;9;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 1,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 169,
           "kind": "debuffPm",
           "zone": "Pa",
+          "raw": "169;1;-1;-1;9;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 212,
           "kind": "resistBuff",
           "element": "air",
           "zone": "Pa",
+          "raw": "212;20;-1;-1;9;0;0d0+20",
           "min": 20,
           "max": 20,
           "p1": 20,
           "p2": -1,
+          "p3": -1,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 211,
           "kind": "resistBuff",
           "element": "eau",
           "zone": "Pa",
+          "raw": "211;20;-1;-1;9;0;0d0+20",
           "min": 20,
           "max": 20,
           "p1": 20,
           "p2": -1,
+          "p3": -1,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 213,
           "kind": "resistBuff",
           "element": "feu",
           "zone": "Pa",
+          "raw": "213;20;-1;-1;9;0;0d0+20",
           "min": 20,
           "max": 20,
           "p1": 20,
           "p2": -1,
+          "p3": -1,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 214,
           "kind": "resistBuff",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "214;20;-1;-1;9;0;0d0+20",
           "min": 20,
           "max": 20,
           "p1": 20,
           "p2": -1,
+          "p3": -1,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 210,
           "kind": "resistBuff",
           "element": "terre",
           "zone": "Pa",
+          "raw": "210;20;-1;-1;9;0;0d0+20",
           "min": 20,
           "max": 20,
           "p1": 20,
           "p2": -1,
+          "p3": -1,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 149,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "149;1;-1;8010;9;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": 8010,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
         {
           "id": 950,
-          "kind": "ignore",
+          "kind": "state",
           "zone": "Pa",
+          "raw": "950;-1;-1;1;9;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 1,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 212,
           "kind": "resistBuff",
           "element": "air",
           "zone": "Pa",
+          "raw": "212;25;-1;-1;9;0;0d0+25",
           "min": 25,
           "max": 25,
           "p1": 25,
           "p2": -1,
+          "p3": -1,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 211,
           "kind": "resistBuff",
           "element": "eau",
           "zone": "Pa",
+          "raw": "211;25;-1;-1;9;0;0d0+25",
           "min": 25,
           "max": 25,
           "p1": 25,
           "p2": -1,
+          "p3": -1,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 213,
           "kind": "resistBuff",
           "element": "feu",
           "zone": "Pa",
+          "raw": "213;25;-1;-1;9;0;0d0+25",
           "min": 25,
           "max": 25,
           "p1": 25,
           "p2": -1,
+          "p3": -1,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 214,
           "kind": "resistBuff",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "214;25;-1;-1;9;0;0d0+25",
           "min": 25,
           "max": 25,
           "p1": 25,
           "p2": -1,
+          "p3": -1,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 210,
           "kind": "resistBuff",
           "element": "terre",
           "zone": "Pa",
+          "raw": "210;25;-1;-1;9;0;0d0+25",
           "min": 25,
           "max": 25,
           "p1": 25,
           "p2": -1,
+          "p3": -1,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 149,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "149;1;-1;8010;9;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": 8010,
           "duration": 9,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -12239,9 +17472,19 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        1,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 687,
@@ -12256,12 +17499,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;10;15;-1;0;0;1d6+9",
           "min": 10,
           "max": 15,
           "p1": 10,
           "p2": 15,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -12270,12 +17516,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;12;17;-1;0;0;1d6+11",
           "min": 12,
           "max": 17,
           "p1": 12,
           "p2": 17,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -12288,9 +17537,17 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        41
+      ]
     },
     {
       "id": 688,
@@ -12305,12 +17562,15 @@ export const REAL_SPELLS = {
           "kind": "resistDebuff",
           "element": "feu",
           "zone": "Pa",
+          "raw": "218;8;-1;-1;2;0;0d0+8",
           "min": 8,
           "max": 8,
           "p1": 8,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -12319,12 +17579,15 @@ export const REAL_SPELLS = {
           "kind": "resistDebuff",
           "element": "feu",
           "zone": "Pa",
+          "raw": "218;9;-1;-1;2;0;0d0+9",
           "min": 9,
           "max": 9,
           "p1": 9,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -12337,9 +17600,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 13,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 689,
@@ -12351,25 +17623,32 @@ export const REAL_SPELLS = {
       "effects": [
         {
           "id": 171,
-          "kind": "ignore",
+          "kind": "debuffStat",
+          "stat": "crit",
           "zone": "Pa",
+          "raw": "171;5;-1;-1;2;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;1;-1;-1;0;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -12382,10 +17661,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 3,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 690,
@@ -12400,23 +17688,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;11;20;-1;0;0;1d10+10",
           "min": 11,
           "max": 20,
           "p1": 11,
           "p2": 20,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;1;-1;-1;0;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -12425,23 +17719,29 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;13;22;-1;0;0;1d10+12",
           "min": 13,
           "max": 22,
           "p1": 13,
           "p2": 22,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;1;-1;-1;0;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -12454,9 +17754,17 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 6,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        41
+      ]
     },
     {
       "id": 691,
@@ -12471,12 +17779,15 @@ export const REAL_SPELLS = {
           "kind": "resistDebuff",
           "element": "eau",
           "zone": "Pa",
+          "raw": "216;8;-1;-1;2;0;0d0+8",
           "min": 8,
           "max": 8,
           "p1": 8,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -12485,12 +17796,15 @@ export const REAL_SPELLS = {
           "kind": "resistDebuff",
           "element": "eau",
           "zone": "Pa",
+          "raw": "216;9;-1;-1;2;0;0d0+9",
           "min": 9,
           "max": 9,
           "p1": 9,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -12503,9 +17817,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 9,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 692,
@@ -12520,12 +17843,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;11;19;-1;0;0;1d9+10",
           "min": 11,
           "max": 19,
           "p1": 11,
           "p2": 19,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -12534,12 +17860,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;13;21;-1;0;0;1d9+12",
           "min": 13,
           "max": 21,
           "p1": 13,
           "p2": 21,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -12552,9 +17881,17 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        41
+      ]
     },
     {
       "id": 694,
@@ -12569,12 +17906,15 @@ export const REAL_SPELLS = {
           "kind": "resistDebuff",
           "element": "air",
           "zone": "Pa",
+          "raw": "217;8;-1;-1;2;0;0d0+8",
           "min": 8,
           "max": 8,
           "p1": 8,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -12583,12 +17923,15 @@ export const REAL_SPELLS = {
           "kind": "resistDebuff",
           "element": "air",
           "zone": "Pa",
+          "raw": "217;9;-1;-1;2;0;0d0+9",
           "min": 9,
           "max": 9,
           "p1": 9,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -12601,9 +17944,110 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 21,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
+    },
+    {
+      "id": 695,
+      "name": "Stabilisation",
+      "grade": 5,
+      "key": "stabilisation",
+      "emoji": "✨",
+      "targetMode": "fighter",
+      "effects": [
+        {
+          "id": 950,
+          "kind": "state",
+          "zone": "Pa",
+          "raw": "950;-1;-1;6;4;0",
+          "min": -1,
+          "max": -1,
+          "p1": -1,
+          "p2": -1,
+          "p3": 6,
+          "duration": 4,
+          "chance": 0,
+          "targetMask": 0
+        },
+        {
+          "id": 161,
+          "kind": "buffStat",
+          "stat": "dodgePm",
+          "zone": "Pa",
+          "raw": "161;50;-1;-1;4;0;0d0+50",
+          "min": 50,
+          "max": 50,
+          "p1": 50,
+          "p2": -1,
+          "p3": -1,
+          "duration": 4,
+          "chance": 0,
+          "targetMask": 0
+        }
+      ],
+      "critEffects": [
+        {
+          "id": 950,
+          "kind": "state",
+          "zone": "Pa",
+          "raw": "950;-1;-1;6;4;0",
+          "min": -1,
+          "max": -1,
+          "p1": -1,
+          "p2": -1,
+          "p3": 6,
+          "duration": 4,
+          "chance": 0,
+          "targetMask": 0
+        },
+        {
+          "id": 161,
+          "kind": "buffStat",
+          "stat": "dodgePm",
+          "zone": "Pa",
+          "raw": "161;100;-1;-1;4;0;0d0+100",
+          "min": 100,
+          "max": 100,
+          "p1": 100,
+          "p2": -1,
+          "p3": -1,
+          "duration": 4,
+          "chance": 0,
+          "targetMask": 0
+        }
+      ],
+      "pa": 3,
+      "rangeMin": 0,
+      "rangeMax": 5,
+      "critRate": 40,
+      "failRate": 100,
+      "lineOnly": true,
+      "needsLos": false,
+      "emptyCellOnly": false,
+      "adjustableRange": true,
+      "maxPerTurn": 0,
+      "maxPerTarget": 0,
+      "cooldown": 6,
+      "requiredLevel": 26,
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 697,
@@ -12618,12 +18062,15 @@ export const REAL_SPELLS = {
           "kind": "resistDebuff",
           "element": "terre",
           "zone": "Pa",
+          "raw": "215;8;-1;-1;2;0;0d0+8",
           "min": 8,
           "max": 8,
           "p1": 8,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -12632,12 +18079,15 @@ export const REAL_SPELLS = {
           "kind": "resistDebuff",
           "element": "terre",
           "zone": "Pa",
+          "raw": "215;9;-1;-1;2;0;0d0+9",
           "min": 9,
           "max": 9,
           "p1": 9,
           "p2": -1,
+          "p3": -1,
           "duration": 2,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -12650,9 +18100,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 36,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 698,
@@ -12666,45 +18125,57 @@ export const REAL_SPELLS = {
           "id": 186,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "186;100;-1;-1;1;25;0d0+100",
           "min": 100,
           "max": 100,
           "p1": 100,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 25
+          "chance": 25,
+          "targetMask": 0
         },
         {
           "id": 122,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "122;12;-1;-1;1;25;0d0+12",
           "min": 12,
           "max": 12,
           "p1": 12,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 25
+          "chance": 25,
+          "targetMask": 0
         },
         {
           "id": 132,
           "kind": "dispel",
           "zone": "Pa",
+          "raw": "132;-1;-1;-1;0;25",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 25
+          "chance": 25,
+          "targetMask": 0
         },
         {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;3;-1;-1;1;25;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 25
+          "chance": 25,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -12712,45 +18183,57 @@ export const REAL_SPELLS = {
           "id": 132,
           "kind": "dispel",
           "zone": "Pa",
+          "raw": "132;-1;-1;-1;0;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 186,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "186;100;-1;-1;1;0;0d0+100",
           "min": 100,
           "max": 100,
           "p1": 100,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 122,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "122;12;-1;-1;1;0;0d0+12",
           "min": 12,
           "max": 12,
           "p1": 12,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;3;-1;-1;1;0;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -12763,9 +18246,17 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 42,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        41
+      ]
     },
     {
       "id": 699,
@@ -12779,34 +18270,43 @@ export const REAL_SPELLS = {
           "id": 132,
           "kind": "dispel",
           "zone": "Pa",
+          "raw": "132;-1;-1;-1;0;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 149,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "149;-1;-1;-1;0;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 951,
-          "kind": "ignore",
+          "kind": "removeState",
           "zone": "Pa",
+          "raw": "951;-1;-1;1;0;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -12820,9 +18320,17 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 48,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        41
+      ]
     },
     {
       "id": 700,
@@ -12837,12 +18345,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;19;33;-1;0;0;1d15+18",
           "min": 19,
           "max": 33,
           "p1": 19,
           "p2": 33,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -12851,12 +18362,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;31;40;-1;0;0;1d10+30",
           "min": 31,
           "max": 40,
           "p1": 31,
           "p2": 40,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -12869,9 +18383,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 54,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 701,
@@ -12885,56 +18408,71 @@ export const REAL_SPELLS = {
           "id": 149,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "149;1;-1;7030;3;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": 7030,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 950,
-          "kind": "ignore",
+          "kind": "state",
           "zone": "Pa",
+          "raw": "950;-1;-1;1;3;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 138,
           "kind": "buffPower",
           "zone": "Pa",
+          "raw": "138;140;-1;-1;3;0;0d0+140",
           "min": 140,
           "max": 140,
           "p1": 140,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Pa",
+          "raw": "112;10;-1;-1;3;0;0d0+10",
           "min": 10,
           "max": 10,
           "p1": 10,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 115,
           "kind": "buffCrit",
           "zone": "Pa",
+          "raw": "115;10;-1;-1;3;0;0d0+10",
           "min": 10,
           "max": 10,
           "p1": 10,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -12942,56 +18480,71 @@ export const REAL_SPELLS = {
           "id": 149,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "149;1;-1;7030;4;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": 7030,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 950,
-          "kind": "ignore",
+          "kind": "state",
           "zone": "Pa",
+          "raw": "950;-1;-1;1;4;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": 1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 138,
           "kind": "buffPower",
           "zone": "Pa",
+          "raw": "138;140;-1;-1;4;0;0d0+140",
           "min": 140,
           "max": 140,
           "p1": 140,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "Pa",
+          "raw": "112;10;-1;-1;4;0;0d0+10",
           "min": 10,
           "max": 10,
           "p1": 10,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 115,
           "kind": "buffCrit",
           "zone": "Pa",
+          "raw": "115;10;-1;-1;4;0;0d0+10",
           "min": 10,
           "max": 10,
           "p1": 10,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 6,
@@ -13004,9 +18557,19 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 60,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        1,
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 702,
@@ -13021,12 +18584,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Cc",
+          "raw": "99;11;25;-1;0;0;1d15+10",
           "min": 11,
           "max": 25,
           "p1": 11,
           "p2": 25,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -13035,12 +18601,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Cc",
+          "raw": "99;21;35;-1;0;0;1d15+20",
           "min": 21,
           "max": 35,
           "p1": 21,
           "p2": 35,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -13052,10 +18621,19 @@ export const REAL_SPELLS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 70,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 703,
@@ -13070,12 +18648,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Lc",
+          "raw": "97;23;32;-1;0;0;1d10+22",
           "min": 23,
           "max": 32,
           "p1": 23,
           "p2": 32,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -13084,12 +18665,15 @@ export const REAL_SPELLS = {
           "kind": "damage",
           "element": "terre",
           "zone": "Lc",
+          "raw": "97;31;35;-1;0;0;1d5+30",
           "min": 31,
           "max": 35,
           "p1": 31,
           "p2": 35,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 5,
@@ -13102,9 +18686,18 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 80,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     },
     {
       "id": 704,
@@ -13112,18 +18705,21 @@ export const REAL_SPELLS = {
       "grade": 5,
       "key": "pandanlku",
       "emoji": "💨",
-      "targetMode": "self",
+      "targetMode": "fighter",
       "effects": [
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "Pa",
+          "raw": "128;2;3;-1;4;0;1d2+1",
           "min": 2,
           "max": 3,
           "p1": 2,
           "p2": 3,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -13131,12 +18727,15 @@ export const REAL_SPELLS = {
           "id": 128,
           "kind": "buffPm",
           "zone": "Pa",
+          "raw": "128;3;4;-1;4;0;1d2+2",
           "min": 3,
           "max": 4,
           "p1": 3,
           "p2": 4,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -13149,9 +18748,17 @@ export const REAL_SPELLS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 90,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        41
+      ]
     },
     {
       "id": 705,
@@ -13165,12 +18772,15 @@ export const REAL_SPELLS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;516;5;-1;0;0",
           "min": 516,
           "max": 5,
           "p1": 516,
           "p2": 5,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -13184,9 +18794,17 @@ export const REAL_SPELLS = {
       "emptyCellOnly": true,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 10,
       "requiredLevel": 100,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        41
+      ]
     }
   ]
 };
@@ -13216,12 +18834,15 @@ export const REAL_SUMMONS = {
           "kind": "damage",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "100;12;15;-1;0;0;1d4+11",
           "min": 12,
           "max": 15,
           "p1": 12,
           "p2": 15,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -13230,12 +18851,15 @@ export const REAL_SUMMONS = {
           "kind": "damage",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "100;18;-1;-1;0;0;0d0+18",
           "min": 18,
           "max": 18,
           "p1": 18,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -13247,10 +18871,19 @@ export const REAL_SUMMONS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 3,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 0,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "37": {
@@ -13276,84 +18909,105 @@ export const REAL_SUMMONS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 97,
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;25;30;-1;0;0;1d6+24",
           "min": 25,
           "max": 30,
           "p1": 25,
           "p2": 30,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 212,
           "kind": "resistBuff",
           "element": "air",
           "zone": "C_",
+          "raw": "212;5;-1;-1;1;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 211,
           "kind": "resistBuff",
           "element": "eau",
           "zone": "C_",
+          "raw": "211;5;-1;-1;1;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 213,
           "kind": "resistBuff",
           "element": "feu",
           "zone": "C_",
+          "raw": "213;5;-1;-1;1;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 214,
           "kind": "resistBuff",
           "element": "neutre",
           "zone": "C_",
+          "raw": "214;5;-1;-1;1;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 210,
           "kind": "resistBuff",
           "element": "terre",
           "zone": "C_",
+          "raw": "210;5;-1;-1;1;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -13361,84 +19015,105 @@ export const REAL_SUMMONS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;2;3;-1;1;0;1d2+1",
           "min": 2,
           "max": 3,
           "p1": 2,
           "p2": 3,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 97,
           "kind": "damage",
           "element": "terre",
           "zone": "Pa",
+          "raw": "97;32;-1;-1;0;0;0d0+32",
           "min": 32,
           "max": 32,
           "p1": 32,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 212,
           "kind": "resistBuff",
           "element": "air",
           "zone": "C_",
+          "raw": "212;7;-1;-1;1;0;0d0+7",
           "min": 7,
           "max": 7,
           "p1": 7,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 211,
           "kind": "resistBuff",
           "element": "eau",
           "zone": "C_",
+          "raw": "211;7;-1;-1;1;0;0d0+7",
           "min": 7,
           "max": 7,
           "p1": 7,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 213,
           "kind": "resistBuff",
           "element": "feu",
           "zone": "C_",
+          "raw": "213;7;-1;-1;1;0;0d0+7",
           "min": 7,
           "max": 7,
           "p1": 7,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 214,
           "kind": "resistBuff",
           "element": "neutre",
           "zone": "C_",
+          "raw": "214;7;-1;-1;1;0;0d0+7",
           "min": 7,
           "max": 7,
           "p1": 7,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 210,
           "kind": "resistBuff",
           "element": "terre",
           "zone": "C_",
+          "raw": "210;7;-1;-1;1;0;0d0+7",
           "min": 7,
           "max": 7,
           "p1": 7,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -13451,9 +19126,18 @@ export const REAL_SUMMONS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 0,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "39": {
@@ -13479,34 +19163,43 @@ export const REAL_SUMMONS = {
           "id": 178,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "178;10;-1;-1;3;0;0d0+10",
           "min": 10,
           "max": 10,
           "p1": 10,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 178,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "178;10;-1;-1;3;0;0d0+10",
           "min": 10,
           "max": 10,
           "p1": 10,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "Pa",
+          "raw": "128;1;-1;-1;3;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -13514,34 +19207,43 @@ export const REAL_SUMMONS = {
           "id": 178,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "178;11;-1;-1;3;0;0d0+11",
           "min": 11,
           "max": 11,
           "p1": 11,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 178,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "178;11;-1;-1;3;0;0d0+11",
           "min": 11,
           "max": 11,
           "p1": 11,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "Pa",
+          "raw": "128;1;-1;-1;4;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -13554,9 +19256,18 @@ export const REAL_SUMMONS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 4,
       "requiredLevel": 0,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "40": {
@@ -13583,23 +19294,29 @@ export const REAL_SUMMONS = {
           "kind": "damage",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "100;8;12;-1;0;0;1d5+7",
           "min": 8,
           "max": 12,
           "p1": 8,
           "p2": 12,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;5;-1;-1;0;0",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -13608,23 +19325,29 @@ export const REAL_SUMMONS = {
           "kind": "damage",
           "element": "neutre",
           "zone": "Pa",
+          "raw": "100;13;-1;-1;0;0;0d0+13",
           "min": 13,
           "max": 13,
           "p1": 13,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;5;-1;-1;0;0",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -13637,9 +19360,18 @@ export const REAL_SUMMONS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 0,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "41": {
@@ -13665,12 +19397,15 @@ export const REAL_SUMMONS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -13678,12 +19413,15 @@ export const REAL_SUMMONS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;3;-1;-1;1;0;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -13695,10 +19433,19 @@ export const REAL_SUMMONS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 0,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "42": {
@@ -13724,12 +19471,15 @@ export const REAL_SUMMONS = {
           "id": 181,
           "kind": "summon",
           "zone": "Pa",
+          "raw": "181;152;6;-1;0;0",
           "min": 152,
           "max": 6,
           "p1": 152,
           "p2": 6,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -13742,10 +19492,19 @@ export const REAL_SUMMONS = {
       "needsLos": true,
       "emptyCellOnly": true,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 0,
-      "endsTurnOnFailure": true
+      "endsTurnOnFailure": true,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "43": {
@@ -13772,35 +19531,44 @@ export const REAL_SUMMONS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;9;12;-1;0;0;1d4+8",
           "min": 9,
           "max": 12,
           "p1": 9,
           "p2": 12,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 119,
           "kind": "buffStat",
           "stat": "agilite",
           "zone": "Pa",
+          "raw": "119;25;-1;-1;4;0;0d0+25",
           "min": 25,
           "max": 25,
           "p1": 25,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 154,
           "kind": "unknown_154",
           "zone": "Pa",
+          "raw": "154;25;-1;-1;4;0;0d0+25",
           "min": 25,
           "max": 25,
           "p1": 25,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -13809,35 +19577,44 @@ export const REAL_SUMMONS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;15;-1;-1;0;0;0d0+15",
           "min": 15,
           "max": 15,
           "p1": 15,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 119,
           "kind": "buffStat",
           "stat": "agilite",
           "zone": "Pa",
+          "raw": "119;30;-1;-1;4;0;0d0+30",
           "min": 30,
           "max": 30,
           "p1": 30,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 154,
           "kind": "unknown_154",
           "zone": "Pa",
+          "raw": "154;30;-1;-1;4;0;0d0+30",
           "min": 30,
           "max": 30,
           "p1": 30,
           "p2": -1,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -13850,9 +19627,18 @@ export const REAL_SUMMONS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 0,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "44": {
@@ -13879,34 +19665,43 @@ export const REAL_SUMMONS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;20;22;-1;0;0;1d3+19",
           "min": 20,
           "max": 22,
           "p1": 20,
           "p2": 22,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;1;-1;-1;0;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 127,
           "kind": "removePm",
           "zone": "Pa",
+          "raw": "127;1;2;-1;1;0;1d2+0",
           "min": 1,
           "max": 2,
           "p1": 1,
           "p2": 2,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -13915,34 +19710,43 @@ export const REAL_SUMMONS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;23;-1;-1;0;0;0d0+23",
           "min": 23,
           "max": 23,
           "p1": 23,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;1;-1;-1;0;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 127,
           "kind": "removePm",
           "zone": "Pa",
+          "raw": "127;2;-1;-1;1;0;0d0+2",
           "min": 2,
           "max": 2,
           "p1": 2,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -13954,10 +19758,19 @@ export const REAL_SUMMONS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 0,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "45": {
@@ -13983,12 +19796,15 @@ export const REAL_SUMMONS = {
           "id": 122,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "122;1;9;-1;10;0;1d9+0",
           "min": 1,
           "max": 9,
           "p1": 1,
           "p2": 9,
+          "p3": -1,
           "duration": 10,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -13996,12 +19812,15 @@ export const REAL_SUMMONS = {
           "id": 122,
           "kind": "ignore",
           "zone": "Pa",
+          "raw": "122;10;18;-1;10;0;1d9+9",
           "min": 10,
           "max": 18,
           "p1": 10,
           "p2": 18,
+          "p3": -1,
           "duration": 10,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -14013,10 +19832,19 @@ export const REAL_SUMMONS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 0,
-      "endsTurnOnFailure": true
+      "endsTurnOnFailure": true,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "114": {
@@ -14042,12 +19870,15 @@ export const REAL_SUMMONS = {
           "id": 101,
           "kind": "removePa",
           "zone": "Pa",
+          "raw": "101;3;-1;-1;1;0;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -14055,12 +19886,15 @@ export const REAL_SUMMONS = {
           "id": 127,
           "kind": "removePm",
           "zone": "Pa",
+          "raw": "127;3;-1;-1;1;0;0d0+3",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -14073,9 +19907,18 @@ export const REAL_SUMMONS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 1,
-      "endsTurnOnFailure": true
+      "endsTurnOnFailure": true,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "115": {
@@ -14118,23 +19961,29 @@ export const REAL_SUMMONS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;50;-1;-1;0;0;0d0+50",
           "min": 50,
           "max": 50,
           "p1": 50,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 109,
-          "kind": "ignore",
+          "kind": "selfDamage",
           "zone": "Pa",
+          "raw": "109;1000;-1;-1;0;0;0d0+1000",
           "min": 1000,
           "max": 1000,
           "p1": 1000,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -14143,23 +19992,29 @@ export const REAL_SUMMONS = {
           "kind": "damage",
           "element": "air",
           "zone": "Pa",
+          "raw": "98;60;-1;-1;0;0;0d0+60",
           "min": 60,
           "max": 60,
           "p1": 60,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 109,
-          "kind": "ignore",
+          "kind": "selfDamage",
           "zone": "Pa",
+          "raw": "109;1000;-1;-1;0;0;0d0+1000",
           "min": 1000,
           "max": 1000,
           "p1": 1000,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -14171,10 +20026,19 @@ export const REAL_SUMMONS = {
       "needsLos": false,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 0,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "117": {
@@ -14200,12 +20064,15 @@ export const REAL_SUMMONS = {
           "id": 128,
           "kind": "buffPm",
           "zone": "Pa",
+          "raw": "128;2;3;-1;4;0;1d2+1",
           "min": 2,
           "max": 3,
           "p1": 2,
           "p2": 3,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -14213,12 +20080,15 @@ export const REAL_SUMMONS = {
           "id": 128,
           "kind": "buffPm",
           "zone": "Pa",
+          "raw": "128;3;4;-1;4;0;1d2+2",
           "min": 3,
           "max": 4,
           "p1": 3,
           "p2": 4,
+          "p3": -1,
           "duration": 4,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 4,
@@ -14231,9 +20101,18 @@ export const REAL_SUMMONS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 8,
       "requiredLevel": 0,
-      "endsTurnOnFailure": true
+      "endsTurnOnFailure": true,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "237": {
@@ -14259,12 +20138,15 @@ export const REAL_SUMMONS = {
           "id": 765,
           "kind": "ignore",
           "zone": "Cc",
+          "raw": "765;-1;-1;-1;5;0",
           "min": -1,
           "max": -1,
           "p1": -1,
           "p2": -1,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -14278,9 +20160,18 @@ export const REAL_SUMMONS = {
       "emptyCellOnly": false,
       "adjustableRange": true,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 6,
       "requiredLevel": 31,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "238": {
@@ -14306,23 +20197,29 @@ export const REAL_SUMMONS = {
           "id": 5,
           "kind": "push",
           "zone": "Pa",
+          "raw": "5;3;-1;-1;0;0",
           "min": 3,
           "max": 3,
           "p1": 3,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 163,
           "kind": "unknown_163",
           "zone": "Pa",
+          "raw": "163;12;-1;-1;3;0;0d0+12",
           "min": 12,
           "max": 12,
           "p1": 12,
           "p2": -1,
+          "p3": -1,
           "duration": 3,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -14336,9 +20233,18 @@ export const REAL_SUMMONS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 0,
-      "endsTurnOnFailure": true
+      "endsTurnOnFailure": true,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "239": {
@@ -14365,23 +20271,29 @@ export const REAL_SUMMONS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;41;50;-1;0;0;1d10+40",
           "min": 41,
           "max": 50,
           "p1": 41,
           "p2": 50,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "C_",
+          "raw": "112;5;-1;-1;1;0;0d0+5",
           "min": 5,
           "max": 5,
           "p1": 5,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -14390,23 +20302,29 @@ export const REAL_SUMMONS = {
           "kind": "damage",
           "element": "feu",
           "zone": "Pa",
+          "raw": "99;51;60;-1;0;0;1d10+50",
           "min": 51,
           "max": 60,
           "p1": 51,
           "p2": 60,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 112,
           "kind": "buffDamage",
           "zone": "C_",
+          "raw": "112;10;-1;-1;1;0;0d0+10",
           "min": 10,
           "max": 10,
           "p1": 10,
           "p2": -1,
+          "p3": -1,
           "duration": 1,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 3,
@@ -14418,10 +20336,19 @@ export const REAL_SUMMONS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 1,
+      "maxPerTurn": 0,
+      "maxPerTarget": 1,
       "cooldown": 0,
       "requiredLevel": 0,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "250": {
@@ -14448,23 +20375,29 @@ export const REAL_SUMMONS = {
           "kind": "damage",
           "element": "eau",
           "zone": "Pa",
+          "raw": "96;19;23;-1;0;0;1d5+18",
           "min": 19,
           "max": 23,
           "p1": 19,
           "p2": 23,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 141,
           "kind": "unknown_141",
           "zone": "Pa",
+          "raw": "141;1;-1;-1;0;0",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 32
         }
       ],
       "critEffects": [],
@@ -14478,9 +20411,18 @@ export const REAL_SUMMONS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 0,
-      "endsTurnOnFailure": false
+      "endsTurnOnFailure": false,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "264": {
@@ -14522,12 +20464,15 @@ export const REAL_SUMMONS = {
           "id": 176,
           "kind": "unknown_176",
           "zone": "Pa",
+          "raw": "176;31;50;-1;5;0;1d20+30",
           "min": 31,
           "max": 50,
           "p1": 31,
           "p2": 50,
+          "p3": -1,
           "duration": 5,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -14540,10 +20485,19 @@ export const REAL_SUMMONS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": false,
-      "maxPerTurn": 0,
+      "maxPerTurn": 1,
+      "maxPerTarget": 0,
       "cooldown": 0,
       "requiredLevel": 0,
-      "endsTurnOnFailure": true
+      "endsTurnOnFailure": true,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "434": {
@@ -14570,12 +20524,15 @@ export const REAL_SUMMONS = {
           "kind": "lifeSteal",
           "element": "terre",
           "zone": "Pa",
+          "raw": "92;21;25;-1;0;0;1d5+20",
           "min": 21,
           "max": 25,
           "p1": 21,
           "p2": 25,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [
@@ -14584,12 +20541,15 @@ export const REAL_SUMMONS = {
           "kind": "lifeSteal",
           "element": "terre",
           "zone": "Pa",
+          "raw": "92;26;30;-1;0;0;1d5+25",
           "min": 26,
           "max": 30,
           "p1": 26,
           "p2": 30,
+          "p3": -1,
           "duration": 0,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "pa": 2,
@@ -14601,10 +20561,19 @@ export const REAL_SUMMONS = {
       "needsLos": true,
       "emptyCellOnly": false,
       "adjustableRange": true,
-      "maxPerTurn": 2,
+      "maxPerTurn": 0,
+      "maxPerTarget": 2,
       "cooldown": 0,
       "requiredLevel": 0,
-      "endsTurnOnFailure": true
+      "endsTurnOnFailure": true,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   },
   "516": {
@@ -14631,34 +20600,43 @@ export const REAL_SUMMONS = {
           "kind": "buffStat",
           "stat": "agilite",
           "zone": "Pa",
+          "raw": "119;325;-1;-1;10;0;0d0+325",
           "min": 325,
           "max": 325,
           "p1": 325,
           "p2": -1,
+          "p3": -1,
           "duration": 10,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 128,
           "kind": "buffPm",
           "zone": "Pa",
+          "raw": "128;1;-1;-1;10;0;0d0+1",
           "min": 1,
           "max": 1,
           "p1": 1,
           "p2": -1,
+          "p3": -1,
           "duration": 10,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         },
         {
           "id": 125,
           "kind": "buffVitality",
           "zone": "Pa",
+          "raw": "125;325;-1;-1;10;0;0d0+325",
           "min": 325,
           "max": 325,
           "p1": 325,
           "p2": -1,
+          "p3": -1,
           "duration": 10,
-          "chance": 0
+          "chance": 0,
+          "targetMask": 0
         }
       ],
       "critEffects": [],
@@ -14672,9 +20650,18 @@ export const REAL_SUMMONS = {
       "emptyCellOnly": false,
       "adjustableRange": false,
       "maxPerTurn": 0,
+      "maxPerTarget": 0,
       "cooldown": 5,
       "requiredLevel": 0,
-      "endsTurnOnFailure": true
+      "endsTurnOnFailure": true,
+      "requiredStates": [],
+      "forbiddenStates": [
+        18,
+        19,
+        3,
+        1,
+        41
+      ]
     }
   }
 };

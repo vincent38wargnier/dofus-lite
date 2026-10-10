@@ -17,12 +17,12 @@ Grade string layout (20 comma-separated fields):
   9  empty cell only
   10 adjustable range
   11 ? (always 0)
-  12 max per target?    (int)
-  13 max per turn       (0 = unlimited)
+  12 max per turn       (0 = unlimited; SQLManager.parseSortStats)
+  13 max per target     (0 = unlimited)
   14 cooldown           (intervalle de relance)
   15 zones              two chars per effect (P=point, C=circle, X=cross, L=line + size letter)
-  16 ? (always -1)
-  17 required states
+  16 required states
+  17 forbidden states
   18 required character level
   19 ends turn on failure (true/false)
 
@@ -112,7 +112,7 @@ EFFECTS = {
     89:  {'kind': 'ignore'},
     268: {'kind': 'ignore'},                     # vols de caracs secondaires
     271: {'kind': 'ignore'},
-    120: {'kind': 'ignore'},                     # padding sur les sorts Xélor
+    120: {'kind': 'refundPa'},                   # PA au lanceur (proc Xélor)
     293: {'kind': 'ignore'},
     320: {'kind': 'ignore'},
     666: {'kind': 'ignore'},                     # no-op
@@ -134,6 +134,27 @@ EFFECTS = {
     131: {'kind': 'ignore'}, 142: {'kind': 'ignore'}, 145: {'kind': 'ignore'},
     155: {'kind': 'ignore'}, 951: {'kind': 'ignore'},
 }
+
+# Keep unimplemented effects in the catalogue; only confirmed handlers belong here.
+EFFECTS.update({
+    124: {'kind': 'buffStat', 'stat': 'sagesse'},
+    142: {'kind': 'buffStat', 'stat': 'physicalDamage'},
+    160: {'kind': 'buffStat', 'stat': 'dodgePa'},
+    161: {'kind': 'buffStat', 'stat': 'dodgePm'},
+    182: {'kind': 'buffStat', 'stat': 'summons'},
+    145: {'kind': 'debuffStat', 'stat': 'damage'},
+    155: {'kind': 'debuffStat', 'stat': 'intelligence'},
+    162: {'kind': 'debuffStat', 'stat': 'dodgePa'},
+    171: {'kind': 'debuffStat', 'stat': 'crit'},
+    268: {'kind': 'stealStat', 'stat': 'agilite'},
+    271: {'kind': 'stealStat', 'stat': 'force'},
+    320: {'kind': 'stealStat', 'stat': 'range'},
+    950: {'kind': 'state'}, 951: {'kind': 'removeState'},
+    109: {'kind': 'selfDamage'},
+    89: {'kind': 'percentLifeDamage'},
+    293: {'kind': 'spellBoost'},
+    400: {'kind': 'trap'}, 401: {'kind': 'glyph'},
+})
 
 
 def parse_tuple(line):
@@ -218,7 +239,9 @@ def load_sorts():
     for line in read_sql_lines():
         if rx.match(line):
             t = parse_tuple(line.rstrip().rstrip(';'))
-            sorts[int(t[0])] = {'id': int(t[0]), 'name': repair_name(t[1]), 'grades': t[4:10]}
+            sorts[int(t[0])] = {'id': int(t[0]), 'name': repair_name(t[1]),
+                               'sprite': t[2], 'spriteInfos': t[3],
+                               'grades': t[4:10], 'effectTarget': t[10] if len(t) > 10 else ''}
     return sorts
 
 
@@ -229,7 +252,7 @@ def parse_effect(raw, zone):
     p = raw.split(';')
     eid = int(p[0])
     meta = EFFECTS.get(eid, {'kind': f'unknown_{eid}'})
-    out = {'id': eid, **meta, 'zone': zone}
+    out = {'id': eid, **meta, 'zone': zone, 'raw': raw}
     nums = []
     for x in p[1:6]:
         try:
@@ -249,6 +272,7 @@ def parse_effect(raw, zone):
         out['max'] = p2 if p2 is not None and p2 != -1 else p1
     out['p1'] = p1
     out['p2'] = p2
+    out['p3'] = nums[2] if len(nums) > 2 else None
     # format: id;p1;p2;p3;turns;chance;dice
     out['duration'] = nums[3] if len(nums) > 3 and nums[3] not in (None, -1) else 0
     # per-effect probability in % (Ecaflip coin flips); 0 = always applies
@@ -264,7 +288,7 @@ def parse_zones(z):
     return [z[i:i + 2] for i in range(0, len(z), 2)]
 
 
-def parse_grade(raw):
+def parse_grade(raw, effect_targets=''):
     f = [x.strip() for x in raw.split(',')]
     if len(f) < 20:
         return None
@@ -274,6 +298,12 @@ def parse_grade(raw):
     effects = [parse_effect(e, zones[i] if i < len(zones) else 'Pa') for i, e in enumerate(fx)]
     crit_effects = [parse_effect(e, zones[len(fx) + i] if len(fx) + i < len(zones) else 'Pa')
                     for i, e in enumerate(cfx)]
+    masks = effect_targets.split(':')
+    for rows, mask in ((effects, masks[0]), (crit_effects, masks[1] if len(masks) > 1 else masks[0])):
+        flags = [int(x.strip()) if x.strip().isdigit() else 0 for x in mask.split(';')]
+        for i, effect in enumerate(rows):
+            effect['targetMask'] = flags[i] if i < len(flags) else 0
+    states = lambda value: [int(x) for x in re.findall(r'-?\d+', value) if int(x) >= 0]
     return {
         'effects': effects,
         'critEffects': crit_effects,
@@ -286,10 +316,13 @@ def parse_grade(raw):
         'needsLos': f[8] == 'true',
         'emptyCellOnly': f[9] == 'true',
         'adjustableRange': f[10] == 'true',
-        'maxPerTurn': int(f[13]),
+        'maxPerTurn': int(f[12]),
+        'maxPerTarget': int(f[13]),
         'cooldown': int(f[14]),
         'requiredLevel': int(f[18]),
         'endsTurnOnFailure': f[19] == 'true',
+        'requiredStates': states(f[16]),
+        'forbiddenStates': states(f[17]),
     }
 
 
@@ -297,7 +330,7 @@ def best_grade(spell, char_level=CHAR_LEVEL):
     chosen = None
     chosen_idx = 0
     for i, raw in enumerate(spell['grades']):
-        g = parse_grade(raw)
+        g = parse_grade(raw, spell.get('effectTarget', ''))
         if g and g['requiredLevel'] <= char_level:
             chosen = g
             chosen_idx = i + 1
@@ -396,7 +429,7 @@ def slugify(name):
 OFFENSIVE = {
     'damage', 'lifeSteal', 'poison', 'removePa', 'removePm', 'stealPa', 'stealPm',
     'debuffPa', 'debuffPm', 'push', 'pull', 'debuffRange', 'resistDebuff',
-    'punitionDamage',
+    'punitionDamage', 'debuffStat', 'stealStat',
 }
 SELFISH = {
     'buffPa', 'buffPm', 'buffPower', 'buffDamage', 'buffCrit', 'buffStat',
@@ -421,7 +454,7 @@ def derive_meta(sid, name, grade, summons):
 
     if 'swap' in kinds or 'swapAlly' in kinds:
         target = 'fighter'
-    elif grade['emptyCellOnly'] or 'summon' in kinds or 'teleport' in kinds:
+    elif grade['emptyCellOnly'] or any(k in kinds for k in ('summon', 'teleport', 'trap', 'glyph')):
         target = 'freeCell'
     elif any(k in OFFENSIVE for k in kinds):
         # une zone (cercle/croix/ligne de taille > 0) se cible au sol
@@ -429,8 +462,8 @@ def derive_meta(sid, name, grade, summons):
         target = 'cell' if aoe else 'enemy'
     elif 'heal' in kinds or 'dispel' in kinds:
         target = 'fighter'
-    elif any(k in SELFISH for k in kinds):
-        target = 'self'
+    elif any(k in SELFISH for k in kinds) or 'state' in kinds or 'removeState' in kinds:
+        target = 'self' if grade['rangeMax'] == 0 else 'fighter'
     else:
         target = 'enemy'
 
@@ -500,12 +533,20 @@ def cmd_generate():
             if not g:
                 dropped.append((class_id, sid, s['name'], 'niveau > 100'))
                 continue
+            for effect in g['effects'] + g['critEffects']:
+                if effect['kind'] in ('trap', 'glyph'):
+                    child = sorts.get(effect['p1'])
+                    payload = parse_grade(child['grades'][effect['p2'] - 1], child['effectTarget']) if child and 1 <= effect['p2'] <= 6 else None
+                    if payload:
+                        effect['trigger'] = {'id': child['id'], 'name': s['name'], 'grade': effect['p2'], **payload}
+                    else:
+                        effect['kind'] = 'ignore'
             # invocations dont le monstre est introuvable → lignes ignorées
             for e in g['effects'] + g['critEffects']:
                 if e['kind'] == 'summon' and e['p1'] not in summons:
                     e['kind'] = 'ignore'
             supported = [e for e in g['effects']
-                         if e['kind'] != 'ignore' and not e['kind'].startswith('unknown')]
+                         if e['kind'] not in ('ignore', 'refundPa') and not e['kind'].startswith('unknown')]
             if not supported:
                 kinds = sorted({e['kind'] for e in g['effects']})
                 dropped.append((class_id, sid, s['name'], f"effets non simulés: {kinds}"))
@@ -539,6 +580,24 @@ def cmd_generate():
     print(f'\nexclus ({len(dropped)}):')
     for class_id, sid, name, why in dropped:
         print(f'  {class_id} #{sid} {name} — {why}')
+    # Preserve EVERY spell and grade, including omitted mechanics and original
+    # effect strings. The browser can inspect this without bundling it into combat.
+    catalogue = {'source': str(SQL.relative_to(ROOT)), 'classes': {k: list(v) for k, v in CLASS_RANGES.items()}, 'spells': []}
+    for s in sorts.values():
+        grades = []
+        for i, raw in enumerate(s['grades']):
+            try:
+                grade = parse_grade(raw, s['effectTarget'])
+            except (ValueError, IndexError):
+                grade = None
+            if grade:
+                grades.append({'grade': i + 1, **grade})
+        catalogue['spells'].append({**s, 'rawGrades': s['grades'], 'grades': grades,
+                                    'excludedReason': SPELL_BLACKLIST.get(s['id'])})
+    destination = ROOT / 'public/dofus-local/spell-catalogue.json'
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(json.dumps(catalogue, ensure_ascii=False, separators=(',', ':')))
+    print(f'Full catalogue: {len(catalogue["spells"])} spells, {sum(len(s["grades"]) for s in catalogue["spells"])} grades.')
 
 
 if __name__ == '__main__':

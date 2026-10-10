@@ -4,12 +4,11 @@
 // so api.canCast() agrees exactly with what the arena will accept.
 
 import {
-  validateAction, blocksMoveAt, blocksLosAt,
+  validateAction, blocksMoveAt, blocksLosAt, escapePreview,
 } from '../engine/engine';
-import { escapeChance } from '../engine/formulas';
 import { utilityDecide } from './utilityBrain';
 import { maisonDecide, maisonWeightsFor } from './maison';
-import { key, dist, adjacentCells, cellsInRange, hasLineOfSight } from '../engine/geometry';
+import { key, dist, cellsInRange, hasLineOfSight } from '../engine/geometry';
 import { bfs, reachableCells, reconstructPath } from '../engine/pathfinding';
 
 // Rebuild a minimal engine state from a bot view (enough for validateAction).
@@ -19,6 +18,8 @@ function stateFromView(view) {
     team: v.team,
     leader: v.leader,
     isSummon: v.isSummon,
+    isDouble: v.isDouble, staticSummon: v.staticSummon, summonGrade: v.summonGrade,
+    hidden: v.hidden, carriedBy: v.carriedBy, carrying: v.carrying,
     monsterId: v.monsterId,
     ownerId: v.ownerId,
     classId: v.classId,
@@ -34,6 +35,10 @@ function stateFromView(view) {
     resistances: v.resistances,
     resistancesFixed: v.resistancesFixed,
     effects: v.effects,
+    permanent: v.permanent, spellModifiers: v.spellModifiers,
+    weaponSpell: v.weaponSpell, maxSummons: v.maxSummons,
+    loadout: v.loadout,
+    usedOnTarget: v.usedOnTarget || {},
     cooldowns: Object.fromEntries(v.spells.map((s) => [s.key, s.cooldownLeft])),
     usedThisTurn: Object.fromEntries(
       v.spells.map((s) => [s.key, s.usesPerTurn === 0 ? 0 : s.usesPerTurn - s.usesLeft]),
@@ -54,13 +59,13 @@ function stateFromView(view) {
     order: Object.keys(fighters),
     currentIndex: Object.keys(fighters).indexOf(view.you.id),
     fighters,
+    hazards: view.hazards || [],
   };
 }
 
 export function makeBotApi(view, rng) {
   const state = stateFromView(view);
   const you = view.you;
-  const enemy = view.enemy;
   const { width, height } = view.board;
 
   const moveBlocked = (x, y) => blocksMoveAt(state, x, y);
@@ -139,17 +144,13 @@ export function makeBotApi(view, rng) {
     },
 
     // Fuite: probabilité de s'échapper si vous quittez le contact ce tour.
-    // En cas d'échec: déplacement annulé, tous les PM perdus + (chance%) des PA.
+    // En cas d'échec: tous les PM perdus et floor(PA × chance / 200) PA.
     tackleInfo: () => {
-      const inContact = enemy.hp > 0
-        && adjacentCells(you.pos).some((c) => c.x === enemy.pos.x && c.y === enemy.pos.y);
-      const chance = inContact
-        ? escapeChance(you.stats.agilite, enemy.stats.agilite)
-        : 100;
+      const { inContact, chance } = escapePreview(state, you.id);
       return {
         inContact,
         escapeChance: chance,
-        paIfTackled: inContact ? you.pa - Math.floor((you.pa * chance) / 100) : you.pa,
+        paIfTackled: inContact ? you.pa - Math.floor((you.pa * chance) / 200) : you.pa,
       };
     },
 

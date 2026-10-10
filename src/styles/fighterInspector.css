@@ -1,0 +1,25 @@
+.fighter-inspector { position: fixed; z-index: 4000; width: min(340px, calc(100vw - 24px)); max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; overscroll-behavior: contain; padding: 0 14px 14px; background: var(--panel); color: var(--text); border: 1px solid #a8b393; border-radius: 12px; box-shadow: 0 14px 48px #24341f40; scrollbar-width: thin; scrollbar-color: #a8b393 transparent; }
+.fighter-inspector-toolbar { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 8px; background: var(--panel); padding: 9px 0 8px; margin-bottom: 8px; border-bottom: 1px solid var(--border); }
+.fighter-inspector-toolbar > span { font-size: 10px; font-weight: 650; color: var(--muted); }
+.fighter-inspector-toolbar button { display: grid; place-items: center; min-width: 28px; min-height: 28px; padding: 4px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-soft); color: var(--text); cursor: pointer; }
+.fighter-inspector .fighter-card { padding: 0; border: 0; border-radius: 0; box-shadow: none; background: transparent; }
+.fighter-inspector .fighter-head .face { flex: 0 0 40px; }
+.fighter-inspector .fighter-head .who { flex: 1; }
+.fighter-inspector .turn-chip { font-size: 8px; padding: 3px 4px; letter-spacing: 0; }
+.fighter-inspector .fighter-live-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.fighter-inspector .fighter-live-stat { padding: 6px 7px; }
+.fighter-inspector .fighter-live-stat dd { font-size: 14px; }
+.fighter-inspector .combat-effect-list { max-height: none; overflow: visible; }
+.inspector-combat-bonuses { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 12px; margin: 0; }
+.inspector-combat-bonuses > div { display: flex; align-items: baseline; justify-content: space-between; gap: 4px; font-size: 11px; }
+.inspector-combat-bonuses dt { color: var(--muted); }
+.inspector-combat-bonuses dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+.inspector-resistances { border-collapse: collapse; width: 100%; font-size: 11px; font-variant-numeric: tabular-nums; }
+.inspector-resistances caption { text-align: left; font-weight: 750; font-size: 12px; margin: 3px 0 6px; }
+.inspector-resistances th, .inspector-resistances td { padding: 4px 5px; border-bottom: 1px solid var(--border-soft); }
+.inspector-resistances th { font-weight: 500; text-align: left; text-transform: capitalize; }
+.inspector-resistances thead th { color: var(--muted); font-size: 10px; }
+.inspector-resistances td, .inspector-resistances thead th:not(:first-child) { text-align: right; }
+.inspector-resistances small { display: block; color: var(--muted); font-size: 9px; }
+.token .figure:focus-visible { outline: 2px solid #f4d87d; outline-offset: 3px; border-radius: 6px; }
+.token.is-inspected .ring { box-shadow: 0 0 0 2px #f4d87d, 0 0 12px #f4d87d70; }

@@ -5,7 +5,7 @@
 // puisse animer chaque coup.
 
 import {
-  createGame, applyAction, getView, currentFighter,
+  createGame, applyAction, getView, currentFighter, placeFighter, readyFighter,
 } from '../engine/engine';
 import { createRng, hashSeed } from '../engine/rng';
 import { makeBotApi } from '../bots/api';
@@ -16,17 +16,19 @@ export const HUMAN_ID = 'A';
 export const TURN_SECONDS = 30; // comme en 1.29
 
 export class LiveMatch {
-  constructor({ playerClass, botClass, mapId, seed, botName, botDecide, playerName = 'Vous' }) {
+  constructor({ playerClass, botClass, mapId, seed, botName, botDecide, playerName = 'Vous', loadouts = {} }) {
     const init = createGame({
       mapId,
       seed,
+      placement: true,
       fighters: [
-        { id: 'A', name: playerName, botName: playerName, classId: playerClass },
-        { id: 'B', name: botName, botName, classId: botClass },
+        { id: 'A', name: playerName, botName: playerName, classId: playerClass, loadout: loadouts.A },
+        { id: 'B', name: botName, botName, classId: botClass, loadout: loadouts.B },
       ],
     });
-    this.state = init.state;
-    this.initialEvents = init.events;
+    const opponentReady = readyFighter(init.state, 'B');
+    this.state = opponentReady.state;
+    this.initialEvents = [...init.events, ...opponentReady.events];
     this.seed = seed;
     this.botDecide = botDecide;
     this.rngs = {};
@@ -37,10 +39,23 @@ export class LiveMatch {
   }
 
   get over() { return this.state.over; }
+  get placing() { return this.state.phase === 'placement'; }
 
   current() { return currentFighter(this.state); }
 
-  isHumanTurn() { return !this.state.over && this.current().id === HUMAN_ID; }
+  isHumanTurn() { return !this.placing && !this.state.over && this.current().id === HUMAN_ID; }
+
+  placeHuman(to) {
+    const result = placeFighter(this.state, HUMAN_ID, to);
+    this.state = result.state;
+    return result;
+  }
+
+  ready() {
+    const result = readyFighter(this.state, HUMAN_ID);
+    this.state = result.state;
+    return result;
+  }
 
   humanView() { return getView(this.state, HUMAN_ID); }
 
@@ -58,7 +73,7 @@ export class LiveMatch {
   // Une action du combattant courant NON humain (bot adverse ou invocation,
   // y compris les invocations du joueur: elles sont autonomes, comme en 1.29).
   botStep() {
-    if (this.state.over || this.isHumanTurn()) return { events: [] };
+    if (this.placing || this.state.over || this.isHumanTurn()) return { events: [] };
     const f = this.current();
     const fid = f.id;
 

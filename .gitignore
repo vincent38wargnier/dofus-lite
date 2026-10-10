@@ -10,3 +10,11 @@ shot-*.png
 build
 src/tuning/out/
 src/tuning/rl/
+
+# Imported from this machine's game install; regenerate with import:client.
+public/dofus-local/
+public/ruffle/
+scripts/__pycache__/
+
+# Private local client research and network observations.
+local-observations/

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ruffle-rs/ruffle": "0.7.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -14,10 +15,35 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "node scripts/prepare_ruffle.cjs && react-scripts start",
+    "build": "node scripts/prepare_ruffle.cjs && react-scripts build",
+    "import:client": "node scripts/prepare_ruffle.cjs && python3 scripts/import_retro_client.py && python3 scripts/import_client_spells.py && node scripts/render_retro_assets.cjs --force",
+    "render:client": "node scripts/prepare_ruffle.cjs && node scripts/render_retro_assets.cjs --force",
+    "test:client": "python3 -m unittest discover -s scripts -p 'test_retro_swf.py'",
+    "test:audio": "python3 -m unittest discover -s scripts -p 'test_retro_audio.py'",
+    "test:combat-data": "python3 -m unittest discover -s scripts -p 'test*spell*.py'",
+    "import:spells": "python3 scripts/import_client_spells.py && node scripts/render_retro_assets.cjs --icons-only",
+    "import:maps": "python3 scripts/import_dofus_maps.py generate && python3 scripts/import_retro_client.py --maps-only && node scripts/render_retro_assets.cjs",
+    "test:maps": "python3 -m unittest discover -s scripts -p 'test_map_placements.py'",
+    "proof:placement": "node scripts/proof_placement.cjs",
+    "proof:client": "node scripts/proof_retro.cjs",
+    "proof:combat": "node scripts/proof_combat.cjs",
+    "proof:audio": "node scripts/proof_audio.cjs",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "import:equipment": "python3 scripts/import_equipment.py && node scripts/render_equipment.cjs",
+    "render:equipment": "node scripts/render_equipment.cjs",
+    "test:equipment-data": "python3 -m unittest discover -s scripts -p 'test_equipment_import.py'",
+    "proof:equipment": "node scripts/proof_equipment.cjs",
+    "audit:equipment": "python3 scripts/audit_equipment_catalogue.py",
+    "proof:spells": "node scripts/proof_spells.cjs",
+    "proof:loadouts": "node scripts/proof_loadouts.cjs",
+    "proof:setup": "node scripts/proof_setup.cjs",
+    "proof:characteristics": "node scripts/proof_characteristics.cjs",
+    "audit:characteristics": "python3 scripts/audit_characteristic_caps.py",
+    "proof:parchottage": "node scripts/proof_parchottage.cjs",
+    "import:forgemagie": "python3 scripts/import_forgemagie.py && node scripts/render_equipment.cjs --forgemagie",
+    "proof:forgemagie": "node scripts/proof_forgemagie.cjs"
   },
   "eslintConfig": {
     "extends": [

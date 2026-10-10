@@ -69,16 +69,16 @@ describe('geometry', () => {
 
 describe('formules 1.29', () => {
   test('coup critique: agilité améliore le 1/x (2.9901 / ln(agi+12))', () => {
-    expect(critDivisor(40, 0)).toBe(48);   // peu agile: crit plus rare que 1/40
+    expect(critDivisor(40, 0)).toBe(40);   // faible agilité: aucun malus
     expect(critDivisor(40, 120)).toBe(24); // 120 agi: 1/24
     expect(critDivisor(2, 1000)).toBe(2);  // plancher 1/2
     expect(critDivisor(0, 500)).toBe(0);   // sort sans critique
   });
 
-  test('fuite: 300*(agi+25)/(agi+agiEnnemis+50) - 100, borné [10,90]', () => {
+  test('fuite: 300*(agi+25)/(agi+agiEnnemis+50) - 100, borné [0,100]', () => {
     expect(escapeChance(60, 60)).toBe(50);   // agilités égales: 50%
-    expect(escapeChance(0, 1000)).toBe(10);  // plancher
-    expect(escapeChance(1000, 0)).toBe(90);  // plafond
+    expect(escapeChance(0, 1000)).toBe(0);   // fuite impossible
+    expect(escapeChance(1000, 0)).toBe(100); // fuite garantie
     expect(escapeChance(120, 60)).toBe(89);  // floor(300*145/230)-100
   });
 
@@ -90,18 +90,18 @@ describe('formules 1.29', () => {
     expect(removed).toBeLessThanOrEqual(4);
   });
 
-  test('initiative: (vitalité/4 + caracs) * ratio de vie', () => {
+  test('initiative: (caracs + bonus initiative) * ratio de vie', () => {
     const stats = { force: 220, intelligence: 60, chance: 0, agilite: 60 };
-    expect(initiative(stats, 300, 850, 850)).toBe(415);
-    expect(initiative(stats, 300, 425, 850)).toBe(207); // blessé: initiative réduite
+    expect(initiative(stats, 850, 850)).toBe(340);
+    expect(initiative(stats, 425, 850)).toBe(170); // blessé: initiative réduite
   });
 
-  test('poussée: (1d8+8) * niveau/50 * cases bloquées', () => {
+  test('poussée: (8 + 1d8 * niveau/50) * cases bloquées', () => {
     const rng = createRng(1);
     for (let i = 0; i < 20; i++) {
       const dmg = pushbackDamage(rng, 100, 2);
-      expect(dmg).toBeGreaterThanOrEqual(36); // 9*2*2
-      expect(dmg).toBeLessThanOrEqual(64);    // 16*2*2
+      expect(dmg).toBeGreaterThanOrEqual(20); // (8+1*2)*2
+      expect(dmg).toBeLessThanOrEqual(48);    // (8+8*2)*2
     }
     expect(pushbackDamage(rng, 100, 0)).toBe(0);
   });
@@ -111,7 +111,7 @@ describe('formules 1.29', () => {
     expect(damageAmount(10, 'terre', caster)).toBe(32);
     expect(damageAmount(10, 'feu', caster)).toBe(10); // pas d'intelligence
     const target = { resistances: { terre: 25 }, resistancesFixed: { terre: 5 } };
-    expect(applyResistances(32, 'terre', target)).toBe(19); // floor(32*0.75)-5
+    expect(applyResistances(32, 'terre', target)).toBe(20); // floor((32-5)*0.75)
   });
 
   test('soins: jet * (100+intelligence)/100', () => {
@@ -127,7 +127,8 @@ describe('sorts réels (données AncestraRemake)', () => {
     expect(CLASSES.IOP.spells.colere.pa).toBe(7);
     expect(CLASSES.IOP.spells.colere.cooldown).toBe(4);
     expect(CLASSES.CRA.spells.fleche_magique.range).toEqual([1, 11]);
-    expect(CLASSES.CRA.spells.fleche_magique.usesPerTurn).toBe(2);
+    expect(CLASSES.CRA.spells.fleche_magique.usesPerTurn).toBe(0);
+    expect(CLASSES.CRA.spells.fleche_magique.usesPerTarget).toBe(2);
     expect(CLASSES.CRA.spells.fleche_ralentissante.effects[0].kind).toBe('removePa');
     expect(CLASSES.ENIRIPSA.spells.mot_vampirique.effects[0].kind).toBe('lifeSteal');
   });
@@ -142,15 +143,15 @@ describe('sorts réels (données AncestraRemake)', () => {
     const { state: after, events } = castUntilHit(mk, { type: 'CAST', spell: 'pression', target: { x: 5, y: 7 } });
     const dmg = events.find((e) => e.t === 'damage');
     expect(after.fighters.A.pa).toBe(8 - 3);
-    // jet 8-12 (crit 10-14) x (100+220)/100 => 25..44
-    expect(dmg.amount).toBeGreaterThanOrEqual(25);
-    expect(dmg.amount).toBeLessThanOrEqual(44);
+    // Force 260 + 101 scrolled: normal 8..12 or critical 10..14 × 4.61.
+    expect(dmg.amount).toBeGreaterThanOrEqual(36);
+    expect(dmg.amount).toBeLessThanOrEqual(64);
     expect(dmg.element).toBe('terre');
     expect(dmg.erosion).toBe(Math.floor(dmg.amount / 10));
-    expect(after.fighters.B.maxHp).toBe(850 - dmg.erosion);
+    expect(after.fighters.B.maxHp).toBe(951 - dmg.erosion);
   });
 
-  test('lancers par tour: Flèche Magique 2x max', () => {
+  test('lancers par cible: Flèche Magique 2x max sur le même combattant', () => {
     let state = freshGame('CRA', 'IOP');
     state.fighters.A.pos = { x: 5, y: 6 };
     state.fighters.B.pos = { x: 5, y: 9 };
@@ -206,9 +207,9 @@ describe('sorts réels (données AncestraRemake)', () => {
     const { state: after, events } = castUntilHit(mk, { type: 'CAST', spell: 'intimidation', target: { x: 11, y: 6 } });
     const push = events.find((e) => e.t === 'push');
     expect(push.moved).toBe(1); // le bord (x=12) puis dehors
-    // 2 cases bloquées: floor(jet(9..16) * 2 * 2)
-    expect(push.collisionDamage).toBeGreaterThanOrEqual(36);
-    expect(push.collisionDamage).toBeLessThanOrEqual(64);
+    // 2 cases bloquées: floor((8 + jet(1..8) * 2) * 2)
+    expect(push.collisionDamage).toBeGreaterThanOrEqual(20);
+    expect(push.collisionDamage).toBeLessThanOrEqual(48);
     expect(after.fighters.B.pos).toEqual({ x: 12, y: 6 });
   });
 
@@ -234,7 +235,7 @@ describe('sorts réels (données AncestraRemake)', () => {
     expect(after.fighters.A.pa).toBeLessThanOrEqual(8);
     const buff = after.fighters.A.effects.find((e) => e.stat === 'pa');
     expect(buff).toBeTruthy();
-    expect(buff.turnsLeft).toBe(5); // durée réelle du sort (données 1.29)
+    expect(buff.turnsLeft).toBe(6); // cinq tours suivants + fin du tour de lancement
   });
 
   test('Flèche Ralentissante: retrait PA esquivable', () => {
@@ -265,9 +266,9 @@ describe('sorts réels (données AncestraRemake)', () => {
     const { events } = castUntilHit(mk, { type: 'CAST', spell: 'mot_vampirique', target: { x: 5, y: 8 } });
     const dmg = events.find((e) => e.t === 'damage');
     const heal = events.find((e) => e.t === 'heal');
-    // jet 21-30 (crit 31) x (100+120)/100 => 46..68
-    expect(dmg.amount).toBeGreaterThanOrEqual(46);
-    expect(dmg.amount).toBeLessThanOrEqual(68);
+    // Chance 120 + 101 scrolled: normal 21..30 or critical 31 × 3.21.
+    expect(dmg.amount).toBeGreaterThanOrEqual(67);
+    expect(dmg.amount).toBeLessThanOrEqual(99);
     expect(heal.amount).toBe(Math.floor(dmg.amount / 2));
   });
 
@@ -279,9 +280,9 @@ describe('sorts réels (données AncestraRemake)', () => {
     };
     const { events } = castUntilHit(mk, { type: 'CAST', spell: 'mot_curatif', target: { x: 0, y: 0 } });
     const heal = events.find((e) => e.t === 'heal');
-    // jet 13-19 (crit 32) x (100+200)/100 => 39..96
-    expect(heal.amount).toBeGreaterThanOrEqual(39);
-    expect(heal.amount).toBeLessThanOrEqual(96);
+    // Intelligence 140 + 101 scrolled: normal 13..19 or critical 32 × 3.41.
+    expect(heal.amount).toBeGreaterThanOrEqual(44);
+    expect(heal.amount).toBeLessThanOrEqual(109);
   });
 
   test('échec critique: existe, coûte les PA, aucun effet', () => {
@@ -318,7 +319,7 @@ describe('tacle / fuite (1.29)', () => {
         expect(after.fighters.A.pos).toEqual({ x: 5, y: 6 }); // move annulé
         expect(after.fighters.A.pm).toBe(0);                  // tous les PM perdus
         expect(after.fighters.A.pa).toBe(8 - tackle.lostPa);
-        expect(tackle.lostPa).toBe(4); // floor(8 * 50/100)
+        expect(tackle.lostPa).toBe(2); // exemple officiel 1.27: floor(8 * 50/200)
       }
     }
     expect(sawEscape && sawTackle).toBe(true); // les deux issues existent

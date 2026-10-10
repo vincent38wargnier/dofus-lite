@@ -1,0 +1,23 @@
+.board-tools { position: absolute; z-index: 2600; top: 10px; right: 10px; }
+.board-mode-toggle { display: inline-flex; align-items: center; gap: 7px; min-height: 34px; padding: 7px 11px; color: #eef1e7; background: #262f26ed; border: 1px solid #a5b39370; border-radius: 8px; box-shadow: 0 2px 8px #0003; font: inherit; font-size: 11px; font-weight: 650; cursor: pointer; }
+.board-mode-toggle:hover { background: #43503d; border-color: #c4d3a7; }
+.board-mode-toggle[aria-pressed="true"] { color: #23311b; background: #dbe8b4; border-color: #e8f2ce; }
+.board-mode-toggle:focus-visible { outline: 2px solid #f4d87d; outline-offset: 3px; }
+.board-mode-toggle .mode-indicator { width: 6px; height: 6px; border-radius: 50%; background: #77806e; }
+.board-mode-toggle[aria-pressed="true"] .mode-indicator { background: #4b682b; box-shadow: 0 0 0 2px #4b682b1a; }
+.board-wrap.tactical-mode { background: #343b3f; }
+.tactical-mode .board::before { display: none; }
+.tactical-tile { stroke: #737e80; stroke-width: .7; stroke-linejoin: round; }
+.tactical-tile.free { fill: #c4c8c6; }
+.tactical-tile.free.parity-1 { fill: #b5bcba; }
+.tactical-tile.movement { fill: #505b61; }
+.tactical-tile.sight { fill: #565c61; }
+.tactical-wall-left { fill: #565c61; }
+.tactical-wall-right { fill: #687076; }
+.tactical-wall-top { fill: #83878d; stroke: #b5bec2; stroke-width: .8; stroke-linejoin: round; }
+.tactical-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 14px; max-width: 100%; padding-top: 10px; color: #d8dfe0; font-size: 10px; line-height: 1.5; }
+.tactical-legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.tactical-legend i { display: inline-block; width: 12px; height: 9px; border: 1px solid #b5bec2; transform: skewY(-15deg); }
+.tactical-legend .free { background: #c4c8c6; }
+.tactical-legend .movement { background: repeating-linear-gradient(120deg, #505b61 0 3px, #859095 3px 4px); }
+.tactical-legend .sight { background: #83878d; box-shadow: 0 3px 0 #565c61; }

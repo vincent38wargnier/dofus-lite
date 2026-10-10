@@ -1,14 +1,20 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { CLASSES, CLASS_IDS } from '../engine/classes';
-import { MAPS, MAP_IDS } from '../engine/maps';
+import { CLASSES } from '../engine/classes';
+import { MAPS } from '../engine/maps';
 import { ELEMENT_EMOJI } from '../engine/formulas';
 import { key, cellsInRange } from '../engine/geometry';
 import { compileBot } from '../bots/compile';
 import { findBot } from './botsStore';
 import { LiveMatch, TURN_SECONDS } from '../game/liveMatch';
+import { spellsOf } from '../engine/engine';
+import { useLoadouts } from './LoadoutPicker';
 import BoardView from './BoardView';
 import FighterPanel from './FighterPanel';
 import LogPanel from './LogPanel';
+import PlayerSetup from './PlayerSetup';
+import PlacementPanel from './PlacementPanel';
+import { readPlayerSetup, SETUP_STORAGE } from './playerSetupState';
+import { RetroSpellIcon, combatAnimationMs, useRetroAssets, useAppearances } from './RetroAssets';
 
 const BOT_STEP_MS = 620;
 
@@ -19,16 +25,37 @@ function spellTitle(s) {
   if (!s.needsLos) bits.push('sans ligne de vue');
   if (s.cooldown > 0) bits.push(`relance ${s.cooldown}t`);
   if (s.usesPerTurn > 0) bits.push(`${s.usesPerTurn}x/tour`);
+  if (s.usesPerTarget > 0) bits.push(`${s.usesPerTarget}x/cible`);
+  if (s.failRate > 0) bits.push(`échec critique 1/${s.failRate} (${(100 / s.failRate).toLocaleString('fr-FR', { maximumFractionDigits: 2 })} %)${s.endsTurnOnFailure ? ' : termine le tour' : ''}`);
+  if (s.unsupportedEffects?.length) bits.push('Certains effets restent à reproduire — voir le Grimoire');
   return `${s.name} — ${bits.join(' · ')}`;
 }
 
-export default function PlayScreen({ allBots }) {
-  const [playerClass, setPlayerClass] = useState('IOP');
-  const [botId, setBotId] = useState('maison');
-  const [botClass, setBotClass] = useState('CRA');
-  const [mapId, setMapId] = useState('arene');
+export default function PlayScreen({ allBots, active = true }) {
+  const assets = useRetroAssets();
+  const { appearances, setAppearance } = useAppearances();
+  const [initial] = useState(() => readPlayerSetup({ getItem: key => localStorage.getItem(key) }));
+  const [animating, setAnimating] = useState(false);
+  const animationUntil = useRef(0);
+  const animationTimer = useRef(null);
+  const [playerClass, setPlayerClass] = useState(initial.playerClass);
+  const [botId, setBotId] = useState(() => allBots.some(bot => bot.id === initial.botId) ? initial.botId : 'maison');
+  const [botClass, setBotClass] = useState(initial.botClass);
+  const equipment = useLoadouts(playerClass, botClass);
+  const [mapId, setMapId] = useState(initial.mapId);
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1e9));
   const [error, setError] = useState(null);
+  const [settingsError, setSettingsError] = useState(false);
+  useEffect(() => {
+    try { localStorage.setItem(SETUP_STORAGE, JSON.stringify({ playerClass, botClass, botId, mapId })); setSettingsError(false); }
+    catch (_) { setSettingsError(true); }
+  }, [playerClass, botClass, botId, mapId]);
+  const playerSex = equipment.loadouts.A.profile?.sex || 0;
+  const botSex = equipment.loadouts.B.profile?.sex || 0;
+  useEffect(() => {
+    if (active) { setAppearance('A', playerSex === 1 ? 'female' : 'male'); setAppearance('B', botSex === 1 ? 'female' : 'male'); }
+  }, [active, playerSex, botSex, setAppearance]);
+  useEffect(() => { if (!allBots.some(bot => bot.id === botId)) setBotId('maison'); }, [allBots, botId]);
 
   const [phase, setPhase] = useState('setup'); // 'setup' | 'fight'
   const [botName, setBotName] = useState('');
@@ -41,12 +68,21 @@ export default function PlayScreen({ allBots }) {
   const matchRef = useRef(null);
 
   const pushEvents = (events) => {
+    clearTimeout(animationTimer.current);
+    const duration = combatAnimationMs(events, matchRef.current?.state.fighters || {}, assets, appearances);
+    animationUntil.current = Date.now() + duration;
+    setAnimating(true);
+    animationTimer.current = setTimeout(() => setAnimating(false), duration);
     setLastEvents(events);
     if (events.length) setLog((l) => [...l, ...events]);
     setStep((s) => s + 1);
   };
+  useEffect(() => () => clearTimeout(animationTimer.current), []);
 
   const start = (newSeed) => {
+    clearTimeout(animationTimer.current);
+    animationUntil.current = 0;
+    setAnimating(false);
     setError(null);
     const bot = findBot(allBots, botId);
     if (!bot) { setError('Choisissez un adversaire.'); return; }
@@ -54,9 +90,11 @@ export default function PlayScreen({ allBots }) {
     try { decideB = compileBot(bot.code); } catch (e) { setError(`${bot.name} : ${e.message}`); return; }
     const s = newSeed ?? (Number(seed) || 1);
     setSeed(s);
-    const m = new LiveMatch({
-      playerClass, botClass, mapId, seed: s, botName: bot.name, botDecide: decideB,
-    });
+    let m;
+    try {
+      m = new LiveMatch({ playerClass, botClass, mapId, seed: s, botName: bot.name, botDecide: decideB,
+        loadouts: equipment.loadouts });
+    } catch (e) { setError(e.message); return; }
     matchRef.current = m;
     setBotName(bot.name);
     setLog(m.initialEvents);
@@ -67,6 +105,7 @@ export default function PlayScreen({ allBots }) {
   };
 
   const m = phase === 'fight' ? matchRef.current : null;
+  const placing = !!m?.placing;
   const humanTurn = !!(m && m.isHumanTurn());
 
   // Vue + api officielles côté joueur (mêmes règles que les bots).
@@ -115,8 +154,8 @@ export default function PlayScreen({ allBots }) {
 
   // Le bot (et toutes les invocations) jouent automatiquement, un coup à la fois.
   useEffect(() => {
-    if (!m || m.over || m.isHumanTurn()) return undefined;
-    const t = setTimeout(() => pushEvents(m.botStep().events), BOT_STEP_MS);
+    if (!m || m.placing || m.over || m.isHumanTurn()) return undefined;
+    const t = setTimeout(() => pushEvents(m.botStep().events), Math.max(BOT_STEP_MS, animationUntil.current - Date.now()));
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, phase]);
@@ -145,7 +184,16 @@ export default function PlayScreen({ allBots }) {
 
   const onCellClick = (x, y) => {
     const mm = matchRef.current;
-    if (!mm || !mm.isHumanTurn() || !highlights) return;
+    if (mm?.placing) {
+      const result = mm.placeHuman({ x, y });
+      if (result.ok) {
+        setLastEvents(result.events);
+        setLog(l => [...l, ...result.events]);
+        setStep(s => s + 1);
+      }
+      return;
+    }
+    if (!mm || !mm.isHumanTurn() || !highlights || animating) return;
     const k = key(x, y);
     if (selectedSpell) {
       if (highlights[k] === 'target') {
@@ -161,7 +209,7 @@ export default function PlayScreen({ allBots }) {
 
   const onSpellClick = (info) => {
     const mm = matchRef.current;
-    if (!mm || !mm.isHumanTurn() || !view) return;
+    if (!mm || !mm.isHumanTurn() || !view || animating) return;
     if (info.targetMode === 'self') {
       setSelectedSpell(null);
       pushEvents(mm.humanAct({ type: 'CAST', spell: info.key, target: view.you.pos }).events);
@@ -172,9 +220,15 @@ export default function PlayScreen({ allBots }) {
 
   const endTurn = () => {
     const mm = matchRef.current;
-    if (!mm || !mm.isHumanTurn()) return;
+    if (!mm || !mm.isHumanTurn() || animating) return;
     setSelectedSpell(null);
     pushEvents(mm.humanAct({ type: 'PASS' }).events);
+  };
+
+  const confirmPlacement = () => {
+    const result = matchRef.current?.ready();
+    if (result?.ok) { setHoverCell(null); setError(null); pushEvents(result.events); }
+    else if (result) setError(result.reason);
   };
 
   const namesById = useMemo(() => {
@@ -183,64 +237,24 @@ export default function PlayScreen({ allBots }) {
     return names;
   }, [log, botName]);
 
-  const botOptions = allBots.map((b) => (
-    <option key={b.id} value={b.id}>{b.emoji} {b.name}{b.custom ? ' (perso)' : ''}</option>
-  ));
-  const classOptions = CLASS_IDS.map((id) => (
-    <option key={id} value={id}>{CLASSES[id].emoji} {CLASSES[id].name}</option>
-  ));
-
   const tackle = humanTurn && api ? api.tackleInfo() : null;
   const spellInfo = view ? Object.fromEntries(view.you.spells.map((s) => [s.key, s])) : {};
   const timerPct = Math.round((timeLeft / TURN_SECONDS) * 100);
 
   return (
-    <div>
-      <div className="panel" style={{ marginBottom: 14, display: 'flex', gap: 12, alignItems: 'flex-end', flexWrap: 'wrap' }}>
-        <label className="field">
-          <span style={{ color: 'var(--blue)', fontWeight: 700 }}>Votre classe</span>
-          <select value={playerClass} onChange={(e) => setPlayerClass(e.target.value)}>{classOptions}</select>
-        </label>
-        <span style={{ fontWeight: 900, color: 'var(--gold)', paddingBottom: 9 }}>VS</span>
-        <label className="field">
-          <span style={{ color: 'var(--red)', fontWeight: 700 }}>Bot adverse</span>
-          <select value={botId} onChange={(e) => setBotId(e.target.value)}>{botOptions}</select>
-        </label>
-        <label className="field">
-          Classe adverse
-          <select value={botClass} onChange={(e) => setBotClass(e.target.value)}>{classOptions}</select>
-        </label>
-        <label className="field">
-          Carte
-          <select value={mapId} onChange={(e) => setMapId(e.target.value)}>
-            {MAP_IDS.map((id) => <option key={id} value={id}>{MAPS[id].name}</option>)}
-          </select>
-        </label>
-        <label className="field">
-          Seed
-          <input type="number" value={seed} style={{ width: 110 }} onChange={(e) => setSeed(e.target.value)} />
-        </label>
-        <button className="btn primary" onClick={() => start()}>🎮 Jouer</button>
-        {phase === 'fight' ? (
-          <button className="btn" onClick={() => { matchRef.current = null; setPhase('setup'); }}>⏹ Abandonner</button>
-        ) : null}
-        {error ? <span style={{ color: 'var(--danger)', fontWeight: 700 }}>{error}</span> : null}
-      </div>
-
+    <div className={phase === 'fight' ? 'play-screen fight-screen' : 'play-screen'}>
       {phase !== 'fight' ? (
-        <div className="panel" style={{ padding: 40, textAlign: 'center' }}>
-          <div style={{ fontSize: 40 }}>🎮</div>
-          <p className="muted">
-            Affrontez un bot en direct : cliquez pour vous déplacer, choisissez un sort puis sa cible.<br />
-            Vos invocations sont autonomes, comme en 1.29 — et le chrono de tour est de {TURN_SECONDS} secondes.
-          </p>
-        </div>
+        <PlayerSetup {...{ playerClass, setPlayerClass, botClass, setBotClass, botId, setBotId, allBots, mapId, setMapId, seed, setSeed, equipment, error, settingsError }} onStart={() => start()} />
       ) : (
         <>
+          <div className="fight-heading"><div><p className="eyebrow">{placing ? 'PLACEMENT' : m.over ? 'COMBAT TERMINÉ' : 'COMBAT EN COURS'}</p><h1>{CLASSES[playerClass].name} <span>contre</span> {CLASSES[botClass].name}</h1><p>{MAPS[mapId].name.replace(/^🗺\s*/, '')} · {placing ? 'Avant le combat' : `Tour ${m.state.turn}`}</p></div>
+            <button className="btn" onClick={() => { matchRef.current = null; setPhase('setup'); }}>{m.over || placing ? 'Retour à la préparation' : 'Abandonner'}</button></div>
+          {error ? <p className="loadout-errors" role="alert">{error}</p> : null}
           <div className="arena-layout">
             <div>
               <FighterPanel
                 fighter={m.state.fighters.A}
+                fighters={m.state.fighters}
                 side="A"
                 isActive={humanTurn}
               />
@@ -248,6 +262,7 @@ export default function PlayScreen({ allBots }) {
 
             <div className="arena-center">
               <BoardView
+                viewerTeam="A"
                 state={m.state}
                 frameEvents={lastEvents}
                 frameIdx={step}
@@ -260,7 +275,7 @@ export default function PlayScreen({ allBots }) {
                 pathPreview={m.over ? null : pathPreview}
               />
 
-              {!m.over ? (
+              {placing ? <PlacementPanel state={m.state} onReady={confirmPlacement} /> : !m.over ? (
                 <>
                   <div className="play-controls">
                     <div className={`turn-status${humanTurn ? ' yours' : ''}`}>
@@ -282,13 +297,13 @@ export default function PlayScreen({ allBots }) {
                         🪤 fuite {tackle.escapeChance}%
                       </span>
                     ) : null}
-                    <button className="btn" disabled={!humanTurn} onClick={endTurn}>⏭ Fin de tour</button>
+                    <button className="btn" disabled={!humanTurn || animating} onClick={endTurn}>⏭ Fin de tour</button>
                   </div>
 
                   <div className="spellbar">
-                    {Object.values(CLASSES[playerClass].spells).map((s) => {
+                    {Object.values(spellsOf(m.state.fighters.A)).map((s) => {
                       const info = spellInfo[s.key];
-                      const disabled = !humanTurn || !info
+                      const disabled = !humanTurn || animating || !info
                         || info.pa > view.you.pa || info.cooldownLeft > 0 || info.usesLeft <= 0;
                       return (
                         <button
@@ -298,10 +313,11 @@ export default function PlayScreen({ allBots }) {
                           title={spellTitle(info || s)}
                           onClick={() => info && onSpellClick(info)}
                         >
-                          <span className="ic">{s.emoji}</span>
+                          <span className="ic"><RetroSpellIcon spell={s} /></span>
                           <span className="nm">{s.name}</span>
                           <span className="meta">
-                            {s.element ? `${ELEMENT_EMOJI[s.element]} ` : ''}{s.pa} PA
+                            {s.element ? `${ELEMENT_EMOJI[s.element]} ` : ''}{info?.pa ?? s.pa} PA
+                            {s.isWeapon && (info?.failRate ?? s.failRate) > 0 ? ` · EC 1/${info?.failRate ?? s.failRate}` : ''}
                             {info && info.cooldownLeft > 0 ? ` · ⏳${info.cooldownLeft}` : ''}
                           </span>
                         </button>
@@ -312,31 +328,32 @@ export default function PlayScreen({ allBots }) {
               ) : (
                 <div className="play-controls">
                   <button className="btn primary" onClick={() => start(Math.floor(Math.random() * 1e9))}>
-                    🔁 Revanche (nouveau seed)
+                    Revanche
                   </button>
                   <button className="btn" onClick={() => { matchRef.current = null; setPhase('setup'); }}>
-                    ⚙️ Changer la config
+                    Modifier mon personnage
                   </button>
                 </div>
               )}
 
-              <div className="muted small">
-                Tour {m.state.turn} / {m.state.maxTurns} · seed {seed} ·
+              {!placing && <div className="muted small">
+                Tour {m.state.turn} / {m.state.maxTurns} · seed {m.seed} ·
                 {' '}les invocations jouent toutes seules, le chrono passe votre tour à 0s.
-              </div>
+              </div>}
             </div>
 
             <div>
               <FighterPanel
                 fighter={m.state.fighters.B}
+                fighters={m.state.fighters}
                 side="B"
-                isActive={!m.over && m.current().id === 'B'}
+                isActive={!placing && !m.over && m.current().id === 'B'}
               />
             </div>
           </div>
 
           <div style={{ marginTop: 14 }}>
-            <LogPanel events={log} namesById={namesById} />
+            <LogPanel events={log} namesById={namesById} state={m.state} />
           </div>
         </>
       )}

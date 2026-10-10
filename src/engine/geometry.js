@@ -87,23 +87,22 @@ export function cellsInRange(pos, minRange, maxRange, width, height, lineOnly = 
 // Spell zones, Dofus 1.29 encoding: two chars [shape][size].
 // Shapes: P = point, C = cercle (Manhattan disc), X = croix, L = ligne
 // (from the caster through the target). Size letter: a=0, b=1, c=2…
-// Sizes are capped for arena sanity (some spells encode "infinite" lines).
-const ZONE_SIZE_CAP = 3;
+// The original 6-bit alphabet is also used for zone sizes. Do not truncate
+// radius 4+ support spells (e.g. Mot Stimulant) to an arbitrary arena radius.
+const ZONE_ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_';
 
 function zoneSize(code) {
-  const c = code.charCodeAt(1) - 97; // 'a' -> 0
-  if (Number.isNaN(c) || c < 0) return ZONE_SIZE_CAP;
-  return Math.min(ZONE_SIZE_CAP, c);
+  return Math.max(0, ZONE_ALPHABET.indexOf(code[1]));
 }
 
 export function spellZoneCells(code, target, casterPos) {
   const shape = code ? code[0] : 'P';
   const size = code && code.length > 1 ? zoneSize(code) : 0;
-  if (shape === 'C' && size > 0) {
+  if (['C', 'O'].includes(shape) && size > 0) {
     const cells = [];
     for (let dy = -size; dy <= size; dy++) {
       for (let dx = -size; dx <= size; dx++) {
-        if (Math.abs(dx) + Math.abs(dy) <= size) {
+        if (shape === 'O' ? Math.abs(dx) + Math.abs(dy) === size : Math.abs(dx) + Math.abs(dy) <= size) {
           cells.push({ x: target.x + dx, y: target.y + dy });
         }
       }
@@ -129,6 +128,17 @@ export function spellZoneCells(code, target, casterPos) {
       for (let i = 1; i <= size; i++) {
         cells.push({ x: target.x + dx * i, y: target.y + dy * i });
       }
+    }
+    return cells;
+  }
+  if (shape === 'T' && size > 0) {
+    // Staff: a line perpendicular to the direction of the attack.
+    const dx = Math.sign(target.x - casterPos.x);
+    const dy = Math.sign(target.y - casterPos.y);
+    const cells = [{ ...target }];
+    for (let i = 1; i <= size; i++) {
+      cells.push({ x: target.x - dy * i, y: target.y + dx * i });
+      cells.push({ x: target.x + dy * i, y: target.y - dx * i });
     }
     return cells;
   }

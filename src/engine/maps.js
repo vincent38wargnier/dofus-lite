@@ -20,7 +20,8 @@ function make(id, name, description, width, height, spawns, obstacleList) {
   for (const [type, x, y] of obstacleList) {
     obstacles[key(x, y)] = { ...OBSTACLE_TYPES[type], x, y };
   }
-  return { id, name, description, width, height, spawns, obstacles };
+  return { id, name, description, width, height, spawns, obstacles,
+    startingCells: spawns.map(pos => [{ ...pos }]), placement: { status: 'custom' } };
 }
 
 export const MAPS = {
@@ -61,11 +62,13 @@ export const MAPS = {
 // Real Dofus 1.29 maps imported from the OblivionRetro emulator
 // (see scripts/import_dofus_maps.py).
 for (const raw of DOFUS_MAPS_RAW) {
-  MAPS[raw.id] = make(
+  MAPS[raw.id] = { ...make(
     raw.id, `🗺 ${raw.name}`, raw.description,
     raw.width, raw.height, raw.spawns,
     raw.obstacles.map((o) => [o.t, o.x, o.y]),
-  );
+  ), sourceId: raw.sourceId, area: raw.area, coordinate: raw.coordinate,
+  walkableCells: raw.walkableCells, spawnDistance: raw.spawnDistance,
+  startingCells: raw.startingCells, placement: raw.placement };
 }
 
 export const MAP_IDS = Object.keys(MAPS);

@@ -1,12 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { CLASSES, CLASS_IDS } from '../engine/classes';
-import { MAPS, MAP_IDS } from '../engine/maps';
 import { compileBot } from '../bots/compile';
 import { runMatch } from '../arena/runner';
 import { findBot } from './botsStore';
 import BoardView from './BoardView';
 import FighterPanel from './FighterPanel';
 import LogPanel from './LogPanel';
+import MapPicker from './MapPicker';
+import LoadoutPicker, { useLoadouts } from './LoadoutPicker';
+import { AppearanceSelect, combatAnimationMs, useRetroAssets, useAppearances } from './RetroAssets';
 
 const SPEEDS = [
   { label: '×0.5', ms: 850 },
@@ -15,12 +17,21 @@ const SPEEDS = [
   { label: '×4', ms: 110 },
 ];
 
-export default function ArenaScreen({ allBots, replay, onReplayConsumed }) {
+export default function ArenaScreen({ allBots, replay, onReplayConsumed, active = true }) {
+  const assets = useRetroAssets();
+  const { appearances, setAppearance } = useAppearances();
   const [botA, setBotA] = useState('brutus');
   const [botB, setBotB] = useState('plume');
   const [classA, setClassA] = useState('IOP');
   const [classB, setClassB] = useState('CRA');
-  const [mapId, setMapId] = useState('arene');
+  const equipment = useLoadouts(classA, classB);
+  const sexA = equipment.loadouts.A.profile?.sex || 0;
+  const sexB = equipment.loadouts.B.profile?.sex || 0;
+  useEffect(() => {
+    if (active) { setAppearance('A', sexA === 1 ? 'female' : 'male'); setAppearance('B', sexB === 1 ? 'female' : 'male'); }
+  }, [active, sexA, sexB, setAppearance]);
+  const [showEquipment, setShowEquipment] = useState(true);
+  const [mapId, setMapId] = useState('territoire_des_dopeuls_5383');
   const [seed, setSeed] = useState(1337);
   const [error, setError] = useState(null);
 
@@ -30,7 +41,7 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed }) {
   const [speedIdx, setSpeedIdx] = useState(1);
 
   const launch = (cfg) => {
-    const c = cfg || { botA, botB, classA, classB, mapId, seed };
+    const c = cfg || { botA, botB, classA, classB, mapId, seed, loadouts: equipment.loadouts };
     setError(null);
     const a = findBot(allBots, c.botA);
     const b = findBot(allBots, c.botB);
@@ -40,15 +51,18 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed }) {
     try { decideA = compileBot(a.code); } catch (e) { setError(`${a.name} : ${e.message}`); return; }
     try { decideB = compileBot(b.code); } catch (e) { setError(`${b.name} : ${e.message}`); return; }
 
-    const r = runMatch({
+    let r;
+    try { r = runMatch({
       bots: { A: { name: a.name, decide: decideA }, B: { name: b.name, decide: decideB } },
       classes: { A: c.classA, B: c.classB },
       mapId: c.mapId,
       seed: Number(c.seed) || 1,
-    });
+      loadouts: c.loadouts,
+    }); } catch (e) { setError(e.message); return; }
     setResult(r);
     setFrameIdx(0);
     setPlaying(true);
+    setShowEquipment(false);
   };
 
   // Replay demandé depuis l'écran Tournoi.
@@ -66,14 +80,16 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed }) {
 
   useEffect(() => {
     if (!playing || !result) return undefined;
-    const timer = setInterval(() => {
+    const current = result.frames[frameIdx];
+    const duration = combatAnimationMs(current.events, current.state.fighters, assets, appearances);
+    const timer = setTimeout(() => {
       setFrameIdx((i) => {
         if (i >= lastIdx) { setPlaying(false); return i; }
         return i + 1;
       });
-    }, SPEEDS[speedIdx].ms);
-    return () => clearInterval(timer);
-  }, [playing, speedIdx, result, lastIdx]);
+    }, Math.max(SPEEDS[speedIdx].ms, duration * SPEEDS[speedIdx].ms / 480));
+    return () => clearTimeout(timer);
+  }, [playing, speedIdx, result, lastIdx, frameIdx, assets, appearances]);
 
   // Événements aplatis une seule fois, tagués par frame, pour le journal.
   const taggedEvents = useMemo(() => {
@@ -128,12 +144,9 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed }) {
           Classe B
           <select value={classB} onChange={(e) => setClassB(e.target.value)}>{classOptions}</select>
         </label>
-        <label className="field">
-          Carte
-          <select value={mapId} onChange={(e) => setMapId(e.target.value)}>
-            {MAP_IDS.map((id) => <option key={id} value={id}>{MAPS[id].name}</option>)}
-          </select>
-        </label>
+        <MapPicker value={mapId} onChange={setMapId} />
+        {['A', 'B'].map(side => <AppearanceSelect key={side} side={side} value={equipment.loadouts[side].profile?.sex === 1 ? 'female' : 'male'}
+          onChange={value => equipment.update(side, current => ({ ...current, profile: { ...current.profile, sex: value === 'female' ? 1 : 0 } }))} />)}
         <label className="field">
           Seed
           <input
@@ -144,9 +157,12 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed }) {
           />
         </label>
         <button className="btn icon" title="Seed aléatoire" onClick={() => setSeed(Math.floor(Math.random() * 1e9))}>🎲</button>
-        <button className="btn primary" onClick={() => launch()}>⚔️ Lancer le combat</button>
+        <button className="btn primary" disabled={!equipment.summaries.A.valid || !equipment.summaries.B.valid} onClick={() => launch()}>⚔️ Lancer le combat</button>
+        {result ? <button className="btn" onClick={() => setShowEquipment(!showEquipment)}>{showEquipment ? 'Fermer l’équipement' : 'Équipement du prochain match'}</button> : null}
         {error ? <span style={{ color: 'var(--danger)', fontWeight: 700 }}>{error}</span> : null}
       </div>
+
+      {showEquipment ? <LoadoutPicker onClassChange={(side, id) => side === 'A' ? setClassA(id) : setClassB(id)} classes={{ A: classA, B: classB }} names={{ A: 'Combattant A', B: 'Combattant B' }} {...equipment} /> : null}
 
       <div className="arena-layout">
         <div>
@@ -154,6 +170,7 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed }) {
             ? (
               <FighterPanel
                 fighter={frame.state.fighters.A}
+                fighters={frame.state.fighters}
                 side="A"
                 isActive={!atEnd && frame.state.order[frame.state.currentIndex] === 'A'}
               />
@@ -214,6 +231,7 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed }) {
           {frame ? (
             <FighterPanel
               fighter={frame.state.fighters.B}
+              fighters={frame.state.fighters}
               side="B"
               isActive={!atEnd && frame.state.order[frame.state.currentIndex] === 'B'}
             />
@@ -222,7 +240,7 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed }) {
       </div>
 
       <div style={{ marginTop: 14 }}>
-        <LogPanel events={logEvents} namesById={namesById} />
+        <LogPanel events={logEvents} namesById={namesById} state={frame?.state} />
       </div>
     </div>
   );

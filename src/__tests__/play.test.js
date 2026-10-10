@@ -21,6 +21,7 @@ describe('match en direct (humain vs bot)', () => {
       botDecide: compileBot(maisonCode),
     });
 
+    expect(m.ready().ok).toBe(true);
     let guard = 0;
     // On avance jusqu'au tour du joueur (le bot peut avoir l'initiative).
     while (!m.over && !m.isHumanTurn() && guard++ < 200) m.botStep();
@@ -30,7 +31,7 @@ describe('match en direct (humain vs bot)', () => {
     const cells = api.reachable();
     expect(cells.length).toBeGreaterThan(0);
     const r = m.humanAct({ type: 'MOVE', to: cells[0].pos });
-    expect(r.ok).toBe(true);
+    expect(r).toMatchObject({ ok: true });
     expect(r.events.some((e) => e.t === 'move' || e.t === 'tackle')).toBe(true);
 
     const pass = m.humanAct({ type: 'PASS' });
@@ -47,6 +48,7 @@ describe('match en direct (humain vs bot)', () => {
       botName: 'Sparring',
       botDecide: compileBot('function decide(v, a) { return a.endTurn(); }'),
     });
+    expect(m.ready().ok).toBe(true);
     let guard = 0;
     while (!m.over && !m.isHumanTurn() && guard++ < 200) m.botStep();
     const r = m.humanAct({ type: 'CAST', spell: 'colere', target: { x: -3, y: 99 } });
@@ -64,6 +66,7 @@ describe('match en direct (humain vs bot)', () => {
       botName: 'IA Maison',
       botDecide: compileBot(maisonCode),
     });
+    expect(m.ready().ok).toBe(true);
     let guard = 0;
     while (!m.over && guard++ < 3000) {
       if (m.isHumanTurn()) m.humanAct({ type: 'PASS' });
