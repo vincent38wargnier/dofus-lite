@@ -95,6 +95,14 @@ function zoneSize(code) {
   return Math.max(0, ZONE_ALPHABET.indexOf(code[1]));
 }
 
+// Retro spell areas: 110% on the aimed cell, then -10 percentage points per
+// cell. Point effects and weapons do not use this spell-area coefficient.
+// The weapon penalty introduced in DOFUS 2.11 does not apply to Retro.
+export function areaDamagePercent(code, center, position, isWeapon = false) {
+  if (isWeapon || !code || code[0] === 'P' || zoneSize(code) === 0) return 100;
+  return Math.max(10, 110 - 10 * dist(center, position));
+}
+
 export function spellZoneCells(code, target, casterPos) {
   const shape = code ? code[0] : 'P';
   const size = code && code.length > 1 ? zoneSize(code) : 0;

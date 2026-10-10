@@ -43,6 +43,7 @@ export function effectDescription(effect) {
     case 'spellBoost': return `Bonus aux dégâts de base : +${e.value}`;
     case 'invisibility': return 'Invisible';
     case 'dodgeMelee': return 'Esquive des attaques au corps à corps';
+    case 'damageOnHit': return `${e.value} % des PV max perdus par coup reçu (neutre)`;
     case 'sacrifice': return 'Dégâts transférés au lanceur';
     case 'minRolls': return 'Jets de dégâts minimisés';
     case 'maxRolls': return 'Dégâts reçus maximisés';
@@ -57,7 +58,7 @@ export function effectDescription(effect) {
 
 export function effectTone(e) {
   if (e.kind === 'buff') return statTone(e.stat, e.value);
-  if (['poison', 'apPoison', 'skipTurn', 'minRolls', 'maxRolls'].includes(e.kind)) return 'negative';
+  if (['poison', 'apPoison', 'damageOnHit', 'skipTurn', 'minRolls', 'maxRolls'].includes(e.kind)) return 'negative';
   if (['punishment', 'regeneration', 'armor', 'weaponMastery', 'damageReflection', 'spellReflection', 'dodgeMelee', 'spellBoost', 'invisibility'].includes(e.kind)) return 'positive';
   return 'neutral';
 }

@@ -1,4 +1,4 @@
-import { MAPS } from '../engine/maps';
+import { MAPS, MAP_IDS } from '../engine/maps';
 import { createGame, placeFighter, readyFighter, applyAction, getView } from '../engine/engine';
 import { bfs } from '../engine/pathfinding';
 import { LiveMatch } from '../game/liveMatch';
@@ -10,10 +10,10 @@ const fresh = (extra = {}) => createGame({ fighters, mapId: 'astrub_7423', seed:
 const pos = ({ x, y }) => ({ x, y });
 const key = ({ x, y }) => `${x},${y}`;
 
-test('all 21 maps have disjoint, walkable and connected team zones; provenance is explicit', () => {
-  const maps = Object.values(MAPS);
-  expect(maps).toHaveLength(21);
-  expect(maps.filter(m => m.placement.status === 'historical')).toHaveLength(8);
+test('all 22 PvP/training maps have disjoint, walkable and connected team zones; provenance is explicit', () => {
+  const maps = MAP_IDS.map(id => MAPS[id]);
+  expect(maps).toHaveLength(22);
+  expect(maps.filter(m => m.placement.status === 'historical')).toHaveLength(9);
   expect(maps.filter(m => m.placement.status === 'local')).toHaveLength(10);
   for (const map of maps) {
     expect(map.startingCells).toHaveLength(2);

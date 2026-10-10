@@ -29,6 +29,14 @@ test('original aliases and numeric IDs resolve to their recordings and authored 
   expect(clips[0].play).toHaveBeenCalledTimes(1);
 });
 
+test('monster timeline names use the client SOMA accent/space/hyphen normalization', () => {
+  const aliases = { cues: { ATTACK_TOURNI_PERE_NOEL_01: { url: 'nowel.mp3', volume: .35 },
+    SON_TRANSFORMATION_PERE_NOEL: { url: 'summon.mp3' }, E_A: { url: 'accent.mp3' } } };
+  expect(resolveSound(aliases, 'attack tourni pere noel-01')).toBe(aliases.cues.ATTACK_TOURNI_PERE_NOEL_01);
+  expect(resolveSound(aliases, 'son transformation pere noel')).toBe(aliases.cues.SON_TRANSFORMATION_PERE_NOEL);
+  expect(resolveSound(aliases, 'é-à')).toBe(aliases.cues.E_A);
+});
+
 test('muting stops active sounds immediately and ignores subsequent cues', () => {
   const { player, clips } = setup();
   player.play('vlad_806');

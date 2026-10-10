@@ -1,5 +1,6 @@
 import { CLASSES } from '../engine/classes';
 import { isForgeSnapshot } from '../engine/forgedItems';
+import { EQUIPMENT_SLOTS } from '../engine/equipment';
 
 export const DRAFT_STORAGE = 'dofus-lite-loadouts-v1';
 export const LIBRARY_STORAGE = 'dofus-lite-stuff-library-v1';
@@ -16,7 +17,10 @@ export function isLoadout(value) {
     && (value.level == null || (integer(value.level) && value.level >= 1 && value.level <= 200))
     && ['max', 'average', 'random'].includes(value.rollMode)
     && (value.rollSeed == null || Number.isFinite(value.rollSeed))
+    && (value.rollOrigins == null || (record(value.rollOrigins) && Object.entries(value.rollOrigins)
+      .every(([slot, origin]) => EQUIPMENT_SLOTS.some(s => s.id === slot) && EQUIPMENT_SLOTS.some(s => s.id === origin))))
     && (value.profile == null || record(value.profile))
+    && (value.petBonuses == null || (record(value.petBonuses) && Object.values(value.petBonuses).every(integer)))
     && (value.forgedItems == null || (record(value.forgedItems) && Object.values(value.forgedItems).every(isForgeSnapshot)))
     && (value.spells == null || (record(value.spells)
       && ['common', 'order'].every(key => value.spells[key] == null || (Array.isArray(value.spells[key]) && value.spells[key].every(integer)))
@@ -30,7 +34,7 @@ export function readLibrary(storage) {
     const library = JSON.parse(raw);
     if (library?.version !== 1 || !Array.isArray(library.builds) || !record(library.active)
       || library.builds.some(b => !record(b) || typeof b.id !== 'string' || !b.id || typeof b.name !== 'string'
-        || !b.name.trim() || !CLASSES[b.classId] || !isLoadout(b.loadout))
+        || !b.name.trim() || (b.classId != null && !CLASSES[b.classId]) || !isLoadout(b.loadout))
       || new Set(library.builds.map(b => b.id)).size !== library.builds.length) throw new Error('format');
     return { library, error: '' };
   } catch (_) {
@@ -45,9 +49,9 @@ export function buildName(name) {
   return result;
 }
 
-export function uniqueBuildName(builds, name, classId, exceptId) {
+export function uniqueBuildName(builds, name, exceptId) {
   const base = buildName(name);
-  const used = new Set(builds.filter(b => b.classId === classId && b.id !== exceptId).map(b => b.name.toLocaleLowerCase('fr')));
+  const used = new Set(builds.filter(b => b.id !== exceptId).map(b => b.name.toLocaleLowerCase('fr')));
   let result = base, index = 2;
   while (used.has(result.toLocaleLowerCase('fr'))) result = `${base.slice(0, 74)} (${index++})`;
   return result;
@@ -60,28 +64,47 @@ export function sameLoadout(a, b) {
   return JSON.stringify(canonical(a)) === JSON.stringify(canonical(b));
 }
 
+const EQUIPMENT_FIELDS = ['slots', 'rollMode', 'rollSeed', 'rollOrigins', 'forgedItems', 'petBonuses'];
+
+export function equipmentSnapshot(loadout) {
+  return clone(Object.fromEntries(EQUIPMENT_FIELDS.filter(key => loadout[key] !== undefined).map(key => [key, loadout[key]])));
+}
+
+// A stuff replaces equipment only. Remove absent optional fields too, so the
+// previous weapon's forge or slot roll origins cannot leak into the new stuff.
+export function applySavedEquipment(current, saved) {
+  const next = clone(current);
+  EQUIPMENT_FIELDS.forEach(key => { delete next[key]; });
+  return { ...next, ...equipmentSnapshot(saved) };
+}
+
+export const sameEquipment = (a, b) => sameLoadout(equipmentSnapshot(a), equipmentSnapshot(b));
+
 export function libraryReducer(library, action) {
   const existing = library.builds.find(b => b.id === action.id);
   switch (action.type) {
     case 'save': {
-      if (!CLASSES[action.classId] || !isLoadout(action.loadout)) throw new Error('Configuration de stuff invalide.');
+      if (!isLoadout(action.loadout)) throw new Error('Configuration de stuff invalide.');
       if (!action.id || (action.replace && !existing)) throw new Error('Ce stuff n’existe plus. Enregistrez une copie.');
-      if (existing && (!action.replace || existing.classId !== action.classId)) throw new Error('Choisissez un autre emplacement de sauvegarde.');
-      const build = { id: action.id, classId: action.classId,
-        name: uniqueBuildName(library.builds, action.name, action.classId, existing?.id),
-        createdAt: existing?.createdAt || action.now, updatedAt: action.now, loadout: clone(action.loadout) };
+      if (existing && !action.replace) throw new Error('Choisissez un autre emplacement de sauvegarde.');
+      const build = { id: action.id,
+        name: uniqueBuildName(library.builds, action.name, existing?.id),
+        createdAt: existing?.createdAt || action.now, updatedAt: action.now,
+        // Keep legacy character settings stored, without applying them to a
+        // different character or requiring a class for newly saved equipment.
+        loadout: applySavedEquipment(existing?.loadout || { version: 1, base: {} }, action.loadout) };
       return { ...library, builds: existing ? library.builds.map(b => b.id === build.id ? build : b) : [build, ...library.builds],
         active: action.key ? { ...library.active, [action.key]: build.id } : library.active };
     }
     case 'activate':
-      if (!existing || existing.classId !== action.classId) throw new Error('Ce stuff appartient à une autre classe.');
+      if (!existing) throw new Error('Ce stuff n’existe plus.');
       return { ...library, active: { ...library.active, [action.key]: action.id } };
     case 'clear-active':
       return { ...library, active: Object.fromEntries(Object.entries(library.active).filter(([key]) => key !== action.key)) };
     case 'rename':
       if (!existing) throw new Error('Ce stuff n’existe plus.');
       return { ...library, builds: library.builds.map(b => b.id === action.id
-        ? { ...b, name: uniqueBuildName(library.builds, action.name, b.classId, b.id), updatedAt: action.now } : b) };
+        ? { ...b, name: uniqueBuildName(library.builds, action.name, b.id), updatedAt: action.now } : b) };
     case 'delete':
       return { ...library, builds: library.builds.filter(b => b.id !== action.id),
         active: Object.fromEntries(Object.entries(library.active).filter(([, id]) => id !== action.id)) };

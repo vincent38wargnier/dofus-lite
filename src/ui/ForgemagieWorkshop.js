@@ -52,11 +52,12 @@ export default function ForgemagieWorkshop({ loadout, change, initialSlot, saveE
   const bounds = item ? naturalBounds(item) : {};
   const last = state?.history.at(-1);
   const presentStats = [...new Set([...Object.keys(bounds), ...Object.keys(state?.stats || {}).filter(s => state.stats[s])])];
+  const suggestedStats = [...new Set(['pa', 'pm', ...presentStats])];
   const paletteKey = `${slot?.id}:${item?.id}`;
-  const extras = (extraRunes[paletteKey] || []).filter(s => !presentStats.includes(s));
-  const visibleStats = [...presentStats, ...extras];
+  const extras = (extraRunes[paletteKey] || []).filter(s => !suggestedStats.includes(s));
+  const visibleStats = [...suggestedStats, ...extras];
   const selectedRune = RUNES.find(r => r.supported && r.id === runeChoices[paletteKey] && visibleStats.includes(r.stat))
-    || RUNES.find(r => r.supported && r.stat === visibleStats[0]);
+    || RUNES.find(r => r.supported && r.stat === (presentStats[0] || visibleStats[0]));
   const stat = selectedRune?.stat;
   const reagent = kind === 'potion' ? POTIONS.find(p => p.id === potionId) : selectedRune;
   // Always show the normal estimate; the selected mode is applied when fusing.
@@ -152,7 +153,7 @@ export default function ForgemagieWorkshop({ loadout, change, initialSlot, saveE
             <div className="fm-reagent-tabs"><button type="button" className={kind === 'rune' ? 'selected' : ''} onClick={() => { setKind('rune'); setRemaining(0); }}><Gem size={16} /> Runes</button>
               <button type="button" className={kind === 'potion' ? 'selected' : ''} onClick={() => { setKind('potion'); setRemaining(0); }}><FlaskConical size={16} /> Élément d’arme</button></div>
             {kind === 'rune' ? <>
-              <ForgeRuneGrid key={paletteKey} bounds={bounds} suggested={presentStats} extras={extras} selected={selectedRune}
+              <ForgeRuneGrid key={paletteKey} bounds={bounds} suggested={suggestedStats} extras={extras} selected={selectedRune}
                 onSelect={selectRune} onToggleExtra={toggleExtra} />
               {selectedRune ? <div className="fm-selected-rune" aria-live="polite"><EquipmentIcon item={selectedRune} /><div><strong>{selectedRune.name}</strong>
                 <span>+{selectedRune.power} {label(stat)} · Poids {runeWeight(selectedRune)}</span></div></div> : null}

@@ -142,7 +142,7 @@ describe('sorts réels (données AncestraRemake)', () => {
     };
     const { state: after, events } = castUntilHit(mk, { type: 'CAST', spell: 'pression', target: { x: 5, y: 7 } });
     const dmg = events.find((e) => e.t === 'damage');
-    expect(after.fighters.A.pa).toBe(8 - 3);
+    expect(after.fighters.A.pa).toBe(7 - 3);
     // Force 260 + 101 scrolled: normal 8..12 or critical 10..14 × 4.61.
     expect(dmg.amount).toBeGreaterThanOrEqual(36);
     expect(dmg.amount).toBeLessThanOrEqual(64);
@@ -231,8 +231,8 @@ describe('sorts réels (données AncestraRemake)', () => {
     const mk = (seed) => freshGame('ENIRIPSA', 'IOP', 'arene', seed);
     const { state: after } = castUntilHit(mk, { type: 'CAST', spell: 'mot_stimulant', target: { x: 0, y: 0 } });
     // coût 2 PA, +1 ou +2 PA
-    expect(after.fighters.A.pa).toBeGreaterThanOrEqual(7);
-    expect(after.fighters.A.pa).toBeLessThanOrEqual(8);
+    expect(after.fighters.A.pa).toBeGreaterThanOrEqual(6);
+    expect(after.fighters.A.pa).toBeLessThanOrEqual(7);
     const buff = after.fighters.A.effects.find((e) => e.stat === 'pa');
     expect(buff).toBeTruthy();
     expect(buff.turnsLeft).toBe(6); // cinq tours suivants + fin du tour de lancement
@@ -295,7 +295,7 @@ describe('sorts réels (données AncestraRemake)', () => {
       if (r.events.some((e) => e.t === 'spell_fail')) found = r;
     }
     expect(found).toBeTruthy();
-    expect(found.state.fighters.A.pa).toBe(5); // PA dépensés quand même
+    expect(found.state.fighters.A.pa).toBe(4); // 7 PA de base, 3 PA dépensés quand même
     expect(found.events.find((e) => e.t === 'damage')).toBeUndefined();
   });
 });
@@ -306,6 +306,7 @@ describe('tacle / fuite (1.29)', () => {
     let sawTackle = false;
     for (let seed = 1; seed <= 30; seed++) {
       const s = freshGame('IOP', 'IOP', 'arene', seed);
+      s.fighters.A.pa = 8; // Fixture explicite de l’exemple officiel de tacle à 8 PA.
       s.fighters.A.pos = { x: 5, y: 6 };
       s.fighters.B.pos = { x: 5, y: 7 };
       const { state: after, events } = applyAction(s, { type: 'MOVE', to: { x: 2, y: 6 } });
@@ -426,7 +427,7 @@ describe('bot layer', () => {
       mapId: 'arene',
       seed: 8,
     });
-    expect(result.finalState.fighters.A.pa).toBeLessThanOrEqual(8);
+    expect(result.finalState.fighters.A.pa).toBeLessThanOrEqual(7);
   });
 });
 
@@ -435,7 +436,7 @@ describe('real Dofus maps (OblivionRetro import)', () => {
   const { shortestPath } = require('../engine/pathfinding');
 
   test('every map has free, mutually reachable spawns', () => {
-    for (const map of Object.values(MAPS)) {
+    for (const map of Object.values(MAPS).filter(m => m.kind !== 'dungeon')) {
       const blocked = (x, y) => {
         const o = map.obstacles[`${x},${y}`];
         return !!(o && o.blocksMove);

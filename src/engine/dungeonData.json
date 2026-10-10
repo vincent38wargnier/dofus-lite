@@ -1,0 +1,2096 @@
+{
+  "notes": [
+    "Starting rosters only: summoned creatures are created by spells, never pre-spawned.",
+    "Client SWFs hold monster templates; encounter rosters use the separately attributed server archives and Retro room guides.",
+    "Companion grades are selected deterministically from current client grades using the combat seed."
+  ],
+  "encounters": [
+    {
+      "id": "room_2083",
+      "bossIds": [
+        147
+      ],
+      "name": "Donjon des Bouftous",
+      "mapId": 2083,
+      "members": [
+        {
+          "monsterId": 147,
+          "count": 1
+        },
+        {
+          "monsterId": 148,
+          "count": 3
+        },
+        {
+          "monsterId": 101,
+          "count": 4
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 2083
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-bouftous/"
+        }
+      ],
+      "combatMapId": "dungeon_2083"
+    },
+    {
+      "id": "room_10164",
+      "bossIds": [
+        928
+      ],
+      "name": "Donjon Ensablé",
+      "mapId": 10164,
+      "members": [
+        {
+          "monsterId": 928,
+          "count": 1
+        },
+        {
+          "monsterId": 920,
+          "count": 1
+        },
+        {
+          "monsterId": 921,
+          "count": 1
+        },
+        {
+          "monsterId": 922,
+          "count": 1
+        },
+        {
+          "monsterId": 923,
+          "count": 1
+        },
+        {
+          "monsterId": 924,
+          "count": 1
+        },
+        {
+          "monsterId": 926,
+          "count": 1
+        },
+        {
+          "monsterId": 927,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 10164
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-ensable/"
+        }
+      ],
+      "combatMapId": "dungeon_10164"
+    },
+    {
+      "id": "room_10363",
+      "bossIds": [
+        1001
+      ],
+      "name": "Donjon d’Incarnam",
+      "mapId": 10363,
+      "members": [
+        {
+          "monsterId": 1001,
+          "count": 1
+        },
+        {
+          "monsterId": 996,
+          "count": 1
+        },
+        {
+          "monsterId": 983,
+          "count": 1
+        },
+        {
+          "monsterId": 981,
+          "count": 1
+        },
+        {
+          "monsterId": 976,
+          "count": 1
+        },
+        {
+          "monsterId": 980,
+          "count": 1
+        },
+        {
+          "monsterId": 978,
+          "count": 1
+        },
+        {
+          "monsterId": 971,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 10363
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-dincarnam/"
+        }
+      ],
+      "combatMapId": "dungeon_10363"
+    },
+    {
+      "id": "room_9774",
+      "bossIds": [
+        799
+      ],
+      "name": "Donjon des Champs",
+      "mapId": 9774,
+      "members": [
+        {
+          "monsterId": 799,
+          "count": 1
+        },
+        {
+          "monsterId": 31,
+          "count": 1
+        },
+        {
+          "monsterId": 46,
+          "count": 1
+        },
+        {
+          "monsterId": 34,
+          "count": 1
+        },
+        {
+          "monsterId": 78,
+          "count": 1
+        },
+        {
+          "monsterId": 59,
+          "count": 1
+        },
+        {
+          "monsterId": 79,
+          "count": 1
+        },
+        {
+          "monsterId": 48,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 9774
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-champs/"
+        },
+        {
+          "url": "https://barbok.fr/images/donjon/champs/champs8.jpg"
+        }
+      ],
+      "notes": [
+        "The original final-room screenshot includes a Tournesol Sauvage omitted by the text catalogue."
+      ],
+      "combatMapId": "dungeon_9774"
+    },
+    {
+      "id": "room_9784",
+      "bossIds": [
+        797
+      ],
+      "name": "Donjon des Scarafeuilles",
+      "mapId": 9784,
+      "members": [
+        {
+          "monsterId": 797,
+          "count": 1
+        },
+        {
+          "monsterId": 795,
+          "count": 3
+        },
+        {
+          "monsterId": 194,
+          "count": 1
+        },
+        {
+          "monsterId": 198,
+          "count": 1
+        },
+        {
+          "monsterId": 240,
+          "count": 1
+        },
+        {
+          "monsterId": 241,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 9784
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-scarafeuilles/"
+        }
+      ],
+      "combatMapId": "dungeon_9784"
+    },
+    {
+      "id": "room_11887",
+      "bossIds": [
+        1184
+      ],
+      "name": "Donjon des Blops · Blop Coco Royal",
+      "mapId": 11887,
+      "members": [
+        {
+          "monsterId": 1184,
+          "count": 1
+        },
+        {
+          "monsterId": 273,
+          "count": 1
+        },
+        {
+          "monsterId": 1182,
+          "count": 3
+        },
+        {
+          "monsterId": 1183,
+          "count": 3
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 11887
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-blops/"
+        }
+      ],
+      "combatMapId": "dungeon_11887"
+    },
+    {
+      "id": "room_11888",
+      "bossIds": [
+        1185
+      ],
+      "name": "Donjon des Blops · Blop Griotte Royal",
+      "mapId": 11888,
+      "members": [
+        {
+          "monsterId": 1185,
+          "count": 1
+        },
+        {
+          "monsterId": 275,
+          "count": 1
+        },
+        {
+          "monsterId": 1182,
+          "count": 3
+        },
+        {
+          "monsterId": 1183,
+          "count": 3
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 11888
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-blops/"
+        }
+      ],
+      "combatMapId": "dungeon_11888"
+    },
+    {
+      "id": "room_11889",
+      "bossIds": [
+        1186
+      ],
+      "name": "Donjon des Blops · Blop Indigo Royal",
+      "mapId": 11889,
+      "members": [
+        {
+          "monsterId": 1186,
+          "count": 1
+        },
+        {
+          "monsterId": 274,
+          "count": 1
+        },
+        {
+          "monsterId": 1182,
+          "count": 3
+        },
+        {
+          "monsterId": 1183,
+          "count": 3
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 11889
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-blops/"
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-blops/"
+        }
+      ],
+      "combatMapId": "dungeon_11889"
+    },
+    {
+      "id": "room_11890",
+      "bossIds": [
+        1187
+      ],
+      "name": "Donjon des Blops · Blop Reinette Royal",
+      "mapId": 11890,
+      "members": [
+        {
+          "monsterId": 1187,
+          "count": 1
+        },
+        {
+          "monsterId": 276,
+          "count": 1
+        },
+        {
+          "monsterId": 1182,
+          "count": 3
+        },
+        {
+          "monsterId": 1183,
+          "count": 3
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 11890
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-blops/"
+        }
+      ],
+      "combatMapId": "dungeon_11890"
+    },
+    {
+      "id": "room_11892",
+      "bossIds": [
+        1188
+      ],
+      "name": "Antre du Blop Multicolore",
+      "mapId": 11892,
+      "members": [
+        {
+          "monsterId": 1188,
+          "count": 1
+        },
+        {
+          "monsterId": 1185,
+          "count": 1
+        },
+        {
+          "monsterId": 1186,
+          "count": 1
+        },
+        {
+          "monsterId": 1187,
+          "count": 1
+        },
+        {
+          "monsterId": 1184,
+          "count": 1
+        },
+        {
+          "monsterId": 1183,
+          "count": 2
+        },
+        {
+          "monsterId": 1182,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 11892
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/antre-du-blop-multicolore/"
+        }
+      ],
+      "combatMapId": "dungeon_11892"
+    },
+    {
+      "id": "room_9760",
+      "bossIds": [
+        792
+      ],
+      "name": "Donjon des Bworks",
+      "mapId": 9760,
+      "members": [
+        {
+          "monsterId": 792,
+          "count": 1
+        },
+        {
+          "monsterId": 74,
+          "count": 2
+        },
+        {
+          "monsterId": 876,
+          "count": 2
+        },
+        {
+          "monsterId": 53,
+          "count": 3
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 9760
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-bworks/"
+        }
+      ],
+      "combatMapId": "dungeon_9760"
+    },
+    {
+      "id": "room_325",
+      "bossIds": [
+        107
+      ],
+      "name": "Labyrinthe du Dark Vlad",
+      "mapId": 325,
+      "members": [
+        {
+          "monsterId": 107,
+          "count": 1
+        },
+        {
+          "monsterId": 291,
+          "count": 2
+        },
+        {
+          "monsterId": 54,
+          "count": 2
+        },
+        {
+          "monsterId": 110,
+          "count": 2
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 325
+        }
+      ],
+      "combatMapId": "dungeon_325"
+    },
+    {
+      "id": "room_10234",
+      "bossIds": [
+        173
+      ],
+      "name": "Donjon des Abraknydes",
+      "mapId": 10234,
+      "members": [
+        {
+          "monsterId": 173,
+          "count": 1
+        },
+        {
+          "monsterId": 917,
+          "count": 4
+        },
+        {
+          "monsterId": 650,
+          "count": 3
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 10234
+        },
+        {
+          "url": "https://http.wiki-dofus.eu/w/Donjon_Abraknyde"
+        }
+      ],
+      "notes": [
+        "Archive IDs corrected: Araknotrons accompany the Ancestral, not Tronknydes."
+      ],
+      "combatMapId": "dungeon_10234"
+    },
+    {
+      "id": "room_1836",
+      "bossIds": [
+        226
+      ],
+      "name": "Arbre de Moon",
+      "mapId": 1836,
+      "members": [
+        {
+          "monsterId": 226,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 1836
+        }
+      ],
+      "combatMapId": "dungeon_1836"
+    },
+    {
+      "id": "room_10153",
+      "bossIds": [
+        257
+      ],
+      "name": "Donjon du Chêne Mou",
+      "mapId": 9126,
+      "members": [
+        {
+          "monsterId": 257,
+          "count": 1
+        },
+        {
+          "monsterId": 258,
+          "count": 1
+        },
+        {
+          "monsterId": 260,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 10153
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-du-chene-mou/"
+        }
+      ],
+      "notes": [
+        "Final room resolved against client MA map metadata and dungeon room sequence; legacy encounter map IDs are not authoritative."
+      ],
+      "combatMapId": "dungeon_9126"
+    },
+    {
+      "id": "room_8965",
+      "bossIds": [
+        670
+      ],
+      "name": "Donjon du Koulosse",
+      "mapId": 8965,
+      "members": [
+        {
+          "monsterId": 670,
+          "count": 1
+        },
+        {
+          "monsterId": 671,
+          "count": 7
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 8965
+        }
+      ],
+      "combatMapId": "dungeon_8965"
+    },
+    {
+      "id": "room_6836",
+      "bossIds": [
+        58,
+        85,
+        86,
+        430
+      ],
+      "name": "La Gelaxième Dimension",
+      "mapId": 6836,
+      "members": [
+        {
+          "monsterId": 58,
+          "count": 1
+        },
+        {
+          "monsterId": 85,
+          "count": 1
+        },
+        {
+          "monsterId": 86,
+          "count": 1
+        },
+        {
+          "monsterId": 430,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 6836
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/la-gelaxieme-dimension/"
+        }
+      ],
+      "combatMapId": "dungeon_6836"
+    },
+    {
+      "id": "room_1837",
+      "bossIds": [
+        230
+      ],
+      "name": "Bateau du Chouque",
+      "mapId": 1837,
+      "members": [
+        {
+          "monsterId": 230,
+          "count": 1
+        },
+        {
+          "monsterId": 231,
+          "count": 2
+        },
+        {
+          "monsterId": 228,
+          "count": 2
+        },
+        {
+          "monsterId": 229,
+          "count": 2
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 1837
+        }
+      ],
+      "combatMapId": "dungeon_1837"
+    },
+    {
+      "id": "room_9766",
+      "bossIds": [
+        800
+      ],
+      "name": "Donjon des Tofus",
+      "mapId": 9766,
+      "members": [
+        {
+          "monsterId": 800,
+          "count": 1
+        },
+        {
+          "monsterId": 804,
+          "count": 1
+        },
+        {
+          "monsterId": 806,
+          "count": 1
+        },
+        {
+          "monsterId": 808,
+          "count": 1
+        },
+        {
+          "monsterId": 98,
+          "count": 1
+        },
+        {
+          "monsterId": 796,
+          "count": 3
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 9766
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-tofus/"
+        }
+      ],
+      "combatMapId": "dungeon_9766"
+    },
+    {
+      "id": "room_9648",
+      "bossIds": [
+        232
+      ],
+      "name": "Donjon des Canidés",
+      "mapId": 9648,
+      "members": [
+        {
+          "monsterId": 232,
+          "count": 1
+        },
+        {
+          "monsterId": 301,
+          "count": 1
+        },
+        {
+          "monsterId": 102,
+          "count": 2
+        },
+        {
+          "monsterId": 159,
+          "count": 2
+        },
+        {
+          "monsterId": 287,
+          "count": 2
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 9648
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-canides/"
+        }
+      ],
+      "combatMapId": "dungeon_9648"
+    },
+    {
+      "id": "room_9580",
+      "bossIds": [
+        669
+      ],
+      "name": "Donjon des Craqueleurs",
+      "mapId": 9580,
+      "members": [
+        {
+          "monsterId": 669,
+          "count": 1
+        },
+        {
+          "monsterId": 293,
+          "count": 4
+        },
+        {
+          "monsterId": 483,
+          "count": 3
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 9580
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-craqueleurs/"
+        }
+      ],
+      "combatMapId": "dungeon_9580"
+    },
+    {
+      "id": "room_8314",
+      "bossIds": [
+        568
+      ],
+      "name": "Donjon des Kitsounes",
+      "mapId": 8314,
+      "members": [
+        {
+          "monsterId": 568,
+          "count": 1
+        },
+        {
+          "monsterId": 532,
+          "count": 1
+        },
+        {
+          "monsterId": 531,
+          "count": 1
+        },
+        {
+          "monsterId": 530,
+          "count": 1
+        },
+        {
+          "monsterId": 523,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 8314
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-kitsounes/"
+        }
+      ],
+      "combatMapId": "dungeon_8314"
+    },
+    {
+      "id": "room_7526",
+      "bossIds": [
+        478
+      ],
+      "name": "Donjon du Bworker",
+      "mapId": 7526,
+      "members": [
+        {
+          "monsterId": 478,
+          "count": 1
+        },
+        {
+          "monsterId": 486,
+          "count": 1
+        },
+        {
+          "monsterId": 484,
+          "count": 1
+        },
+        {
+          "monsterId": 479,
+          "count": 2
+        },
+        {
+          "monsterId": 488,
+          "count": 3
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 7526
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-du-bworker/"
+        }
+      ],
+      "combatMapId": "dungeon_7526"
+    },
+    {
+      "id": "room_10212",
+      "bossIds": [
+        940
+      ],
+      "name": "Donjon des Rats de Bonta",
+      "mapId": 10212,
+      "members": [
+        {
+          "monsterId": 940,
+          "count": 1
+        },
+        {
+          "monsterId": 442,
+          "count": 1
+        },
+        {
+          "monsterId": 447,
+          "count": 1
+        },
+        {
+          "monsterId": 942,
+          "count": 3
+        },
+        {
+          "monsterId": 941,
+          "count": 1
+        },
+        {
+          "monsterId": 938,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 10212
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-rats-de-bonta/"
+        }
+      ],
+      "combatMapId": "dungeon_10212"
+    },
+    {
+      "id": "room_10198",
+      "bossIds": [
+        939
+      ],
+      "name": "Donjon des Rats de Brâkmar",
+      "mapId": 10198,
+      "members": [
+        {
+          "monsterId": 939,
+          "count": 1
+        },
+        {
+          "monsterId": 442,
+          "count": 1
+        },
+        {
+          "monsterId": 935,
+          "count": 3
+        },
+        {
+          "monsterId": 937,
+          "count": 1
+        },
+        {
+          "monsterId": 447,
+          "count": 1
+        },
+        {
+          "monsterId": 936,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 10198
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-rats-brakmar/"
+        }
+      ],
+      "combatMapId": "dungeon_10198"
+    },
+    {
+      "id": "room_10149",
+      "bossIds": [
+        943
+      ],
+      "name": "Donjon des Rats du Château d’Amakna",
+      "mapId": 10149,
+      "members": [
+        {
+          "monsterId": 943,
+          "count": 1
+        },
+        {
+          "monsterId": 942,
+          "count": 1
+        },
+        {
+          "monsterId": 937,
+          "count": 1
+        },
+        {
+          "monsterId": 940,
+          "count": 1
+        },
+        {
+          "monsterId": 939,
+          "count": 1
+        },
+        {
+          "monsterId": 935,
+          "count": 1
+        },
+        {
+          "monsterId": 936,
+          "count": 1
+        },
+        {
+          "monsterId": 941,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 10149
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-rats-du-chateau-damakna/"
+        }
+      ],
+      "combatMapId": "dungeon_10149"
+    },
+    {
+      "id": "room_8331",
+      "bossIds": [
+        612
+      ],
+      "name": "Repaire des Pandikazes",
+      "mapId": 8331,
+      "members": [
+        {
+          "monsterId": 612,
+          "count": 1
+        },
+        {
+          "monsterId": 580,
+          "count": 1
+        },
+        {
+          "monsterId": 581,
+          "count": 1
+        },
+        {
+          "monsterId": 579,
+          "count": 1
+        },
+        {
+          "monsterId": 578,
+          "count": 2
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 8331
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/repaire-des-pandikazes/"
+        }
+      ],
+      "combatMapId": "dungeon_8331"
+    },
+    {
+      "id": "room_9535",
+      "bossIds": [
+        382
+      ],
+      "name": "Donjon du Tofu Royal",
+      "mapId": 9535,
+      "members": [
+        {
+          "monsterId": 382,
+          "count": 1
+        },
+        {
+          "monsterId": 808,
+          "count": 2
+        },
+        {
+          "monsterId": 804,
+          "count": 2
+        },
+        {
+          "monsterId": 796,
+          "count": 2
+        },
+        {
+          "monsterId": 806,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 9535
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-du-tofu-royal/"
+        }
+      ],
+      "combatMapId": "dungeon_9535"
+    },
+    {
+      "id": "room_8203",
+      "bossIds": [
+        457
+      ],
+      "name": "Donjon des Larves",
+      "mapId": 8203,
+      "members": [
+        {
+          "monsterId": 457,
+          "count": 1
+        },
+        {
+          "monsterId": 412,
+          "count": 2
+        },
+        {
+          "monsterId": 413,
+          "count": 2
+        },
+        {
+          "monsterId": 456,
+          "count": 1
+        },
+        {
+          "monsterId": 414,
+          "count": 2
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 8203
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-larves/"
+        }
+      ],
+      "combatMapId": "dungeon_8203"
+    },
+    {
+      "id": "room_10025",
+      "bossIds": [
+        1179
+      ],
+      "name": "Donjon de Nowel",
+      "mapId": 10025,
+      "members": [
+        {
+          "monsterId": 1179,
+          "count": 1
+        },
+        {
+          "monsterId": 1180,
+          "count": 4
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 10025
+        }
+      ],
+      "combatMapId": "dungeon_10025"
+    },
+    {
+      "id": "room_11961",
+      "bossIds": [
+        872
+      ],
+      "name": "Caverne de Nowel",
+      "mapId": 11961,
+      "members": [
+        {
+          "monsterId": 872,
+          "count": 1
+        },
+        {
+          "monsterId": 839,
+          "count": 2
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 11961
+        }
+      ],
+      "combatMapId": "dungeon_11961"
+    },
+    {
+      "id": "room_11951",
+      "bossIds": [
+        1194
+      ],
+      "name": "Maison du Papa Nowel",
+      "mapId": 11951,
+      "members": [
+        {
+          "monsterId": 1194,
+          "count": 1
+        },
+        {
+          "monsterId": 851,
+          "count": 5
+        },
+        {
+          "monsterId": 839,
+          "count": 2
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 11951
+        }
+      ],
+      "combatMapId": "dungeon_11951"
+    },
+    {
+      "id": "room_11079",
+      "bossIds": [
+        1027
+      ],
+      "name": "Donjon Grotte Hesque",
+      "mapId": 11079,
+      "members": [
+        {
+          "monsterId": 1027,
+          "count": 1
+        },
+        {
+          "monsterId": 1067,
+          "count": 1
+        },
+        {
+          "monsterId": 1066,
+          "count": 1
+        },
+        {
+          "monsterId": 1065,
+          "count": 1
+        },
+        {
+          "monsterId": 1064,
+          "count": 1
+        },
+        {
+          "monsterId": 1022,
+          "count": 1
+        },
+        {
+          "monsterId": 1061,
+          "count": 1
+        },
+        {
+          "monsterId": 1060,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 11079
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-grotte-hesque/"
+        }
+      ],
+      "combatMapId": "dungeon_11079"
+    },
+    {
+      "id": "room_11073",
+      "bossIds": [
+        1051
+      ],
+      "name": "Arche Otomaï",
+      "mapId": 11073,
+      "members": [
+        {
+          "monsterId": 1051,
+          "count": 1
+        },
+        {
+          "monsterId": 1049,
+          "count": 2
+        },
+        {
+          "monsterId": 1048,
+          "count": 3
+        },
+        {
+          "monsterId": 1050,
+          "count": 2
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 11073
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/arche-otomai/"
+        }
+      ],
+      "combatMapId": "dungeon_11073"
+    },
+    {
+      "id": "room_11267",
+      "bossIds": [
+        1071
+      ],
+      "name": "Goulet du Rasboul",
+      "mapId": 11267,
+      "members": [
+        {
+          "monsterId": 1071,
+          "count": 1
+        },
+        {
+          "monsterId": 1070,
+          "count": 2
+        },
+        {
+          "monsterId": 1019,
+          "count": 2
+        },
+        {
+          "monsterId": 1069,
+          "count": 1
+        },
+        {
+          "monsterId": 1068,
+          "count": 1
+        },
+        {
+          "monsterId": 1025,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 11267
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/goulet-du-rasboul/"
+        }
+      ],
+      "combatMapId": "dungeon_11267"
+    },
+    {
+      "id": "room_10812",
+      "bossIds": [
+        1072,
+        1085,
+        1086,
+        1087
+      ],
+      "name": "Laboratoire du Tynril",
+      "mapId": 10812,
+      "members": [
+        {
+          "monsterId": 1072,
+          "count": 1
+        },
+        {
+          "monsterId": 1085,
+          "count": 1
+        },
+        {
+          "monsterId": 1086,
+          "count": 1
+        },
+        {
+          "monsterId": 1087,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 10812
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/laboratoire-du-tynril/"
+        }
+      ],
+      "combatMapId": "dungeon_10812"
+    },
+    {
+      "id": "room_9880",
+      "bossIds": [
+        121
+      ],
+      "name": "Labyrinthe du Minotoror",
+      "mapId": 9880,
+      "members": [
+        {
+          "monsterId": 121,
+          "count": 1
+        },
+        {
+          "monsterId": 831,
+          "count": 1
+        },
+        {
+          "monsterId": 832,
+          "count": 1
+        },
+        {
+          "monsterId": 668,
+          "count": 2
+        },
+        {
+          "monsterId": 830,
+          "count": 2
+        },
+        {
+          "monsterId": 829,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 9880
+        }
+      ],
+      "combatMapId": "dungeon_9880"
+    },
+    {
+      "id": "room_8549",
+      "bossIds": [
+        113
+      ],
+      "name": "Antre du Dragon cochon",
+      "mapId": 8549,
+      "members": [
+        {
+          "monsterId": 113,
+          "count": 1
+        },
+        {
+          "monsterId": 123,
+          "count": 1
+        },
+        {
+          "monsterId": 600,
+          "count": 2
+        },
+        {
+          "monsterId": 603,
+          "count": 2
+        },
+        {
+          "monsterId": 601,
+          "count": 2
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 8549
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/antre-du-dragon-cochon/"
+        }
+      ],
+      "combatMapId": "dungeon_8549"
+    },
+    {
+      "id": "room_10109",
+      "bossIds": [
+        854
+      ],
+      "name": "Donjon des Dragoeufs",
+      "mapId": 10109,
+      "members": [
+        {
+          "monsterId": 854,
+          "count": 1
+        },
+        {
+          "monsterId": 855,
+          "count": 1
+        },
+        {
+          "monsterId": 862,
+          "count": 2
+        },
+        {
+          "monsterId": 858,
+          "count": 1
+        },
+        {
+          "monsterId": 878,
+          "count": 1
+        },
+        {
+          "monsterId": 879,
+          "count": 1
+        },
+        {
+          "monsterId": 905,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 10109
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-dragoeufs/"
+        }
+      ],
+      "combatMapId": "dungeon_10109"
+    },
+    {
+      "id": "room_11939",
+      "bossIds": [
+        1159
+      ],
+      "name": "Donjon Fungus",
+      "mapId": 11941,
+      "members": [
+        {
+          "monsterId": 1159,
+          "count": 1
+        },
+        {
+          "monsterId": 1153,
+          "count": 2
+        },
+        {
+          "monsterId": 1157,
+          "count": 1
+        },
+        {
+          "monsterId": 1158,
+          "count": 1
+        },
+        {
+          "monsterId": 1154,
+          "count": 1
+        },
+        {
+          "monsterId": 1155,
+          "count": 1
+        },
+        {
+          "monsterId": 1156,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 11939
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-fungus/"
+        },
+        {
+          "file": "emulators/GDCore/data/item/templates.xml",
+          "itemId": 10503
+        }
+      ],
+      "notes": [
+        "Final room resolved against client MA map metadata and dungeon room sequence; legacy encounter map IDs are not authoritative.",
+        "Ougah boss room 11941 is referenced by the dungeon teleport potion (item 10503, MK<11941,30). Map 11942 is the near-identical follow-up room with cell 209 opened."
+      ],
+      "combatMapId": "dungeon_11941"
+    },
+    {
+      "id": "room_8977",
+      "bossIds": [
+        780
+      ],
+      "name": "Repaire du Skeunk",
+      "mapId": 8977,
+      "members": [
+        {
+          "monsterId": 780,
+          "count": 1
+        },
+        {
+          "monsterId": 673,
+          "count": 1
+        },
+        {
+          "monsterId": 675,
+          "count": 1
+        },
+        {
+          "monsterId": 677,
+          "count": 1
+        },
+        {
+          "monsterId": 681,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 8977
+        }
+      ],
+      "combatMapId": "dungeon_8977"
+    },
+    {
+      "id": "room_1774",
+      "bossIds": [
+        180
+      ],
+      "name": "Château du Wa Wabbit",
+      "mapId": 1774,
+      "members": [
+        {
+          "monsterId": 180,
+          "count": 1
+        },
+        {
+          "monsterId": 181,
+          "count": 2
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 1774
+        }
+      ],
+      "combatMapId": "dungeon_1774"
+    },
+    {
+      "id": "room_8357",
+      "bossIds": [
+        605
+      ],
+      "name": "Donjon des Firefoux",
+      "mapId": 8357,
+      "members": [
+        {
+          "monsterId": 605,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 8357
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/donjon-des-firefoux/"
+        }
+      ],
+      "combatMapId": "dungeon_8357"
+    },
+    {
+      "id": "room_11133",
+      "bossIds": [
+        1045
+      ],
+      "name": "Canopée du Kimbo",
+      "mapId": 11133,
+      "members": [
+        {
+          "monsterId": 1045,
+          "count": 1
+        },
+        {
+          "monsterId": 1043,
+          "count": 1
+        },
+        {
+          "monsterId": 1047,
+          "count": 1
+        },
+        {
+          "monsterId": 1020,
+          "count": 2
+        },
+        {
+          "monsterId": 1044,
+          "count": 2
+        },
+        {
+          "monsterId": 1046,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 11133
+        },
+        {
+          "url": "https://xixou.io/guides/donjons/canopee-du-kimbo/"
+        }
+      ],
+      "combatMapId": "dungeon_11133"
+    },
+    {
+      "id": "room_9879",
+      "bossIds": [
+        827
+      ],
+      "name": "Salle du Minotot",
+      "mapId": 9879,
+      "members": [
+        {
+          "monsterId": 827,
+          "count": 1
+        },
+        {
+          "monsterId": 121,
+          "count": 1
+        },
+        {
+          "monsterId": 831,
+          "count": 1
+        },
+        {
+          "monsterId": 832,
+          "count": 1
+        },
+        {
+          "monsterId": 668,
+          "count": 2
+        },
+        {
+          "monsterId": 830,
+          "count": 2
+        }
+      ],
+      "sources": [
+        {
+          "file": "emulators/GDCore/data/monster/groups.xml",
+          "mapId": 9879
+        }
+      ],
+      "combatMapId": "dungeon_9879"
+    },
+    {
+      "id": "belvedere-d-ilyzaelle",
+      "bossIds": [
+        1170
+      ],
+      "name": "Belvédère d’Ilyzaelle",
+      "members": [
+        {
+          "monsterId": 1170,
+          "count": 1
+        },
+        {
+          "monsterId": 1204,
+          "count": 1
+        },
+        {
+          "monsterId": 1205,
+          "count": 1
+        },
+        {
+          "monsterId": 1207,
+          "count": 1
+        },
+        {
+          "monsterId": 1206,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://xixou.io/guides/donjons/belvedere-d-ilyzaelle/"
+        }
+      ],
+      "mapId": 11976,
+      "notes": [
+        "Final room resolved against client MA map metadata and dungeon room sequence; legacy encounter map IDs are not authoritative."
+      ],
+      "combatMapId": "dungeon_11976"
+    },
+    {
+      "id": "sanctuaire-de-qutan",
+      "bossIds": [
+        1195
+      ],
+      "name": "Sanctuaire de Qu’Tan",
+      "members": [
+        {
+          "monsterId": 1195,
+          "count": 1
+        },
+        {
+          "monsterId": 1210,
+          "count": 2
+        },
+        {
+          "monsterId": 1197,
+          "count": 2
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://xixou.io/guides/donjons/sanctuaire-de-qutan/"
+        }
+      ],
+      "mapId": 11975,
+      "notes": [
+        "Final room resolved against client MA map metadata and dungeon room sequence; legacy encounter map IDs are not authoritative."
+      ],
+      "combatMapId": "dungeon_11975"
+    },
+    {
+      "id": "maitre_corbac",
+      "bossIds": [
+        289
+      ],
+      "name": "Bibliothèque du Maître Corbac",
+      "members": [
+        {
+          "monsterId": 289,
+          "count": 1
+        },
+        {
+          "monsterId": 824,
+          "count": 1
+        },
+        {
+          "monsterId": 825,
+          "count": 1
+        },
+        {
+          "monsterId": 823,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.tofus.fr/donjons/mc"
+        }
+      ],
+      "mapId": 9594,
+      "combatMapId": "dungeon_9594"
+    },
+    {
+      "id": "kralamoure",
+      "bossIds": [
+        423
+      ],
+      "name": "Antre du Kralamoure Géant",
+      "members": [
+        {
+          "monsterId": 423,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://dofusretro.jeuxonline.info/article/14812/donjons-ile-otomai"
+        }
+      ],
+      "mapId": 11095,
+      "notes": [
+        "Final room resolved against client MA map metadata and dungeon room sequence; legacy encounter map IDs are not authoritative."
+      ],
+      "combatMapId": "dungeon_11095"
+    },
+    {
+      "id": "jorbak",
+      "bossIds": [
+        2772
+      ],
+      "name": "Antre de l’Infortuné",
+      "members": [
+        {
+          "monsterId": 2772,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://dofusretro.jeuxonline.info/article/14808/donjons-amakna"
+        }
+      ],
+      "mapId": 12233,
+      "combatMapId": "dungeon_12233"
+    },
+    {
+      "id": "krtek",
+      "bossIds": [
+        2793
+      ],
+      "name": "Mine de Krtek",
+      "members": [
+        {
+          "monsterId": 2793,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://dofusretro.jeuxonline.info/article/14808/donjons-amakna"
+        }
+      ],
+      "mapId": 12266,
+      "notes": [
+        "Final room resolved against client MA map metadata and dungeon room sequence; legacy encounter map IDs are not authoritative."
+      ],
+      "combatMapId": "dungeon_12266"
+    },
+    {
+      "id": "vampire_dupyr",
+      "bossIds": [
+        2786
+      ],
+      "name": "Crypte du Vampire Dupyr",
+      "members": [
+        {
+          "monsterId": 2786,
+          "count": 1
+        },
+        {
+          "monsterId": 2788,
+          "count": 7
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://dofus2.org/donjons/Crypte-du-Vampire-Dupyr-70.html"
+        }
+      ],
+      "mapId": 12263,
+      "notes": [
+        "Final room resolved against client MA map metadata and dungeon room sequence; legacy encounter map IDs are not authoritative."
+      ],
+      "combatMapId": "dungeon_12263"
+    },
+    {
+      "id": "grozilla_grasmera",
+      "bossIds": [
+        2800,
+        2801
+      ],
+      "name": "Grozilla et Grasmera",
+      "members": [
+        {
+          "monsterId": 2800,
+          "count": 1
+        },
+        {
+          "monsterId": 2801,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://dofusretro.jeuxonline.info/article/14806/monstres-liberte"
+        }
+      ],
+      "mapId": 9853,
+      "notes": [
+        "Final room resolved against client MA map metadata and dungeon room sequence; legacy encounter map IDs are not authoritative."
+      ],
+      "mapLabel": "Sanctuaire des Dragoeufs · ancien repaire",
+      "locationNote": "Grozilla et Grasmera sont des monstres itinérants. Ce combat utilise leur ancien repaire en [-5;32].",
+      "combatMapId": "dungeon_9853"
+    },
+    {
+      "id": "wabbit_gm",
+      "bossIds": [
+        182
+      ],
+      "name": "Laboratoire du Wabbit Gm",
+      "mapId": 1776,
+      "members": [
+        {
+          "monsterId": 182,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "monsters_fr_1381.swf",
+          "monsterId": 182,
+          "field": "spawn.m"
+        },
+        {
+          "url": "https://dofus.jeuxonline.info/article/2497/ile-wabbit"
+        }
+      ],
+      "locationNote": "Le Wabbit Gm vous attend dans son laboratoire. Ses Cawottes sont invoquées pendant le combat.",
+      "combatMapId": "dungeon_1776"
+    },
+    {
+      "id": "sanctuaire_pandala",
+      "bossIds": [
+        2997
+      ],
+      "name": "Sanctuaire de Pandala",
+      "mapId": 12307,
+      "members": [
+        {
+          "monsterId": 2997,
+          "count": 1
+        }
+      ],
+      "sources": [
+        {
+          "file": "monsters_fr_1381.swf",
+          "monsterId": 2997,
+          "field": "spawn.a"
+        },
+        {
+          "file": "maps_fr_1384.swf",
+          "mapId": 12307
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=o-2G_ySF_9E&t=390s",
+          "description": "Final room and initial single-boss fight; assistance and bowl appear through the boss spells."
+        }
+      ],
+      "notes": [
+        "The final room starts with Fantôme de Péki Garou alone. Its spirits, Fantôme de Péki Péki and Fantôme de Gamelle are summons, not starting companions.",
+        "Map 12307 is the installed final-room revision with publicly available key; its original placements and scenery are imported without a PvP fallback."
+      ],
+      "locationNote": "Salle finale du Sanctuaire de Pandala. Les fantômes appelés par le boss apparaissent pendant le combat.",
+      "combatMapId": "dungeon_12307"
+    }
+  ],
+  "unavailable": [
+    {
+      "bossId": 499,
+      "name": "Minotoboule de Nowel",
+      "reason": "Ancienne variante de Nowel, sans salle finale associée dans les données disponibles.",
+      "category": "legacy"
+    },
+    {
+      "bossId": 844,
+      "name": "Boufmouth",
+      "reason": "Ancien Boufmouth de Nowel, sans salle finale associée dans les données disponibles.",
+      "category": "legacy"
+    },
+    {
+      "bossId": 874,
+      "name": "Demi papa Nowel",
+      "reason": "Ancienne variante du Papa Nowel, sans salle finale associée dans les données disponibles.",
+      "category": "legacy"
+    },
+    {
+      "bossId": 2819,
+      "name": "Minotoboule de Nowel",
+      "reason": "Monstre de l’île de Nowel, sans salle finale fixe.",
+      "category": "roaming"
+    },
+    {
+      "bossId": 2891,
+      "name": "Péki Garou",
+      "reason": "Cette variante de Péki Garou appartient au Gladiatrool. Le boss du Sanctuaire de Pandala est le Fantôme de Péki Garou.",
+      "category": "gladiatrool",
+      "suggestedBossId": 2997
+    },
+    {
+      "bossId": 2928,
+      "name": "Boufmouth Royal",
+      "reason": "Boss du Gladiatrool, sans salle finale de donjon.",
+      "category": "gladiatrool"
+    },
+    {
+      "bossId": 3019,
+      "name": "Jack'O Lent et Terne",
+      "reason": "Monstre de l’événement Halouine, sans salle finale fixe.",
+      "category": "event"
+    }
+  ],
+  "source": {
+    "file": "scripts/dungeon_encounters.json",
+    "sha256": "d1a7655e3286f75c6a3d47123b4c4d1d7e394e512d3fa1a623b98b97787c75d5"
+  }
+}

@@ -1,7 +1,7 @@
 # 🏟️ Dofus Koliséum
 
 **Une arène tactique locale inspirée de Dofus Retro.** Préparez votre personnage,
-enregistrez vos stuffs et jouez contre un bot. Les outils de programmation,
+enregistrez vos stuffs et jouez contre un bot, un Poutch du Kanojedo ou un boss. Les outils de programmation,
 de simulation et de tournoi restent accessibles dans le menu **Outils**.
 
 ## Lancer le projet
@@ -21,16 +21,17 @@ L’accueil **Jouer** présente trois panneaux, accessibles dans n’importe que
 |---|---|
 | Personnage | 12 classes illustrées, niveau, apparence et répartition manuelle des caractéristiques |
 | Stuff et sorts | Équipements autour du personnage, catalogue, comparaison, caractéristiques détaillées et barre de sorts |
-| Combat | Aperçu du terrain, galerie des 21 cartes, classe et comportement de l’adversaire |
+| Combat | Aperçu du terrain, galerie des 22 cartes, classe et comportement de l’adversaire |
 
 Le bouton **Jouer** utilise la préparation courante. Les erreurs d’équipement
 bloquent le lancement et donnent accès au combattant concerné. L’équipement
 adverse se modifie depuis **Combat → Modifier son équipement**.
 
-**Mes stuffs** conserve les variantes nommées, y compris l’apparence, les jets,
-les caractéristiques et les sorts. Les brouillons restent propres à chaque classe
-et combattant. Le choix de classe, d’adversaire et de carte est également mémorisé
-dans ce navigateur. Les anciennes sauvegardes de stuffs restent compatibles.
+**Mes stuffs** conserve des équipements nommés utilisables par toutes les classes,
+avec leurs jets, exos et spécialisation de familier. Le chargement garde le niveau,
+les caractéristiques, l’apparence et les sorts du personnage actuel. Les brouillons
+restent propres à chaque classe et combattant. Le choix de classe, d’adversaire et
+de carte est également mémorisé. Les anciens stuffs restent disponibles.
 
 Les flèches du clavier permettent de changer d’onglet de préparation. La galerie
 des cartes conserve le focus et se ferme avec **Échap**. Sur téléphone, le bouton
@@ -41,17 +42,107 @@ yarn proof:setup     # parcours navigateur, sauvegardes, carte, combat, clavier 
 yarn proof:loadouts  # bibliothèque, variantes, annulations et équipement utilisé en combat
 ```
 
+## Combats contre les monstres : Kanojedo
+
+Dans **Jouer → Combat → Monstres · Kanojedo**, choisissez le niveau du Poutch
+puis lancez le combat. Le choix est conservé, ainsi que la carte et l’adversaire
+précédents lorsque vous revenez au mode Duel. Chaque combat oppose votre
+personnage à un Poutch, sur la carte intérieure du Kanojedo d’Amakna `[0;0]`.
+
+| Niveau du Poutch | PV |
+|---|---|
+| 1 | 100 |
+| 25 | 500 |
+| 50 | 1 500 |
+| 75 | 5 000 |
+| 100 | 10 000 |
+
+Les cinq grades ont 0 PA et 0 % de résistance élémentaire. Le client indique
+-1 PM de base, soit 0 PM utilisables. Les Poutchs passent leur tour sans se
+déplacer. Ils possèdent **Tuerie** (sort 411, grade 1, 3 PA) : un bonus donnant
+au moins 3 PA effectifs leur permet de tuer tous les autres combattants.
+Les sorts réservés aux invocations ne traitent pas les Poutchs comme des invocations.
+
+Les PV, PA, PM, résistances, initiative et liste de sorts sont importés depuis
+`monsters_fr_1381.swf`, et Tuerie depuis `spells_fr_1387.swf`.
+`scripts/import_client_monsters.py` conserve les empreintes des sources dans
+`src/engine/monsterData.json`. Le client ne fournit pas les caractéristiques
+élémentaires du Poutch ; elles ont des valeurs neutres de zéro, sans incidence
+sur Tuerie qui ne lance pas de jet de dégâts. L’exclusion du lanceur et son
+comportement sont reconstitués à partir de la description du sort.
+
+Le terrain 534 est vérifié case par case contre le fichier installé
+`534_0706131721X.swf`, déchiffré avec la clé de carte des archives GDCore.
+Les zones de départ proviennent de ces archives serveur ; elles ne sont pas
+contenues dans le client et ne constituent pas une observation du serveur actuel.
+Le décor, l’animation 1219 et le portrait proviennent des bibliothèques locales.
+
+```bash
+npm run import:monsters
+npm run test:monster-data
+npm run proof:kanojedo
+```
+
+## Boss du client Retro
+
+**Jouer → Combat → Boss de donjon** propose les groupes complets de **55 salles**, correspondant à 62 choix de boss. Chaque carte sélectionnable mène à un combat disponible. La recherche ignore les accents ; la préparation montre le nom du donjon, chaque espèce, son nombre, les niveaux du groupe, les résistances et sorts du boss, et le décor de la salle.
+
+Le choix du boss et de son grade est mémorisé. Le combat utilise automatiquement sa salle finale, indépendamment du terrain PvP enregistré. Les monstres prennent les cases du second camp du client ; le joueur choisit une case du premier camp. Aucun échange aléatoire des camps ni ajout de cases n’est effectué en donjon. Tous les adversaires jouent et la victoire attend la mort du groupe entier, même si le boss est déjà vaincu. Les invocations arrivent uniquement lorsque leur sort est lancé. La carte agrandie et les commandes restent visibles sans défilement en combat.
+
+Les salles à plusieurs boss conservent leur groupe : quatre Tynrils, Minotot avec Minotoror, Sphincter Cell avec Rat Noir et Rat Blanc. Grozilla et Grasmera étant itinérants, leur rencontre utilise l’ancien repaire du Sanctuaire des Dragoeufs en `[-5;32]`, indiqué dans la préparation.
+
+Le Sanctuaire de Pandala utilise le **Fantôme de Péki Garou** (`2997`) et sa salle `12307` ; le laboratoire du Wabbit Gm utilise la carte `1776`. Les invocations de ces boss ne sont pas ajoutées au groupe de départ. Le Péki Garou `2891` et le Boufmouth Royal `2928` appartiennent à la race **Gladiatrool** (`91`) du client : leur indicateur de boss ne suffit pas à en faire un donjon. Une ancienne sauvegarde sur le Péki du Gladiatrool explique la distinction et propose de sélectionner explicitement le Fantôme de Péki Garou, avec son propre grade, sans modifier le stuff ni la carte PvP.
+
+L’import examine les entrées `d` et la race `Boss` (`b = 1`) de la table `M`. Parmi les 69 fiches de boss ayant des grades utilisables, sept entrées du Gladiatrool, d’événements ou d’anciennes versions restent décrites dans « Hors des salles de donjon », avec leur raison, en dehors des cartes sélectionnables. Les 19 autres entrées sans caractéristiques complètes restent indisponibles. Aucun groupe de remplacement n’est inventé. Les limites sont conservées dans `src/engine/monsterData.json` et `src/engine/dungeonData.json`.
+
+| Donnée | Provenance / limite |
+| --- | --- |
+| Niveaux, PV, PA/PM, initiative, résistances, sorts | Tables du client installé |
+| Groupes de départ | Archives serveur et guides Retro, sources par salle dans `scripts/dungeon_encounters.json` |
+| Terrain, obstacles, décor | Fichier SWF installé de la salle finale, révision et empreinte conservées |
+| Cases de départ | `MA.m[mapId].p1` et `p2`, table du client `maps_fr` |
+| Lecture des cartes chiffrées | Clés publiques de ressources liées à leur révision, dans `scripts/dungeon_map_keys.json` |
+| Apparences et portraits | Bibliothèques Flash du client |
+| Caractéristiques élémentaires | Archives Ancestra si présentes ; zéro sinon, signalé dans la sélection |
+| Ciblage des effets | Masques communautaires disponibles ; lacunes identifiées |
+| Invocations | Import récursif ; client en priorité, complément Ancestra identifié |
+| IA et mécanismes particuliers | Simulateur : certains effets et scripts de boss restent partiels |
+
+Les [clés publiques de ressources](https://github.com/Daweyy/MapKeys-DR) servent uniquement à lire les fichiers de cartes. Deux terrains ont été vérifiés intégralement contre les cellules archivées de GDCore. L’audit décode de nouveau chaque SWF installé et compare chaque case, chaque zone de départ et la provenance. Les salles du Chêne Mou (`9126`), de l’Ougah (`11941`) et du Kralamoure (`11095`) corrigent les anciennes associations erronées. Le Kralamoure conserve sa case unique `509`, même si elle n’est pas accessible à pied depuis l’autre camp.
+
+Les effets non simulés sont signalés par sort. Une invocation dont les caractéristiques manquent est bloquée avant consommation des PA. Les invocations de monstres ne reçoivent pas les coefficients réservés aux invocations des personnages. Le stuff adverse et le bot sélectionnés en mode Duel ne modifient pas ces combats.
+
+```bash
+npm run import:dungeons
+npm run test:monster-data
+npm run test:maps
+npm run proof:dungeons
+```
+
+### Donjon automatique
+
+**Jouer → Combat → Donjon automatique** fait jouer le personnage préparé, avec son stuff et ses sorts, contre le groupe complet de la salle finale. Choisissez l’IA du personnage, le boss et son grade, puis **Simuler le donjon**. La simulation utilise le même arbitre que les combats IA contre IA, la carte du donjon et ses cases de départ ; le placement est automatique. Le mode, l’IA et la salle sont mémorisés.
+
+Le combat peut être regardé en lecture normale, mis en pause, parcouru action par action ou accéléré jusqu’à ×8. **Voir le résultat** affiche directement le bilan : monstres vaincus, tours et PV restants. La victoire exige que le groupe entier soit vaincu ; une limite de tours reste un résultat non concluant, même si le personnage mène aux points. **Retester** relance avec de nouveaux jets, en conservant la préparation.
+
+La simulation se calcule par étapes pour garder l’interface réactive et peut être annulée. Le résultat dépend de l’IA choisie et des mécanismes pris en charge par le simulateur. Le stuff enregistré n’est pas modifié.
+
+```bash
+npm run proof:auto-dungeon
+```
+
 ## Habillage du client Retro installé localement
 
 Le jeu utilise maintenant les bibliothèques Flash de votre installation locale
 pour les personnages, leurs animations, les portraits, les icônes et effets de
-sorts et les décors de dix-huit cartes décodées. Ruffle est installé avec le
+sorts et les décors de dix-neuf cartes décodées. Ruffle est installé avec le
 projet et servi localement : aucun CDN ni compte Ankama n’est requis pour jouer.
 
 ```bash
 yarn import:client   # importer puis préparer les images ; Python 3 et Chrome requis
 yarn import:spells   # catalogue complet et sorts jouables depuis la base locale
-yarn import:maps     # 18 cartes du jeu, décodage puis rendu des décors
+yarn import:monsters # Poutchs, niveaux et sort depuis les données du client
+yarn import:maps     # 19 cartes du jeu, décodage puis rendu des décors
 yarn start          # Jouer, Grimoire ; bibliothèque des personnages dans Outils
 ```
 
@@ -75,17 +166,17 @@ les émojis restent disponibles.
 | Bibliothèques de personnages | Clips vectoriels originaux : marche, course, sorts, impacts, mort, émotes |
 | Invocations | Apparence associée au `gfxID` du monstre dans la base existante |
 | Portraits et icônes | PNG transparents rendus depuis les symboles originaux |
-| 18 cartes originales + 3 arènes | Galerie avec aperçus, recherche et choix dans Jouer et Arène |
+| 19 cartes originales + 3 arènes | Galerie avec aperçus, recherche et choix dans Jouer et Arène |
 | Effets de sorts | Timelines originales, grade du sort, positions de départ et d’arrivée |
 | Grimoire | 2 141 définitions et 10 686 grades, contraintes, effets normaux/critiques et prévisualisation |
 | Audio | 905 enregistrements, 766 noms de sons reliés aux timelines de sorts/personnages, 48 musiques dans Personnages |
-| Équipements | 6 419 modèles, 145 panoplies, 2 386 icônes originales ; sélection avant les matchs Jouer et Arène |
+| Équipements | 6 490 modèles dont 71 montures, 145 panoplies ; familiers maximisés et sélection avant les matchs Jouer et Arène |
 | Autres fichiers | Bibliothèque locale conservée dans `raw/`, inventaire dans `inventory.json` |
 
 Il s’agit du moteur Koliséum avec les ressources du client : pas d’une copie
 complète du MMO. L’interface générale reste celle du projet. Les quêtes,
 l’économie, les serveurs et les règles manquantes ne sont pas fournis par cet
-import. Les autres cartes du client restent archivées ; les dix-huit cartes
+import. Les autres cartes du client restent archivées ; les dix-neuf cartes
 sélectionnées disposent des données décodées et des graphismes reliés au plateau.
 Les accessoires portés sur les personnages, certains paramètres d’effets et les
 couleurs personnalisées ne sont pas encore pilotés. La compatibilité d’un clip dépend de
@@ -97,9 +188,40 @@ contient le bouton des bruitages et le curseur de volume. Les sons suivent
 les images des animations originales, dans les combats et dans le Grimoire ;
 les onglets masqués ne jouent pas de bruitages. Les volumes individuels viennent
 des définitions audio du client. Les bibliothèques de projectiles démarrent
-leurs clips de vol et d’impact avec un trajet local de 300 ms. Les animations
-sans appel audio propre (par exemple Flèche Magique) restent silencieuses ;
-la réaction de la cible fournit séparément son bruitage en combat.
+leurs clips de vol et d’impact avec la trajectoire balistique du client. Certains
+projectiles n’ont pas d’appel audio propre ; le geste du lanceur (par exemple
+`cc_jet` pour Flèche Magique) et la réaction de la cible jouent leurs bruitages.
+
+Les noms de sons suivent aussi la normalisation de `SOMA.playSound` (espaces,
+tirets, `é`, `à`). Les critiques utilisent les appels de `GameActionsEx` :
+`BIP` pour un coup critique et `COUP_CRITIQUE` pour un échec critique, malgré
+le nom de cette dernière entrée. La marche joue un pas par case, synchronisé
+avec le déplacement accéléré. L’import inventorie les sons de chaque geste et
+effet : les animations silencieuses reçoivent un son de repli issu du client
+(invocation, soin, boost ou frappe). Ces replis sont des choix du simulateur,
+pas des associations officielles propres à chaque monstre. Les pas déjà joués
+par cette synchronisation ne sont pas doublés par les clips Flash.
+
+Les directions et gestes suivent le code du `loader.swf` installé : quadrants
+de lancer, miroir des vues arrière, conservation de la direction sur soi et
+repli sur la pose immobile de même direction. Le deuxième champ de `spriteInfos`
+choisit le geste ; le premier choisit le placement de l’effet. Les effets de
+type 10/12 suivent le lanceur, 11 la cible, 20/21 le faisceau et son impact,
+30/31 la trajectoire balistique, 40/41 la traînée, 50/51 leurs deux cellules.
+Le grade est transmis au clip original avant sa première image.
+
+Les actions des autres combattants ne coupent plus un geste en cours. Une nouvelle
+attaque du joueur peut repartir immédiatement, y compris avec le même sort ; les
+effets complets sont accélérés pour rester courts en combat. La marche finit dans
+la direction du dernier pas. Les correspondances sort/graphisme/geste viennent
+toujours des arguments du serveur SQL local, car le client les reçoit dans GA300.
+Leur provenance et le SHA-256 du loader sont consignés dans `animationSources`.
+
+```bash
+python3 scripts/import_retro_client.py --animations-only
+python3 -m unittest discover -s scripts -p 'test_spell_visuals.py'
+node scripts/proof_spell_animations.cjs
+```
 
 L’import audio lit `lang/swf/audio_*.swf`, ou sa copie dans le cache du jeu sur
 macOS, puis conserve uniquement cette ressource dans le dossier local ignoré
@@ -180,7 +302,7 @@ avec le serveur Retro actuel. Aucun journal provenant du serveur officiel n’a
 
 | Mécanique | Comportement du moteur |
 |-----------|----------------|
-| PA / PM | Jouer / Arène : 7 PA, 3 PM de base au niveau 100, plus équipement et panoplies ; anciens kits sans loadout : 8 PA, 4 PM |
+| PA / PM | 6 PA avant le niveau 100, puis 7 PA dès le niveau 100, plus équipement et panoplies, dans tous les modes ; 3 PM de base, 4 PM pour les anciens kits sans loadout |
 | Éléments | terre/neutre→force, feu→intelligence, eau→chance, air→agilité ; jet, caractéristiques, bonus fixes, résistances fixes puis %, armure |
 | Soins | `floor(jet × (100 + intelligence) / 100) + soins` ; les dommages fixes et % ne les augmentent pas |
 | Résistances / armures | Résistances % des joueurs plafonnées à 50 ; armures Féca limitées à leurs éléments ; caractéristique d’armure `max(carac élément, (intelligence + carac élément)/2)` |
@@ -213,15 +335,81 @@ communs), puis rendues depuis leurs SWF originaux.
 
 Avant le match, choisissez le niveau 1–200, les sorts communs appris et le grade
 de chaque sort. Faites glisser les raccourcis ou utilisez les flèches pour déplacer
-les sorts et l’arme. L’ordre, les grades et les choix sont sauvegardés par camp et
+les sorts ; l’arme reste en première case. L’ordre, les grades et les choix sont sauvegardés par camp et
 par classe et sont conservés dans le journal exporté. Les points de sorts
 supplémentaires sont supposés obtenus par parchemins : préparation libre,
-sans progression ni inventaire de parchemins. Les grades 6 communs sont accessibles
-au niveau 100 ; ceux des classes suivent les niveaux requis du client. Le réglage
-**Auto** choisit cependant le grade **5 avant le niveau 200**, puis **6 au niveau
-200**, pour tous les sorts disponibles, communs inclus. Les grades explicitement
-choisis restent prioritaires ; « Rétablir les niveaux par défaut » réactive ce
-réglage pour tous les sorts sans changer l’ordre ni les sorts communs appris.
+sans progression ni inventaire de parchemins. Les sorts communs utilisent toujours
+le **grade maximal accessible : 5 avant le niveau 100, puis 6 dès le niveau 100**.
+Les anciennes sauvegardes avec un grade commun inférieur suivent également cette
+règle. Pour les sorts de classe, **Auto** conserve le grade **5 avant le niveau
+200**, puis **6 au niveau 200** ; un grade explicitement choisi reste prioritaire
+et doit respecter les niveaux requis du client. « Rétablir les niveaux par
+défaut » réactive ce réglage sans changer l’ordre ni les sorts communs appris.
+
+En combat, les sorts se déplacent aussi par glisser-déposer, même
+pendant le tour adverse ou lorsqu’ils sont indisponibles. L’ordre est sauvegardé
+dans le même brouillon et repris à la préparation et aux prochains combats.
+Au clavier, `Alt + ← / →` déplace la case ayant le focus.
+Le bouton **Trier par type**, présent en combat et en préparation, regroupe les
+éléments, boosts/protections, soins, invocations, placements, retraits et
+utilitaires. L’ordre dans chaque groupe est conservé et l’arme reste première,
+y compris avec une ancienne sauvegarde. Les raccourcis suivent immédiatement
+le nouvel ordre. Les effets critiques, pièges et glyphes participent au classement.
+La palette des icônes vient des champs `i.bc[0]` du client
+(`SpellIconProperties.buildFromSpellText`, `spells_fr_1387.swf`) : terre brune,
+feu rouge, eau bleue, air vert, neutre gris brun, plusieurs éléments violets,
+boosts dorés, soins roses et invocations bordeaux. Les sorts communs utilisent
+également la couleur de leurs effets. La barre occupe toute la largeur, et
+affiche les noms lorsque la taille de la fenêtre le permet.
+
+L’écran de combat occupe la fenêtre sans défilement de page. Comme dans le client,
+le journal est visible à gauche sur ordinateur ; **Journal** permet de le replier
+pour donner plus de place à la carte. Sur petit écran, il est replié au départ.
+La carte conserve ses proportions et remplit l’espace disponible. Les sorts
+restent tous visibles dans une barre compacte sous la carte, avec leurs raccourcis
+et coûts en PA. Plus bas, les effets sont à gauche, le chrono et la fin de tour
+au centre, et les statistiques à droite. Le survol d’un combattant actualise les
+effets et la fiche, sans fenêtre flottante ; vos propres PV/PA/PM restent visibles
+au centre. Les onglets donnent accès aux effets, caractéristiques, bonus et sorts.
+Pendant votre tour, les compteurs indiquent les PA/PM restants. Dès la fin du tour,
+ils affichent les points prévus pour le suivant, avec les boosts et retraits encore
+actifs. Ils se mettent à jour pendant les tours adverses et après désenvoûtement ;
+la fiche du combattant survolé suit la même règle.
+`node scripts/proof_combat_layout.cjs` vérifie le placement, le combat et les
+redimensionnements avec tous les sorts communs équipés.
+Le mode tactique cadre les cases du terrain, indépendamment des dimensions des
+décors masqués, et garde la légende sous la carte. Le décor normal conserve toutes
+ses couches. `node scripts/proof_map_framing.cjs` contrôle ce cadrage dans la
+Caverne de Nowel, les placements et la visée après redimensionnement.
+Le journal affiche les variations de PV, les boosts et les retraits sous une
+forme courte (`−73 PV`, `+36 PV`, `+8 Dommages`, `−2 PM`). Les tours, lancers,
+déplacements et pertes de PV max par érosion ne l’encombrent plus. Les dégâts et
+soins restent additionnés par action et par cible ; **Détails des jets** permet
+de consulter les calculs, et l’export conserve tous les événements du combat.
+
+| Emplacements affichés | Raccourcis |
+| --- | --- |
+| 1 à 10 | `1` à `9`, puis `0` |
+| 11 à 20 | `Maj + 1…0` |
+| 21 à 30 | `Alt + 1…0` |
+| 31 à 40 | `Alt + Maj + 1…0` |
+
+Chaque case affiche sa touche. Les positions physiques de la rangée des chiffres
+(y compris les touches AZERTY sans Maj) et le pavé numérique sont reconnus.
+Un raccourci agit comme un clic : il sélectionne le sort pour viser, ou lance
+directement un sort sans cible à choisir. `Échap` annule la visée.
+Les raccourcis respectent les PA et relances, restent inactifs hors du tour du
+joueur et pendant une saisie, et ignorent la répétition d’une touche maintenue.
+Un **clic droit sur un sort** le lance immédiatement sur le joueur si sa case est
+une cible autorisée. Portée minimale, case libre, états, PA, relances et limites
+de lancer restent contrôlés. Un clic droit impossible ne dépense rien et conserve
+la visée en cours. `node scripts/proof_self_cast.cjs` vérifie ce geste dans Chrome.
+Après sélection d’un sort de zone, survoler une case ou un combattant affiche
+les cases concernées avant le lancer. Les sorts centrés sur le joueur montrent
+leur zone dès le survol de leur icône. L’aperçu reprend le grade, l’orientation
+et les zones du moteur, avec les mêmes limites de ciblage, en mode tactique ou
+avec les décors. `node scripts/proof_spell_areas.cjs` compare l’aperçu au lancer
+dans Chrome pour les douze classes, les glyphes, les pièges et les sorts communs.
 
 | Correction | Effet en combat |
 |---|---|
@@ -234,6 +422,11 @@ réglage pour tous les sorts sans changer l’ordre ni les sorts communs appris.
 | Invisibilité | Positions adverses masquées dans la vue du joueur/bot ; révélation par attaque/détection |
 | Dés et armes | Conservation de la distribution des dés ; maîtrise limitée au type d’arme correspondant |
 | Sorts communs | Flamiche, Libération, Cawotte, Foudroiement, Moon, Boomerang, invocations et huit maîtrises |
+
+Les scénarios de réaction aux coups, de cumul et de passage de tour sont détaillés
+dans [l’audit des effets spéciaux des douze classes](docs/combat-special-effects.md).
+Le journal indique les esquives de Dérobade, les dommages fixes et le coefficient
+de zone. Les armes peuvent viser une case vide : leur zone est montrée au survol.
 
 **Portée de la vérification :** les tests confrontent tous les champs numériques
 et payloads des 1 692 grades aux SWF originaux et exécutent chaque grade sur une
@@ -321,6 +514,12 @@ Personnages, invocations, effets, portées et fiches au survol restent disponibl
 Un second clic rétablit le décor. Le choix est conservé pour les prochains
 combats et partagé avec les replays ; il ne modifie pas l’état du combat.
 
+Les décors importés respectent les couches du client : fond, totalité des sols,
+puis herbes, bordures et ombres, puis objets triés avec les combattants.
+Les symboles conservent leur origine au centre des cases, leurs rotations,
+miroirs et reliefs. Les images incluent les débords du décor et portent une
+empreinte de leurs sources pour renouveler le cache après une réimportation.
+
 ### Journal et vérification
 
 « Détails des jets » affiche le tirage de branche et le calcul des dégâts.
@@ -380,12 +579,12 @@ validation. Le moteur refuse toute case hors de la zone attribuée et verrouille
 le placement dès que le combattant est prêt. Les combats automatiques tirent
 leurs positions dans les mêmes zones, de façon reproductible avec le seed.
 
-Les 18 SWF de cartes installées ne contiennent pas les départs : le serveur les
+Les 19 SWF de cartes installées ne contiennent pas les départs : le serveur les
 envoie par paquet `GP` (`SocketManager.java`, `GAME_SEND_FIGHT_PLACES_PACKET_TO_FIGHT`
 dans AncestraRemake ; décodage dans `CryptManager.java`). Le relevé versionné
 `scripts/map_placements.json` conserve les chaînes `places`, leur provenance,
-les dimensions et les motifs de rejet. Huit listes historiques de GDCore sont
-compatibles avec les terrains : **952, 1571, 1735, 2073, 7423, 8313, 9750 et 4**.
+les dimensions et les motifs de rejet. Neuf listes historiques de GDCore sont
+compatibles avec les terrains : **534, 952, 1571, 1735, 2073, 7423, 8313, 9750 et 4**.
 Elles sont importées intégralement, sans filtrage silencieux des cases. Cela ne
 certifie pas leur correspondance avec les placements officiels de Retro actuel.
 
@@ -458,18 +657,30 @@ par nom/panoplie, un filtre de bonus, une plage de niveaux et un tri.
 Sélectionner un objet affiche les écarts de caractéristiques après remplacement,
 y compris les bonus de panoplie perdus ou gagnés. Un double-clic l’équipe directement.
 
+Glissez un objet du catalogue ou de sa fiche vers un emplacement compatible pour
+l’équiper. Les destinations possibles sont mises en évidence pendant le déplacement.
+Les anneaux et les Dofus déjà équipés peuvent être déplacés ou échangés entre leurs
+cases : leurs jets aléatoires et leur forgemagie suivent l’objet. Un dépôt incompatible
+ou annulé ne modifie rien ; le brouillon est sauvegardé automatiquement.
+
 **Enregistrer ce stuff** crée une version nommée. **Enregistrer sous…** conserve
 une nouvelle variante ; **Mettre à jour** remplace uniquement la version active.
 **Mes stuffs** permet de rechercher, charger, renommer, dupliquer et supprimer
-les versions enregistrées (suppression annulable). Le chargement rapide affiche
-les stuffs de la classe choisie. Depuis la bibliothèque, charger un stuff d’une
-autre classe change la classe du combattant concerné.
+les versions enregistrées (suppression annulable). Le chargement rapide et la
+bibliothèque proposent tous les stuffs, quelle que soit la classe actuelle.
 
-Chaque stuff conserve le niveau, les 16 emplacements, les jets et leur graine,
-les points de caractéristiques, le profil JcJ, les sorts communs, leurs grades
-et l’ordre de la barre. Les modifications restent dans un brouillon automatique
-jusqu’à l’enregistrement explicite de la version. Les anciennes configurations
-par classe et camp sont conservées. La bibliothèque est locale à ce navigateur
+Chaque stuff conserve les 16 emplacements, les jets et leur graine, les origines
+des jets après déplacement, les forgemagies et la spécialisation du familier.
+Le chargement remplace uniquement l’équipement du combattant choisi ; son niveau,
+ses caractéristiques, son profil et sa barre de sorts sont conservés. Les PV, PA et
+PM des cartes sont calculés pour ce personnage. Les conditions des objets restent
+vérifiées avec sa classe et son niveau avant de lancer un combat.
+
+Les modifications d’équipement restent dans le brouillon jusqu’à l’enregistrement
+explicite du stuff. Les réglages propres au personnage restent sauvegardés par
+classe et camp. Les anciens stuffs sont lus sans effacement ni changement de nom ;
+leurs réglages de personnage ne remplacent plus ceux du personnage équipé.
+La bibliothèque est locale à ce navigateur
 et à cette adresse du jeu, commune à **Jouer** et **Arène** ; elle n’est pas synchronisée
 avec un compte Dofusbook.
 
@@ -521,7 +732,7 @@ automatiques 5/6, les choix manuels et la persistance sans double comptage.
 | Journal / replays | Configuration, jets et bonus permanents conservés dans l’état et la configuration du match |
 
 Sources locales : `items_fr_1393.swf`, `itemstats_fr_1392.swf`,
-`itemsets_fr_1387.swf`, `effects_fr_1391.swf`, `classes_fr_1391.swf`.
+`itemsets_fr_1387.swf`, `effects_fr_1391.swf`, `classes_fr_1391.swf`, `rides_fr_1391.swf`.
 Leurs versions et empreintes SHA-256 sont consignées dans
 `src/engine/equipmentData.json`. Le lecteur décode seulement les affectations
 linéaires de données ; il n’exécute pas de code client et ne lit aucun compte.
@@ -537,9 +748,9 @@ yarn build                  # actualiser le jeu servi depuis build/
 ```
 
 Limites explicites : les effets spéciaux inconnus (par exemple le Dofus
-Tacheté) et les conditions hors simulation bloquent le lancement. Les
-caractéristiques acquises par entraînement des familiers, les montures et
-l’usure entre combats ne sont pas simulées. Les exos, surjets et conversions
+Tacheté) et les conditions hors simulation bloquent le lancement. L’entraînement,
+l’élevage et l’usure entre combats ne sont pas simulés : les compagnons à bonus
+sont proposés directement au maximum. Les exos, surjets et conversions
 élémentaires disposent maintenant d'un atelier de simulation (voir ci-dessous).
 Les informations hors combat (pods, prospection, titres, liens
 au compte) restent visibles mais ne modifient pas les combats. Neuf objets
@@ -551,7 +762,7 @@ l’identique.
 
 ### Complétude des équipements
 
-`python3 scripts/audit_equipment_catalogue.py` contrôle les 6 419 objets et les
+`python3 scripts/audit_equipment_catalogue.py` contrôle les 6 490 objets et les
 145 panoplies. 140 panoplies ont toutes leurs pièces présentes ; aucune pièce
 présente ne référence une autre panoplie que celle qui la contient. Les 20
 références absentes appartiennent à Givranoplie, Rapine, Phong Huss, Hectaupe et
@@ -574,8 +785,52 @@ Barbok comporte également du contenu Dofus 2. Le client installé reste la sour
 retenue pour les objets Retro et les bonus ; par exemple le Bouftou complet y
 donne 5 dommages, contre 4 sur Barbok. Ces quatre contrôles de composition ne
 valident pas toutes les statistiques de tout le site. Les bonus entraînés des
-familiers restent indisponibles dans les templates installés.
+familiers sont importés depuis les plafonds `items.ef`, distincts des jets de
+départ présents dans `itemstats`.
 Le rapport détaillé est `public/dofus-local/equipment-audit.json`.
+
+### Familiers maximisés et montures
+
+L’emplacement **Familier / Monture** accepte un seul compagnon. Les 78 familiers
+entraînables ont leur bonus maximal, augmenté lorsque le client définit une potion
+d’amélioration (effet 939). Les 7 familiers à bonus fixes conservent leurs bonus
+simultanés ; les 87 familiers d’apparat n’obtiennent pas de caractéristiques inventées.
+Les restrictions des familiers réservés aux MJ restent appliquées.
+
+| Compagnon | Bonus maximal proposé |
+|---|---|
+| Nomoon | 90 prospection |
+| Dragoune Rose | 55 sagesse |
+| Péki | 440 vitalité |
+| Wabbit | 90 dans un élément, ou 30 sagesse |
+| Croum | 26 % de résistance dans l’élément choisi |
+| Dragodinde Prune et Emeraude | 200 vitalité, 1 PM et 1 PO |
+
+Pour les familiers entraînables à plusieurs caractéristiques, une spécialisation
+maximale est choisie dans la fiche puis sauvegardée dans `loadout.petBonuses`, par
+identifiant de familier. Les maxima ne sont pas cumulés entre eux. Les mélanges
+partiels de caractéristiques ne sont pas proposés. Les modes de jets moyen et
+aléatoire ne diminuent pas ces bonus. Les anciens stuffs bénéficient des maxima
+sans migration ; le niveau affiché pour un familier est son niveau requis.
+
+L’import lit les plafonds `items.I.u[id].ef` et les potions `itemstats` : l’effet
+939 encode la capacité supplémentaire et l’identifiant du familier. Les unités
+d’entraînement utilisées pour convertir cette capacité sont définies explicitement
+dans `PET_WEIGHTS` (elles ne sont pas les poids de forgemagie). Le budget naturel
+est le plus grand plafond pondéré, ce qui conserve les fractions de capacité
+du Wabbit. Aucun supplément n’est inventé pour une potion sans définition de jet.
+
+Les 71 montures à bonus sont identifiées dans `rides`, avec les bonus maximaux
+des certificats `items.ef` et leurs icônes originales. Elles sont niveau 100 et
+exigent un personnage niveau 60. Le champ `l` du certificat est une génération,
+pas le niveau requis. Les certificats génériques, sauvages et sans bonus sont
+exclus. Les bonus sont appliqués à la préparation, au combat et aux replays ;
+l’apparence montée sur le plateau n’est pas animée.
+
+Vérifications : `src/__tests__/companions.test.js`,
+`python3 -m unittest discover -s scripts -p test_equipment_import.py` et
+`node scripts/proof_companions.cjs` (sélection, spécialisation, sauvegarde,
+remplacement par une monture, combat, captures bureau/mobile).
 
 ## Recherche sur la forgemagie et observation du client
 
@@ -684,9 +939,11 @@ Les tests de protocole ne valident pas les probabilités du serveur officiel.
 Dans **Jouer → Stuff et sorts → Forgemagie**, sélectionner un équipement porté,
 puis cliquer sur une rune dans la grille. Les caractéristiques naturelles de
 l'objet (même tombées à zéro) et ses exotiques présents sont affichés automatiquement.
+Les runes **Ga Pa** et **Ga Pme** apparaissent toujours en tête de grille, même
+sans bonus PA ou PM naturel, pour accéder directement aux exos.
 Les colonnes **Simple / Ga**, **Pa** et **Ra** ne proposent que les variantes
 existantes. **Ajouter des runes** permet de chercher et cocher d'autres bonus
-(par exemple PA / Ga Pa ou PM / Ga Pme). Choisir une rune ne lance pas de fusion.
+(par exemple la portée ou les soins). Choisir une rune ne lance pas de fusion.
 Le bouton **Forgemager cet objet** dans la
 fiche d'équipement ouvre aussi l'atelier. Il est également disponible dans l'Arène.
 
@@ -877,10 +1134,15 @@ est à nouveau naturelle. Les détails des pertes par phase sont exportés dans
 `loss.steps`. `loss.checks` identifie aussi le type de ligne et le coefficient
 de fragilité employé. Les sauvegardes v1/v2 restent lisibles sans rerouler leurs jets.
 
-Les exotiques et surjets partagent un budget de 101. Une ligne dépassant son
-maximum naturel respecte aussi le plafond de ligne, diminué des autres excès.
+Les exotiques et surjets partagent un budget de 101, calculé uniquement sur
+les points au-delà des maxima naturels. Chaque ligne respecte aussi son
+propre plafond de puissance de 101, sans soustraire les excès des autres lignes.
 Un maximum naturel plus élevé reste restaurable. Exemples sans autre excès :
 33 sagesse, 404 vitalité, 101 force ; le deuxième PA d'un Gelano est impossible.
+Ainsi, un Blopanneau Griotte Royal à 38/35 vitalité peut recevoir un PA exo :
+le cumul vaut 0,75 + 100 = 100,75. À 39 vitalité, il atteint exactement 101 ;
+à 40, l'ajout du PA est bloqué avant la fusion. L'ordre des runes ne change
+pas la validité du jet obtenu.
 Le même plafond s'applique au chargement d'un stuff, pas seulement aux boutons.
 
 ### Contre-exemple observé : sagesse sur un Gelano vide

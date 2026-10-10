@@ -18,6 +18,7 @@ function stateFromView(view) {
     team: v.team,
     leader: v.leader,
     isSummon: v.isSummon,
+    isMonster: v.isMonster, monsterGrade: v.monsterGrade,
     isDouble: v.isDouble, staticSummon: v.staticSummon, summonGrade: v.summonGrade,
     hidden: v.hidden, carriedBy: v.carriedBy, carrying: v.carrying,
     monsterId: v.monsterId,

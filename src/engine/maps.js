@@ -1,5 +1,6 @@
 import { key } from './geometry';
 import { DOFUS_MAPS_RAW } from './dofusMaps';
+import DUNGEON_MAPS_RAW from './dungeonMaps.json';
 
 // Obstacle types:
 //   WALL / ROCK  block movement and line of sight
@@ -61,14 +62,16 @@ export const MAPS = {
 
 // Real Dofus 1.29 maps imported from the OblivionRetro emulator
 // (see scripts/import_dofus_maps.py).
-for (const raw of DOFUS_MAPS_RAW) {
+for (const raw of [...DOFUS_MAPS_RAW, ...DUNGEON_MAPS_RAW]) {
   MAPS[raw.id] = { ...make(
     raw.id, `🗺 ${raw.name}`, raw.description,
     raw.width, raw.height, raw.spawns,
     raw.obstacles.map((o) => [o.t, o.x, o.y]),
-  ), sourceId: raw.sourceId, area: raw.area, coordinate: raw.coordinate,
+  ), sourceId: raw.sourceId, area: raw.area, coordinate: raw.coordinate, kind: raw.kind,
   walkableCells: raw.walkableCells, spawnDistance: raw.spawnDistance,
   startingCells: raw.startingCells, placement: raw.placement };
 }
 
-export const MAP_IDS = Object.keys(MAPS);
+// The PvP selector keeps its own terrain choice. Dungeon maps are selected
+// exclusively by their encounter and never enter the random arena pool.
+export const MAP_IDS = Object.keys(MAPS).filter(id => MAPS[id].kind !== 'dungeon');

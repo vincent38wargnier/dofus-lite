@@ -4,7 +4,7 @@ import DATA from './equipmentData.json';
 import { createRng, hashSeed } from './rng';
 import { initiative } from './formulas';
 import { resolveSpellLoadout } from './classes';
-import { PARCHMENT_STAT } from './characteristicDefaults';
+import { PARCHMENT_STAT, baseActionPoints } from './characteristicDefaults';
 import { matchingForge, validateForgedItem, forgedEffects, convertedWeaponRows, replaceEquipment } from './forgedItems';
 export { PARCHMENT_STAT } from './characteristicDefaults';
 
@@ -33,7 +33,7 @@ export const EQUIPMENT_SLOTS = [
   { id: 'belt', name: 'Ceinture', types: [10], icon: '═' },
   { id: 'boots', name: 'Bottes', types: [11], icon: '♟' },
   { id: 'shield', name: 'Bouclier', types: [82], icon: '⬡' },
-  { id: 'pet', name: 'Familier', types: [18], icon: '♞' },
+  { id: 'pet', name: 'Familier / Monture', types: [18, 97], icon: '♞' },
   ...Array.from({ length: 6 }, (_, i) => ({ id: `dofus${i + 1}`, name: `Dofus ${i + 1}`, types: [23], icon: '◒' })),
 ];
 
@@ -53,7 +53,7 @@ export const SPELL_MODIFIERS = { 281: 'range', 282: 'adjustableRange', 283: 'dam
   286: 'cooldown', 287: 'crit', 288: 'lineOnly', 289: 'needsLos', 290: 'usesPerTurn', 291: 'usesPerTarget' };
 // Display these separately; they have no effect in a single offline fight.
 const METADATA = new Set([10, 130, 146, 148, 149, 239, 601, 705, 706, 723, 724, 740, 795, 800, 806, 807, 808, 811, 812,
-  983, 2146, 2149, 2151, 2179, 2184]);
+  940, 983, 2146, 2149, 2151, 2179, 2184]);
 const WEAPON_EFFECTS = new Set([84, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 108]);
 export function effectDefinition(id) {
   const stat = POSITIVE[id] || NEGATIVE[id];
@@ -77,10 +77,26 @@ export function rollEffect(row, mode = 'max', rng = createRng(1)) {
 }
 
 export function rolledEffects(item, loadout, slot = '') {
+  if (item.pet?.kind === 'trained') {
+    const choice = petBonus(item, loadout);
+    return [choice, ...item.effects.filter(([id]) => id === 940)].map(row => ({ row, value: row[1] }));
+  }
   const forged = matchingForge(item, loadout, slot);
   if (forged && !validateForgedItem(item, forged)) return forgedEffects(item, forged);
-  const rng = createRng(hashSeed(`${loadout.rollSeed || 1}:${slot}:${item.id}`));
+  const origin = loadout.slots?.[slot] === item.id ? loadout.rollOrigins?.[slot] || slot : slot;
+  const rng = createRng(hashSeed(`${loadout.rollSeed || 1}:${origin}:${item.id}`));
   return item.effects.map(row => ({ row, value: rollEffect(row, loadout.rollMode, rng) }));
+}
+
+// Persist only an allowed effect ID, never a user-provided amount. Every choice
+// consumes the pet's shared capacity; fixed multi-bonus pets keep all their lines.
+export function petBonus(item, loadout) {
+  const choices = item.pet?.choices || [];
+  return choices.find(([id]) => id === loadout?.petBonuses?.[item.id]) || choices[0];
+}
+
+export function availableItemEffects(item) {
+  return item.pet?.choices || item.effects;
 }
 
 // `amount` is the purchased increase, not the free parchment baseline.
@@ -226,6 +242,10 @@ export function resolveLoadout(classId, loadout) {
       const error = validateForgedItem(item, forged);
       if (error) errors.push(`${item.name} : ${error}`);
     }
+    const petChoice = loadout.petBonuses?.[item.id];
+    if (item.pet?.kind === 'trained' && petChoice != null && !item.pet.choices.some(([id]) => id === petChoice)) {
+      errors.push(`${item.name} : spécialisation de familier invalide.`);
+    }
     effects.forEach(({ row, value }) => add(row, value, item.name));
     resolvedItems.push({ slot: slot.id, id: item.id, name: item.name, effects });
     if (item.set) (setIds[item.set] || (setIds[item.set] = new Set())).add(item.id);
@@ -255,7 +275,7 @@ export function resolveLoadout(classId, loadout) {
     if (!condition.ok) errors.push(`${item.name} : ${condition.unsupported ? 'condition non simulée' : 'conditions non remplies'} (${item.condition}).`);
   }
   const hp = Math.max(1, 55 + 5 * (level - 1) + stats.vitalite);
-  const pa = Math.max(0, (level >= 100 ? 7 : 6) + (bonuses.pa || 0));
+  const pa = Math.max(0, baseActionPoints(level) + (bonuses.pa || 0));
   const pm = Math.max(0, 3 + (bonuses.pm || 0));
   const permanent = Object.fromEntries(Object.entries(bonuses).filter(([stat]) => !CHARACTERISTICS.includes(stat)
     && !['pa', 'pm'].includes(stat) && !stat.startsWith('res_') && !stat.startsWith('fixed_')));

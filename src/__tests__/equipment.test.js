@@ -24,7 +24,7 @@ function game(loadout, other = outfit(), classId = 'IOP') {
 }
 
 test('imports official versions, known item ranges, and all seven Bouftou pieces', () => {
-  expect(Object.keys(ITEMS)).toHaveLength(6419);
+  expect(Object.keys(ITEMS)).toHaveLength(6490);
   expect(Object.keys(ITEM_SETS)).toHaveLength(145);
   expect(EQUIPMENT.sources.items.version).toBe(1393);
   expect(EQUIPMENT.sources.items.sha256).toHaveLength(64);

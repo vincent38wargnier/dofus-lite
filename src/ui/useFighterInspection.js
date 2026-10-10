@@ -12,8 +12,9 @@ export function fighterUnderPointer(board, x, y) {
   return token ? { id: token.dataset.fighterId, anchor: token.querySelector('.figure') } : null;
 }
 
-export default function useFighterInspection(matchKey) {
+export default function useFighterInspection(matchKey, enabled = true, fighters = null) {
   const [inspection, setInspection] = useState(null);
+  const invalid = !!(inspection && fighters && !(fighters[inspection.id]?.hp > 0));
   const closeTimer = useRef(null);
   const dismissed = useRef(null);
   const dialogRef = useRef(null);
@@ -45,13 +46,20 @@ export default function useFighterInspection(matchKey) {
   const pointerLeave = () => { dismissed.current = null; closeSoon(); };
 
   useEffect(() => {
+    if (!invalid) return;
+    clearTimeout(closeTimer.current);
+    setInspection(null);
+    dismissed.current = null;
+  }, [invalid]);
+  useEffect(() => {
     setInspection(null); dismissed.current = null;
+    if (!enabled) return undefined;
     const leaveBoard = event => {
       if (!event.target.closest?.('.board')) dismissed.current = null;
     };
     document.addEventListener('pointermove', leaveBoard);
     return () => { clearTimeout(closeTimer.current); document.removeEventListener('pointermove', leaveBoard); };
-  }, [matchKey]);
+  }, [matchKey, enabled]);
   useEffect(() => {
     if (!inspection) return undefined;
     const escape = event => {
@@ -65,5 +73,5 @@ export default function useFighterInspection(matchKey) {
     document.addEventListener('keydown', escape);
     return () => document.removeEventListener('keydown', escape);
   }, [inspection]);
-  return { inspection, dialogRef, open, dismiss, keepOpen, closeSoon, pointerMove, pointerLeave };
+  return { inspection: invalid ? null : inspection, dialogRef, open, dismiss, keepOpen, closeSoon, pointerMove, pointerLeave };
 }

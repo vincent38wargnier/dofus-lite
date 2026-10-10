@@ -22,20 +22,21 @@ import {
   CLASSES, SUMMONS, getSummon, resolveSpellLoadout, FIGHTER_LEVEL, DEFAULT_BUFF_TURNS,
 } from './classes';
 import { MAPS } from './maps';
+import { getMonster } from './monsters';
 import {
   key, dist, samePos, isAligned, adjacentCells,
-  hasLineOfSight, spellZoneCells,
+  hasLineOfSight, spellZoneCells, areaDamagePercent,
 } from './geometry';
 import { bfs, reconstructPath } from './pathfinding';
 import {
   rollCritical, rollFailure, rollEscape, pointRemovalScores, rollPointRemoval,
   initiative, pushbackDamage, damageAmount, applyResistances, healAmount,
-  escapeChance, effectiveStat, armorReduction, statBuffTotal,
+  escapeChance, effectiveStat, armorReduction, statBuffTotal, turnResources,
 } from './formulas';
 import { resolveLoadout, applySpellModifiers } from './equipment';
 
 export const MAX_TURNS = 40;
-export const COMBAT_RULES_VERSION = 6;
+export const COMBAT_RULES_VERSION = 9;
 export { FIGHTER_LEVEL };
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
@@ -53,7 +54,8 @@ export function currentFighter(state) {
 // The enemy LEADER (bots' main target reference).
 export function enemyOf(state, fighterId) {
   const me = state.fighters[fighterId];
-  return fighterList(state).find((f) => f.team !== me.team && f.leader);
+  const opponents = fighterList(state).filter(f => f.team !== me.team && f.leader);
+  return opponents.find(f => f.hp > 0) || opponents[0];
 }
 
 export function enemiesOf(state, fighterId) {
@@ -69,6 +71,7 @@ export function alliesOf(state, fighterId) {
 // Spells of a fighter: class kit for leaders, monster kit for summons.
 export function spellsOf(fighter) {
   if (fighter.isDouble) return {};
+  if (fighter.isMonster) return getMonster(fighter.monsterId, fighter.monsterGrade)?.spells || {};
   if (fighter.isSummon) return getSummon(fighter.monsterId, fighter.summonGrade || 5)?.spells || {};
   const spells = fighter.loadout ? resolveSpellLoadout(fighter.classId, fighter.loadout).spells : CLASSES[fighter.classId].spells;
   if (!Object.keys(fighter.spellModifiers || {}).length && !fighter.weaponSpell) return spells;
@@ -76,6 +79,7 @@ export function spellsOf(fighter) {
   if (fighter.weaponSpell) result.weapon = fighter.weaponSpell;
   const order = fighter.loadout?.spells?.order?.length ? fighter.loadout.spells.order : [0];
   return Object.fromEntries(Object.entries(result).sort(([, a], [, b]) => {
+    if (!!a.isWeapon !== !!b.isWeapon) return a.isWeapon ? -1 : 1;
     const ai = order.indexOf(a.id), bi = order.indexOf(b.id);
     return (ai < 0 ? 10000 : ai) - (bi < 0 ? 10000 : bi);
   }));
@@ -150,7 +154,7 @@ function effectTargets(state, cells, caster, effect) {
 
 function addBuff(events, target, caster, spell, effect, stat, value, extra = {}) {
   const turns = effect.duration > 0 ? effect.duration : DEFAULT_BUFF_TURNS;
-  const buff = { kind: 'buff', stat, value, turnsLeft: turns + (target.id === caster.id ? 1 : 0), name: spell.name,
+  const buff = { kind: 'buff', stat, value, turnsLeft: Math.max(1, turns + (target.id === caster.id ? 1 : 0)), name: spell.name,
     source: caster.id, spellId: spell.id, effectId: effect.id, ...extra };
   target.effects.push(buff);
   if (stat === 'pa' || stat === 'pm') target[stat] = Math.max(0, target[stat] + value);
@@ -187,15 +191,49 @@ function saveRng(state, rng) {
 
 // ---------------------------------------------------------------- creation
 
+// Keep archived zones intact. Arenas with only one departure gain adjacent,
+// reachable cells when a team needs more room, never taking the opposing zone.
+function teamStartingCells(map, counts) {
+  const zones = clone(map.startingCells);
+  const reserved = new Set(zones.flat().map(p => key(p.x, p.y)));
+  zones.forEach((cells, i) => {
+    if (cells.length >= counts[i]) return;
+    if (map.placement.status === 'client') throw new Error('Ce groupe dépasse les cases de placement de la salle.');
+    if (!cells.length) throw new Error(`Missing starting cells: ${map.id}`);
+    const { costs } = bfs(cells[0], map.width * map.height, map.width, map.height,
+      (x, y) => !!map.obstacles[key(x, y)]?.blocksMove);
+    const candidates = [...costs].filter(([k]) => !reserved.has(k))
+      .sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]));
+    for (const [k] of candidates) {
+      if (cells.length >= counts[i]) break;
+      const [x, y] = k.split(',').map(Number);
+      cells.push({ x, y }); reserved.add(k);
+    }
+    if (cells.length < counts[i]) throw new Error('Pas assez de cases libres pour ce groupe.');
+  });
+  return zones;
+}
+
 export function createGame({ mapId = 'arene', seed = 1, fighters, placement = false }) {
   const map = MAPS[mapId];
   if (!map) throw new Error(`Unknown map: ${mapId}`);
-  if (!fighters || fighters.length !== 2) throw new Error('Need exactly 2 fighters');
+  if (!fighters || fighters.length < 2) throw new Error('Need at least 2 fighters');
+  const configs = fighters.map((cfg, i) => ({ ...cfg, id: cfg.id || `F${i + 1}`, team: cfg.team || cfg.id || `F${i + 1}` }));
+  const teams = [...new Set(configs.map(f => f.team))];
+  if (teams.length !== 2 || teams.some(team => configs.filter(f => f.team === team).length > 8)) {
+    throw new Error('Need two teams of at most 8 fighters');
+  }
+  if (new Set(configs.map(f => f.id)).size !== configs.length) throw new Error('Duplicate fighter id');
 
   const rng = createRng(seed);
   // A separate stream keeps placement choices from changing combat dice.
   const placementRng = createRng(hashSeed(`${seed}:placement`));
   const swapZones = map.placement.status === 'historical' && placementRng.next() < 0.5;
+  const zoneIndex = team => swapZones ? 1 - teams.indexOf(team) : teams.indexOf(team);
+  const counts = [0, 0];
+  configs.forEach(f => { counts[zoneIndex(f.team)]++; });
+  const zones = teamStartingCells(map, counts);
+  const occupiedStarts = new Set();
   const state = {
     rulesVersion: COMBAT_RULES_VERSION,
     seed,
@@ -203,7 +241,8 @@ export function createGame({ mapId = 'arene', seed = 1, fighters, placement = fa
     mapId,
     board: { width: map.width, height: map.height, obstacles: clone(map.obstacles) },
     phase: placement ? 'placement' : 'combat',
-    placement: { cells: {}, ready: {}, source: clone(map.placement) },
+    placement: { cells: {}, ready: {}, source: { ...clone(map.placement),
+      ...(zones.some((cells, i) => cells.length > map.startingCells[i].length) ? { expanded: true } : {}) } },
     turn: placement ? 0 : 1,
     maxTurns: MAX_TURNS,
     order: [],
@@ -216,27 +255,31 @@ export function createGame({ mapId = 'arene', seed = 1, fighters, placement = fa
     hazardCount: 0,
   };
 
-  fighters.forEach((cfg, i) => {
-    const cls = CLASSES[cfg.classId];
+  configs.forEach(cfg => {
+    const monster = cfg.monsterId != null ? getMonster(cfg.monsterId, cfg.monsterGrade) : null;
+    if (cfg.monsterId != null && !monster) throw new Error(`Unknown monster/grade: ${cfg.monsterId}/${cfg.monsterGrade}`);
+    const cls = monster || CLASSES[cfg.classId];
     if (!cls) throw new Error(`Unknown class: ${cfg.classId}`);
-    const id = cfg.id || `F${i + 1}`;
-    const cells = map.startingCells[swapZones ? 1 - i : i];
+    const id = cfg.id;
+    const cells = zones[zoneIndex(cfg.team)];
     if (!cells?.length) throw new Error(`Missing starting cells: ${mapId}`);
     state.placement.cells[id] = clone(cells);
     state.placement.ready[id] = !placement;
-    const cell = placementRng.pick(cells);
+    const cell = placementRng.pick(cells.filter(p => !occupiedStarts.has(key(p.x, p.y))));
+    occupiedStarts.add(key(cell.x, cell.y));
     const pos = { x: cell.x, y: cell.y };
-    const equipment = cfg.loadout ? resolveLoadout(cfg.classId, cfg.loadout) : null;
+    const equipment = !monster && cfg.loadout ? resolveLoadout(cfg.classId, cfg.loadout) : null;
     if (equipment && !equipment.valid) throw new Error(`${cfg.name || cls.name} : ${equipment.errors.join(' ')}`);
     state.fighters[id] = {
       id,
-      team: id,
+      team: cfg.team,
       leader: true,
       isSummon: false,
+      isMonster: !!monster,
       name: cfg.name || cls.name,
       botName: cfg.botName || null,
-      classId: cls.id,
-      level: FIGHTER_LEVEL,
+      classId: monster ? null : cls.id,
+      level: monster ? monster.level : FIGHTER_LEVEL,
       pos: { ...pos },
       startPos: { ...pos },
       hp: cls.baseHp,
@@ -244,8 +287,8 @@ export function createGame({ mapId = 'arene', seed = 1, fighters, placement = fa
       baseMaxHp: cls.baseHp,
       basePa: cls.basePa,
       basePm: cls.basePm,
-      pa: cls.basePa,
-      pm: cls.basePm,
+      pa: Math.max(0, cls.basePa),
+      pm: Math.max(0, cls.basePm),
       stats: { ...cls.stats },
       resistances: { ...cls.resistances },
       resistancesFixed: { ...cls.resistancesFixed },
@@ -254,6 +297,10 @@ export function createGame({ mapId = 'arene', seed = 1, fighters, placement = fa
       usedThisTurn: {},
       usedOnTarget: {},
       initiative: 0,
+      ...(monster ? {
+        monsterId: monster.monsterId, monsterGrade: monster.grade, emoji: monster.emoji,
+        permanent: { dodgePa: monster.dodgePa, dodgePm: monster.dodgePm }, maxSummons: monster.maxSummons,
+      } : {}),
       ...(equipment ? {
         level: equipment.level,
         hp: equipment.hp, maxHp: equipment.hp, baseMaxHp: equipment.hp,
@@ -270,15 +317,21 @@ export function createGame({ mapId = 'arene', seed = 1, fighters, placement = fa
   const ids = Object.keys(state.fighters);
   for (const id of ids) {
     const f = state.fighters[id];
-    f.initiative = initiative(f.stats, f.hp, f.maxHp, statBuff(f, 'initiative'));
+    f.initiative = f.isMonster ? getMonster(f.monsterId, f.monsterGrade).initiative
+      : initiative(f.stats, f.hp, f.maxHp, statBuff(f, 'initiative'));
   }
   const [a, b] = ids;
-  if (state.fighters[a].initiative === state.fighters[b].initiative) {
+  if (ids.length === 2 && state.fighters[a].initiative === state.fighters[b].initiative) {
     state.order = rng.next() < 0.5 ? [a, b] : [b, a];
   } else {
-    state.order = [...ids].sort(
-      (x, y) => state.fighters[y].initiative - state.fighters[x].initiative,
-    );
+    const ties = Object.fromEntries(ids.map(id => [id, placementRng.next()]));
+    const ranked = [...ids].sort((x, y) => state.fighters[y].initiative - state.fighters[x].initiative || ties[x] - ties[y]);
+    const queues = teams.map(team => ranked.filter(id => state.fighters[id].team === team));
+    let side = teams.indexOf(state.fighters[ranked[0]].team);
+    while (queues.some(queue => queue.length)) {
+      if (queues[side].length) state.order.push(queues[side].shift());
+      side = 1 - side;
+    }
   }
   saveRng(state, rng);
 
@@ -358,12 +411,11 @@ function startTurn(state, events) {
   f.apSpent = 0;
 
   // PA/PM du tour = base + effets actifs (retraits compris)
-  f.pa = Math.max(0, f.basePa + statBuff(f, 'pa'));
-  f.pm = Math.max(0, f.basePm + statBuff(f, 'pm'));
+  Object.assign(f, turnResources(f));
 
-  // Les châtiments repartent de zéro (leur plafond est PAR TOUR).
-  for (const e of f.effects) {
-    if (e.kind === 'punishment') e.gained = 0;
+  // The cap is per acting fighter's turn, including summons, not per round.
+  for (const fighter of fighterList(state)) for (const effect of fighter.effects) {
+    if (effect.kind === 'punishment') effect.gained = 0;
   }
 
   events.push({ t: 'turn_start', fighter: f.id, turn: state.turn, pa: f.pa, pm: f.pm });
@@ -377,12 +429,6 @@ function startTurn(state, events) {
         f.pos, { caster: f, origin: f.pos, visualSpellId: effect.spellId });
     }
   }
-  if (f.effects.some(e => e.kind === 'skipTurn') && !state.over) {
-    events.push({ t: 'turn_skipped', fighter: f.id });
-    endTurn(state, events);
-    return;
-  }
-
   // Les dégâts périodiques (poisons) tombent au début du tour de la victime.
   for (const e of f.effects) {
     if (e.kind === 'poison' && f.hp > 0 && !state.over) {
@@ -403,7 +449,11 @@ function startTurn(state, events) {
       triggerHazard(state, events, hazard, f);
     }
   }
-  if (f.hp <= 0 && !state.over) endTurn(state, events);
+  // Losing the ability to act does not cancel start-of-turn effects.
+  if (f.effects.some(e => e.kind === 'skipTurn') && !state.over && f.hp > 0) {
+    events.push({ t: 'turn_skipped', fighter: f.id });
+    endTurn(state, events);
+  } else if (f.hp <= 0 && !state.over) endTurn(state, events);
 }
 
 function endTurn(state, events) {
@@ -442,14 +492,17 @@ function endTurn(state, events) {
   if (wrapped) {
     state.turn += 1;
     if (state.turn > state.maxTurns) {
-      // Limite de tours: le % de vie des LEADERS sur les PV max d'ORIGINE,
-      // l'érosion punit donc la tortue qui soigne sans conclure.
-      const [a, b] = fighterList(state).filter((x) => x.leader);
-      const ra = a.hp / a.baseMaxHp;
-      const rb = b.hp / b.baseMaxHp;
+      // Compare each team's remaining original HP; a dead boss does not
+      // erase the rest of its group, and summons do not inflate the score.
+      const teams = [...new Set(fighterList(state).filter(f => f.leader).map(f => f.team))];
+      const scores = teams.map(team => {
+        const members = fighterList(state).filter(f => f.leader && f.team === team);
+        return members.reduce((hp, f) => hp + f.hp, 0) / members.reduce((hp, f) => hp + f.baseMaxHp, 0);
+      });
       state.over = true;
       state.endReason = 'turn_limit';
-      state.winner = ra === rb ? null : (ra > rb ? a.id : b.id);
+      state.winner = scores[0] === scores[1] ? null
+        : fighterList(state).find(f => f.leader && f.team === teams[scores[0] > scores[1] ? 0 : 1] && f.hp > 0).id;
       events.push({ t: 'match_end', winner: state.winner, reason: 'turn_limit' });
       return;
     }
@@ -492,7 +545,8 @@ function applyDamage(state, events, sourceId, targetId, amount, label, opts = {}
   if (total > 0 && target.hp > 0 && opts.erosion !== false) {
     for (const e of target.effects) {
       if (e.kind !== 'punishment') continue;
-      const gain = Math.min(Math.floor(total / 2), Math.max(0, e.maxPerTurn - (e.gained || 0)));
+      const attacker = state.fighters[sourceId];
+      const gain = Math.min(Math.floor(total / (attacker?.isSummon || attacker?.isMonster ? 1 : 2)), Math.max(0, e.maxPerTurn - (e.gained || 0)));
       if (gain <= 0) continue;
       e.gained = (e.gained || 0) + gain;
       if (e.statEffectId === 108) {
@@ -500,15 +554,28 @@ function applyDamage(state, events, sourceId, targetId, amount, label, opts = {}
       } else {
         const stat = PUNISHMENT_STATS[e.statEffectId];
         if (!stat) continue;
-        target.effects.push({ kind: 'buff', stat, value: gain, turnsLeft: Math.max(1, e.turnsLeft), name: e.name,
+        const turns = e.bonusDuration || 5;
+        target.effects.push({ kind: 'buff', stat, value: gain, turnsLeft: turns + (target.id === currentFighter(state).id ? 1 : 0), name: e.name,
           source: e.source, spellId: e.spellId, effectId: e.statEffectId });
-        events.push({ t: 'effect_add', fighter: target.id, kind: 'buff', stat, value: gain, turns: e.turnsLeft, name: e.name,
+        events.push({ t: 'effect_add', fighter: target.id, kind: 'buff', stat, value: gain, turns, name: e.name,
           source: e.source, spellId: e.spellId });
       }
     }
   }
 
-  if (target.hp <= 0) {
+  // Furie's one-turn drawback reacts to each direct damage line. It is not
+  // a poison tick, does not scale with +damage, and cannot trigger itself.
+  if (total > 0 && target.hp > 0 && opts.direct) {
+    for (const effect of target.effects.filter(e => e.kind === 'damageOnHit')) {
+      const raw = Math.floor(target.maxHp * effect.value / 100);
+      const recoil = applyResistances(raw, 'neutre', target, target);
+      applyDamage(state, events, target.id, target.id, recoil, `${effect.name} (coup reçu)`,
+        { erosion: false, element: 'neutre', reactive: true });
+      if (target.hp <= 0) break;
+    }
+  }
+
+  if (target.hp <= 0 && !target.deathOrder) {
     target.deathOrder = (state.deathCount = (state.deathCount || 0) + 1);
     if (target.carrying) {
       const carried = state.fighters[target.carrying];
@@ -521,13 +588,15 @@ function applyDamage(state, events, sourceId, targetId, amount, label, opts = {}
       target.carriedBy = null;
     }
     events.push({ t: 'death', fighter: targetId });
-    for (const revived of fighterList(state)) if (revived.revivedBy === targetId && revived.hp > 0) {
-      applyDamage(state, events, targetId, revived.id, revived.hp, 'Fin de Laisse Spirituelle', { erosion: false });
+    for (const dependent of fighterList(state)) if (dependent.hp > 0
+      && (dependent.revivedBy === targetId || dependent.ownerId === targetId)) {
+      applyDamage(state, events, targetId, dependent.id, dependent.hp,
+        dependent.ownerId === targetId ? 'Mort de l’invocateur' : 'Fin de Laisse Spirituelle', { erosion: false });
     }
-    if (target.leader) {
+    if (!state.over && !fighterList(state).some(f => f.leader && f.team === target.team && f.hp > 0)) {
       state.over = true;
       state.endReason = 'ko';
-      state.winner = enemyOf(state, targetId).id;
+      state.winner = fighterList(state).find(f => f.leader && f.team !== target.team && f.hp > 0)?.id || null;
       events.push({ t: 'match_end', winner: state.winner, reason: 'ko' });
     }
   }
@@ -541,6 +610,27 @@ function applyHeal(state, events, targetId, amount, label) {
   target.hp += healed;
   events.push({ t: 'heal', target: targetId, amount: healed, hpLeft: target.hp, label });
   return healed;
+}
+
+function damageRecipient(state, events, rng, caster, victim, spell, trigger, dodged) {
+  if (dodged.has(victim.id)) return null;
+  const sacrifice = victim.effects.find(e => e.kind === 'sacrifice' && e.source !== victim.id && state.fighters[e.source]?.hp > 0);
+  if (sacrifice) {
+    const protector = state.fighters[sacrifice.source];
+    const pos = { ...victim.pos }; victim.pos = { ...protector.pos }; protector.pos = pos;
+    events.push({ t: 'swap', a: victim.id, b: protector.id, aTo: { ...victim.pos }, bTo: { ...protector.pos }, name: 'Sacrifice' });
+    victim = protector;
+  }
+  if (dodged.has(victim.id)) return null;
+  const dodge = victim.effects.find(e => e.kind === 'dodgeMelee');
+  if (!trigger && dodge && dist(caster.pos, victim.pos) === 1 && !hasState(victim, 6) && !victim.carriedBy) {
+    dodged.add(victim.id);
+    events.push({ t: 'damage_dodged', fighter: victim.id, source: caster.id, spellId: spell.id, name: dodge.name || 'Dérobade' });
+    // Even against a wall the attack is avoided; only the collision remains.
+    applyPush(state, events, rng, caster.pos, victim.id, dodge.cells || 1, dodge.name || 'Dérobade');
+    return null;
+  }
+  return victim;
 }
 
 function applyPush(state, events, rng, casterPos, targetId, cells, label, options = {}) {
@@ -626,6 +716,7 @@ function validateCast(state, action) {
   const f = currentFighter(state);
   const spell = spellOf(f, action.spell);
   if (!spell) return { ok: false, reason: `Sort inconnu: ${action.spell}` };
+  if (spell.missingSummons?.length) return { ok: false, reason: 'Invocation indisponible : caractéristiques manquantes.' };
   if (spell.isWeapon && (hasState(f, 42) || f.carriedBy)) return { ok: false, reason: 'Arme inutilisable dans cet état' };
   if ((spell.requiredStates || []).some(id => !hasState(f, id))) return { ok: false, reason: 'État requis absent' };
   if ((spell.forbiddenStates || []).some(id => hasState(f, id))) return { ok: false, reason: 'Impossible dans cet état' };
@@ -683,7 +774,8 @@ function validateCast(state, action) {
   if (spell.id === 438 && occupant?.team !== f.team) return { ok: false, reason: 'Transposition nécessite un allié' };
   if (spell.id === 445 && occupant?.team === f.team) return { ok: false, reason: 'Coopération nécessite un ennemi' };
   if (spell.id === 450 && (!occupant || occupant.id === f.id || occupant.team !== f.team)) return { ok: false, reason: 'Folie sanguinaire nécessite un autre allié' };
-  if (spell.effects.some(e => ['summon', 'staticSummon'].includes(e.kind) && !getSummon(e.p1, e.p2))) {
+  if (spell.effects.some(e => ['summon', 'staticSummon'].includes(e.kind)
+    && !(f.isMonster ? getMonster(e.p1, e.p2) : getSummon(e.p1, e.p2)))) {
     return { ok: false, reason: 'Données de cette invocation indisponibles' };
   }
   const obs = state.board.obstacles[key(target.x, target.y)];
@@ -726,21 +818,21 @@ export function applyAction(inputState, action) {
     return { state: inputState, events, ok: false };
   }
 
+  // Presentation and exported logs need a stable boundary for a whole action,
+  // including its damage rows, life steals and triggered reactions.
+  state.actionSequence = (state.actionSequence || 0) + 1;
   if (action.type === 'PASS') {
     endTurn(state, events);
-    return { state, events, ok: true };
-  }
-  if (action.type === 'MOVE') {
+  } else if (action.type === 'MOVE') {
     doMove(state, events, action, check);
     if (!state.over && currentFighter(state).hp <= 0) endTurn(state, events);
-    return { state, events, ok: true };
-  }
-  if (action.type === 'CAST') {
+  } else if (action.type === 'CAST') {
     doCast(state, events, check.spell, check.target);
     if (!state.over && currentFighter(state).hp <= 0) endTurn(state, events);
-    return { state, events, ok: true };
+  } else {
+    return { state: inputState, events, ok: false };
   }
-  return { state: inputState, events, ok: false };
+  return { state, events: events.map(e => ({ ...e, actionId: state.actionSequence })), ok: true };
 }
 
 function doMove(state, events, action, check) {
@@ -801,7 +893,7 @@ function triggerHazard(state, events, hazard, victim, rng) {
     element: hazard.trigger.effects.find(e => e.element)?.element },
   hazard.kind === 'trap' ? hazard.center : victim.pos, {
     caster, rng, origin: hazard.center, visualSpellId: hazard.spellId, trap: hazard.kind === 'trap',
-    cells: hazard.kind === 'trap' ? hazard.cells : null,
+    cells: hazard.kind === 'trap' ? hazard.cells : null, areaZone: hazard.zone,
   });
 }
 
@@ -852,7 +944,7 @@ function doCast(state, events, spell, target, trigger = null) {
   );
 
   const rows = crit && spell.critEffects.length > 0 ? spell.critEffects : spell.effects;
-  if (!trigger && (spell.isWeapon || rows.some(e => ['damage', 'lifeSteal', 'fixedLifeSteal'].includes(e.kind)))) revealFighter(events, f);
+  if (!trigger && (spell.isWeapon || rows.some(e => ['damage', 'lifeSteal', 'fixedLifeSteal', 'punitionDamage'].includes(e.kind)))) revealFighter(events, f);
   const casterPos = { ...(trigger?.origin || f.pos) };
 
   // Cellules de zone (pour l'affichage) : union des zones non ponctuelles.
@@ -882,6 +974,7 @@ function doCast(state, events, spell, target, trigger = null) {
   // One shared draw partitions the probability intervals (e.g. Bluff: water OR air).
   const chanceRoll = rows.some(e => e.chance > 0) ? rng.int(0, 99) : null;
   let chanceCursor = 0;
+  const dodged = new Set();
 
   for (const effect of rows) {
     if (state.over) break;
@@ -894,8 +987,9 @@ function doCast(state, events, spell, target, trigger = null) {
       if (!selected) continue;
     }
     const cells = trigger?.cells || spellZoneCells(effect.zone, target, casterPos);
-    let targets = effectTargets(state, cells, f, effect);
-    if (!trigger && !spell.isWeapon && ['damage', 'lifeSteal', 'fixedLifeSteal', 'removePa', 'stealPa'].includes(effect.kind)) {
+    let targets = effectTargets(state, cells, f, effect).sort((a, b) => dist(a.pos, target) - dist(b.pos, target));
+    const targetPositions = targets.map(victim => ({ ...victim.pos }));
+    if (!trigger && !spell.isWeapon && ['damage', 'lifeSteal', 'fixedLifeSteal', 'punitionDamage', 'removePa', 'stealPa'].includes(effect.kind)) {
       targets = targets.map(victim => {
         if (victim.id !== f.id && victim.effects.some(e => e.kind === 'spellReflection' && e.value >= spell.grade && (e.chance >= 100 || rng.int(0, 99) < e.chance))) {
           events.push({ t: 'spell_reflected', fighter: victim.id, target: f.id, spellId: spell.id });
@@ -924,6 +1018,7 @@ function doCast(state, events, spell, target, trigger = null) {
       case 'minRolls':
       case 'maxRolls':
       case 'apPoison':
+      case 'damageOnHit':
       case 'delayedSpell': {
         for (const patient of targets) {
           const turns = Math.max(1, effect.duration || effect.p3 || 1);
@@ -931,13 +1026,14 @@ function doCast(state, events, spell, target, trigger = null) {
             turnsLeft: turns + (patient.id === f.id ? 1 : 0),
             value: effect.kind === 'spellReflection' ? effect.p2 : effect.kind === 'weaponMastery' ? effect.p2 : Math.max(0, effect.p1 || 0) };
           if (effect.kind === 'weaponMastery') entry.weaponType = effect.p1;
+          if (effect.kind === 'dodgeMelee') entry.cells = Math.max(1, effect.p2 || 1);
           if (effect.kind === 'invisibility') patient.lastVisiblePos = { ...patient.pos };
           if (effect.kind === 'spellReflection') entry.chance = effect.p3 > 0 ? effect.p3 : 100;
           if (effect.kind === 'ecaflipLuck') Object.assign(entry, { chance: 100 - effect.p3, damageFactor: effect.p1, healFactor: effect.p2 });
           if (effect.kind === 'apPoison') Object.assign(entry, { step: effect.p1,
             value: Math.floor(Math.max(0, effect.p2) * (100 + effectiveStat(f, 'intelligence')) / 100) });
           if (effect.kind === 'delayedSpell') Object.assign(entry, { trigger: effect.trigger, delay: Math.max(1, effect.p3) });
-          patient.effects = patient.effects.filter(e => !(e.kind === entry.kind && e.spellId === spell.id && e.source === f.id));
+          if (effect.kind !== 'damageOnHit') patient.effects = patient.effects.filter(e => !(e.kind === entry.kind && e.spellId === spell.id && e.source === f.id));
           patient.effects.push(entry);
           events.push({ t: 'effect_add', fighter: patient.id, kind: entry.kind, value: entry.value, turns, name: spell.name });
         }
@@ -1011,6 +1107,7 @@ function doCast(state, events, spell, target, trigger = null) {
           .sort((a, b) => b.deathOrder - a.deathOrder)[0];
         if (!patient) break;
         patient.hp = Math.max(1, Math.floor(patient.maxHp * effect.p1 / 100));
+        delete patient.deathOrder;
         patient.pos = { ...target }; patient.effects = []; patient.revivedBy = f.id;
         if (!state.order.includes(patient.id)) state.order.splice(state.currentIndex + 1, 0, patient.id);
         events.push({ t: 'summon_add', fighter: f.id, id: patient.id, name: patient.name, emoji: patient.emoji, pos: patient.pos, hp: patient.hp });
@@ -1021,7 +1118,7 @@ function doCast(state, events, spell, target, trigger = null) {
         if (!effect.trigger) break;
         const hazard = { id: `H${++state.hazardCount}`, kind: effect.kind,
           owner: f.id, team: f.team, spellId: spell.id, name: spell.name,
-          center: { ...target }, cells, trigger: effect.trigger, turnsLeft: effect.duration || null };
+          center: { ...target }, zone: effect.zone, cells, trigger: effect.trigger, turnsLeft: effect.duration || null };
         state.hazards = [...(state.hazards || []), hazard];
         events.push({ t: 'hazard_add', id: hazard.id, kind: hazard.kind, fighter: f.id,
           name: spell.name, center: hazard.center, turns: hazard.turnsLeft });
@@ -1029,32 +1126,29 @@ function doCast(state, events, spell, target, trigger = null) {
       }
       case 'damage':
       case 'lifeSteal':
+      case 'punitionDamage':
       case 'fixedLifeSteal': {
-        for (let victim of targets) {
-          const sacrificed = victim.effects.find(e => e.kind === 'sacrifice' && state.fighters[e.source]?.hp > 0 && e.source !== victim.id);
-          if (sacrificed) {
-            const protector = state.fighters[sacrificed.source];
-            const pos = { ...victim.pos }; victim.pos = { ...protector.pos }; protector.pos = pos;
-            events.push({ t: 'swap', a: victim.id, b: protector.id, aTo: { ...victim.pos }, bTo: { ...protector.pos }, name: 'Sacrifice' });
-            victim = protector;
-          }
-          if (!trigger && dist(f.pos, victim.pos) === 1 && victim.effects.some(e => e.kind === 'dodgeMelee')) {
-            const next = { x: victim.pos.x + victim.pos.x - f.pos.x, y: victim.pos.y + victim.pos.y - f.pos.y };
-            if (next.x >= 0 && next.y >= 0 && next.x < state.board.width && next.y < state.board.height && !blocksMoveAt(state, next.x, next.y)) {
-              const from = { ...victim.pos }; victim.pos = next;
-              events.push({ t: 'push', target: victim.id, from, to: next, moved: 1, cells: 1, collisionDamage: 0 });
-              triggerTraps(state, events, victim, rng);
-              continue;
-            }
-          }
+        for (const [index, originalVictim] of targets.entries()) {
+          let victim = originalVictim;
+          const isPunition = effect.kind === 'punitionDamage';
+          const element = isPunition ? 'neutre' : effect.element;
+          const areaPercent = effect.kind === 'fixedLifeSteal' ? 100
+            : areaDamagePercent(trigger?.areaZone || effect.zone, trigger?.origin || target, targetPositions[index], spell.isWeapon);
+          victim = damageRecipient(state, events, rng, f, victim, spell, trigger, dodged);
+          if (!victim || victim.hp <= 0 || state.over) continue;
           const jet = rollEffectValue(rng, effect, f, victim);
           const boost = f.effects.filter(e => e.kind === 'spellBoost' && e.boostSpell === spell.id)
             .reduce((sum, e) => sum + e.value, 0);
-          const raw = effect.kind === 'fixedLifeSteal' ? jet : damageAmount(jet + boost, effect.element, f,
-            { trap: trigger?.trap, flatDamage: spell.flatDamage, weaponType: spell.weaponType });
-          const afterRes = effect.kind === 'fixedLifeSteal' ? raw : applyResistances(raw, effect.element, victim, f);
+          // Punition peaks at half life and ignores characteristic/+damage
+          // bonuses, but still follows the same defensive reactions as a hit.
+          const lifeCurve = ((Math.cos(2 * Math.PI * (f.hp / Math.max(1, f.maxHp) - 0.5)) + 1) ** 2) / 4;
+          const raw = isPunition ? Math.floor(lifeCurve * (effect.p1 || 0) / 100 * f.maxHp)
+            : effect.kind === 'fixedLifeSteal' ? jet : damageAmount(jet + boost, element, f,
+              { trap: trigger?.trap, flatDamage: spell.flatDamage, weaponType: spell.weaponType });
+          const afterArea = Math.floor(raw * areaPercent / 100);
+          const afterRes = effect.kind === 'fixedLifeSteal' ? raw : applyResistances(afterArea, element, victim, f);
           // Armure (Féca…): réduction plate des dégâts subis.
-          const armor = effect.kind === 'fixedLifeSteal' ? 0 : armorReduction(victim, effect.element, state.fighters);
+          const armor = effect.kind === 'fixedLifeSteal' ? 0 : armorReduction(victim, element, state.fighters);
           const afterArmor = Math.max(0, afterRes - armor);
           const reflection = victim.id !== f.id ? Math.min(afterArmor, Math.max(0, statBuff(victim, 'reflect'))) : 0;
           // Equipment reflection does not prevent incoming damage (Ankama 1.17,
@@ -1071,10 +1165,11 @@ function doCast(state, events, spell, target, trigger = null) {
           const dealt = applyDamage(
             state, events, f.id, victim.id, finalDmg,
             spell.name + (crit ? ' (critique !)' : ''),
-            { element: effect.element, calculation: { jet, boost, raw, afterRes, armor, reflection } },
+            { element, direct: !trigger, calculation: { jet, boost, raw, areaPercent, afterArea, afterRes, armor, reflection,
+              flatDamage: isPunition || effect.kind === 'fixedLifeSteal' ? 0 : statBuff(f, 'damage') + (spell.flatDamage || 0) } },
           );
           if (spellReflection > 0 && f.hp > 0) applyDamage(state, events, victim.id, f.id,
-            Math.max(0, applyResistances(spellReflection, effect.element, f, victim) - armorReduction(f, effect.element, state.fighters)), 'Renvoi de sort de protection');
+            Math.max(0, applyResistances(spellReflection, element, f, victim) - armorReduction(f, element, state.fighters)), 'Renvoi de sort de protection');
           if (reflection > 0 && f.hp > 0) applyDamage(state, events, victim.id, f.id, reflection, 'Renvoi de dommages');
           if (victim.monsterId === 2750 && dealt > 0 && f.hp > 0) applyHeal(state, events, f.id, dealt, 'Arbre de vie');
           if (['lifeSteal', 'fixedLifeSteal'].includes(effect.kind) && dealt > 0 && f.hp > 0) {
@@ -1167,7 +1262,7 @@ function doCast(state, events, spell, target, trigger = null) {
         const value = rollEffectValue(rng, effect, f, targets[0]);
         const turns = effect.duration > 0 ? effect.duration : DEFAULT_BUFF_TURNS;
         for (const patient of targets) {
-          patient.effects.push({ kind: 'armor', source: f.id, spellId: spell.id, value, turnsLeft: turns + (patient.id === f.id ? 1 : 0), name: spell.name });
+          patient.effects.push({ kind: 'armor', source: f.id, spellId: spell.id, value, turnsLeft: Math.max(1, turns + (patient.id === f.id ? 1 : 0)), name: spell.name });
           events.push({ t: 'effect_add', fighter: patient.id, kind: 'armor', value, turns, name: spell.name });
         }
         break;
@@ -1175,23 +1270,28 @@ function doCast(state, events, spell, target, trigger = null) {
       case 'staticSummon':
       case 'double':
       case 'summon': {
-        const tpl = effect.kind === 'double' ? { ...f, monsterId: null, name: 'Double', emoji: '👤', hp: f.maxHp, pa: 0, pm: f.basePm } : getSummon(effect.p1, effect.p2);
+        const monster = f.isMonster && effect.kind !== 'double' ? getMonster(effect.p1, effect.p2) : null;
+        const tpl = effect.kind === 'double' ? { ...f, monsterId: null, name: 'Double', emoji: '👤', hp: f.maxHp, pa: 0, pm: f.basePm }
+          : monster ? { ...monster, hp: monster.baseHp, pa: Math.max(0, monster.basePa), pm: Math.max(0, monster.basePm) }
+            : getSummon(effect.p1, effect.p2);
         if (!tpl) break;
         // Invocation 1.29: stats et PV multipliés par (1 + niveau de l'invocateur / 100).
-        const coef = effect.kind === 'double' ? 1 : 1 + f.level / 100;
+        const coef = effect.kind === 'double' || f.isMonster ? 1 : 1 + f.level / 100;
         const id = `${f.id}s${(f.summonCount = (f.summonCount || 0) + 1)}`;
         const summon = {
           id,
           team: f.team,
           leader: false,
           isSummon: true,
+          ...(monster ? { isMonster: true, monsterGrade: monster.grade, maxSummons: monster.maxSummons,
+            permanent: { dodgePa: monster.dodgePa, dodgePm: monster.dodgePm } } : {}),
           isDouble: effect.kind === 'double', staticSummon: effect.kind === 'staticSummon', summonGrade: effect.p2,
           ownerId: f.id,
           monsterId: tpl.monsterId,
           name: tpl.name,
           emoji: tpl.emoji,
           classId: f.classId,
-          level: f.level,
+          level: monster ? monster.level : f.level,
           pos: { ...target },
           startPos: { ...target },
           hp: Math.floor(tpl.hp * coef),
@@ -1230,7 +1330,7 @@ function doCast(state, events, spell, target, trigger = null) {
         patient.effects = patient.effects.filter((x) => !(x.kind === 'punishment' && x.name === spell.name));
         patient.effects.push({
           kind: 'punishment', statEffectId: effect.p1, maxPerTurn: effect.p2 || 999,
-          gained: 0, turnsLeft: turns + (patient.id === f.id ? 1 : 0), name: spell.name,
+          gained: 0, bonusDuration: effect.p3 > 0 ? effect.p3 : 5, turnsLeft: turns + (patient.id === f.id ? 1 : 0), name: spell.name,
           source: f.id, spellId: spell.id,
         });
         events.push({
@@ -1246,25 +1346,8 @@ function doCast(state, events, spell, target, trigger = null) {
         for (const patient of targets) addBuff(events, patient, f, spell, effect, 'erosion', value);
         break;
       }
-      case 'punitionDamage': {
-        // Punition (672), formule GDCore: cloche sur le ratio de PV du
-        // LANCEUR — nulle à pleine vie, maximale (p1% des PV max) à mi-vie.
-        for (const victim of targets) {
-          if (victim.id === f.id) continue;
-          const ratio = f.hp / Math.max(1, f.maxHp);
-          const radian = 2 * Math.PI * (ratio - 0.5);
-          const raw = Math.floor((((Math.cos(radian) + 1) ** 2) / 4)
-            * ((effect.p1 || 0) / 100) * f.maxHp);
-          const afterRes = applyResistances(raw, 'neutre', victim, f);
-          const finalDmg = Math.max(0, afterRes - armorReduction(victim, 'neutre', state.fighters));
-          applyDamage(state, events, f.id, victim.id, finalDmg,
-            spell.name + (crit ? ' (critique !)' : ''), { element: 'neutre' });
-          if (state.over) break;
-        }
-        break;
-      }
       case 'swapAlly': {
-        // Dérobade: échange de positions avec un ALLIÉ (invocation comprise).
+        // Échange de positions avec un allié (invocation comprise).
         const ally = targets.find((v) => v.id !== f.id && v.team === f.team);
         if (!ally) break;
         const posA = { ...f.pos };
@@ -1297,10 +1380,16 @@ function doCast(state, events, spell, target, trigger = null) {
         // Désenvoûtement: retire TOUS les effets (buffs comme malus).
         for (const victim of targets) {
           if (victim.effects.length === 0) continue;
+          const available = { pa: Math.max(0, victim.basePa + statBuff(victim, 'pa')),
+            pm: Math.max(0, victim.basePm + statBuff(victim, 'pm')) };
           const dispellable = victim.effects.filter(e => e.kind !== 'state');
           for (const ef of dispellable) onEffectRemoved(victim, ef);
           const removed = dispellable.length;
           victim.effects = victim.effects.filter(e => e.kind === 'state');
+          for (const stat of ['pa', 'pm']) {
+            const capacity = Math.max(0, (stat === 'pa' ? victim.basePa : victim.basePm) + statBuff(victim, stat));
+            victim[stat] = Math.max(0, victim[stat] + capacity - available[stat]);
+          }
           events.push({ t: 'dispel', fighter: f.id, target: victim.id, removed, name: spell.name });
         }
         break;
@@ -1392,18 +1481,21 @@ function doCast(state, events, spell, target, trigger = null) {
           const max = isPa ? victim.basePa : victim.basePm;
           const current = victim.id === currentFighter(state).id ? victim[stat] : Math.max(0, max + statBuff(victim, stat));
           const points = rollEffectValue(rng, effect, f, victim);
-          const { removed, dodged } = effect.kind.startsWith('debuff')
+          const nonDodgeable = effect.kind.startsWith('debuff');
+          const { removed, dodged } = nonDodgeable
             ? { removed: Math.min(points, current), dodged: 0 } : rollPointRemoval(
             rng, attack, defense, current, max, points,
           );
-          if (removed > 0) {
+          const penalty = nonDodgeable ? points : removed;
+          if (penalty > 0) {
             if (isPa) victim.pa = Math.max(0, victim.pa - removed);
             else victim.pm = Math.max(0, victim.pm - removed);
             // Le retrait pèse aussi sur le prochain tour de la victime.
             if (effect.duration > 0 || victim.id !== currentFighter(state).id) {
               victim.effects.push({
-                kind: 'buff', stat: isPa ? 'pa' : 'pm', value: -removed,
-                turnsLeft: effect.duration || 1, name: spell.name,
+                kind: 'buff', stat: isPa ? 'pa' : 'pm', value: -penalty,
+                turnsLeft: Math.max(1, (effect.duration || 0) + (victim.id === currentFighter(state).id ? 1 : 0)), name: spell.name,
+                source: f.id, spellId: spell.id, effectId: effect.id,
               });
             }
           }
@@ -1416,12 +1508,11 @@ function doCast(state, events, spell, target, trigger = null) {
       }
       case 'poison': {
         // Poison 1.29: jet × caracs du LANCEUR au lancer, résistances de la
-        // victime à chaque tic (début de son tour). Relancer remplace.
+        // victime à chaque tic (début de son tour). Chaque lancer garde sa durée.
         for (const victim of targets) {
           const jet = rollEffectValue(rng, effect, f, victim);
           const value = Math.max(1, damageAmount(jet, effect.element, f, { trap: trigger?.trap, flatDamage: spell.flatDamage }));
           const turns = effect.duration || 3;
-          victim.effects = victim.effects.filter((x) => !(x.kind === 'poison' && x.name === spell.name));
           victim.effects.push({
             kind: 'poison', source: f.id, value, element: effect.element || null, turnsLeft: turns + (victim.id === f.id ? 1 : 0), name: spell.name,
           });
@@ -1452,6 +1543,7 @@ export function getView(state, fighterId) {
     team: f.team,
     leader: f.leader,
     isSummon: !!f.isSummon,
+    isMonster: !!f.isMonster, monsterGrade: f.monsterGrade,
     isDouble: !!f.isDouble, staticSummon: !!f.staticSummon, summonGrade: f.summonGrade,
     carriedBy: f.carriedBy || null, carrying: f.carrying || null,
     hidden: f.team !== me.team && isInvisible(f),
@@ -1459,7 +1551,7 @@ export function getView(state, fighterId) {
     ownerId: f.ownerId || null,
     name: f.name,
     classId: f.classId,
-    className: CLASSES[f.classId].name,
+    className: f.isMonster ? getMonster(f.monsterId, f.monsterGrade).name : CLASSES[f.classId]?.name || f.name,
     level: f.level,
     pos: { ...(isInvisible(f) && f.team !== me.team ? f.lastVisiblePos || f.startPos || f.pos : f.pos) },
     hp: f.hp,

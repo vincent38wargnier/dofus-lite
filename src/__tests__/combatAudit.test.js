@@ -204,11 +204,11 @@ test.each([NaN, Infinity, 1.5])('invalid coordinate %s is rejected without spend
   expect(JSON.stringify(state)).toBe(before);
 });
 
-test('every map has distinct, connected, walkable starting cells', () => {
-  expect(Object.values(MAPS).filter(m => m.sourceId)).toHaveLength(18);
+test('every PvP/training map has distinct, connected, walkable starting cells', () => {
+  expect(Object.values(MAPS).filter(m => m.sourceId && m.kind !== 'dungeon')).toHaveLength(19);
   expect(MAPS.astrub_7423).toMatchObject({ sourceId: 7423, coordinate: '[5,-23]', area: 'Astrub' });
   expect(MAPS.amakna_952).toMatchObject({ sourceId: 952, coordinate: '[-1,0]', area: 'Amakna' });
-  for (const map of Object.values(MAPS)) {
+  for (const map of Object.values(MAPS).filter(m => m.kind !== 'dungeon')) {
     const [a, b] = map.spawns;
     expect(map.obstacles[key(a.x, a.y)]?.blocksMove).toBeFalsy();
     expect(map.obstacles[key(b.x, b.y)]?.blocksMove).toBeFalsy();

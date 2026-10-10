@@ -1,5 +1,5 @@
 import { createGame, applyAction, validateAction, spellsOf, getView, rollEffectValue } from '../engine/engine';
-import { SPELL_LIBRARY, resolveSpellLoadout, availableSpellGrades, getSummon } from '../engine/classes';
+import { SPELL_LIBRARY, resolveSpellLoadout, availableSpellGrades, getSummon, spellAtGrade } from '../engine/classes';
 import { emptyLoadout, resolveLoadout } from '../engine/equipment';
 import { damageAmount } from '../engine/formulas';
 import { spellZoneCells } from '../engine/geometry';
@@ -52,15 +52,15 @@ test('spell selection, grades, weapon position and order survive JSON storage an
   const resolved = resolveLoadout('IOP', state.fighters.A.loadout);
   state.fighters.A.weaponSpell = resolved.weaponSpell;
   state = JSON.parse(JSON.stringify(state));
-  expect(Object.values(spellsOf(state.fighters.A)).slice(0, 4).map(s => s.id)).toEqual([350, 0, 368, 141]);
-  expect(byId(state, 350).grade).toBe(3);
-  expect(getView(state, 'A').you.spells.slice(0, 4).map(s => s.id)).toEqual([350, 0, 368, 141]);
+  expect(Object.values(spellsOf(state.fighters.A)).slice(0, 4).map(s => s.id)).toEqual([0, 350, 368, 141]);
+  expect(byId(state, 350).grade).toBe(6);
+  expect(getView(state, 'A').you.spells.slice(0, 4).map(s => s.id)).toEqual([0, 350, 368, 141]);
 });
 
 test('Flamiche enforces per-target rather than per-turn limits', () => {
   let state = fresh('IOP', { 350: 5 }, [350]);
   state.fighters.B.hp = state.fighters.B.maxHp = 10000;
-  for (let i = 0; i < 2; i++) state = cast(state, 350).state;
+  for (let i = 0; i < 3; i++) state = cast(state, 350).state;
   const spell = byId(state, 350);
   expect(validateAction(state, { type: 'CAST', spell: spell.key, target: state.fighters.B.pos }).ok).toBe(false);
   expect(validateAction(state, { type: 'CAST', spell: spell.key, target: { x: 10, y: 12 } }).ok).toBe(true);
@@ -105,8 +105,8 @@ test('Arakne and critical summons have grade-specific stats and executable attac
     expect(Object.keys(getSummon(id, grade).spells).length).toBeGreaterThan(0);
   }
   const state = cast(fresh('IOP', { 370: 1 }, [370]), 370, { x: 10, y: 11 }).state;
-  expect(state.fighters.As1.hp).toBe(60); // 20 × (1 + level 200 / 100)
-  expect(state.fighters.As1.summonGrade).toBe(1);
+  expect(state.fighters.As1.hp).toBe(240); // Grade 6: 80 × (1 + level 200 / 100)
+  expect(state.fighters.As1.summonGrade).toBe(6);
 });
 
 test('Soin Animal applies one heal row to a summon and one different row to a character', () => {
@@ -213,7 +213,11 @@ test('all 1692 player grades accept an appropriate target and resolve without in
     const classId = Object.keys(SPELL_LIBRARY.classes).find(c => SPELL_LIBRARY.classes[c].includes(raw.id)) || 'IOP';
     for (const grade of raw.grades) {
       const state = fresh(classId, { [raw.id]: grade.grade }, SPELL_LIBRARY.common.includes(raw.id) ? [raw.id] : []);
-      const f = state.fighters.A, spell = byId(state, raw.id);
+      const f = state.fighters.A;
+      // Exercise even historic common grades; normal loadouts always maximize
+      // them. The engine's extra spell slot lets this audit use the raw grade.
+      const spell = spellAtGrade(raw.id, grade.grade);
+      f.weaponSpell = { ...spell, key: 'weapon' };
       f.maxSummons = 100; f.hp = f.maxHp = f.baseMaxHp = 10000; f.pm = 50;
       state.fighters.B.hp = state.fighters.B.maxHp = 10000;
       for (const id of spell.requiredStates) f.effects.push({ kind: 'state', stateId: id, turnsLeft: 10 });
@@ -230,7 +234,7 @@ test('all 1692 player grades accept an appropriate target and resolve without in
         f.effects.push({ kind: 'state', stateId: 3, turnsLeft: 10 });
         c.effects.push({ kind: 'state', stateId: 8, turnsLeft: 10 });
       }
-      const action = { type: 'CAST', spell: spell.key, target };
+      const action = { type: 'CAST', spell: 'weapon', target };
       const check = validateAction(state, action);
       if (!check.ok) { failures.push(`${raw.id}/${grade.grade}: ${check.reason}`); continue; }
       const result = applyAction(state, action);
@@ -244,14 +248,16 @@ test('all 1692 player grades accept an appropriate target and resolve without in
   expect(checked).toBe(1692);
 }, 30000);
 
-test('Dérobade avoids an adjacent hit only if the retreat cell is free', () => {
+test('Dérobade avoids the hit even against a wall, where only collision damage remains', () => {
   const state = fresh('IOP', { 141: 5 });
   state.fighters.B.effects.push({ kind: 'dodgeMelee', turnsLeft: 2 });
   const result = cast(state, 141);
   expect(result.events.some(e => e.t === 'damage')).toBe(false);
   expect(result.state.fighters.B.pos).toEqual({ x: 12, y: 10 });
   state.board.obstacles['12,10'] = { x: 12, y: 10, blocksMove: true };
-  expect(cast(state, 141).events.some(e => e.t === 'damage')).toBe(true);
+  const blocked = cast(state, 141).events.filter(e => e.t === 'damage');
+  expect(blocked).toHaveLength(1);
+  expect(blocked[0].label).toContain('poussée');
 });
 
 test('Sacrifice redirects the hit and swaps the protected fighter with its living protector', () => {

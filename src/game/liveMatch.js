@@ -11,24 +11,33 @@ import { createRng, hashSeed } from '../engine/rng';
 import { makeBotApi } from '../bots/api';
 import { utilityDecide } from '../bots/utilityBrain';
 import { MAX_ACTIONS_PER_TURN, MAX_INVALID_PER_TURN } from '../arena/runner';
+import { KANOJEDO_MAP_ID, POUTCH_ID, DEFAULT_BOSS_ID, defaultMonsterGrade, monsterDecide, BOSSES } from '../engine/monsters';
+import { dungeonRoster, dungeonMapId } from '../engine/dungeons';
 
 export const HUMAN_ID = 'A';
 export const TURN_SECONDS = 30; // comme en 1.29
 
 export class LiveMatch {
-  constructor({ playerClass, botClass, mapId, seed, botName, botDecide, playerName = 'Vous', loadouts = {} }) {
+  constructor({ playerClass, botClass, mapId, seed, botName, botDecide, playerName = 'Vous', loadouts = {}, mode = 'duel', monsterGrade = 5, bossId = DEFAULT_BOSS_ID, bossGrade = defaultMonsterGrade(bossId) }) {
+    if (mode === 'boss' && !BOSSES.some(boss => boss.id === bossId)) throw new Error('Boss inconnu.');
     const init = createGame({
-      mapId,
+      mapId: mode === 'kanojedo' ? KANOJEDO_MAP_ID : mode === 'boss' ? dungeonMapId(bossId) : mapId,
       seed,
       placement: true,
       fighters: [
         { id: 'A', name: playerName, botName: playerName, classId: playerClass, loadout: loadouts.A },
-        { id: 'B', name: botName, botName, classId: botClass, loadout: loadouts.B },
+        ...(mode === 'kanojedo' ? [{ id: 'B', monsterId: POUTCH_ID, monsterGrade }]
+          : mode === 'boss' ? dungeonRoster(bossId, bossGrade, seed)
+          : [{ id: 'B', name: botName, botName, classId: botClass, loadout: loadouts.B }]),
       ],
     });
-    const opponentReady = readyFighter(init.state, 'B');
-    this.state = opponentReady.state;
-    this.initialEvents = [...init.events, ...opponentReady.events];
+    this.state = init.state;
+    this.initialEvents = [...init.events];
+    for (const opponent of Object.values(init.state.fighters).filter(f => f.id !== HUMAN_ID)) {
+      const ready = readyFighter(this.state, opponent.id);
+      this.state = ready.state;
+      this.initialEvents.push(...ready.events);
+    }
     this.seed = seed;
     this.botDecide = botDecide;
     this.rngs = {};
@@ -85,7 +94,8 @@ export class LiveMatch {
     try {
       const view = getView(this.state, fid);
       const api = makeBotApi(view, this.rngs[fid]);
-      action = (fid === 'B' && !f.isSummon) ? this.botDecide(view, api) : utilityDecide(view, api);
+      action = f.isMonster ? monsterDecide(view, api, utilityDecide)
+        : (fid === 'B' && !f.isSummon) ? this.botDecide(view, api) : utilityDecide(view, api);
     } catch (err) {
       const events = [{ t: 'bot_error', fighter: fid, message: String(err && err.message ? err.message : err) }];
       const p = applyAction(this.state, { type: 'PASS' });

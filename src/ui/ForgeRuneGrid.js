@@ -47,7 +47,7 @@ export default function ForgeRuneGrid({ bounds, suggested, extras, selected, onS
       <summary><Plus size={15} aria-hidden="true" /> Ajouter des runes{extras.length ? <span>{extras.length}</span> : null}</summary>
       <div className="fm-rune-picker">
         <label className="fm-rune-search" htmlFor={pickerId}><Search size={15} aria-hidden="true" /><input id={pickerId} type="search"
-          aria-label="Rechercher d’autres runes" placeholder="PA, PM, force, Ga Pa…" value={search} onChange={e => setSearch(e.target.value)} /></label>
+          aria-label="Rechercher d’autres runes" placeholder="Force, portée, dommages…" value={search} onChange={e => setSearch(e.target.value)} /></label>
         <p>Coche un bonus pour ajouter ses runes à la grille.</p>
         <div className="fm-rune-options">{choices.map(stat => <label key={stat} className={extras.includes(stat) ? 'selected' : ''}>
           <input type="checkbox" data-extra-stat={stat} checked={extras.includes(stat)} onChange={() => onToggleExtra(stat)} />

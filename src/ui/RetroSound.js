@@ -13,7 +13,10 @@ export function saveSoundSettings(settings) {
 }
 
 export function resolveSound(audio, name) {
-  const cue = audio?.cues?.[String(name).toUpperCase()];
+  // SOMA.playSound in the client normalizes these characters before looking
+  // up AUEC. Monster clips often use spaces/hyphens instead of alias names.
+  const alias = String(name).replace(/ /g, '_').replace(/é/g, 'e').replace(/à/g, 'a').replace(/-/g, '_').toUpperCase();
+  const cue = audio?.cues?.[alias];
   if (cue) return cue;
   const url = audio?.effects?.[name];
   return url ? { url, volume: 1, offset: 0 } : null;

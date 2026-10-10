@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CLASSES, CLASS_IDS, SPELL_LIBRARY, spellAtGrade } from '../engine/classes';
 import { RETRO_BASE, RetroMovie, RetroSpellEffect, RetroSpellIcon, resolveAnimation, useRetroAssets, useSoundScene } from './RetroAssets';
+import { castAnimation } from './retroAnimation';
 
 const LABELS = {
   damage: 'Dégâts', lifeSteal: 'Vol de vie', heal: 'Soin', poison: 'Poison',
@@ -17,7 +18,7 @@ const LABELS = {
   carry: 'Porter', throw: 'Lancer', fear: 'Peur', rollback: 'Retour aux positions initiales',
   spellReflection: 'Renvoi de sort', damageReflection: 'Renvoi de dommages',
   ecaflipLuck: 'Chance d’Ecaflip', sacrifice: 'Sacrifice', minRolls: 'Jets minimisés', maxRolls: 'Jets maximisés',
-  skipTurn: 'Tour passé', dodgeMelee: 'Esquive au contact', apPoison: 'Poison par PA utilisés',
+  skipTurn: 'Tour passé', dodgeMelee: 'Esquive au contact', apPoison: 'Poison par PA utilisés', damageOnHit: 'Perte de vie par coup reçu',
   staticSummon: 'Invocation statique', double: 'Double', lifeTransfer: 'Transfert de vie', revive: 'Résurrection',
   delayedSpell: 'Sort différé', outOfCombat: 'Hors combat', cosmetic: 'Apparence', kill: 'Mort',
   resistAllBuff: 'Résistances élémentaires', punishment: 'Châtiment', punitionDamage: 'Punition',
@@ -60,7 +61,7 @@ export default function SpellbookScreen() {
   const spellClass = CLASS_IDS.find(c => catalogue.classes[c].includes(spell?.id)) || 'IOP';
   const actorId = assets?.classes[spellClass]?.male || '80';
   const actor = assets?.actors[actorId];
-  const animation = resolveAnimation(actor, preview ? info?.animation || 'anim0' : 'static');
+  const animation = resolveAnimation(actor, preview ? castAnimation({ spellId: spell?.id }, assets) : 'static');
   return <div className="spellbook">
     <div className="panel spellbook-heading"><div><h2>Grimoire des sorts</h2><p className="muted">{catalogue.spells.length.toLocaleString('fr')} sorts · tous les grades disponibles · animations du client local</p></div>
       <label className="field">Classe<select aria-label="Classe du grimoire" value={classId} onChange={e => { setClassId(e.target.value); setPreview(0); }}>
@@ -83,8 +84,10 @@ export default function SpellbookScreen() {
         <p className="muted small">{level.lineOnly ? 'En ligne · ' : ''}{level.needsLos ? 'Ligne de vue requise' : 'Sans ligne de vue'} · {level.adjustableRange ? 'Portée modifiable' : 'Portée fixe'} · Niveau requis {level.requiredLevel}</p>
         {actor && <><div className="spell-preview-stage">
           <RetroMovie url={actor.url} animation={animation} restart={preview} scriptAccess className="spell-preview-caster" />
-          {assets.actors['90'] && <RetroMovie url={assets.actors['90'].url} animation="staticL" scriptAccess className="spell-preview-target" />}
-          {preview > 0 && info?.effect && <RetroSpellEffect key={`${spell.id}-${level.grade}-${preview}`} url={info.effect} grade={level.grade} duration={info.duration} from={{ x: 80, y: 160 }} to={{ x: 310, y: 160 }} scale={.8} />}
+          {assets.actors['90'] && <RetroMovie url={assets.actors['90'].url} animation="staticR" style={{ transform: 'scaleX(-1)' }} scriptAccess className="spell-preview-target" />}
+          {preview > 0 && info?.effect && <RetroSpellEffect key={`${spell.id}-${level.grade}-${preview}`} url={info.effect} grade={level.grade}
+            type={info.type} fps={info.fps} exportFrames={info.exportFrames} duration={info.duration}
+            from={{ x: 80, y: 160 }} to={{ x: 310, y: 160 }} scale={.8} />}
         </div><button className="btn" onClick={() => setPreview(n => n + 1)}>Voir l’animation originale</button></>}
         <h3>Effets normaux</h3><Effects effects={level.effects} />
         {level.critEffects.length > 0 && <><h3>Coup critique · 1/{level.critRate} avant bonus</h3><Effects effects={level.critEffects} /></>}

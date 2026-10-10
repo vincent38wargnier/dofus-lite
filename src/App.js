@@ -11,6 +11,7 @@ import RetroLibraryScreen from './ui/RetroLibraryScreen';
 import SpellbookScreen from './ui/SpellbookScreen';
 import { LoadoutsProvider } from './ui/LoadoutPicker';
 import './styles/playerSetup.css';
+import './styles/combatLayout.css';
 
 const TABS = [
   { id: 'arena', label: 'Arène', detail: 'Observer un duel de bots' },
@@ -22,6 +23,7 @@ const TABS = [
 
 export default function App() {
   const [tab, setTab] = useState('play');
+  const [fighting, setFighting] = useState(false);
   const toolsMenu = useRef(null);
   useSoundScene(tab);
   const { customBots, addBot, updateBot, deleteBot } = useCustomBots();
@@ -34,7 +36,7 @@ export default function App() {
   };
 
   return (
-    <LoadoutsProvider><div className="app">
+    <LoadoutsProvider><div className={`app${tab === 'play' && fighting ? ' in-combat' : ''}`}>
       <header className="app-header">
         <button className="app-brand" onClick={() => setTab('play')} aria-label="Dofus Koliséum — Jouer"><span className="brand-mark"><Swords size={23} /></span><span className="app-title">Dofus <strong>Koliséum</strong><span className="sub">VOTRE ARÈNE, VOS RÈGLES</span></span></button>
         <nav className="tabs" aria-label="Navigation principale">
@@ -67,8 +69,8 @@ export default function App() {
           onReplayConsumed={() => setReplay(null)}
         />
       </div>
-      <div style={{ display: tab === 'play' ? 'block' : 'none' }}>
-        <PlayScreen allBots={allBots} active={tab === 'play'} />
+      <div className="play-route" style={{ display: tab === 'play' ? 'block' : 'none' }}>
+        <PlayScreen allBots={allBots} active={tab === 'play'} onFightChange={setFighting} />
       </div>
       <div style={{ display: tab === 'editor' ? 'block' : 'none' }}>
         <EditorScreen

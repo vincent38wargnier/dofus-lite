@@ -154,6 +154,12 @@ def main():
             if sid == 114:
                 for effect in grade['effects']:
                     effect['targetMask'] = 32
+            if sid == 447:
+                # Furie's duration-1 effect 89 reacts to hits. Other uses of
+                # effect 89 (Stimulant, Contrecoup, etc.) are life costs.
+                for effect in grade['effects'] + grade['critEffects']:
+                    if effect['id'] == 89:
+                        effect['kind'] = 'damageOnHit'
             grades.append({'grade': gi, **grade})
         if grades:
             catalogue[sid] = {'id': sid, 'name': source['n'], 'description': source.get('d', ''),
@@ -250,7 +256,14 @@ def main():
             if not g['emptyCellOnly'] and g['rangeMax'] > 0 and g['targetMode'] == 'enemy':
                 g['targetMode'] = 'cell'
 
+    # SpellIconProperties.buildFromSpellText reads i.bc for the icon background.
+    # Keep the client's default elemental/support palette with the spell data.
+    palette_ids = {'neutre': 143, 'terre': 141, 'feu': 156, 'eau': 447, 'air': 145,
+                   'multi': 152, 'boost': 153, 'heal': 121, 'summon': 34}
+    icon_palette = {kind: '#{:06x}'.format(originals[sid]['i']['bc'][0])
+                    for kind, sid in palette_ids.items()}
     library = {'version': 1, 'sources': sources, 'classes': classes, 'common': COMMON, 'special': SPECIAL,
+               'iconPalette': icon_palette,
                'spells': {sid: catalogue[sid] for sid in sorted(player_ids) if sid in catalogue}, 'summons': summon_data}
     (ROOT / 'src/engine/spellLibrary.json').write_text(json.dumps(library, ensure_ascii=False, separators=(',', ':')) + '\n')
     handlers = set(re.findall(r"case '([^']+)':", (ROOT / 'src/engine/engine.js').read_text()))

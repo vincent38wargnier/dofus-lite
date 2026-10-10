@@ -28,16 +28,30 @@ class EquipmentImportTests(unittest.TestCase):
         if not source.is_dir():
             self.skipTest('Original local client cache not imported on this machine')
         tables = {}
-        for name in ['items', 'itemstats', 'itemsets', 'classes', 'effects']:
+        for name in ['items', 'itemstats', 'itemsets', 'classes', 'effects', 'rides']:
             file = max(source.glob(f'{name}_fr_*.swf'), key=lambda p: int(p.stem.rsplit('_', 1)[1]))
             tables[name] = data_tables(file)
         result = build_catalogue(tables, {})
-        self.assertEqual(len(result['items']), 6419)
+        self.assertEqual(len(result['items']), 6490)
         self.assertEqual(result['items'][2469]['effects'], [[111, 1, 0, '0d0+1']])
         self.assertEqual(result['items'][2416]['weapon']['pa'], 5)
         self.assertTrue(result['items'][2416]['weapon']['twoHanded'])
         self.assertEqual(len(result['sets'][1]['items']), 7)
         self.assertEqual(result['caps']['SACRIEUR']['vitalite'], [[0, 1, 2]])
+        self.assertEqual(result['items'][6716]['effects'][0], [176, 90, 0, '0d0+90'])
+        self.assertEqual(result['items'][7519]['effects'][0], [124, 55, 0, '0d0+55'])
+        self.assertEqual(result['items'][6978]['effects'][0], [125, 440, 0, '0d0+440'])
+        self.assertEqual(result['items'][7520]['pet']['budget'], 105)
+        self.assertTrue(all(row[1] == 26 for row in result['items'][7520]['pet']['choices']))
+        self.assertIn([124, 30, 0, '0d0+30'], result['items'][1748]['pet']['choices'])
+        self.assertEqual(result['items'][7519]['pet']['capacity'], {'increase': 15, 'potionId': 8985})
+        self.assertEqual(result['items'][6604]['pet']['kind'], 'fixed')
+        self.assertEqual(result['items'][13018]['pet']['kind'], 'cosmetic')
+        self.assertEqual(result['items'][7870]['level'], 60)
+        self.assertEqual(result['items'][7870]['mount']['level'], 100)
+        self.assertEqual(result['items'][7870]['effects'], [[117, 1, 0, '0d0+1'], [128, 1, 0, '0d0+1'], [125, 200, 0, '0d0+200']])
+        self.assertNotIn(7807, result['items'])  # wild mount, no wearable bonuses
+        self.assertIn(9582, result['items'])  # case differs in rides / certificates
 
 
 if __name__ == '__main__':

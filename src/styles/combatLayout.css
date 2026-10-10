@@ -1,0 +1,192 @@
+/* A client-style workspace: journal beside the map, commands below it. */
+html:has(.app.in-combat), body:has(.app.in-combat), #root:has(.app.in-combat) { height: 100%; min-height: 0; overflow: hidden; }
+.app.in-combat { width: 100%; max-width: none; height: 100vh; height: 100dvh; padding: 6px; }
+.app.in-combat > .app-header { display: none; }
+.in-combat > .play-route, .in-combat .fight-screen { height: 100%; min-height: 0; }
+.fight-workspace { height: 100%; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+.fight-workspace.log-open { grid-template-columns: clamp(224px, 20vw, 300px) minmax(0, 1fr); }
+.fight-main { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 5px; container-type: inline-size; }
+.in-combat .fight-heading { flex: 0 0 32px; min-height: 0; gap: 10px; margin: 0; }
+.in-combat .fight-heading > div:first-child { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.in-combat .fight-heading h1 { margin: 0; font-size: 14px; letter-spacing: -.25px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.in-combat .fight-heading > div > p:last-child { font-size: 10px; white-space: nowrap; }
+.fight-heading-actions { display: flex; gap: 5px; flex-shrink: 0; }
+.in-combat .fight-heading .btn { padding: 4px 9px; min-height: 26px; font-size: 11px; }
+.in-combat .fight-heading .btn[aria-expanded=true] { background: #e2e8d5; border-color: #a7b491; }
+.in-combat .loadout-errors { margin: 0; font-size: 11px; }
+.fight-map { flex: 1 1 0; min-width: 0; min-height: 0; position: relative; }
+.fight-map .fitted-board { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 0; overflow: hidden; border-radius: 7px; box-shadow: none; }
+.fitted-board .board { flex: none; }
+.fitted-board .tactical-legend { position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); z-index: 2600; width: max-content; max-width: calc(100% - 12px); padding: 3px 8px; border-radius: 5px; background: #262f26e8; pointer-events: none; }
+
+/* This panel owns its history scroll; it never covers a combat cell. */
+.fight-log { position: relative; min-width: 0; min-height: 0; }
+.fight-log > .panel { height: 100%; display: flex; flex-direction: column; padding: 12px 9px 9px; border-radius: 7px; background: #e4e5d7; box-shadow: none; }
+.fight-log .combat-log-heading { flex-shrink: 0; gap: 9px 6px; margin-bottom: 10px; padding: 0 0 10px; border-bottom: 1px solid #c8cbb8; }
+.fight-log .combat-log-heading h3 { flex-basis: 100%; padding-right: 22px; font-size: 13px; }
+.fight-log .combat-log-heading h3 small { display: block; margin-top: 3px; font-size: 10px; }
+.fight-log .combat-log-heading label { display: flex; gap: 4px; align-items: center; font-size: 10px; }
+.fight-log .combat-log-heading input { margin: 0; }
+.fight-log .combat-log-heading .btn { padding: 4px 6px; font-size: 10px; margin-left: auto; }
+.in-combat .fight-log .log { flex: 1; min-height: 0; height: auto; padding: 0 3px 0 0; border: 0; background: transparent; font-size: 12px; line-height: 1.55; overflow-x: hidden; overflow-wrap: anywhere; overscroll-behavior: contain; }
+.fight-log .log .entry { padding: 4px 3px; }
+.fight-log .log .entry.turn { padding: 7px 5px; background: #d7ddc7; font-size: 11px; }
+.fight-log-close { position: absolute; z-index: 1; top: 7px; right: 7px; width: 24px; height: 24px; display: grid; place-items: center; background: transparent; border: 0; border-radius: 4px; padding: 0; font-size: 21px; color: var(--muted); cursor: pointer; }
+.fight-log-close:hover { background: #cfd5bd; }
+
+/* Compact icons keep every learned spell visible, including extra spells. */
+.combat-dock { flex: 0 0 auto; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 5px; }
+.in-combat .combat-spellbar { min-width: 0; position: relative; display: flex; flex-direction: column; gap: 3px; padding: 0 2px; }
+.in-combat .spellbar-guide { height: 24px; min-width: 0; margin: 0; font-size: 9px; line-height: 18px; flex-wrap: nowrap; align-items: center; }
+.in-combat .spellbar-guide > * { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.in-combat .spellbar-guide > .spellbar-actions { flex-shrink: 0; overflow: visible; display: flex; gap: 10px; align-items: center; }
+.spellbar-shortcuts, .spellbar-count { color: #72795f; }
+.spellbar-sort { display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 22px; padding: 2px 7px; border: 1px solid #aab58e; border-radius: 4px; background: #e5ead7; color: #40532c; font: inherit; font-weight: 700; cursor: pointer; }
+.spellbar-sort:hover:not(:disabled) { background: #d5e1b9; }
+.spellbar-sort:disabled { opacity: .5; cursor: default; }
+.in-combat .turn-status { min-width: 0; font-size: 11px; font-weight: 600; }
+.in-combat .turn-status.yours { color: #4c672d; }
+.tackle-chance { color: #a86a30; }
+.in-combat .spellbar { display: grid; min-width: 0; gap: 3px; grid-template-columns: repeat(var(--spell-columns), minmax(0, 1fr)); grid-template-rows: repeat(var(--spell-rows), 54px); }
+.in-combat .spell-slot { min-height: 0; }
+.in-combat .spell-slot .spell-btn { min-width: 0; min-height: 0; width: 100%; height: 100%; padding: 10px 3px 1px; gap: 0; justify-content: center; overflow: hidden; border-radius: 4px; border-color: #b9bea4; border-left: 3px solid var(--spell-color); background: #f7f6e9; }
+.in-combat .spell-slot .spell-btn.selected { border-color: #657f37; background: #e2ebc5; }
+.in-combat .spell-slot[draggable=false] { cursor: default; }
+.in-combat .spell-slot .spell-btn:disabled { opacity: .46; }
+.in-combat .spell-slot-tools { top: 1px; left: 3px; right: 2px; }
+.in-combat .spell-slot-tools kbd { font-size: 8px; line-height: 10px; }
+.in-combat .spell-slot-tools svg { width: 9px; height: 9px; opacity: .5; }
+.in-combat .spell-btn .ic { display: flex; align-items: center; justify-content: center; flex: 0 0 29px; width: 29px; height: 29px; max-width: 100%; min-height: 0; }
+.in-combat .spell-btn .retro-spell-icon { width: 29px; height: 29px; max-width: 100%; max-height: 100%; padding: 0; object-fit: contain; }
+.in-combat .spell-btn .nm { display: block; width: 100%; padding: 0 8px; min-height: 11px; font-size: 9px; line-height: 11px; overflow: hidden; text-overflow: ellipsis; }
+.in-combat .spell-btn .meta { display: none; }
+.spell-cost { position: absolute; right: 2px; bottom: 1px; padding: 0 2px; border-radius: 3px; font-size: 8px; font-weight: 800; line-height: 11px; color: #305d82; background: #f7f6e9e8; }
+.spell-cost.on-cooldown { color: #9c5135; }
+.in-combat .spellbar-save-error { position: absolute; bottom: 100%; margin: 0; padding: 6px; background: var(--panel); border: 1px solid var(--red); border-radius: 4px; font-size: 11px; z-index: 2700; }
+
+/* Effects and inspected stats flank the player's permanent turn controls. */
+.combat-stats { height: 136px; min-width: 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 156px minmax(0, 1fr); gap: 12px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 7px; background: var(--panel); }
+.combat-stats.inspecting { border-color: #b48a53; background: #fcf9ee; }
+.dock-details, .dock-fighter-summary { display: flex; flex-direction: column; min-width: 0; min-height: 0; gap: 5px; }
+.dock-fighter-heading { display: flex; align-items: center; min-width: 0; gap: 7px; flex: 0 0 29px; }
+.dock-portrait { width: 29px; height: 29px; flex: 0 0 29px; }
+.dock-portrait img { width: 100%; height: 100%; object-fit: contain; }
+.dock-fighter-name { flex: 1; min-width: 0; }
+.dock-fighter-name > * { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.dock-fighter-name > strong { font-size: 12px; }
+.dock-fighter-name > small { font-size: 9px; color: var(--muted); }
+.dock-points { display: flex; gap: 6px; font-size: 12px; font-weight: 750; white-space: nowrap; }
+.dock-points .pa, .player-resources .pa { color: #426f9b; }.dock-points .pm, .player-resources .pm { color: #4b7438; }
+.dock-reset, .dock-pages button { display: grid; place-items: center; padding: 2px; border: 1px solid var(--border); border-radius: 4px; color: var(--text); background: var(--bg-soft); cursor: pointer; }
+.dock-reset { flex: 0 0 21px; height: 21px; }
+.combat-stats .dock-health { flex: 0 0 16px; height: 16px; margin: 0; border-radius: 4px; }
+.dock-health .txt { font-size: 10px; }
+.dock-stat-tabs { display: flex; gap: 4px; flex: 0 0 23px; }
+.dock-stat-tabs button { flex: 1; min-width: 0; padding: 2px 4px; background: transparent; border: 0; border-radius: 4px; font-size: 11px; white-space: nowrap; color: var(--muted); cursor: pointer; }
+.dock-stat-tabs button[aria-selected=true] { background: #e4ead5; color: #3e532d; font-weight: 750; }
+.dock-stat-content { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 4px; }
+.dock-attributes { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 3px; margin: 0; align-items: center; }
+.dock-attributes > div { min-width: 0; text-align: center; border-radius: 4px; background: var(--bg-soft); padding: 5px 1px; }
+.dock-attributes dt { font-size: 9px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
+.dock-attributes dd { margin: 2px 0 0; font-size: 14px; font-weight: 750; font-variant-numeric: tabular-nums; }
+.dock-resistances { flex: 1; width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 11px; text-align: center; }
+.dock-resistances th { font-weight: 500; font-size: 9px; padding-bottom: 2px; color: var(--muted); }
+.dock-resistances th span { margin-left: 3px; text-transform: capitalize; }
+.dock-resistances td { border-top: 1px solid var(--border-soft); padding-top: 3px; font-variant-numeric: tabular-nums; }
+.dock-resistances td strong, .dock-resistances td small { display: block; }
+.dock-resistances td small { font-size: 9px; color: var(--muted); }
+.dock-rows { flex: 1; min-height: 0; display: grid; grid-auto-rows: minmax(0, 1fr); gap: 2px; }
+.dock-detail-row { min-width: 0; min-height: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11px; border-bottom: 1px solid var(--border-soft); }
+.dock-detail-row > * { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dock-detail-row > strong { text-align: right; font-weight: 650; }
+.dock-detail-row > small { flex-shrink: 0; font-size: 9px; }
+.dock-pages { display: flex; align-items: center; justify-content: center; gap: 12px; flex: 0 0 16px; font-size: 9px; }
+.dock-pages button { height: 16px; }
+.dock-pages button:disabled { opacity: .35; cursor: default; }
+.dock-empty { margin: auto 0; text-align: center; font-size: 11px; color: var(--muted); }
+.in-combat .combat-turn-controls { min-width: 0; padding: 0 8px; border: 0; border-left: 1px solid var(--border-soft); border-right: 1px solid var(--border-soft); border-radius: 0; background: transparent; display: flex; flex-direction: column; justify-content: space-between; flex-wrap: nowrap; gap: 3px; }
+.player-resources { display: flex; justify-content: center; gap: 6px; font-variant-numeric: tabular-nums; line-height: 16px; }
+.player-resources > span { display: flex; align-items: center; gap: 2px; }
+.player-resources strong { font-size: 12px; }.player-resources small { display: none; }
+.player-resources .hp { color: #b74735; }
+.turn-dial { flex: 0 0 auto; width: 66px; height: 66px; padding: 4px; border-radius: 50%; background: conic-gradient(#7c914e var(--turn-progress), #dfe2d4 0); box-shadow: 0 0 0 1px #cdd2bd; }
+.turn-dial.urgent { background: conic-gradient(#c75e3d var(--turn-progress), #e6ddd2 0); }
+.turn-dial > div { width: 100%; height: 100%; border-radius: 50%; background: #36432e; color: #fffdec; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; gap: 2px; }
+.turn-dial strong { font-size: 25px; font-variant-numeric: tabular-nums; }.turn-dial small { font-size: 7px; letter-spacing: 1px; color: #bfcbae; }.turn-dial span { font-size: 9px; }
+.in-combat .combat-turn-controls .btn { display: flex; justify-content: center; align-items: center; flex-shrink: 0; width: 100%; min-width: 0; min-height: 25px; padding: 3px 6px; font-size: 11px; gap: 5px; }
+
+/* Automatic dungeon replay uses the same fitted map and inspection dock. */
+.auto-simulation { height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; padding: 24px; text-align: center; }
+.auto-simulation h1, .auto-simulation p { margin: 0; }
+.auto-replay-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; min-width: 0; }
+.auto-replay-controls .btn { display: flex; align-items: center; justify-content: center; gap: 4px; padding: 4px 8px; min-height: 28px; font-size: 11px; }
+.auto-replay-controls .btn.icon { width: 29px; padding: 4px; }
+.auto-replay-controls input { flex: 1 1 80px; min-width: 60px; width: 0; }
+.auto-replay-controls select { width: 58px; min-height: 28px; padding: 3px; font-size: 11px; }
+.auto-combat-status, .auto-result { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 11px; line-height: 17px; }
+.auto-combat-status { color: var(--muted); }
+.auto-result { padding: 5px 9px; background: #e9e8da; border-radius: 5px; }
+.auto-result.victory { background: #e2edcf; color: #365a27; }.auto-result.defeat { background: #f6dfd5; color: #8e392b; }
+.auto-dungeon .player-resources small { display: inline; font-size: 8px; }
+
+@container (max-width: 900px) {
+  .in-combat .spellbar { grid-template-columns: repeat(var(--spell-columns-narrow), minmax(0, 1fr)); grid-template-rows: repeat(var(--spell-rows-narrow), 32px); }
+  .in-combat .spell-slot .spell-btn { padding-top: 7px; }
+  .in-combat .spell-btn .ic, .in-combat .spell-btn .retro-spell-icon { width: 23px; height: 23px; flex-basis: 23px; }
+  .in-combat .spell-btn .nm { display: none; }
+  .spellbar-shortcuts { display: none; }
+  .combat-stats { grid-template-columns: minmax(0, 1fr) 130px minmax(0, 1fr); gap: 7px; padding: 7px; }
+  .dock-portrait { display: none; }.dock-resistances th span { display: none; }
+  .dock-points { font-size: 10px; gap: 4px; }.dock-fighter-name > small { font-size: 8px; }
+  .dock-detail-row { gap: 4px; font-size: 10px; }.dock-attributes dt { font-size: 8px; }
+}
+@media (max-width: 700px) {
+  .auto-replay-controls .auto-result-button { margin-left: auto; }
+  .app.in-combat { padding: 4px; }
+  .fight-workspace.log-open { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) 130px; gap: 4px; }
+  .fight-log { grid-row: 2; }.fight-main { grid-row: 1; gap: 4px; }
+  .fight-log > .panel { padding: 5px 7px; }
+  .fight-log .combat-log-heading { margin-bottom: 4px; padding: 0 23px 4px 0; gap: 4px 8px; }
+  .fight-log .combat-log-heading h3 { flex-basis: auto; padding: 0; font-size: 11px; }
+  .fight-log .combat-log-heading h3 small { display: none; }.fight-log-close { top: 3px; right: 4px; }
+  .in-combat .fight-log .log { font-size: 10px; }
+  .in-combat .fight-heading { flex-basis: 30px; gap: 4px; }
+  .in-combat .fight-heading > div:first-child { flex-direction: column; align-items: stretch; gap: 0; }
+  .in-combat .fight-heading h1 { font-size: 11px; }.in-combat .fight-heading > div > p:last-child { font-size: 9px; }
+  .in-combat .fight-heading .btn { padding: 4px 6px; font-size: 10px; }
+  .in-combat .spellbar { grid-template-columns: repeat(8, minmax(0, 1fr)); grid-template-rows: none; grid-auto-rows: 31px; gap: 3px; }
+  .in-combat .spell-slot-tools svg { display: none; }
+  .spellbar-count { display: none; }
+  .in-combat .turn-status { font-size: 10px; }
+  .combat-stats { height: 170px; grid-template-columns: minmax(0, 1fr) 108px; grid-template-rows: 78px minmax(0, 1fr); gap: 5px 8px; padding: 5px 7px; }
+  .dock-details { grid-row: 2; grid-column: 1 / -1; gap: 3px; }
+  .dock-fighter-summary { grid-row: 1; grid-column: 1; gap: 3px; }
+  .dock-fighter-heading { flex-basis: 21px; gap: 4px; }.dock-fighter-name > strong { font-size: 11px; }
+  .dock-reset { flex-basis: 18px; height: 18px; }.dock-fighter-name > small { font-size: 8px; }
+  .combat-stats .dock-health { flex-basis: 12px; height: 12px; }.dock-health .txt { font-size: 9px; }
+  .dock-resistances { line-height: 1.1; font-size: 10px; }.dock-resistances th { font-size: 8px; padding: 0; }.dock-resistances td { padding: 1px 0 0; }.dock-resistances td small { font-size: 8px; }
+  .dock-stat-tabs { flex-basis: 20px; }.dock-stat-tabs button { font-size: 10px; padding: 1px 3px; }
+  .dock-detail-row { font-size: 9px; line-height: 1.1; }.dock-detail-row > small { font-size: 8px; }
+  .dock-attributes > div { padding: 1px; }.dock-attributes dt { font-size: 8px; }.dock-attributes dd { font-size: 12px; margin-top: 0; }
+  .in-combat .combat-turn-controls { grid-row: 1; grid-column: 2; padding: 0 0 0 7px; border-right: 0; gap: 2px; }
+  .player-resources { gap: 5px; line-height: 12px; }.player-resources svg { display: none; }.player-resources small { display: inline; font-size: 7px; }.player-resources strong { font-size: 10px; }
+  .turn-dial { width: 37px; height: 37px; padding: 3px; }.turn-dial small { display: none; }.turn-dial strong { font-size: 16px; }.turn-dial span { font-size: 7px; }.turn-dial svg { width: 14px; height: 14px; }
+  .in-combat .combat-turn-controls .btn { min-height: 23px; font-size: 10px; padding: 2px 4px; }
+  .fitted-board .tactical-legend { font-size: 8px; padding: 2px 4px; }
+}
+@media (max-height: 650px) and (min-width: 701px) {
+  .combat-stats { height: 92px; padding: 4px 7px; gap: 7px; }
+  .in-combat .spellbar { grid-template-columns: repeat(var(--spell-columns), minmax(0, 1fr)); grid-template-rows: repeat(var(--spell-rows), 26px); }
+  .in-combat .spellbar-guide { height: 18px; line-height: 14px; }.in-combat .turn-status { font-size: 10px; }
+  .spellbar-sort { height: 17px; padding: 0 5px; }
+  .in-combat .spell-slot .spell-btn { padding-top: 6px; }.in-combat .spell-btn .ic, .in-combat .spell-btn .retro-spell-icon { width: 18px; height: 18px; flex-basis: 18px; }
+  .in-combat .spell-btn .nm { display: none; }
+  .in-combat .spell-slot-tools kbd { font-size: 7px; line-height: 8px; }.spell-cost { font-size: 7px; line-height: 9px; }
+  .dock-fighter-heading { flex-basis: 21px; }.dock-fighter-name > small { display: none; }.dock-portrait { display: none; }
+  .dock-details, .dock-fighter-summary { gap: 3px; }.dock-stat-tabs { flex-basis: 20px; }.dock-stat-tabs button { font-size: 10px; }
+  .dock-stat-content { gap: 2px; }.dock-detail-row { font-size: 9px; }.dock-attributes > div { padding: 2px 1px; }.dock-attributes dd { font-size: 12px; }
+  .dock-resistances { line-height: 1; }.dock-resistances th { font-size: 8px; }.dock-resistances td { padding-top: 1px; }.dock-resistances td small { font-size: 8px; }
+  .combat-stats .dock-health { height: 12px; flex-basis: 12px; }.dock-health .txt { font-size: 9px; }
+  .turn-dial { width: 38px; height: 38px; padding: 3px; }.turn-dial small { display: none; }.turn-dial strong { font-size: 16px; }.turn-dial span { font-size: 8px; }.turn-dial svg { width: 16px; height: 16px; }
+  .player-resources { line-height: 12px; }.player-resources strong { font-size: 11px; }.in-combat .combat-turn-controls .btn { min-height: 22px; font-size: 10px; }
+}

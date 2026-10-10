@@ -23,10 +23,10 @@ export default function FighterPanel({ fighter, fighters, side, isActive, compac
     <div className={`panel fighter-card${isActive ? ' is-active' : ''}`} data-fighter-id={fighter.id}>
       <div className="fighter-head">
         <div className={`face side-${side}-border`}>{fighter.isSummon ? <span aria-hidden="true">{fighter.emoji || '✦'}</span>
-          : <RetroPortrait classId={fighter.classId} side={side} fallback={cls.emoji} />}</div>
+          : <RetroPortrait classId={fighter.classId} monsterId={fighter.isMonster ? fighter.monsterId : null} side={side} fallback={fighter.emoji || cls?.emoji} />}</div>
         <div className="who">
           <div className="bot-name">{fighter.name}</div>
-          <div className="class-name">{fighter.isSummon ? (fighter.isDouble ? 'Double' : fighter.staticSummon ? 'Invocation statique' : 'Invocation') : cls.name} · niv. {fighter.level}</div>
+          <div className="class-name">{fighter.isSummon ? (fighter.isDouble ? 'Double' : fighter.staticSummon ? 'Invocation statique' : 'Invocation') : fighter.isMonster ? 'Monstre' : cls.name} · niv. {fighter.level}</div>
           {fighter.ownerId && <div className="class-name">Invoquée par {fighters?.[fighter.ownerId]?.name || fighter.ownerId}</div>}
         </div>
         {isActive ? <span className="turn-chip">à lui de jouer</span> : null}
@@ -68,7 +68,7 @@ export default function FighterPanel({ fighter, fighters, side, isActive, compac
         {fighter.equipment.sets.filter(set => set.effects.length).map(set => <p key={set.id}>{set.name} · {set.count}/{set.total}</p>)}
       </details> : null}
 
-      {(!compact || fighter.isSummon) && <details className="fighter-spells"><summary>{fighter.isSummon ? 'Sorts de l’invocation' : 'Sorts et arme'} · {spells.length}</summary><div className="spell-list">
+      {(!compact || fighter.isSummon || fighter.isMonster) && <details className="fighter-spells"><summary>{fighter.isSummon ? 'Sorts de l’invocation' : fighter.isMonster ? 'Sorts du monstre' : 'Sorts et arme'} · {spells.length}</summary><div className="spell-list">
         {spells.map((s) => {
           const cd = fighter.cooldowns?.[s.key] || 0;
           return (

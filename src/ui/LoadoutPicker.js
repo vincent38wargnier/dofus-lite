@@ -1,9 +1,9 @@
-import React, { useEffect, useId, useMemo, useState } from 'react';
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { CLASSES } from '../engine/classes';
 import {
   EQUIPMENT, ITEMS, ITEM_SETS, EQUIPMENT_SLOTS,
   CHARACTERISTICS, STAT_LABELS, ELEMENTS, equipSet, resolveLoadout,
-  rolledEffects, effectDefinition,
+  rolledEffects, effectDefinition, petBonus, availableItemEffects,
 } from '../engine/equipment';
 import { RetroPortrait } from './RetroAssets';
 import SpellLoadoutPicker from './SpellLoadoutPicker';
@@ -14,6 +14,7 @@ import { loadoutAtLevel } from './playerSetupState';
 import CharacteristicAllocator from './CharacteristicAllocator';
 import ForgemagieWorkshop from './ForgemagieWorkshop';
 import { matchingForge, forgeRestriction, replaceEquipment } from '../engine/forgedItems';
+import { canEquipInSlot, canDropEquipment, dropEquipment } from './equipmentDrag';
 import '../styles/loadoutBuilder.css';
 export { LoadoutsProvider, useLoadouts } from './LoadoutsContext';
 export { default as EquipmentIcon } from './EquipmentIcon';
@@ -31,6 +32,7 @@ function statLabel(stat) {
 
 export function effectText(row, value) {
   const [id, min, maximum, argument] = row;
+  if (id === 940) return 'Capacités accrues';
   const def = effectDefinition(id);
   const range = maximum > min ? `${min}–${maximum}` : String(min);
   if (def.kind === 'stat' || def.kind === 'utility') {
@@ -61,7 +63,7 @@ function EffectList({ item, loadout, slot }) {
   })}</ul>;
 }
 
-export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Adversaire' }, loadouts, update, summaries, saveError, onClassChange,
+export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Adversaire' }, loadouts, update, summaries, saveError,
   embedded = false, fixedSide, activeView, onViewChange }) {
   const tabId = useId();
   const [localView, setLocalView] = useState('equipment');
@@ -75,12 +77,18 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
   const [slotId, setSlotId] = useState('hat');
   const [search, setSearch] = useState('');
   const [statFilter, setStatFilter] = useState('');
+  const [companionFilter, setCompanionFilter] = useState('');
   const [withinLevel, setWithinLevel] = useState(true);
   const [page, setPage] = useState(0);
   const [inspectId, setInspectId] = useState(null);
   const [setId, setSetId] = useState('1');
+  const drag = useRef(null);
+  const suppressClick = useRef(false);
+  const [dragged, setDragged] = useState(null);
+  const [dropTarget, setDropTarget] = useState(null);
   const classId = classes[side];
   useEffect(() => { setInspectId(null); setPage(0); }, [side, classId]);
+  useEffect(() => { drag.current = null; setDragged(null); setDropTarget(null); }, [side, classId, view]);
   const loadout = loadouts[side];
   const summary = summaries[side];
   const level = summary.level;
@@ -94,19 +102,48 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
   const filtered = useMemo(() => {
     const words = fold(search).split(/\s+/).filter(Boolean);
     return ALL_ITEMS.filter(item => slot.types.includes(item.type) && (!withinLevel || item.level <= level)
+      && (slot.id !== 'pet' || !companionFilter || (companionFilter === 'mount' ? !!item.mount
+        : companionFilter === 'cosmetic' ? item.pet?.kind === 'cosmetic' : item.type === 18 && item.pet?.kind !== 'cosmetic'))
       && (!minLevel || item.level >= Number(minLevel)) && (!maxLevel || item.level <= Number(maxLevel))
       && words.every(word => SEARCH[item.id].includes(word))
-      && (!statFilter || item.effects.some(([id]) => effectDefinition(id).stat === statFilter && effectDefinition(id).sign === 1)))
+      && (!statFilter || availableItemEffects(item).some(([id]) => effectDefinition(id).stat === statFilter && effectDefinition(id).sign === 1)))
       .sort((a, b) => sort === 'name' ? a.name.localeCompare(b.name, 'fr')
         : (sort === 'level-asc' ? a.level - b.level : b.level - a.level) || a.name.localeCompare(b.name, 'fr'));
-  }, [slot, withinLevel, search, statFilter, level, minLevel, maxLevel, sort]);
+  }, [slot, withinLevel, search, statFilter, companionFilter, level, minLevel, maxLevel, sort]);
   const pageCount = Math.max(1, Math.ceil(filtered.length / 24));
   const actualPage = Math.min(page, pageCount - 1);
   const shown = filtered.slice(actualPage * 24, (actualPage + 1) * 24);
   const inspectUnsupported = inspected?.effects.some(([id]) => effectDefinition(id).kind === 'unsupported');
   const equip = (item = inspected) => {
-    if (!item || item.level > level || !slot.types.includes(item.type) || item.effects.some(([id]) => effectDefinition(id).kind === 'unsupported')) return;
+    if (!canEquipInSlot(item, slotId, level)) return;
     change(current => replaceEquipment(current, slotId, item.id));
+  };
+  const clearDrag = () => { drag.current = null; setDragged(null); setDropTarget(null); };
+  const beginDrag = (event, item, fromSlot = null) => {
+    if (!item || (!fromSlot && !canEquipInSlot(item, slotId, level))) { event.preventDefault(); return; }
+    const payload = { itemId: item.id, fromSlot, side, classId };
+    drag.current = payload; setDragged(payload); setDropTarget(null); suppressClick.current = true;
+    event.dataTransfer.effectAllowed = fromSlot ? 'move' : 'copy';
+    event.dataTransfer.setData('application/x-dofus-equipment', JSON.stringify(payload));
+    event.dataTransfer.setData('text/plain', item.name);
+    const icon = event.currentTarget.querySelector('.equipment-icon');
+    event.dataTransfer.setDragImage?.(icon || event.currentTarget, 20, 20);
+  };
+  const dragOverSlot = (event, id) => {
+    if (!drag.current) return;
+    event.preventDefault(); event.stopPropagation();
+    const allowed = canDropEquipment(loadout, drag.current, id);
+    event.dataTransfer.dropEffect = allowed ? drag.current.fromSlot ? 'move' : 'copy' : 'none';
+    setDropTarget(allowed ? id : null);
+  };
+  const dropOnSlot = (event, id) => {
+    event.preventDefault(); event.stopPropagation();
+    const payload = drag.current;
+    if (payload?.side === side && payload?.classId === classId && canDropEquipment(loadout, payload, id)) {
+      change(current => dropEquipment(current, payload, id));
+      changeSlot(id); setInspectId(payload.itemId);
+    }
+    clearDrag();
   };
   const comparison = useMemo(() => inspected && selected?.id !== inspected.id && slot.types.includes(inspected.type)
     ? resolveLoadout(classId, { ...loadout, slots: { ...loadout.slots, [slotId]: inspected.id } }) : null, [inspected, selected, slot, slotId, classId, loadout]);
@@ -118,7 +155,11 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
   ].filter(row => row.before !== row.after) : [];
   const renderSlot = s => {
     const item = ITEMS[loadout.slots[s.id]];
-    return <button type="button" key={s.id} className={`equipment-slot${slotId === s.id ? ' selected' : ''}${item ? ' equipped' : ''}`}
+    const compatible = dragged && canDropEquipment(loadout, dragged, s.id);
+    return <button type="button" key={s.id} className={`equipment-slot${slotId === s.id ? ' selected' : ''}${item ? ' equipped' : ''}${dragged ? compatible ? ' drop-compatible' : ' drop-blocked' : ''}${dropTarget === s.id ? ' drop-target' : ''}${dragged?.fromSlot === s.id ? ' dragging' : ''}`}
+      draggable={!!item} onDragStart={event => beginDrag(event, item, s.id)} onDragEnd={clearDrag}
+      onDragOver={event => dragOverSlot(event, s.id)} onDrop={event => dropOnSlot(event, s.id)}
+      onDragLeave={event => { if (!event.currentTarget.contains(event.relatedTarget)) setDropTarget(current => current === s.id ? null : current); }}
       data-slot={s.id} aria-pressed={slotId === s.id} aria-label={`${s.name} : ${item?.name || 'vide'}`} title={`${s.name} : ${item?.name || 'vide'}`} onClick={() => changeSlot(s.id)}>
       {item ? <EquipmentIcon item={item} /> : <span className="slot-empty" aria-hidden="true">{s.icon}</span>}<span>{s.name}</span>
     </button>;
@@ -126,10 +167,13 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
   const remove = () => change(current => replaceEquipment(current, slotId, null));
   const changeSlot = id => { setSlotId(id); setInspectId(null); setSearch(''); setPage(0); setView('equipment'); };
 
-  return <section className={`loadout-picker${embedded ? ' builder-embedded' : ' panel'}`} aria-label="Équipement avant combat">
+  return <section className={`loadout-picker${embedded ? ' builder-embedded' : ' panel'}${dragged ? ' equipment-dragging' : ''}`} aria-label="Équipement avant combat"
+    onPointerDownCapture={() => { suppressClick.current = false; }}
+    onKeyDownCapture={event => { if (['Enter', ' '].includes(event.key)) suppressClick.current = false; }}
+    onClickCapture={event => { if (suppressClick.current) { event.preventDefault(); event.stopPropagation(); suppressClick.current = false; } }}>
     {!embedded && <><div className="loadout-heading">
       <div><p className="eyebrow">ATELIER D’ÉQUIPEMENT</p><h2>Préparez votre prochain combat</h2></div>
-      <span className="loadout-save">Dofus Retro · 6 419 objets · 145 panoplies</span>
+      <span className="loadout-save">Dofus Retro · {ALL_ITEMS.length.toLocaleString('fr-FR')} objets · {SETS.length} panoplies</span>
     </div>
     <div className="loadout-sides" role="tablist" aria-label="Combattant à équiper">
       {['A', 'B'].map(s => <button key={s} type="button" role="tab" aria-selected={side === s}
@@ -139,7 +183,7 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
         <span className="loadout-side-stats">{summaries[s].hp} PV · {summaries[s].pa} PA · {summaries[s].pm} PM{!summaries[s].valid ? ' · ⚠' : ''}</span>
       </button>)}
     </div>
-    <LoadoutLibrary side={side} classId={classId} loadout={loadout} update={update} onClassChange={onClassChange} saveError={saveError} /></>}
+    <LoadoutLibrary side={side} classId={classId} loadout={loadout} update={update} saveError={saveError} /></>}
     {!summary.valid ? <div className="loadout-errors" role="alert"><strong>À corriger avant de lancer le combat</strong><ul>{summary.errors.map(error => <li key={error}>{error}</li>)}</ul></div> : null}
     <div className="builder-navigation" role="tablist" aria-label="Préparation du stuff">
       {[['equipment', 'Équipements'], ['forge', 'Forgemagie'], ['stats', 'Caractéristiques'], ['spells', 'Sorts & raccourcis']].map(([id, label]) => <button key={id} type="button" role="tab" id={`${tabId}-${id}-tab`} aria-controls={`${tabId}-${id}`} aria-selected={view === id} tabIndex={view === id ? 0 : -1} className={view === id ? 'selected' : ''} onClick={() => setView(id)} onKeyDown={event => {
@@ -165,7 +209,7 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
         {SETS.map(set => <option key={set.id} value={set.id}>{set.name}{set.items.some(id => !ITEMS[id]) ? ' · données incomplètes' : ` · niv. ${Math.max(...set.items.map(id => ITEMS[id].level))}`}</option>)}
       </select></label>
       <button type="button" className="btn" disabled={setMissing.length > 0 || setLevel > level} onClick={() => { change(current => equipSet(current, setId)); setInspectId(null); }}>Équiper la panoplie</button>
-      <button className="btn subtle" type="button" onClick={() => { change({ ...loadout, slots: {}, ...(loadout.forgedItems ? { forgedItems: {} } : {}) }); setInspectId(null); }}>Tout retirer</button>
+      <button className="btn subtle" type="button" onClick={() => { change({ ...loadout, slots: {}, ...(loadout.forgedItems ? { forgedItems: {} } : {}), ...(loadout.rollOrigins ? { rollOrigins: {} } : {}) }); setInspectId(null); }}>Tout retirer</button>
     </div>
     <details className="set-composition"><summary>{selectedSet.name} · {selectedSet.items.length} pièces · niveau {setLevel}{setMissing.length ? ` · ${setMissing.length} pièces absentes des données client` : ''}</summary>
       <div className="set-piece-list">{selectedSet.items.map(id => {
@@ -197,10 +241,19 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
       </div>
       <div className="equipment-inventory">
         <div className="equipment-inventory-heading"><div><span className="eyebrow">CATALOGUE</span><h3>{slot.name}</h3></div><span>{filtered.length} objets</span></div>
+        <p className="equipment-drag-hint" role="status">{dragged
+          ? 'Déposez l’objet sur un emplacement en surbrillance.'
+          : 'Glissez un objet vers son emplacement pour l’équiper.'}</p>
+        {slotId === 'pet' ? <div className="companion-intro">
+          <p>Familiers au maximum, avec capacités accrues si disponibles. Montures niveau 100, accessibles dès le niveau 60 du personnage. Un seul compagnon équipé.</p>
+          <label>Type de compagnon <select aria-label="Type de compagnon" value={companionFilter} onChange={e => { setCompanionFilter(e.target.value); setInspectId(null); setPage(0); }}>
+            <option value="">Tous les compagnons</option><option value="pet">Familiers à bonus</option><option value="mount">Montures</option><option value="cosmetic">Familiers d’apparat</option>
+          </select></label>
+        </div> : null}
         <div className="equipment-search">
           <label className="equipment-search-field"><span>Rechercher un objet</span><input type="search" aria-label="Rechercher un équipement" placeholder="Nom d’objet ou de panoplie…" value={search} onChange={e => { setSearch(e.target.value); setPage(0); }} /></label>
           <label><span>Bonus recherché</span><select aria-label="Filtrer par caractéristique" value={statFilter} onChange={e => { setStatFilter(e.target.value); setPage(0); }}>
-            <option value="">Tous les bonus</option>{['pa', 'pm', 'range', ...CHARACTERISTICS, 'damage', 'power', 'crit', 'heal', 'summons'].map(stat => <option key={stat} value={stat}>{STAT_LABELS[stat]}</option>)}
+            <option value="">Tous les bonus</option>{['pa', 'pm', 'range', ...CHARACTERISTICS, 'damage', 'power', 'crit', 'heal', 'summons', 'prospecting', 'pods', ...ELEMENTS.map(e => `res_${e}`)].map(stat => <option key={stat} value={stat}>{statLabel(stat)}</option>)}
           </select></label>
         </div>
         <div className="equipment-filter-row">
@@ -213,12 +266,15 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
           <div>
             <div className="equipment-results" role="list" aria-label="Objets disponibles">
               {shown.map(item => {
-                const preview = item.effects.filter(([id]) => effectDefinition(id).kind === 'stat').slice(0, 2).map(row => effectText(row)).join(' · ');
+                const preview = rolledEffects(item, loadout, slotId).filter(({ row: [id] }) => ['stat', 'utility'].includes(effectDefinition(id).kind))
+                  .slice(0, 2).map(({ row, value }) => effectText(row, value)).join(' · ');
                 const unsupported = item.effects.some(([id]) => effectDefinition(id).kind === 'unsupported');
-                return <button type="button" key={item.id} className={`equipment-result${inspected?.id === item.id ? ' selected' : ''}${item.level > level || unsupported ? ' unavailable' : ''}`}
-                  data-item-id={item.id} onClick={() => setInspectId(item.id)} onDoubleClick={() => equip(item)} title="Cliquer pour comparer · double-cliquer pour équiper" aria-pressed={inspected?.id === item.id}>
+                return <button type="button" key={item.id} className={`equipment-result${inspected?.id === item.id ? ' selected' : ''}${item.level > level || unsupported ? ' unavailable' : ''}${dragged?.itemId === item.id && !dragged.fromSlot ? ' dragging' : ''}`}
+                  draggable={item.level <= level && !unsupported} onDragStart={event => beginDrag(event, item)} onDragEnd={clearDrag}
+                  data-item-id={item.id} onClick={() => setInspectId(item.id)} onDoubleClick={() => equip(item)} title="Glisser vers un emplacement pour équiper · cliquer pour comparer · double-cliquer pour équiper" aria-pressed={inspected?.id === item.id}>
                   <EquipmentIcon item={item} /><span className="equipment-result-text"><strong>{item.name}</strong><small>{preview || EQUIPMENT.types[item.type]}{unsupported ? ' · Effet non reproduit' : ''}</small></span>
-                  <span className="equipment-item-level">Niv. {item.level}{selected?.id === item.id ? <small>Équipé</small> : null}</span>
+                  <span className="equipment-item-level">{item.mount ? 'Monture 100' : item.pet?.kind === 'cosmetic' ? 'Apparat' : item.pet ? 'Max' : `Niv. ${item.level}`}
+                    {item.pet || item.mount ? <small>Niv. requis {item.level}</small> : null}{selected?.id === item.id ? <small>Équipé</small> : null}</span>
                 </button>;
               })}
               {!shown.length ? <p className="equipment-empty muted">Aucun objet ne correspond à ces filtres.</p> : null}
@@ -229,7 +285,21 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
           </div>
           <aside className="equipment-inspector" aria-label="Détails de l’objet">
             {inspected ? <>
-              <div className="equipment-inspector-head"><EquipmentIcon item={inspected} /><h3>{inspected.name}<small>{EQUIPMENT.types[inspected.type]} · Niveau {inspected.level}</small></h3></div>
+              <div className="equipment-inspector-head" draggable={canEquipInSlot(inspected, slotId, level)}
+                onDragStart={event => beginDrag(event, inspected, selected?.id === inspected.id ? slotId : null)} onDragEnd={clearDrag}>
+                <EquipmentIcon item={inspected} /><h3>{inspected.name}<small>{EQUIPMENT.types[inspected.type]} · {inspected.mount ? 'Niveau 100' : `Niveau requis ${inspected.level}`}</small></h3></div>
+              {inspected.pet?.kind === 'trained' ? <div className="companion-training">
+                <p className="companion-status">Bonus maximum{inspected.pet.capacity.increase ? ' · Capacités accrues' : ''}</p>
+                {inspected.pet.choices.length > 1 ? <label>Spécialisation du familier
+                  <select aria-label="Spécialisation du familier" value={petBonus(inspected, loadout)[0]} onChange={e => {
+                    const effect = Number(e.target.value);
+                    change(current => ({ ...current, petBonuses: { ...current.petBonuses, [inspected.id]: effect } }));
+                  }}>{inspected.pet.choices.map(row => <option key={row[0]} value={row[0]}>{effectText(row, row[1])}</option>)}</select>
+                  <small>Le bonus choisi utilise la capacité du familier. Ce choix est sauvegardé avec le stuff.</small>
+                </label> : null}
+              </div> : null}
+              {inspected.pet?.kind === 'fixed' ? <p className="companion-status">Bonus fixes au maximum</p> : null}
+              {inspected.mount ? <p className="companion-status">Bonus de niveau 100 · Personnage niveau {inspected.level} minimum</p> : null}
               {comparison ? <div className="equipment-comparison" aria-label="Comparaison avant remplacement">
                 <h4>{selected ? `Remplace ${selected.name}` : `Ajoute à ${slot.name}`}</h4>
                 {deltas.length ? <table><thead><tr><th>Caractéristique</th><th>Après</th><th>Écart</th></tr></thead><tbody>{deltas.map(row => <tr key={row.stat} data-delta-stat={row.stat}><td>{row.label}</td><td>{row.after}</td><td className={(row.after > row.before) !== (row.stat === 'fail') ? 'gain' : 'penalty'}>{row.after > row.before ? '+' : ''}{row.after - row.before}</td></tr>)}</tbody></table> : <p>Mêmes caractéristiques totales.</p>}
@@ -239,7 +309,8 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
               <h4 className="equipment-effects-title">Effets de l’objet</h4>
               <EffectList item={inspected} loadout={loadout} slot={slotId} />
               {matchingForge(inspected, loadout, slotId) ? <p className="equipment-equipped-label">Jet forgemagé · conservé avec ce stuff</p> : null}
-              {!inspected.effects.some(([id]) => ['stat', 'spell'].includes(effectDefinition(id).kind)) ? <p className="muted small">Aucun bonus permanent dans ce modèle.{inspected.type === 18 ? ' Les jets acquis par entraînement du familier ne sont pas fournis par le client.' : ''}</p> : null}
+              {!inspected.effects.some(([id]) => ['stat', 'utility', 'spell'].includes(effectDefinition(id).kind)) ? <p className="muted small">{inspected.pet?.kind === 'cosmetic'
+                ? 'Familier d’apparat : ce modèle ne donne pas de bonus de caractéristiques.' : 'Aucun bonus permanent dans ce modèle.'}</p> : null}
               {inspected.weapon ? <p className="equipment-weapon">
                 {inspected.weapon.pa} PA · Portée {inspected.weapon.range.join('–')}<br />
                 CC 1/{inspected.weapon.critRate || '—'} (+{inspected.weapon.critBonus}) · {inspected.weapon.twoHanded ? '2 mains' : '1 main'}<br />
@@ -265,7 +336,7 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
     <div className="loadout-sets" aria-label="Bonus de panoplie">
       {summary.sets.map(set => <div key={set.id}><strong>{set.name} <span>{set.count}/{set.total}</span></strong><p>{set.effects.length ? set.effects.map(row => effectText(row, row[1])).join(' · ') : 'Prochain bonus à 2 objets.'}</p></div>)}
     </div>
-    <p className="equipment-catalog-note">Cliquez sur un emplacement pour changer de catégorie. Double-cliquez sur un objet pour l’équiper. <a href="/dofus-local/equipment-audit.json" target="_blank" rel="noreferrer">Audit du catalogue</a></p>
+    <p className="equipment-catalog-note">Glissez un objet sur un emplacement pour l’équiper. Glissez un anneau ou un Dofus entre ses emplacements pour les échanger. Le double-clic permet aussi d’équiper un objet. <a href="/dofus-local/equipment-audit.json" target="_blank" rel="noreferrer">Audit du catalogue</a></p>
     </div>
     <div id={`${tabId}-forge`} role="tabpanel" aria-labelledby={`${tabId}-forge-tab`} hidden={view !== 'forge'}>
       {view === 'forge' ? <ForgemagieWorkshop key={`${side}:${classId}`} loadout={loadout} change={change} initialSlot={slotId} saveError={saveError} /> : null}

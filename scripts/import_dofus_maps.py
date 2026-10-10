@@ -31,7 +31,7 @@ MAPS_JSON = ROOT / 'OblivionRetro/AivyDofus/Resources/Maps.json'
 OUT_JS = ROOT / 'src/engine/dofusMaps.js'
 PLACEMENTS_JSON = ROOT / 'scripts/map_placements.json'
 DEFAULT_MAPS = [5383, 1571, 6170, 6173, 1735, 2095, 2195, 6158,
-                6167, 9750, 4, 1720, 8313, 999, 1907, 2073, 7423, 952]
+                6167, 9750, 4, 1720, 8313, 999, 1907, 2073, 7423, 952, 534]
 PVP_MAPS = {7423: ('Astrub PvP', '[5,-23]'), 952: ('Amakna PvP', '[-1,0]')}
 
 ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'
@@ -323,7 +323,7 @@ def cmd_generate(map_ids):
                     obstacles.append({'x': x, 'y': y, 't': 'VOID'})
         entries.append({
             'id': slugify(m['AreaName'], m['MapId']),
-            'name': f"{pvp[0] if pvp else m['AreaName']} {m['Coordinate']}",
+            'name': f"{pvp[0] if pvp else 'Kanojedo' if mid == 534 else m['AreaName']} {m['Coordinate']}",
             **({'frameToCells': True} if pvp else {}),
             'sourceId': mid, 'area': m['AreaName'], 'coordinate': m['Coordinate'],
             'walkableCells': a['floor'],

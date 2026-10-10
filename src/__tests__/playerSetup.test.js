@@ -5,7 +5,7 @@ import { availableSpellGrades } from '../engine/classes';
 describe('Player preparation', () => {
   test('restores the selected classes and map without touching saved builds', () => {
     const saved = { playerClass: 'SADIDA', botClass: 'FECA', botId: 'custom-bot', mapId: 'canyon' };
-    expect(readPlayerSetup({ getItem: () => JSON.stringify(saved) })).toEqual(saved);
+    expect(readPlayerSetup({ getItem: () => JSON.stringify(saved) })).toEqual({ ...saved, playerBotId: 'maison', mode: 'duel', monsterGrade: 5, bossId: 147, bossGrade: 5 });
   });
 
   test('unavailable, damaged or obsolete settings recover valid defaults', () => {

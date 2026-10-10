@@ -2,7 +2,7 @@
 // and summon stats are separately sourced; see spell-audit.json and README.
 
 import LIBRARY from './spellLibrary.json';
-import { PARCHMENT_STAT } from './characteristicDefaults';
+import { PARCHMENT_STAT, baseActionPoints } from './characteristicDefaults';
 export const SPELL_LIBRARY = LIBRARY;
 
 // Stable display keys for the original arena kit; targeting comes from the dump.
@@ -94,8 +94,8 @@ const SPELL_META = {
   704: { key: 'pandanlku', name: 'Pandanlku', emoji: '🏃', targetMode: 'self' },
 };
 
-// Buffs whose duration is 0 in the dump last this many of the owner's turns.
-export const DEFAULT_BUFF_TURNS = 2;
+// A zero-duration stat bonus applies only during the current turn.
+export const DEFAULT_BUFF_TURNS = 0;
 
 // Effets qu'aucune ligne du moteur ne simule: filtrés à la construction.
 const isSimulated = (e) => e.kind !== 'ignore' && !e.kind.startsWith('unknown');
@@ -134,6 +134,7 @@ export function buildSpell(raw) {
     forbiddenStates: raw.forbiddenStates || [],
     cooldown: raw.cooldown,
     initialCooldown: raw.initialCooldown || 0,
+    missingSummons: raw.missingSummons || [],
     auditNotes: LIBRARY.spells[raw.id]?.auditNotes || [],
     unsupportedEffects: [...new Set([...raw.effects, ...raw.critEffects]
       .filter(e => !isSimulated(e) && ![666, 149].includes(e.id)).map(e => e.id))],
@@ -154,7 +155,7 @@ export function availableSpellGrades(id, level = 100) {
 
 // Default arena preset. Explicit grades still follow the real unlock levels.
 export function defaultSpellGrade(id, level = 100) {
-  const desired = level >= 200 ? 6 : 5;
+  const desired = LIBRARY.common.includes(Number(id)) || level >= 200 ? 6 : 5;
   return availableSpellGrades(id, level).filter(grade => grade <= desired).pop();
 }
 
@@ -169,7 +170,9 @@ export function resolveSpellLoadout(classId, loadout = {}) {
   for (const id of ids) {
     const grades = availableSpellGrades(id, level);
     if (!grades.length) continue;
-    const selected = config.grades?.[id];
+    // Common spells always use their best unlocked grade, including old saved
+    // loadouts that stored grade 1. Their real grade-6 threshold is level 100.
+    const selected = LIBRARY.common.includes(id) ? undefined : config.grades?.[id];
     const grade = selected ?? defaultSpellGrade(id, level);
     if (!grades.includes(grade)) { errors.push(`${LIBRARY.spells[id].name} : grade inaccessible.`); continue; }
     const spell = spellAtGrade(id, grade);
@@ -232,7 +235,7 @@ for (const [id, [emoji, description, vita, stats, maxSummons]] of Object.entries
     emoji,
     description,
     baseHp: BASE_HP + vita + PARCHMENT_STAT,
-    basePa: 8,
+    basePa: baseActionPoints(FIGHTER_LEVEL),
     basePm: 4,
     stats: { ...Object.fromEntries(Object.entries(stats).map(([stat, value]) => [stat, value + PARCHMENT_STAT])), vitalite: vita + PARCHMENT_STAT },
     maxSummons,

@@ -51,7 +51,6 @@
 }
 .retro-token.targetable .retro-figure { filter: drop-shadow(0 0 2px #f7d04e); }
 .retro-token .mini-hp { bottom: calc(var(--hw) * 2.45); }
-.retro-token.dead { filter: none; }
 .retro-library { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .retro-library h2 { font-size: 18px; margin: 0 0 18px; color: var(--gold); }
 .retro-class-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
@@ -317,10 +316,6 @@ label.field { display: flex; flex-direction: column; gap: 5px; font-size: 12px; 
 
 .token.side-A .avatar { border-color: var(--blue); background-color: #2b4f6e; }
 .token.side-B .avatar { border-color: var(--red); background-color: #6e2f29; }
-.token.dead { filter: grayscale(1); opacity: 0.55; }
-.token.dead .figure { bottom: calc(var(--fig) * -0.3); }
-.token.dead .avatar { transform: rotate(90deg) scale(0.9); }
-.token.dead .mini-hp { display: none; }
 
 .token.summon { --fig: calc(var(--hw) * 1.15); }
 .token.summon .ring { transform: scale(0.8); }
@@ -395,6 +390,7 @@ label.field { display: flex; flex-direction: column; gap: 5px; font-size: 12px; 
 
 .float-text.dmg { color: #ff8f6b; }
 .float-text.heal { color: #7fe6ae; }
+.float-text.health-change { font-size: 20px; font-variant-numeric: tabular-nums; text-align: center; }
 .float-text.crit { color: #ffd23e; font-size: 19px; }
 .float-text.info { color: #cfc4ff; font-size: 12.5px; font-weight: 700; }
 .float-text.pa-cost { color: #8fc7ff; font-size: 12px; font-weight: 800; }
@@ -642,6 +638,7 @@ label.field { display: flex; flex-direction: column; gap: 5px; font-size: 12px; 
 }
 
 .log .entry { padding: 2px 6px; border-radius: 6px; }
+.log .log-amount { white-space: nowrap; }
 .log .entry.turn { color: var(--gold); font-weight: 800; margin-top: 6px; }
 .log .entry.dmg { color: #ff9f84; }
 .log .entry.heal { color: #7fe6ae; }
@@ -810,6 +807,21 @@ label.field { display: flex; flex-direction: column; gap: 5px; font-size: 12px; 
   cursor: crosshair;
 }
 .cell.hl-target:hover { fill: rgba(255, 150, 120, 0.66); }
+.cell.hl-splash {
+  fill: rgba(244, 172, 62, 0.25);
+  stroke: #bb791f;
+  stroke-width: 1.5;
+  stroke-dasharray: 3 2;
+  cursor: crosshair;
+}
+.cell.hl-splash:hover { fill: rgba(244, 172, 62, 0.5); }
+/* Keep the hovered area visible above imported grass and scenery, while
+   pointer events still reach the aiming cells and fighters underneath. */
+.board .attack-preview-layer { position: absolute; inset: 0; z-index: 900; overflow: visible; pointer-events: none; }
+.attack-preview-cell { fill: #ffbf5570; stroke: #ffe4a0; stroke-width: 2; pointer-events: none; }
+.attack-preview-cell.aim { fill: #ed765887; stroke: #fff5db; stroke-width: 2.5; }
+.weapon-targeting { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--panel); font-size: 12px; }
+.weapon-targeting > span:last-child { flex-basis: 100%; color: var(--muted); }
 .projectile, .impact, .float-text, .trail, .aoe-cell, .winner-banner .crown { pointer-events: none; }
 
 .play-controls {

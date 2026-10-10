@@ -43,5 +43,19 @@ class ClientSpellAuditTest(unittest.TestCase):
         self.assertTrue(all(not s['officialServerValidated'] for s in audit['spells']))
         self.assertTrue(all(not s['unhandledEffects'] and not s['unsupportedZones'] for s in audit['spells']))
 
+    def test_icon_palette_matches_client_spell_icon_properties(self):
+        for category, sid in {'neutre': 143, 'terre': 141, 'feu': 156, 'eau': 447, 'air': 145,
+                              'multi': 152, 'boost': 153, 'heal': 121, 'summon': 34}.items():
+            self.assertEqual(self.library['iconPalette'][category],
+                             '#{:06x}'.format(self.client[sid]['i']['bc'][0]))
+
+    def test_furie_life_loss_is_a_reaction_to_hits_not_a_periodic_poison(self):
+        for grade in self.library['spells']['447']['grades']:
+            for field in ('effects', 'critEffects'):
+                recoil = next(e for e in grade[field] if e['id'] == 89)
+                self.assertEqual(recoil['kind'], 'damageOnHit')
+                self.assertEqual(recoil['p1'], 1)
+                self.assertEqual(recoil['duration'], 1)
+
 if __name__ == '__main__':
     unittest.main()

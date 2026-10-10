@@ -2,7 +2,12 @@ import React, { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } f
 import { CLASSES } from '../engine/classes';
 import { spellsOf, isInvisible } from '../engine/engine';
 import { key } from '../engine/geometry';
-import { RETRO_BASE, RetroMovie, RetroSpellEffect, facing, getActorId, resolveAnimation, useAppearances, useRetroAssets } from './RetroAssets';
+import { RETRO_BASE, RetroMovie, RetroSpellEffect, getActorId, resolveAnimation, useAppearances, useRetroAssets } from './RetroAssets';
+import useFighterAnimation from './useFighterAnimation';
+import useCombatSounds from './useCombatSounds';
+import useMapFrame from './useMapFrame';
+import HealthChangeFloats from './HealthChangeFloats';
+import { healthChangeGroups } from './healthChanges';
 import FighterInspector from './FighterInspector';
 import useFighterInspection from './useFighterInspection';
 import { Grid2X2 } from 'lucide-react';
@@ -20,19 +25,28 @@ import '../styles/placement.css';
 // fournissent les personnages animés et les décors des cartes importées.
 
 const MAX_BOARD_PX = 760;
+const TACTICAL_LEGEND_PX = 28;
 
-function makeLayout(width, height, availPx, retroMap = null) {
-  const span = retroMap ? retroMap.width / retroMap.hw : width + height;
+export function makeLayout(width, height, availPx, retroMap = null, availHeight = null, mapFrame = null) {
+  const frame = mapFrame || retroMap;
+  const sourceHw = retroMap?.hw || 1;
+  const span = frame ? frame.width / sourceHw : width + height;
   const usable = Math.min(MAX_BOARD_PX, (availPx || 672) - 30);
-  let hw = Math.max(2, Math.min(28, Math.floor(usable / span)));
-  if (hw % 2) hw -= 1;
+  const fitted = availHeight !== null;
+  const heightPerHw = frame ? frame.height / sourceHw : 2.4 + span / 2 + .65;
+  let hw = fitted
+    ? Math.max(.1, Math.min(((availPx || 672) - 2) / span, (availHeight - 2 - (frame ? 0 : 8)) / heightPerHw))
+    : Math.max(2, Math.min(28, Math.floor(usable / span)));
+  if (!fitted && hw % 2) hw -= 1;
   const hh = hw / 2;
   const fig = Math.round(hw * 1.55); // diamètre du médaillon d'un combattant
   const lift = Math.round(hh * 0.4); // le médaillon flotte au-dessus de sa case
-  const top = retroMap ? retroMap.top * hw / retroMap.hw : Math.round(hw * 2.4);
-  const cliff = Math.round(hh * 1.3); // épaisseur du socle de l'île
-  const cx = (x, y) => (x - y + (retroMap?.originX ?? height)) * hw;
-  const cy = (x, y) => top + (x + y + 1) * hh - (retroMap?.elevations[`${x},${y}`] || 0) * hw / (retroMap?.hw || hw);
+  const top = retroMap ? retroMap.top * hw / retroMap.hw : fitted ? hw * 2.4 : Math.round(hw * 2.4);
+  const cliff = fitted ? hh * 1.3 : Math.round(hh * 1.3); // épaisseur du socle de l'île
+  const scale = hw / sourceHw;
+  const offsetX = (mapFrame?.left || 0) * scale, offsetY = (mapFrame?.top || 0) * scale;
+  const cx = (x, y) => (x - y + (retroMap?.originX ?? height)) * hw - offsetX;
+  const cy = (x, y) => top + (x + y + 1) * hh - (retroMap?.elevations[`${x},${y}`] || 0) * scale - offsetY;
   return {
     hw,
     hh,
@@ -40,7 +54,8 @@ function makeLayout(width, height, availPx, retroMap = null) {
     lift,
     cliff,
     w: span * hw,
-    h: retroMap ? retroMap.height * hw / retroMap.hw : top + span * hh + cliff + 8,
+    h: frame ? frame.height * scale : top + span * hh + cliff + 8,
+    mapLayerStyle: retroMap ? { width: retroMap.width * scale, height: retroMap.height * scale, left: -offsetX, top: -offsetY } : null,
     cx,
     cy,
     ground: (p) => ({ x: cx(p.x, p.y), y: cy(p.x, p.y) }),
@@ -56,17 +71,20 @@ function makeLayout(width, height, availPx, retroMap = null) {
   };
 }
 
-// Largeur disponible (colonne centrale) : le plateau s'y ajuste.
-function useParentWidth(ref) {
-  const [w, setW] = useState(null);
+// In combat, fit both axes of the flexible map area, including after a resize.
+function useParentSize(ref) {
+  const [size, setSize] = useState({ width: null, height: null });
   useLayoutEffect(() => {
     const parent = ref.current && ref.current.parentElement;
     if (!parent || typeof ResizeObserver === 'undefined') return undefined;
-    const ro = new ResizeObserver(([entry]) => setW(Math.round(entry.contentRect.width)));
+    const ro = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      setSize(old => old.width === width && old.height === height ? old : { width, height });
+    });
     ro.observe(parent);
     return () => ro.disconnect();
   }, [ref]);
-  return w;
+  return size;
 }
 
 // Bruit déterministe par case : la même carte a toujours le même sol.
@@ -336,78 +354,51 @@ function Prop({ type, x, y, L }) {
 // Un combattant qui MARCHE suit son chemin case par case (comme en 1.29),
 // au lieu de glisser en ligne droite vers sa destination.
 function FighterToken({
-  f, L, activeId, walkPath, frameIdx, frameEvents, bubble, targetable, onCellClick, onCellHover,
-  inspectorId, isInspected, onInspect, onInspectLeave, placing,
+  f, L, activeId, frameIdx, frameEvents, bubble, targetable, onCellClick, onCellHover,
+  inspectorId, isInspected, onInspect, onInspectLeave, placing, inlineInspection,
 }) {
-  const [stepIdx, setStepIdx] = useState(null);
   const assets = useRetroAssets();
   const { appearances } = useAppearances();
   const actorId = getActorId(assets, f, appearances[f.team]);
   const actor = assets?.actors[actorId];
   const [failedActor, setFailedActor] = useState(null);
-  const [pose, setPose] = useState('static');
-  const [direction, setDirection] = useState({ suffix: 'R', mirror: f.team === 'B' });
-  const previousPos = useRef(f.pos);
+  const { pose, direction, restart, position } = useFighterAnimation(f, frameEvents, frameIdx, actor, assets);
   const useOriginal = actor && failedActor !== actorId;
-
-  useEffect(() => {
-    const cast = frameEvents?.find(e => e.t === 'cast' && e.fighter === f.id);
-    const damage = frameEvents?.some(e => e.t === 'damage' && e.target === f.id);
-    let next = f.hp <= 0 ? 'die' : damage ? 'hit' : 'static';
-    if (cast && f.hp > 0) {
-      const spell = spellsOf(f)[cast.spell];
-      next = cast.weaponAnimation != null ? `anim${cast.weaponAnimation}` : assets?.spells[cast.spellId || spell?.id]?.animation || 'anim0';
-      setDirection(old => facing(cast.from, cast.target, old));
-    } else {
-      setDirection(old => facing(previousPos.current, f.pos, old));
-    }
-    previousPos.current = f.pos;
-    setPose(next);
-    if (next === 'static' || next === 'die') return undefined;
-    const label = resolveAnimation(actor, next, direction.suffix);
-    const duration = actor?.durations?.[label] || (next === 'hit' ? 600 : 1100);
-    const timer = setTimeout(() => setPose('static'), Math.max(350, duration));
-    return () => clearTimeout(timer);
-    // Combat steps, not hover updates, restart an animation.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [frameIdx, f.id, assets]);
-
-  useEffect(() => {
-    if (!walkPath || walkPath.length < 2) { setStepIdx(null); return undefined; }
-    setStepIdx(0);
-    // toute la marche tient en ~500 ms, quel que soit le nombre de cases
-    const stepMs = 130;
-    let i = 0;
-    const iv = setInterval(() => {
-      i += 1;
-      setStepIdx(Math.min(i, walkPath.length - 1));
-      if (i >= walkPath.length - 1) clearInterval(iv);
-    }, stepMs);
-    return () => clearInterval(iv);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [frameIdx, f.id]);
-
-  const walking = walkPath && walkPath.length > 1 && stepIdx !== null;
-  const midWalk = walking && stepIdx < walkPath.length - 1;
-  const pos = midWalk ? walkPath[stepIdx] : f.pos;
-  const walkDirection = midWalk ? facing(walkPath[stepIdx], walkPath[stepIdx + 1], direction) : direction;
-  const animation = resolveAnimation(actor, midWalk ? 'walk' : pose, walkDirection.suffix);
+  const midWalk = pose === 'walk' && position;
+  const pos = position || f.pos;
+  const animation = resolveAnimation(actor, pose, direction.suffix);
+  const previousLayout = useRef(L);
+  const [settlingLayout, setSettlingLayout] = useState(false);
+  const resized = previousLayout.current !== L;
+  useLayoutEffect(() => {
+    if (previousLayout.current === L) return undefined;
+    previousLayout.current = L;
+    // Keep transitions off through the paint. A hover or animation render in
+    // the same frame must not re-enable movement while the board resizes.
+    setSettlingLayout(true);
+    let settled;
+    const paint = requestAnimationFrame(() => {
+      settled = requestAnimationFrame(() => setSettlingLayout(false));
+    });
+    return () => { cancelAnimationFrame(paint); cancelAnimationFrame(settled); };
+  }, [L]);
 
   return (
     <div
-      className={`token side-${f.team}${useOriginal ? ' retro-token' : ''}${f.isSummon ? ' summon' : ''}${f.hp <= 0 ? ' dead' : ''}${f.id === activeId && f.hp > 0 ? ' active' : ''}${targetable ? ' targetable' : ''}${midWalk ? ' walking' : ''}${isInspected ? ' is-inspected' : ''}`}
+      className={`token side-${f.team}${useOriginal ? ' retro-token' : ''}${f.isSummon ? ' summon' : ''}${f.id === activeId ? ' active' : ''}${targetable ? ' targetable' : ''}${midWalk ? ' walking' : ''}${isInspected ? ' is-inspected' : ''}`}
       data-fighter-id={f.id}
       data-actor={actorId || undefined}
       data-animation={animation || undefined}
+      data-mirror={String(direction.mirror)}
       aria-label={f.name}
-      style={{ left: L.cx(pos.x, pos.y), top: L.cy(pos.x, pos.y) - (f.carriedBy ? L.fig * .75 : 0), opacity: isInvisible(f) ? .45 : 1, zIndex: (placing ? 2150 : 10) + (pos.x + pos.y) * 4 + 3 }}
+      style={{ left: L.cx(pos.x, pos.y), top: L.cy(pos.x, pos.y) - (f.carriedBy ? L.fig * .75 : 0), opacity: isInvisible(f) ? .45 : 1, transition: resized || settlingLayout ? 'none' : undefined, zIndex: (placing ? 2150 : 10) + (pos.x + pos.y) * 4 + 3 }}
     >
       <div className="ring" />
       {/* Ciblable : cliquer le corps vise sa case. Sinon les clics traversent
           jusqu'au sol, pour viser précisément la case derrière. */}
       <div
         className={`figure${useOriginal ? ' retro-figure' : ''}`}
-        role="button" tabIndex={0} aria-label={`Inspecter ${f.name}`} aria-haspopup="dialog"
+        role="button" tabIndex={0} aria-label={`Inspecter ${f.name}`} aria-haspopup={inlineInspection ? undefined : 'dialog'}
         aria-expanded={isInspected} aria-controls={isInspected ? inspectorId : undefined}
         onFocus={event => onInspect(f.id, event.currentTarget)} onBlur={onInspectLeave}
         onKeyDown={event => {
@@ -418,12 +409,12 @@ function FighterToken({
       >
         {useOriginal ? (
           <RetroMovie
-            url={actor.url} animation={animation} restart={pose !== 'static' && f.hp > 0 ? frameIdx : 0}
-            className="retro-actor" scriptAccess
-            style={{ transform: walkDirection.mirror ? 'scaleX(-1)' : undefined }}
+            url={actor.url} animation={animation} restart={restart}
+            className="retro-actor" scriptAccess combatSteps
+            style={{ transform: direction.mirror ? 'scaleX(-1)' : undefined }}
             onFailure={() => setFailedActor(actorId)}
           />
-        ) : <div className="avatar">{f.isSummon ? f.emoji : CLASSES[f.classId].emoji}</div>}
+        ) : <div className="avatar">{f.isSummon || f.isMonster ? f.emoji : CLASSES[f.classId].emoji}</div>}
       </div>
       <div className="mini-hp">
         <div style={{ transform: `scaleX(${Math.max(0, f.hp / f.maxHp)})` }} />
@@ -458,7 +449,9 @@ function SpellEffects({ state, frameEvents, frameIdx, assets, L }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [frameIdx, assets]);
   return casts.map(c => <RetroSpellEffect key={c.id} url={c.info.effect}
-    grade={c.event.grade || 5} duration={c.info.duration}
+    grade={c.event.grade || 5} duration={c.info.duration} fps={c.info.fps} maxDuration={1500}
+    type={c.info.type} exportFrames={c.info.exportFrames}
+    zIndex={10 + (c.event.target.x + c.event.target.y) * 4 + (c.info.front === false ? 2 : 4)}
     from={L.ground(c.event.from)} to={L.ground(c.event.target)} scale={L.hw / 26.75}
     onComplete={() => setCasts(current => current.filter(x => x.id !== c.id))} />);
 }
@@ -466,23 +459,34 @@ function SpellEffects({ state, frameEvents, frameIdx, assets, L }) {
 export default function BoardView({
   state, frameEvents, frameIdx, winnerName, endReason, showWinner,
   highlights = null, onCellClick = null, onCellHover = null, pathPreview = null,
+  targetPreview = null,
   viewerTeam = null,
+  fitToContainer = false, inspectionController = null, inspectionPanelId = null,
 }) {
   const wrapRef = useRef(null);
-  const avail = useParentWidth(wrapRef);
+  const avail = useParentSize(wrapRef);
   const uid = useId().replace(/:/g, '');
   const [tacticalMode, toggleTacticalMode] = useTacticalMode();
-  const inspection = useFighterInspection(`${state.mapId}:${state.seed}`);
-  const inspectorId = `${uid}-fighter-inspector`;
+  const localInspection = useFighterInspection(`${state.mapId}:${state.seed}`, !inspectionController, state.fighters);
+  const inspection = inspectionController || localInspection;
+  const inspectorId = inspectionPanelId || `${uid}-fighter-inspector`;
   const assets = useRetroAssets();
+  const { appearances } = useAppearances();
   const retroMap = assets?.imagesReady ? assets.maps[state.mapId] : null;
+  const mapFrame = useMapFrame(retroMap, state.board, fitToContainer, tacticalMode);
   const { width, height, obstacles } = state.board;
-  const L = useMemo(() => makeLayout(width, height, avail, retroMap), [width, height, avail, retroMap]);
+  const bottomInset = fitToContainer && tacticalMode ? TACTICAL_LEGEND_PX : 0;
+  const fittedHeight = fitToContainer && avail.height !== null ? avail.height - bottomInset : null;
+  const L = useMemo(() => makeLayout(width, height, avail.width, retroMap, fittedHeight, mapFrame), [width, height, avail.width, retroMap, fittedHeight, mapFrame]);
   const visible = f => f && (!viewerTeam || f.team === viewerTeam || !isInvisible(f));
   const fighters = Object.values(state.fighters).filter(visible);
-  const inspectedFighter = fighters.find(f => f.id === inspection.inspection?.id);
+  // Keep defeated fighters for the final damage numbers, but remove their
+  // sprites, rings, health bars and inspection targets as soon as they die.
+  const livingFighters = fighters.filter(f => f.hp > 0);
+  const inspectedFighter = livingFighters.find(f => f.id === inspection.inspection?.id);
   // Keep actual invisible positions out of movement/effect overlays.
   frameEvents = (frameEvents || []).filter(e => (!e.fighter || visible(state.fighters[e.fighter])) && (!e.target || typeof e.target !== 'string' || visible(state.fighters[e.target])));
+  const soundScope = useCombatSounds(frameIdx, frameEvents, state.fighters, assets, appearances, `${state.mapId}:${state.seed}`);
   const placing = state.phase === 'placement';
   const activeId = placing ? null : state.order[state.currentIndex];
 
@@ -493,7 +497,7 @@ export default function BoardView({
   const sig = `${width}x${height}|${L.hw}|${theme}|${obstacleList.map((o) => `${o.x},${o.y}${o.type}`).join(';')}`;
 
   const fighterAt = {};
-  for (const f of fighters) if (f.hp > 0 && !f.carriedBy) fighterAt[key(f.pos.x, f.pos.y)] = f;
+  for (const f of livingFighters) if (!f.carriedBy) fighterAt[key(f.pos.x, f.pos.y)] = f;
   // un sort vise le buste d'un combattant, sinon le sol
   const aim = (pos) => (fighterAt[key(pos.x, pos.y)] ? L.chest(pos) : L.ground(pos));
   const at = (id) => state.fighters[id]?.pos;
@@ -501,7 +505,7 @@ export default function BoardView({
   const overlays = [];
   const aoeCells = [];
   const bubbles = {};
-  let shake = false;
+  let shake = healthChangeGroups(frameEvents).some(g => g.t === 'damage' && g.amount >= 45);
 
   const addFloat = (pos, cls, text, i, dy = 0) => {
     const p = L.head(pos);
@@ -533,7 +537,8 @@ export default function BoardView({
     if (e.t === 'cast') {
       const caster = state.fighters[e.fighter];
       const spell = caster ? spellsOf(caster)[e.spell] : null;
-      const originalEffect = assets?.spells[e.spellId || spell?.id]?.effect;
+      const effectInfo = assets?.spells[e.spellId || spell?.id];
+      const originalEffect = effectInfo?.effect || effectInfo?.playEffect === false;
       // Projectile du lanceur vers la cible + coût en PA
       const from = L.chest(e.from);
       const to = aim(e.target);
@@ -590,15 +595,6 @@ export default function BoardView({
       const pos = at(e.target);
       if (pos) { addBurst(pos, '🧹', `dp${i}`); addFloat(pos, 'info', `-${e.removed} effet(s)`, i); }
     }
-    if (e.t === 'damage') {
-      const pos = at(e.target);
-      if (pos) addFloat(pos, 'dmg', `-${e.amount}`, i);
-      if (e.amount >= 45) shake = true;
-    }
-    if (e.t === 'heal' && e.amount > 0) {
-      const pos = at(e.target);
-      if (pos) addFloat(pos, 'heal', `+${e.amount}`, i);
-    }
     if (e.t === 'push' && e.collisionDamage > 0) {
       addBurst(e.to, '💥', `pc${i}`, true);
       shake = true;
@@ -627,12 +623,6 @@ export default function BoardView({
     if (e.t === 'say') bubbles[e.fighter] = e.text;
   });
 
-  // Chemins de marche de ce frame: le token suivra ces cases une à une.
-  const walkPaths = {};
-  (frameEvents || []).forEach((e) => {
-    if (e.t === 'move' && e.path && e.path.length > 1) walkPaths[e.fighter] = e.path;
-  });
-
   // Cases cliquables : des losanges transparents posés sur le sol, que les
   // surbrillances (move / target / range) colorent.
   const cellPolys = [];
@@ -657,8 +647,9 @@ export default function BoardView({
   return (
     <div
       ref={wrapRef}
-      className={`board-wrap${tacticalMode ? ' tactical-mode' : ''}`}
-      style={{ '--hw': `${L.hw}px`, '--hh': `${L.hh}px`, '--fig': `${L.fig}px`, '--lift': `${L.lift}px` }}
+      id={`retro-sound-${soundScope}`}
+      className={`board-wrap${tacticalMode ? ' tactical-mode' : ''}${fitToContainer ? ' fitted-board' : ''}`}
+      style={{ '--hw': `${L.hw}px`, '--hh': `${L.hh}px`, '--fig': `${L.fig}px`, '--lift': `${L.lift}px`, paddingBottom: bottomInset || undefined }}
     >
       <div className="board-tools">
         <button type="button" className="board-mode-toggle" aria-pressed={tacticalMode}
@@ -675,7 +666,7 @@ export default function BoardView({
       >
         {tacticalMode ? <TacticalTerrain L={L} board={state.board} uid={uid} /> : retroMap ? retroMap.layers.map(layer => (
           <img key={layer.name} src={RETRO_BASE + layer.image} alt="" className="retro-map-layer"
-            style={{ width: L.w, height: L.h, zIndex: layer.name === 'ground' ? 0 : 10 + Number(layer.name) * 4 + 2 }} />
+            style={{ ...L.mapLayerStyle, zIndex: layer.name === 'ground' ? 0 : 10 + Number(layer.name) * 4 + 2 }} />
         )) : <TerrainLayer sig={sig} L={L} board={state.board} theme={theme} uid={uid} />}
 
         <svg className="grid-layer" width={L.w} height={L.h}>
@@ -691,16 +682,26 @@ export default function BoardView({
           {aoeCells}
         </svg>
 
+        {targetPreview && <svg className="attack-preview-layer" width={L.w} height={L.h}
+          role="img" aria-label={`Zone d’effet : ${targetPreview.cells.length} cases`}>
+          {targetPreview.cells.map(c => <polygon key={`aim-${c.x}-${c.y}`}
+            className={`attack-preview-cell${c.x === targetPreview.target.x && c.y === targetPreview.target.y ? ' aim' : ''}`}
+            data-attack-cell={key(c.x, c.y)} points={L.diamond(c.x, c.y, .9)} />)}
+        </svg>}
+
         {placing && <svg className="placement-layer" width={L.w} height={L.h} aria-label="Cases de départ">
-          {Object.entries(state.placement.cells).flatMap(([id, cells]) => cells.map((cell, index) => {
-            const own = id === viewerTeam;
-            const selected = key(cell.x, cell.y) === key(state.fighters[id].pos.x, state.fighters[id].pos.y);
+          {Object.entries(state.placement.cells).filter(([id], i, entries) =>
+            entries.findIndex(([otherId]) => state.fighters[otherId].team === state.fighters[id].team) === i)
+            .flatMap(([id, cells]) => cells.map((cell, index) => {
+            const own = state.fighters[id].team === viewerTeam;
+            const selected = Object.values(state.fighters).some(f => f.team === state.fighters[id].team
+              && key(cell.x, cell.y) === key(f.pos.x, f.pos.y));
             const canPlace = own && onCellClick && !state.placement.ready[id];
             const label = `${own ? 'Votre' : 'Adversaire :'} départ ${index + 1}`;
             return <g key={`${id}-${index}`}>
               <polygon points={L.diamond(cell.x, cell.y, .92)}
                 className={`placement-cell ${own ? 'yours' : 'enemy'}${selected ? ' selected' : ''}`}
-                data-placement-cell={key(cell.x, cell.y)} data-team={id}
+                data-placement-cell={key(cell.x, cell.y)} data-team={state.fighters[id].team}
                 role={canPlace ? 'button' : 'img'} tabIndex={canPlace ? 0 : undefined}
                 aria-label={label} aria-pressed={canPlace ? selected : undefined}
                 onClick={canPlace ? () => onCellClick(cell.x, cell.y) : undefined}
@@ -734,27 +735,29 @@ export default function BoardView({
           <Prop key={`o${o.x},${o.y}`} type={o.type} x={o.x} y={o.y} L={L} />
         ))}
 
-        {fighters.map((f) => (
+        {livingFighters.map((f) => (
           <FighterToken
             key={f.id}
             f={f}
             L={L}
             activeId={activeId}
             placing={placing}
-            walkPath={walkPaths[f.id] || null}
             frameIdx={frameIdx}
             frameEvents={frameEvents}
             bubble={bubbles[f.id] || null}
-            targetable={Boolean(onCellClick && f.hp > 0 && highlights && highlights[key(f.pos.x, f.pos.y)] === 'target')}
+            targetable={Boolean(onCellClick && highlights && ['target', 'splash'].includes(highlights[key(f.pos.x, f.pos.y)]))}
             onCellClick={onCellClick}
             onCellHover={onCellHover}
             inspectorId={inspectorId}
+            inlineInspection={!!inspectionController}
             isInspected={f.id === inspectedFighter?.id}
             onInspect={inspection.open} onInspectLeave={inspection.closeSoon}
           />
         ))}
 
         {overlays}
+        <HealthChangeFloats key={`health-${state.mapId}-${state.seed}`} frameEvents={frameEvents}
+          frameIdx={frameIdx} fighters={fighters} L={L} />
         <SpellEffects key={`${state.mapId}-${state.seed}`} state={state} frameEvents={frameEvents} frameIdx={frameIdx} assets={assets} L={L} />
 
         {showWinner ? (
@@ -774,8 +777,8 @@ export default function BoardView({
         <span title={TACTICAL_LABELS.movement}><i className="movement" aria-hidden="true" />Déplacement bloqué</span>
         <span title={TACTICAL_LABELS.sight}><i className="sight" aria-hidden="true" />Vue bloquée</span>
       </div>}
-      <FighterInspector id={inspectorId} fighter={inspectedFighter} fighters={state.fighters} viewerTeam={viewerTeam}
-        activeId={activeId} frameIdx={frameIdx} controller={inspection} />
+      {!inspectionController && <FighterInspector id={inspectorId} fighter={inspectedFighter} fighters={state.fighters} viewerTeam={viewerTeam}
+        activeId={activeId} frameIdx={frameIdx} controller={inspection} />}
     </div>
   );
 }

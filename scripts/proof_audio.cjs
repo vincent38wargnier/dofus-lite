@@ -51,7 +51,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
         return originalPlay.call(this).then(() => { item.played = true; }, error => { item.error = error.message; throw error; });
       };
     });
-    const click = async (selector, text) => {
+    const click = async (selector, text = '') => {
       const buttons = await page.$$(selector);
       for (const button of buttons) {
         if (await button.evaluate((e, text) => !!e.getClientRects().length && e.textContent.includes(text), text)) {
@@ -80,7 +80,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
       ['FECA', 'Attaque Naturelle'], ['OSAMODAS', 'Griffe Spectrale'],
       ['ENUTROF', 'Lancer de Pelle'], ['SRAM', 'Sournoiserie'],
       ['XELOR', 'Aiguille'], ['ECAFLIP', 'Pile ou Face'],
-      ['ENIRIPSA', 'Mot Curatif'], ['CRA', 'Flèche Magique', 'silent'],
+      ['ENIRIPSA', 'Mot Curatif'], ['CRA', 'Flèche Magique', 'cc_jet'],
       ['CRA', 'Flèche Explosive'], ['SADIDA', 'Ronce'],
       ['SACRIEUR', 'Pied du Sacrieur'], ['PANDAWA', 'Poing Enflammé'],
     ];
@@ -91,19 +91,17 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
       await sleep(100);
       await page.evaluate(() => { window.audioProof.cues = []; window.audioProof.media = []; });
       await click('.spellbook-detail > .btn', 'animation');
-      await sleep(spell === 'Puissance' ? 3600 : 2500);
+      await page.waitForFunction(cue => (!cue || window.audioProof.cues.includes(cue)) &&
+        window.audioProof.media.some(item => item.played && item.elapsed > 0 && item.peak > .00001),
+      { timeout: 6000 }, expected || null);
       const result = { classId, spell, ...await report() };
-      if (expected === 'silent') {
-        // This original projectile and its caster animation contain no audio
-        // cue. Combat still supplies the victim's separate hit reaction.
-        assert.deepEqual(result.cues, []);
-      } else {
-        if (expected) assert.ok(result.cues.includes(expected), `${spell}: missing first-frame cue ${expected}`);
-        assert.ok(result.clips.some(c => c.played && c.elapsed > 0 && c.peak > .00001), `${spell}: no decoded audio signal: ${JSON.stringify(result)}`);
-      }
+      // Flèche Magique's correct anim2 gesture supplies cc_jet; the old anim3
+      // mapping had incorrectly made this spell's entire preview silent.
+      if (expected) assert.ok(result.cues.includes(expected), `${spell}: missing authored cue ${expected}`);
+      assert.ok(result.clips.some(c => c.played && c.elapsed > 0 && c.peak > .00001), `${spell}: no decoded audio signal: ${JSON.stringify(result)}`);
       assert.ok(result.clips.every(c => !c.error), `${spell}: audio playback rejected`);
       results.push(result);
-      console.log(`${spell}: ${expected === 'silent' ? 'no authored cue' : result.cues.join(', ') + '; decoded audio confirmed.'}`);
+      console.log(`${spell}: ${result.cues.join(', ')}; decoded audio confirmed.`);
     }
     await page.select('select[aria-label="Classe du grimoire"]', 'IOP');
     await click('.spellbook-item', 'Puissance');
@@ -127,7 +125,9 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
     await hookCues();
     await page.click('.sound-settings summary'); await click('.retro-sound-toggle', 'coupés'); await page.click('.sound-settings summary');
     await click('.tab', 'Jouer');
-    await click('.btn.primary', 'Jouer');
+    await click('.setup-play');
+    await page.waitForSelector('.placement-ready');
+    await click('.placement-ready');
     await page.waitForSelector('.cell.hl-move');
     await page.waitForFunction(() => {
       const players = [...document.querySelectorAll('.retro-actor ruffle-player')];
@@ -135,7 +135,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
     });
     // The opponent can win initiative; movement highlights can exist during
     // that turn, so wait for the player's actual spell controls to unlock.
-    await page.waitForFunction(() => [...document.querySelectorAll('.spell-btn')].some(b => b.textContent.startsWith('Puissance') && !b.disabled));
+    await page.waitForFunction(() => [...document.querySelectorAll('.spell-btn')].some(b => b.textContent.includes('Puissance') && !b.disabled));
     await page.evaluate(() => { window.audioProof.cues = []; window.audioProof.media = []; });
     await click('.spell-btn', 'Puissance');
     if (await page.$('.token.side-A.targetable .figure')) await page.click('.token.side-A.targetable .figure');

@@ -27,7 +27,9 @@ def audit(data):
                 'Les références manquantes sont déjà absentes de la table objets du client installé.',
                 'Barbok contient aussi du contenu Dofus 2 ; aucun objet absent du client Retro n’a été inventé.',
                 'Bouftou complet : Barbok annonce 4 dommages, le client installé 5 ; priorité au client.',
-                'Les bonus entraînés des familiers ne figurent pas dans les templates itemstats importés.']}
+                'Familiers : plafonds items.ef et capacités des potions 939 ; un bonus maximal choisi pour les familiers entraînables.',
+                'Montures : bonus maximaux items.ef, identification rides ; niveau 100, personnage niveau 60 minimum.',
+                'Les familiers d’apparat n’ont pas de bonus propre ; élevage et apparence montée en combat non simulés.']}
 
 if __name__ == '__main__':
     result = audit(json.loads((ROOT / 'src/engine/equipmentData.json').read_text()))

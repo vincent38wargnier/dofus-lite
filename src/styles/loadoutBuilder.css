@@ -37,7 +37,7 @@
 .stuff-card { padding: 14px; border: 1px solid var(--border); border-radius: 8px; background: #211a13; min-width: 0; }
 .stuff-card.active { border-color: var(--gold-soft); }
 .stuff-card-heading { display: flex; align-items: center; gap: 8px; }
-.stuff-card-heading .retro-portrait { width: 44px; height: 44px; flex-shrink: 0; }
+.stuff-card-symbol { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; color: var(--gold); background: var(--panel-2); border-radius: 8px; }
 .stuff-card-heading h4 { margin: 0; font-size: 14px; overflow-wrap: anywhere; }
 .stuff-card-heading p { margin: 4px 0 0; font-size: 10px; color: var(--muted); }
 .stuff-card-items { display: flex; align-items: center; gap: 2px; min-height: 52px; margin: 10px 0; flex-wrap: wrap; }
@@ -96,6 +96,14 @@
 .equipment-inventory-heading { display: flex; align-items: center; justify-content: space-between; margin: 0 0 15px; }
 .equipment-inventory-heading h3 { margin: 4px 0 0; font-size: 21px; }
 .equipment-inventory-heading > span { color: var(--muted); font-size: 11px; }
+.equipment-drag-hint { margin: -6px 0 14px; min-height: 18px; font-size: 11px; color: var(--muted); }
+.loadout-picker [draggable="true"] { cursor: grab; }
+.loadout-picker.equipment-dragging [draggable="true"] { cursor: grabbing; }
+.loadout-picker .dragging { opacity: .5; }
+.loadout-picker.equipment-dragging .equipment-slot.drop-compatible { border-color: var(--gold); outline: 1px dashed var(--gold); outline-offset: 2px; }
+.loadout-picker.equipment-dragging .equipment-slot.drop-target { outline: 3px solid var(--gold); outline-offset: 2px; box-shadow: 0 0 0 5px #79925125; }
+.loadout-picker.equipment-dragging .equipment-slot.drop-blocked { opacity: .4; }
+.loadout-picker.equipment-dragging .equipment-drag-hint { color: var(--gold); }
 .loadout-picker .equipment-search { grid-template-columns: minmax(0, 1fr) 170px; gap: 10px; }
 .equipment-filter-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 12px 0 14px; font-size: 10px; color: var(--muted); }
 .loadout-picker .equipment-level-filter { margin: 0; white-space: nowrap; font-size: 10px; }
@@ -111,6 +119,14 @@
 .loadout-picker .equipment-result-text strong { font-size: 12px; line-height: 1.4; }
 .loadout-picker .equipment-result-text small { font-size: 10px; }
 .equipment-item-level small { display: block; color: var(--gold); margin-top: 5px; font-size: 9px; }
+.loadout-picker .equipment-slot[data-slot="pet"] span:last-child { white-space: normal; line-height: 1.15; }
+.companion-intro { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin: 0 0 14px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; }
+.companion-intro p { flex: 1 1 230px; margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.companion-intro label, .companion-training label { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-size: 12px; color: var(--muted); }
+.companion-intro select, .companion-training select { max-width: 100%; width: 100%; }
+.companion-training { margin-bottom: 14px; }
+.companion-training small { font-size: 11px; line-height: 1.5; }
+.companion-status { color: var(--gold); font-size: 12px; line-height: 1.5; font-weight: 600; }
 .loadout-picker .equipment-inspector { border-color: #655033; padding: 14px; }
 .loadout-picker .equipment-inspector-head { margin-bottom: 12px; }
 .loadout-picker .equipment-inspector h3 { font-size: 15px; }
@@ -174,7 +190,6 @@
   .stuff-card-grid { grid-template-columns: 1fr; }
   .stuff-library-filters { flex-wrap: wrap; }
   .stuff-library-filters input { flex: 1 1 100%; }
-  .stuff-library-filters select { flex: 1; }
   .stuff-notice { flex-wrap: wrap; }
   .builder-navigation { gap: 0; justify-content: space-between; }
   .builder-navigation button { font-size: 11px; }

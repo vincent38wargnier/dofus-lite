@@ -1,7 +1,11 @@
-import React, { createContext, useCallback, useContext, useEffect, useId, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { createSoundPlayer, readSoundSettings, saveSoundSettings } from './RetroSound';
 import { ITEMS, itemIcon } from '../engine/equipment';
+import { facing, resolveAnimation, castAnimation } from './retroAnimation';
+import { spellEffectPlan, withStageBounds } from './retroSpellEffect';
+import { spellPresentation } from './spellPresentation';
+export { facing, resolveAnimation } from './retroAnimation';
 
 export const RETRO_BASE = `${process.env.PUBLIC_URL || ''}/dofus-local/`;
 const AssetsContext = createContext(null);
@@ -31,6 +35,9 @@ export function RetroAssetsProvider({ children }) {
       const source = scope && document.getElementById(`retro-sound-${scope}`);
       // Combat screens stay mounted behind other tabs to retain their state.
       if (document.hidden || (scope && !source?.getClientRects().length)) return;
+      // Combat schedules footsteps at each cell, including one-cell moves
+      // shorter than a native walk loop. Don't double the timeline's steps.
+      if (source?.dataset.combatSteps && /^(walk|run)/.test(source.dataset.animation || '')) return;
       soundPlayer.play(name, scope);
     };
     const hide = () => { if (document.hidden) soundPlayer.stopScope(); };
@@ -64,6 +71,7 @@ export function RetroAssetsProvider({ children }) {
 
 export const useRetroAssets = () => useContext(AssetsContext);
 export const useAppearances = () => useContext(AppearanceContext);
+export const useRetroSoundPlayer = () => useContext(SoundContext).player;
 
 export function useSoundScene(scene) {
   const { player } = useContext(SoundContext);
@@ -72,23 +80,8 @@ export function useSoundScene(scene) {
 
 export function getActorId(assets, fighter, appearance = 'male') {
   if (!assets) return null;
-  return fighter.isSummon ? assets.monsters[fighter.monsterId] || null
+  return fighter.isSummon || fighter.isMonster ? assets.monsters[fighter.monsterId] || null
     : assets.classes[fighter.classId]?.[appearance] || null;
-}
-
-// Original clips use R for the front diagonal, L for the rear diagonal,
-// and mirror horizontally for the opposite side of the map.
-export function facing(from, to, fallback = { suffix: 'R', mirror: false }) {
-  if (!from || !to || (from.x === to.x && from.y === to.y)) return fallback;
-  const dx = to.x - from.x;
-  const dy = to.y - from.y;
-  return { suffix: dx + dy >= 0 ? 'R' : 'L', mirror: dx - dy < 0 };
-}
-
-export function resolveAnimation(actor, requested, direction = 'R') {
-  if (!actor) return null;
-  return [`${requested}${direction}`, `${requested}R`, `static${direction}`, 'staticR', actor.animations[0]]
-    .find(name => actor.animations.includes(name));
 }
 
 export function combatAnimationMs(events, fighters, assets, appearances = {}) {
@@ -98,16 +91,17 @@ export function combatAnimationMs(events, fighters, assets, appearances = {}) {
     if (event.t === 'cast') {
       const fighter = fighters[event.fighter];
       const actor = assets?.actors[getActorId(assets, fighter || {}, appearances[fighter?.team])];
-      const spell = assets?.spells[event.spellId];
-      const animation = resolveAnimation(actor, event.weaponAnimation != null ? `anim${event.weaponAnimation}` : spell?.animation || 'anim0');
-      duration = Math.max(duration, actor?.durations?.[animation] || 1000, spell?.duration || 1000);
+      const animation = resolveAnimation(actor, castAnimation(event, assets), facing(event.from, event.target).suffix);
+      // The caster's gesture sets the rhythm; long decorative spell tails
+      // must not hold up bots or replay playback.
+      duration = Math.max(duration, Math.min(1000, actor?.durations?.[animation] || 1000));
     }
     if (event.t === 'damage') duration = Math.max(duration, 650);
   }
   return Math.min(6000, duration + 100);
 }
 
-export function RetroMovie({ url, animation, restart = 0, className = '', style, onFailure, onReady, scriptAccess = false, parameters, soundTail }) {
+export function RetroMovie({ url, animation, restart = 0, className = '', style, onFailure, onReady, scriptAccess = false, parameters, soundTail, frameRate, bounds, combatSteps = false }) {
   const soundScope = useId();
   const { player: soundPlayer } = useContext(SoundContext);
   const mount = useRef(null);
@@ -134,16 +128,18 @@ export function RetroMovie({ url, animation, restart = 0, className = '', style,
             if (!response.ok) throw new Error(`Animation indisponible : ${url}`);
             return response.arrayBuffer();
           })]);
+        const movieData = bounds ? await withStageBounds(data, bounds) : data;
         if (disposed) return;
         player = ruffle.createPlayer();
         player.style.width = '100%';
         player.style.height = '100%';
         mount.current.appendChild(player);
         await player.ruffle().load({
-          data, swfFileName: url, base: new URL(RETRO_BASE + 'raw/', window.location.href).href, autoplay: 'on', wmode: 'transparent',
+          data: movieData,
+          swfFileName: url, base: new URL(RETRO_BASE + 'raw/', window.location.href).href, autoplay: 'on', wmode: 'transparent',
           splashScreen: false, unmuteOverlay: 'hidden', contextMenu: 'off',
           allowScriptAccess: scriptAccess, allowNetworking: 'all', openUrlMode: 'deny',
-          letterbox: 'off', logLevel: 'error',
+          letterbox: 'off', logLevel: 'error', frameRate,
           parameters: { ...parametersRef.current, soundScope },
         });
         if (disposed) return;
@@ -174,38 +170,48 @@ export function RetroMovie({ url, animation, restart = 0, className = '', style,
       // eslint-disable-next-line react-hooks/exhaustive-deps
       if (!soundTail?.current) soundPlayer?.stopScope(soundScope);
     };
-  }, [url, scriptAccess, soundPlayer, soundScope, soundTail]);
+  }, [url, scriptAccess, soundPlayer, soundScope, soundTail, frameRate, bounds]);
   useEffect(() => {
     if (animation) playerRef.current?.ruffle().callExternalInterface('animate', animation);
   }, [animation, restart]);
-  return <span ref={mount} id={`retro-sound-${soundScope}`} className={`retro-movie ${className}`} style={style} aria-hidden="true" />;
+  return <span ref={mount} id={`retro-sound-${soundScope}`} className={`retro-movie ${className}`} style={style}
+    data-animation={animation} data-combat-steps={combatSteps || undefined} aria-hidden="true" />;
 }
 
-export function RetroSpellEffect({ url, from, to, scale, grade = 5, duration = 2200, onComplete }) {
+export function RetroSpellEffect({ url, from, to, scale, grade = 5, duration = 2200, fps, type = 11, exportFrames, zIndex = 600, maxDuration = Infinity, onComplete }) {
   const [visible, setVisible] = useState(true);
   const [ready, setReady] = useState(false);
   const soundTail = useRef(false);
   const completed = useRef(onComplete);
   completed.current = onComplete;
+  const plan = useMemo(() => spellEffectPlan({ type, fps, duration, exportFrames }, from, to, scale, grade),
+    // The parent creates fresh points on render; only geometry changes reload a movie.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [type, fps, duration, exportFrames, from.x, from.y, to.x, to.y, scale, grade]);
+  // Speed up the entire timeline instead of removing its final impact. Older
+  // manifests without an FPS keep their native playback until reimported.
+  const playbackMs = fps > 0 ? Math.min(plan.duration, maxDuration) : plan.duration;
+  const frameRate = playbackMs < plan.duration ? fps * plan.duration / playbackMs : undefined;
   useEffect(() => {
     if (!ready) return undefined;
     // A recording can outlast its visual. Let it finish on natural completion;
     // changing spell/screen or muting still cancels it through the sound scene.
-    const timer = setTimeout(() => { soundTail.current = true; setVisible(false); completed.current?.(); }, Math.max(700, duration + 250));
+    const timer = setTimeout(() => { soundTail.current = true; setVisible(false); completed.current?.(); }, Math.max(700, playbackMs + 250));
     return () => clearTimeout(timer);
     // Start the lifetime after loading so a cold cache cannot cut the movie short.
-  }, [ready, duration]);
+  }, [ready, playbackMs]);
   return visible ? <RetroMovie url={url} scriptAccess className="retro-spell-effect" soundTail={soundTail}
-    parameters={{ fromX: String((from.x - to.x) / scale), fromY: String((from.y - to.y) / scale), spellLevel: String(grade) }}
-    style={{ position: 'absolute', zIndex: 600, width: 400 * scale, height: 400 * scale, left: to.x - 200 * scale, top: to.y - 200 * scale }}
+    frameRate={frameRate} bounds={plan.bounds} parameters={plan.parameters}
+    style={{ position: 'absolute', zIndex, width: (plan.bounds[1] - plan.bounds[0]) * scale,
+      height: (plan.bounds[3] - plan.bounds[2]) * scale, left: to.x + plan.bounds[0] * scale, top: to.y + plan.bounds[2] * scale }}
     onReady={() => setReady(true)}
     onFailure={() => { setVisible(false); completed.current?.(); }} /> : null;
 }
 
-export function RetroPortrait({ classId, side = 'A', appearance, fallback = '', className = '' }) {
+export function RetroPortrait({ classId, monsterId, side = 'A', appearance, fallback = '', className = '' }) {
   const assets = useRetroAssets();
   const { appearances } = useAppearances();
-  const id = assets?.classes[classId]?.[appearance || appearances[side]];
+  const id = monsterId ? assets?.monsters[monsterId] : assets?.classes[classId]?.[appearance || appearances[side]];
   const [failed, setFailed] = useState(null);
   return assets?.imagesReady && id && failed !== id
     ? <img className={`retro-portrait ${className}`} src={`${RETRO_BASE}portraits/${id}.png`} alt="" onError={() => setFailed(id)} />
@@ -217,9 +223,12 @@ export function RetroSpellIcon({ spell }) {
   const icon = spell.itemId ? itemIcon(ITEMS[spell.itemId])
     : assets?.imagesReady && assets.renderedSpellIcons?.includes(String(spell.id)) && assets.spells[spell.id]?.icon;
   const [failed, setFailed] = useState(null);
+  const { color, category } = spellPresentation(spell);
+  const appearance = { className: 'retro-spell-icon', 'data-spell-category': category,
+    style: { '--spell-icon-color': color } };
   return icon && failed !== icon
-    ? <img className="retro-spell-icon" src={spell.itemId ? icon : RETRO_BASE + icon} alt="" onError={() => setFailed(icon)} />
-    : <span>{spell.emoji}</span>;
+    ? <img {...appearance} src={spell.itemId ? icon : RETRO_BASE + icon} alt="" draggable={false} onError={() => setFailed(icon)} />
+    : <span {...appearance}>{spell.emoji}</span>;
 }
 
 export function AppearanceSelect({ side, value, onChange }) {

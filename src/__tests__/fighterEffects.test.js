@@ -52,8 +52,9 @@ test('real punishment gains are visible after multiple hits and survive the per-
   expect(screen.getByRole('progressbar')).toHaveAttribute('max', String(punishment.maxPerTurn));
   expect(screen.getByLabelText('Cumul des bonus et malus temporaires')).toHaveTextContent(`+${total} Force`);
 
-  render(<LogPanel events={hit.events} namesById={{ A: 'Vous', B: 'Adversaire' }} state={state} />);
-  expect(screen.getAllByText(new RegExp(`Vous : \\+${gains[0].value} Force — Châtiment Forcé`)).length).toBeGreaterThan(0);
+  const journal = render(<LogPanel events={hit.events} namesById={{ A: 'Vous', B: 'Adversaire' }} state={state} />);
+  expect(journal.container.querySelector('.log')).toHaveTextContent(`Vous : +${gains[0].value} Force`);
+  expect(journal.container.querySelector('.entry[title="Châtiment Forcé"]')).toBeInTheDocument();
 });
 
 test('a real dispel removes the punishment, its displayed bonuses and the boosted characteristic', () => {

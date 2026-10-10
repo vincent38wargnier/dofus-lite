@@ -1,7 +1,7 @@
 import { ITEMS, emptyLoadout, rolledEffects, resolveLoadout, equipSet } from '../engine/equipment';
 import { RUNES, POTIONS, runeWeight, forgeChances, forgeAttempt, statDeltas } from '../engine/forgemagie';
-import { createForgedItem, forgeRestriction, validateForgedItem, FM_STATS, FORGE_MODEL, naturalBounds, statLimit, replaceEquipment } from '../engine/forgedItems';
-import { libraryReducer, emptyLibrary, isLoadout, sameLoadout } from '../ui/loadoutStore';
+import { createForgedItem, forgeRestriction, validateForgedItem, FM_STATS, FORGE_MODEL, naturalBounds, extraWeight, statLimit, replaceEquipment } from '../engine/forgedItems';
+import { libraryReducer, emptyLibrary, isLoadout, sameEquipment, applySavedEquipment } from '../ui/loadoutStore';
 import OBSERVATIONS from '../engine/forgemagieObservations.json';
 import { createGame } from '../engine/engine';
 
@@ -88,6 +88,64 @@ test('guaranteed mode enforces native ceilings and the exact combined 101 bounda
   expect(forgeChances(coco, at101, rune(1519), options).allowed).toBe(false);
   expect(() => forgeAttempt(coco, at101, rune(1519), options)).toThrow(/101/);
   expect(forgeChances(coco, initial(), rune(12988), options).allowed).toBe(false);
+});
+
+test.each([false, true])('Ga Pa preserves a 0.75 vitality over on a Griotte Royal (guaranteed: %s)', guaranteedSuccess => {
+  const item = ITEMS[9126];
+  const before = { ...initial(item), stats: { ...initial(item).stats, vitalite: 38 } };
+  const original = JSON.parse(JSON.stringify(before));
+  expect(extraWeight(item, before.stats)).toBe(.75);
+  expect(forgeChances(item, before, rune(1557), { guaranteedSuccess }).allowed).toBe(true);
+  const next = guaranteedSuccess ? forgeAttempt(item, before, rune(1557), { guaranteedSuccess })
+    : findResult(item, before, rune(1557), 'SC');
+  expect(next.stats).toEqual({ ...before.stats, pa: 1 });
+  expect(extraWeight(item, next.stats)).toBe(100.75);
+  expect(next.puits).toBe(0);
+  expect(next.consumption[1557]).toBe(1);
+  expect(validateForgedItem(item, next)).toBe('');
+  expect(before).toEqual(original);
+
+  // The legal jet must still be accepted on reload and used by combat stats.
+  const loadout = JSON.parse(JSON.stringify({ ...draft(), slots: { ring2: item.id }, forgedItems: { ring2: next } }));
+  expect(isLoadout(loadout)).toBe(true);
+  const resolved = resolveLoadout('IOP', loadout);
+  expect(resolved.valid).toBe(true);
+  expect(resolved.bonuses).toMatchObject({ pa: 1, vitalite: 38 });
+});
+
+test('the same PA and vitality over are legal in either rune order', () => {
+  const item = ITEMS[9126], start = initial(item), options = { guaranteedSuccess: true };
+  const viThenPa = forgeAttempt(item, forgeAttempt(item, start, rune(1523), options), rune(1557), options);
+  const paThenVi = forgeAttempt(item, forgeAttempt(item, start, rune(1557), options), rune(1523), options);
+  expect(paThenVi.stats).toEqual(viThenPa.stats);
+  expect(paThenVi.stats).toMatchObject({ vitalite: 38, pa: 1 });
+  expect(forgeChances(item, paThenVi, rune(1523), options).allowed).toBe(false);
+});
+
+test('a native vitality over plus PA accepts exactly 101 and rejects the next quarter weight', () => {
+  const item = ITEMS[9126], options = { guaranteedSuccess: true };
+  const before = { ...initial(item), stats: { ...initial(item).stats, vitalite: 39 } };
+  const next = forgeAttempt(item, before, rune(1557), options);
+  expect(extraWeight(item, next.stats)).toBe(101);
+  expect(validateForgedItem(item, next)).toBe('');
+  expect(statLimit(item, 'vitalite', next.stats)).toBe(39);
+  expect(forgeChances(item, next, rune(1557), options).allowed).toBe(false);
+  const overBudget = { ...before, stats: { ...before.stats, vitalite: 40 } };
+  expect(validateForgedItem(item, overBudget)).toBe('');
+  expect(forgeChances(item, overBudget, rune(1557), options).allowed).toBe(false);
+  expect(() => forgeAttempt(item, overBudget, rune(1557), options)).toThrow(/101/);
+  expect(validateForgedItem(item, { ...next, stats: { ...next.stats, vitalite: 40 } })).toMatch(/101/);
+});
+
+test('fractional overs on multiple natural lines keep their natural portions outside the shared budget', () => {
+  const item = ITEMS[9126], options = { guaranteedSuccess: true };
+  const before = { ...initial(item), stats: { ...initial(item).stats, vitalite: 38, initiative: 202 } };
+  const next = forgeAttempt(item, before, rune(1557), options);
+  expect(next.stats).toEqual({ ...before.stats, pa: 1 });
+  expect(extraWeight(item, next.stats)).toBeCloseTo(100.95);
+  expect(validateForgedItem(item, next)).toBe('');
+  const overBudget = { ...before, stats: { ...before.stats, initiative: 203 } };
+  expect(forgeChances(item, overBudget, rune(1557), options).allowed).toBe(false);
 });
 
 test('turning guaranteed mode off restores normal chances without changing saved jets', () => {
@@ -304,8 +362,8 @@ test('forged jets survive roll-mode changes, library copies, reload and class co
   const loadout = { ...draft(), forgedItems: { ring1: fm } };
   expect(isLoadout(loadout)).toBe(true);
   const library = libraryReducer(emptyLibrary(), { type: 'save', id: 'fm', classId: 'IOP', name: 'Test FM', loadout, now: 1 });
-  const copy = JSON.parse(JSON.stringify(library)).builds[0].loadout;
-  expect(sameLoadout(copy, loadout)).toBe(true);
+  const copy = applySavedEquipment(draft(), JSON.parse(JSON.stringify(library)).builds[0].loadout);
+  expect(sameEquipment(copy, loadout)).toBe(true);
   fm.stats.sagesse = 10;
   expect(copy.forgedItems.ring1.stats.sagesse).toBe(12);
   expect(resolveLoadout('IOP', { ...copy, rollMode: 'random', rollSeed: 200 }).bonuses.sagesse).toBe(12);

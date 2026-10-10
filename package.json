@@ -17,14 +17,14 @@
   "scripts": {
     "start": "node scripts/prepare_ruffle.cjs && react-scripts start",
     "build": "node scripts/prepare_ruffle.cjs && react-scripts build",
-    "import:client": "node scripts/prepare_ruffle.cjs && python3 scripts/import_retro_client.py && python3 scripts/import_client_spells.py && node scripts/render_retro_assets.cjs --force",
+    "import:client": "node scripts/prepare_ruffle.cjs && python3 scripts/import_dungeon_maps.py && python3 scripts/import_retro_client.py && python3 scripts/import_client_spells.py && python3 scripts/import_client_monsters.py && node scripts/render_retro_assets.cjs --force",
     "render:client": "node scripts/prepare_ruffle.cjs && node scripts/render_retro_assets.cjs --force",
     "test:client": "python3 -m unittest discover -s scripts -p 'test_retro_swf.py'",
     "test:audio": "python3 -m unittest discover -s scripts -p 'test_retro_audio.py'",
     "test:combat-data": "python3 -m unittest discover -s scripts -p 'test*spell*.py'",
     "import:spells": "python3 scripts/import_client_spells.py && node scripts/render_retro_assets.cjs --icons-only",
-    "import:maps": "python3 scripts/import_dofus_maps.py generate && python3 scripts/import_retro_client.py --maps-only && node scripts/render_retro_assets.cjs",
-    "test:maps": "python3 -m unittest discover -s scripts -p 'test_map_placements.py'",
+    "import:maps": "python3 scripts/import_dofus_maps.py generate && python3 scripts/import_dungeon_maps.py && python3 scripts/import_retro_client.py --maps-only && node scripts/render_retro_assets.cjs",
+    "test:maps": "python3 -m unittest discover -s scripts -p 'test_*map*.py'",
     "proof:placement": "node scripts/proof_placement.cjs",
     "proof:client": "node scripts/proof_retro.cjs",
     "proof:combat": "node scripts/proof_combat.cjs",
@@ -43,7 +43,14 @@
     "audit:characteristics": "python3 scripts/audit_characteristic_caps.py",
     "proof:parchottage": "node scripts/proof_parchottage.cjs",
     "import:forgemagie": "python3 scripts/import_forgemagie.py && node scripts/render_equipment.cjs --forgemagie",
-    "proof:forgemagie": "node scripts/proof_forgemagie.cjs"
+    "proof:forgemagie": "node scripts/proof_forgemagie.cjs",
+    "import:monsters": "python3 scripts/import_client_monsters.py && node scripts/render_retro_assets.cjs --monsters-only",
+    "test:monster-data": "python3 -m unittest discover -s scripts -p 'test_client_monsters.py'",
+    "proof:kanojedo": "node scripts/proof_kanojedo.cjs",
+    "proof:bosses": "node scripts/proof_dungeons.cjs",
+    "import:dungeons": "python3 scripts/import_dungeon_maps.py && python3 scripts/import_client_monsters.py && python3 scripts/import_retro_client.py --maps-only && node scripts/render_retro_assets.cjs",
+    "proof:dungeons": "node scripts/proof_dungeons.cjs",
+    "proof:auto-dungeon": "node scripts/proof_auto_dungeon.cjs"
   },
   "eslintConfig": {
     "extends": [

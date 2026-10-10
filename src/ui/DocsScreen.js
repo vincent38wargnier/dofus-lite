@@ -99,7 +99,7 @@ export default function DocsScreen() {
       </p>
       <table>
         <tbody>
-          <tr><td><b>PA / PM</b></td><td>Niveau 100 : 7 PA et 3 PM de base, augmentés par l’équipement et les panoplies choisis avant le match. 1 PM = 1 case. Les anciens kits du Tournoi et de l’Éditeur restent à 8 PA / 4 PM.</td></tr>
+          <tr><td><b>PA / PM</b></td><td>6 PA de base avant le niveau 100, puis 7 PA dès le niveau 100, auxquels s’ajoutent les bonus d’équipement et de panoplie. Cette règle s’applique aussi aux personnages du Tournoi et de l’Éditeur. 3 PM de base ; les anciens kits conservent 4 PM. 1 PM = 1 case.</td></tr>
           <tr><td><b>Éléments</b></td><td>🟤 terre/neutre → force · 🔥 feu → intelligence · 💧 eau → chance · 💨 air → agilité</td></tr>
           <tr><td><b>Portée</b></td><td>distance de Manhattan, min et max par sort ; sorts « en ligne » ; zones cercle/croix/ligne</td></tr>
           <tr><td><b>Ligne de vue</b></td><td>murs, rochers <i>et combattants</i> bloquent ; l'eau et le vide non</td></tr>

@@ -83,8 +83,8 @@ def read_matrix(data, offset):
     return a, b, c, d, bits.get(n, True) / 20, bits.get(n, True) / 20
 
 
-def display_bounds(items):
-    """Bounds of the first display frame, including nested clip transforms."""
+def display_bounds(items, all_frames=False):
+    """Bounds of display frames, including nested clip transforms."""
     definitions = {struct.unpack_from('<H', p)[0]: (c, p) for c, p in items
                    if c in (2, 22, 32, 83, 39, 11, 33, 46, 84)}
     cache = {}
@@ -106,9 +106,16 @@ def display_bounds(items):
 
     def timeline(entries):
         display = {}
+        snapshots = []
         for code, p in entries:
             if code == 1:
-                break
+                if not all_frames:
+                    break
+                snapshots.append(dict(display))
+                continue
+            if code in (5, 28):
+                display.pop(struct.unpack_from('<H', p, 2 if code == 5 else 0)[0], None)
+                continue
             if code not in (4, 26, 70):
                 continue
             if code == 4:
@@ -130,10 +137,11 @@ def display_bounds(items):
             if cid is not None:
                 display[depth] = cid, transform
         rects = []
-        for cid, (a, b, c, d, tx, ty) in display.values():
-            left, right, top, bottom = bounds(cid)
-            pts = [(a*x+c*y+tx, b*x+d*y+ty) for x in (left, right) for y in (top, bottom)]
-            rects.append((min(x for x, _ in pts), max(x for x, _ in pts), min(y for _, y in pts), max(y for _, y in pts)))
+        for snapshot in snapshots + [display]:
+            for cid, (a, b, c, d, tx, ty) in snapshot.values():
+                left, right, top, bottom = bounds(cid)
+                pts = [(a*x+c*y+tx, b*x+d*y+ty) for x in (left, right) for y in (top, bottom)]
+                rects.append((min(x for x, _ in pts), max(x for x, _ in pts), min(y for _, y in pts), max(y for _, y in pts)))
         return union(rects)
     return timeline(items)
 
@@ -188,8 +196,10 @@ def matrix(x=0, y=0, sx=1, sy=1, r0=0, r1=0):
     return bits_pack(fields)
 
 
-def place(cid, depth=1, x=0, y=0, sx=1, sy=1, r0=0, r1=0):
-    return tag(26, b'\x06' + struct.pack('<HH', depth, cid) + matrix(x, y, sx, sy, r0, r1))
+def place(cid, depth=1, x=0, y=0, sx=1, sy=1, r0=0, r1=0, name=None):
+    flags = b'\x26' if name is not None else b'\x06'
+    return tag(26, flags + struct.pack('<HH', depth, cid) + matrix(x, y, sx, sy, r0, r1)
+               + (name.encode() + b'\0' if name is not None else b''))
 
 
 def movie(items, bounds, fps=50, frames=1):
@@ -232,8 +242,26 @@ def function(name, params, body):
     return action(0x9b, header) + body + b'\0'
 
 
+def set_member(obj, name, value):
+    return obj + push(name) + value + action(0x4f)
+
+
+def when(condition, body):
+    return condition + action(0x12) + action(0x9d, struct.pack('<h', len(body))) + body
+
+
+def object_value(values):
+    return b''.join(push(key) + value for key, value in values.items()) + push(len(values)) + action(0x43)
+
+
 def animation_callback():
     body = variable('_root') + push('idleLabel') + push('static') + method(variable('label'), 'substr', [push(-1)]) + action(0x47) + action(0x4f)
+    # gotoAndStop on the current frame does not recreate its child. Repeated
+    # casts of the same spell must restart the original exported clip too.
+    actor = member(variable('_root'), 'actor')
+    restart = method(actor, 'removeMovieClip', []) + action(0x17)
+    restart += method(variable('_root'), 'attachMovie', [variable('label'), push('actor'), push(1)]) + action(0x17)
+    body += when(member(variable('_root'), 'currentAnimation') + variable('label') + action(0x66), restart)
     body += method(variable('_root'), 'gotoAndStop', [variable('label')]) + action(0x17)
     body += member(variable('_root'), '_currentframe') + action(0x3e)
     register = function('animate', ['label'], body)
@@ -310,6 +338,7 @@ def adapt_sprite(path, target, bounds=(-100, 100, -140, 40)):
         remove = method(actor, 'removeMovieClip', []) + action(0x17)
         reset = actor + action(0x12) + action(0x9d, struct.pack('<h', len(remove))) + remove
         reset += method(variable('_root'), 'attachMovie', [push(name), push('actor'), push(1)]) + action(0x17)
+        reset += set_member(variable('_root'), 'currentAnimation', push(name))
         out += [tag(12, (animation_callback() if i == 0 else b'') + reset + b'\x07\0'), tag(1)]
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(movie(out, bounds, fps, len(names)))
@@ -319,8 +348,13 @@ def adapt_sprite(path, target, bounds=(-100, 100, -140, 40)):
 
 
 def adapt_effect(path, target):
-    """Keep a spell's timeline, supplying the parent objects it expects."""
-    _, fps, items = read(path)
+    """Keep original clips; host them using the client's SpellManager contract.
+
+    Motion samples come from its port in retroSpellEffect.js. Their indices are
+    native frames, so accelerating playback also accelerates nested timelines.
+    """
+    _, source_fps, items = read(path)
+    fps = 60  # All loaded libraries share the host's triple-framerate clock.
     links = exports(items)
     lengths, nested_lengths = timeline_lengths(items)
     display_codes = {1, 4, 5, 12, 26, 28, 43, 70}
@@ -329,48 +363,86 @@ def adapt_effect(path, target):
     count = sum(c == 1 for c, _ in items)
     sprite_id = 65534
     definitions.append(tag(39, struct.pack('<HH', sprite_id, count) + b''.join(timeline) + tag(0)))
-    def point(x, y):
-        return push('x') + x + push('y') + y + push(2) + action(0x43)
-    init = variable('_root') + push('cellFrom') + point(variable('fromX') + action(0x4a), variable('fromY') + action(0x4a)) + action(0x4f)
-    init += variable('_root') + push('cellTo') + point(push(0), push(0)) + action(0x4f)
-    init += variable('_root') + push('level') + variable('spellLevel') + action(0x4a) + action(0x4f)
-    end = method(member(variable('_root'), 'effect'), 'removeMovieClip', []) + action(0x17)
-    init += function('end', [], end) + animation_callback()
+    root = variable('_root')
+    container = member(root, 'effect')
+    number = lambda name: member(root, name) + action(0x4a)
+    call = lambda obj, name, args: method(obj, name, args) + action(0x17)
+    props = {
+        'cellFrom': object_value({'x': number('fromX'), 'y': number('fromY')}),
+        'cellTo': object_value({'x': number('toX'), 'y': number('toY')}),
+        'level': number('spellLevel'), 'angle': number('effectAngle'),
+        '_x': number('effectX'), '_y': number('effectY'),
+        '_xscale': number('effectScaleX'), '_yscale': number('effectScaleY'),
+    }
+    # end() signals completion to the battle sequence; it does not destroy
+    # the whole effect and truncate its original impact/fade-out timelines.
+    init = function('end', [], set_member(root, 'ended', push(1))) + animation_callback()
+    for name in ('cellFrom', 'cellTo', 'level', 'angle'):
+        init += set_member(root, name, props[name])
+    props['end'] = variable('end')
     # Timeline placement runs a child's first-frame actions before the root's
     # actions in Ruffle. Attach after SOMA and the spell's parameters exist so
     # first-frame sounds (Pression, Bond, Colère…) are not silently discarded.
     definitions.append(tag(56, struct.pack('<HH', 1, sprite_id) + b'retroEffect\0'))
-    init += method(variable('_root'), 'attachMovie', [push('retroEffect'), push('effect'), push(1)]) + action(0x17)
-    frames = 1
-    # Projectile libraries have no root display list: the game instantiates
-    # their exported "move" and "shoot" clips. Keep those original timelines,
-    # including impact sounds, and supply a short local flight between cells.
-    projectile = 'shoot' in links and 'move' in links and not any(c in (4, 26, 70) for c, _ in items)
-    if projectile:
-        flight = max(1, round(fps * .3))
-        container = member(variable('_root'), 'effect')
-        for name in ('cellFrom', 'cellTo', 'level'):
-            init += container + push(name) + member(variable('_root'), name) + action(0x4f)
-        moving = member(container, 'projectile')
-        # A real parent clip lets original impact timelines remove themselves;
-        # removeMovieClip on the main stage would do nothing and can loop audio.
-        init += method(container, 'attachMovie', [push('move'), push('projectile'), push(2)]) + action(0x17)
-        # atan2(-fromY, -fromX) gives the direction towards the target at (0,0).
-        angle = method(variable('Math'), 'atan2', [push(0) + variable('fromY') + action(0x0b), push(0) + variable('fromX') + action(0x0b)])
-        angle += push(180) + action(0x0c) + member(variable('Math'), 'PI') + action(0x0d)
-        init += moving + push('_rotation') + angle + action(0x4f)
-        for frame in range(flight):
-            update = init if frame == 0 else b''
-            for axis, origin in (('_x', 'fromX'), ('_y', 'fromY')):
-                update += moving + push(axis) + variable(origin) + push(flight - frame) + action(0x0c) + push(flight) + action(0x0d) + action(0x4f)
-            definitions += [tag(12, update + b'\0'), tag(1)]
-        impact = method(moving, 'removeMovieClip', []) + action(0x17)
-        impact += method(container, 'attachMovie', [push('shoot'), push('impact'), push(2)]) + action(0x17)
-        definitions += [tag(12, impact + b'\x07\0'), tag(1)]
-        frames = flight + 1
-        lengths = max(lengths, flight + nested_lengths.get(links['shoot'], 1))
-    else:
-        definitions += [tag(12, init + b'\x07\0'), tag(1)]
+    init += call(root, 'attachMovie', [push('retroEffect'), push('effect'), push(1), object_value(props)])
+
+    def is_type(kind):
+        return number('effectType') + push(kind) + action(0x66)
+
+    # Beams keep their original root timeline, rotate its named child, and
+    # instantiate the target's exported impact if that library contains one.
+    beam = set_member(member(container, 'rotate'), '_rotation', number('effectAngle'))
+    if 'shoot' in links:
+        beam += call(container, 'attachMovie', [push('shoot'), push('shoot'), push(10), object_value({
+            '_x': number('targetX'), '_y': number('targetY')})])
+    init += when(is_type(20) + is_type(21) + action(0x11), beam)
+    if 'move' in links:
+        init += when(is_type(30) + is_type(31) + action(0x11),
+                     call(container, 'attachMovie', [push('move'), push('move'), push(2)]))
+
+    # Drive move/shoot/duplicate exports one native frame at a time. A trail's
+    # old clips keep playing after a later clip is spawned, as in the client.
+    rows = member(root, 'motionRows')
+    index = member(root, 'motionIndex')
+    row = member(root, 'motionRow')
+    value = lambda i: row + push(i) + action(0x4e) + action(0x4a)
+    update = set_member(root, 'motionRow', method(rows + index + action(0x4e), 'split', [push(',')]))
+    update += set_member(root, 'motionIndex', index + push(1) + action(0x47))
+    moving = member(container, 'move')
+    moving_props = b''.join(set_member(moving, prop, value(i)) for i, prop in enumerate(('_x', '_y', '_rotation'), 1))
+    update += when(value(0) + push(1) + action(0x66), moving_props)
+    if 'shoot' in links:
+        impact = call(moving, 'removeMovieClip', [])
+        impact += call(container, 'attachMovie', [push('shoot'), push('shoot'), push(2), object_value({
+            '_x': value(1), '_y': value(2), '_rotation': value(3)})])
+        update += when(value(0) + push(2) + action(0x66), impact)
+    if 'duplicate' in links:
+        duplicate = call(container, 'attachMovie', [push('duplicate'), push('duplicate') + index + action(0x47),
+                            index + push(10) + action(0x47), object_value({'_x': value(1), '_y': value(2)})])
+        update += when(value(0) + push(3) + action(0x66), duplicate)
+    finished = root + push('onEnterFrame') + action(0x3a) + action(0x17)
+    finished += call(root, 'end', [])
+    update += when(index + member(rows, 'length') + action(0x48) + action(0x12), finished)
+    init += function('advanceEffect', [], update)
+    start = set_member(root, 'motionRows', method(member(root, 'motion'), 'split', [push(';')]))
+    start += set_member(root, 'motionIndex', push(0))
+    start += set_member(root, 'onEnterFrame', variable('advanceEffect'))
+    init += when(member(root, 'motion'), start)
+
+    # Browser regression proofs can inspect the actual Flash runtime, not just
+    # the React props used to configure it.
+    state = object_value({key: member(container, key) for key in ('level', 'angle', 'cellFrom', 'cellTo', '_x', '_y')}
+                         | {'step': index, 'ended': member(root, 'ended'),
+                            'moveX': member(moving, '_x'), 'moveY': member(moving, '_y'),
+                            'shootX': member(member(container, 'shoot'), '_x'),
+                            'shootY': member(member(container, 'shoot'), '_y')})
+    init += function('effectState', [], state + action(0x3e))
+    ei = member(member(variable('flash'), 'external'), 'ExternalInterface')
+    init += call(ei, 'addCallback', [push('effectState'), root, variable('effectState')])
+    definitions += [tag(12, init + b'\x07\0'), tag(1)]
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_bytes(movie(definitions, (-200, 200, -200, 200), fps, frames))
-    return {'duration': max(500, round(lengths / fps * 1000)), 'fps': fps, 'frames': lengths}
+    target.write_bytes(movie(definitions, (-200, 200, -200, 200), fps))
+    export_frames = {name: nested_lengths.get(links[name], 1) for name in ('move', 'shoot', 'duplicate') if name in links}
+    duration = max(lengths, *export_frames.values()) if export_frames else lengths
+    return {'duration': max(500, round(duration / fps * 1000)), 'fps': fps, 'sourceFps': source_fps,
+            'frames': lengths, 'exportFrames': export_frames}

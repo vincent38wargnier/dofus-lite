@@ -48,8 +48,11 @@ export function statLimit(item, stat, stats) {
   const max = Math.max(0, naturalBounds(item)[stat]?.max || 0);
   const weight = FM_STATS[stat].weight;
   const otherExtra = extraWeight(item, { ...stats, [stat]: 0 });
-  // Natural high values remain restorable; extensions share a 101 weight budget.
-  return Math.max(max, Math.floor((101 - otherExtra + 1e-8) / weight));
+  // The full line has its own ceiling; only its excess over the natural maximum
+  // spends the shared budget. Adding an exo must not invalidate another legal over.
+  const lineLimit = Math.max(max, Math.floor((101 + 1e-8) / weight));
+  const sharedLimit = max + Math.floor((101 - otherExtra + 1e-8) / weight);
+  return Math.min(lineLimit, sharedLimit);
 }
 
 export function isForgeSnapshot(value) {
@@ -126,6 +129,23 @@ export function matchingForge(item, loadout, slot) {
 
 export function replaceEquipment(loadout, slot, id) {
   const forgedItems = { ...loadout.forgedItems };
-  if (id !== loadout.slots[slot]) delete forgedItems[slot];
-  return { ...loadout, slots: { ...loadout.slots, [slot]: id }, ...(loadout.forgedItems ? { forgedItems } : {}) };
+  const rollOrigins = { ...loadout.rollOrigins };
+  if (id !== loadout.slots[slot]) { delete forgedItems[slot]; delete rollOrigins[slot]; }
+  return { ...loadout, slots: { ...loadout.slots, [slot]: id },
+    ...(loadout.forgedItems ? { forgedItems } : {}), ...(loadout.rollOrigins ? { rollOrigins } : {}) };
+}
+
+// Moving an equipped instance keeps both its FM history and its random jet.
+export function swapEquipment(loadout, from, to) {
+  if (from === to || !loadout.slots[from]) return loadout;
+  const slots = { ...loadout.slots, [from]: loadout.slots[to] || null, [to]: loadout.slots[from] };
+  const forgedItems = { ...loadout.forgedItems }, rollOrigins = { ...loadout.rollOrigins };
+  for (const [source, target] of [[from, to], [to, from]]) {
+    delete forgedItems[target]; delete rollOrigins[target];
+    if (loadout.slots[source]) {
+      if (loadout.forgedItems?.[source]) forgedItems[target] = loadout.forgedItems[source];
+      rollOrigins[target] = loadout.rollOrigins?.[source] || source;
+    }
+  }
+  return { ...loadout, slots, rollOrigins, ...(loadout.forgedItems ? { forgedItems } : {}) };
 }

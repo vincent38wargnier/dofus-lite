@@ -12,43 +12,48 @@ import { createGame, applyAction, getView, currentFighter } from '../engine/engi
 import { createRng, hashSeed } from '../engine/rng';
 import { makeBotApi } from '../bots/api';
 import { utilityDecide } from '../bots/utilityBrain';
+import { monsterDecide } from '../engine/monsters';
+import { dungeonMapId, dungeonRoster, dungeonForBoss } from '../engine/dungeons';
 
 export const MAX_ACTIONS_PER_TURN = 25;
 export const MAX_SAYS_PER_TURN = 2;
 export const MAX_INVALID_PER_TURN = 3;
 
-export function runMatch({
+function* matchSteps({
   bots,            // { A: {name, decide}, B: {name, decide} }
   classes,         // { A: 'IOP', B: 'CRA' }
   mapId = 'arene',
   seed = 1,
   collectFrames = true,
   loadouts = {},
+  mode = 'duel',
+  bossId,
+  bossGrade,
 }) {
+  if (mode === 'boss') mapId = dungeonMapId(bossId);
   const init = createGame({
     mapId,
     seed,
     fighters: [
       { id: 'A', name: bots.A.name, botName: bots.A.name, classId: classes.A, loadout: loadouts.A },
-      { id: 'B', name: bots.B.name, botName: bots.B.name, classId: classes.B, loadout: loadouts.B },
+      ...(mode === 'boss' ? dungeonRoster(bossId, bossGrade, seed)
+        : [{ id: 'B', name: bots.B.name, botName: bots.B.name, classId: classes.B, loadout: loadouts.B }]),
     ],
   });
 
   let state = init.state;
   const frames = [];
   const allEvents = [];
-  const stats = {
-    A: { damageDealt: 0, healingDone: 0, actions: 0, invalid: 0, errors: 0 },
-    B: { damageDealt: 0, healingDone: 0, actions: 0, invalid: 0, errors: 0 },
-  };
+  const stats = Object.fromEntries(Object.keys(state.fighters).map(id => [id,
+    { damageDealt: 0, healingDone: 0, actions: 0, invalid: 0, errors: 0 }]));
 
   const record = (events) => {
     allEvents.push(...events);
     for (const e of events) {
-      if (e.t === 'damage' && (e.source === 'A' || e.source === 'B')) {
+      if (e.t === 'damage' && stats[e.source]) {
         stats[e.source].damageDealt += e.amount;
       }
-      if (e.t === 'heal' && (e.target === 'A' || e.target === 'B')) {
+      if (e.t === 'heal' && stats[e.target]) {
         stats[e.target].healingDone += e.amount;
       }
     }
@@ -73,7 +78,7 @@ export function runMatch({
     if (!summonRngs[fid]) summonRngs[fid] = createRng(hashSeed(`${seed}:${fid}`));
     return {
       name: fid,
-      decide: (view, api) => utilityDecide(view, api),
+      decide: (view, api) => state.fighters[fid].isMonster ? monsterDecide(view, api, utilityDecide) : utilityDecide(view, api),
       rng: summonRngs[fid],
     };
   };
@@ -83,7 +88,7 @@ export function runMatch({
     guard += 1;
     const current = currentFighter(state);
     const fid = current.id;
-    const bot = current.isSummon ? summonBot(fid) : bots[fid];
+    const bot = current.isSummon || current.isMonster ? summonBot(fid) : bots[fid];
     const turnAtStart = state.turn;
 
     let actionsThisTurn = 0;
@@ -92,6 +97,7 @@ export function runMatch({
 
     // Play out this fighter's whole turn.
     while (!state.over) {
+      yield { turn: state.turn, fighter: fid };
       let action = null;
       try {
         const view = getView(state, fid);
@@ -144,12 +150,13 @@ export function runMatch({
       // Turn is over when PASS was applied (current fighter or turn changed).
       if (action.type === 'PASS') break;
       if (state.over) break;
+      if (currentFighter(state).id !== fid || state.turn !== turnAtStart) break;
 
       if (actionsThisTurn >= MAX_ACTIONS_PER_TURN) {
         record([{ t: 'forfeit_turn', fighter: fid, reason: 'Budget d\'actions épuisé' }]);
         const pass = applyAction(state, { type: 'PASS' });
-        record(pass.events);
         state = pass.state;
+        record(pass.events);
         break;
       }
     }
@@ -157,18 +164,21 @@ export function runMatch({
     // Safety: a turn must actually have ended or the match be over.
     if (!state.over && currentFighter(state).id === fid && state.turn === turnAtStart) {
       const pass = applyAction(state, { type: 'PASS' });
-      record(pass.events);
       state = pass.state;
+      record(pass.events);
     }
   }
 
   if (!state.over) {
     // Guard tripped — should never happen, but never hang the browser.
+    state = { ...state, over: true, winner: null, endReason: 'guard' };
     record([{ t: 'match_end', winner: null, reason: 'guard' }]);
   }
 
   return {
-    config: { mapId, seed, classes, loadouts: JSON.parse(JSON.stringify(loadouts)), botNames: { A: bots.A.name, B: bots.B.name } },
+    config: { mapId, seed, classes, loadouts: JSON.parse(JSON.stringify(loadouts)),
+      ...(mode === 'boss' ? { mode, bossId, bossGrade } : {}),
+      botNames: { A: bots.A.name, B: mode === 'boss' ? dungeonForBoss(bossId).name : bots.B.name } },
     winner: state.winner,          // 'A' | 'B' | null (draw)
     endReason: state.endReason,
     turns: state.turn,
@@ -177,4 +187,28 @@ export function runMatch({
     events: allEvents,
     frames,
   };
+}
+
+export function runMatch(config) {
+  const steps = matchSteps(config);
+  let next = steps.next();
+  while (!next.done) next = steps.next();
+  return next.value;
+}
+
+// Same referee and RNG streams as runMatch, yielding to the browser between
+// short batches so a whole dungeon can be simulated without locking the UI.
+export async function runMatchAsync(config, { signal, onProgress, yieldControl = () => new Promise(resolve => setTimeout(resolve, 0)) } = {}) {
+  const steps = matchSteps(config);
+  let next;
+  do {
+    await yieldControl();
+    if (signal?.aborted) throw new DOMException('Simulation annulée', 'AbortError');
+    const started = Date.now();
+    do {
+      next = steps.next();
+    } while (!next.done && !signal?.aborted && Date.now() - started < 20);
+    if (!next.done) onProgress?.(next.value);
+  } while (!next.done);
+  return next.value;
 }

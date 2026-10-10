@@ -36,6 +36,13 @@ class SwfAdapterTests(unittest.TestCase):
         items = [(2, shape), (39, nested), *list(tags(place(2, x=100, y=50))), (1, b'')]
         self.assertEqual(display_bounds(items), (85, 115, 30, 60))
 
+    def test_full_timeline_bounds_include_later_nested_motion(self):
+        shape = struct.pack('<H', 1) + rect((-10, 20, -30, 0))
+        nested = struct.pack('<HH', 2, 2) + place(1) + tag(1) + place(1, x=100, y=50) + tag(1) + tag(0)
+        items = [(2, shape), (39, nested), *list(tags(place(2))), (1, b'')]
+        self.assertEqual(display_bounds(items), (-10, 20, -30, 0))
+        self.assertEqual(display_bounds(items, all_frames=True), (-10, 120, -30, 50))
+
     def test_adaptation_preserves_nested_timeline_and_exports(self):
         sprite = struct.pack('<HH', 7, 2) + tag(1) + tag(1) + tag(0)
         link = struct.pack('<HH', 1, 7) + b'staticR\0'
@@ -71,12 +78,15 @@ class SwfAdapterTests(unittest.TestCase):
             meta = adapt_effect(a, b)
             _, _, items = read(b)
             self.assertEqual(a.read_bytes(), source)
-        self.assertEqual(meta['duration'], 1800)  # 300 ms flight + 90/60 s impact
-        self.assertEqual(sum(code == 1 for code, _ in items), 19)
+        self.assertEqual(meta['duration'], 1500)  # Native impact, plus distance-dependent motion in JS.
+        self.assertEqual(meta['exportFrames'], {'move': 1, 'shoot': 90})
+        self.assertEqual(sum(code == 1 for code, _ in items), 1)
         self.assertIn((39, impact), items)
         actions = [payload for code, payload in items if code == 12]
         self.assertIn(b'move\0', actions[0])
         self.assertIn(b'shoot\0', actions[-1])
+        self.assertIn(b'effectType\0', actions[0])
+        self.assertIn(b'cellFrom\0', actions[0])
 
 
 if __name__ == '__main__':

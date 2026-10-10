@@ -83,14 +83,28 @@ async function main() {
       rendered += 1;
       if (rendered % 30 === 0) console.log(`Rendered ${rendered} assets.`);
     }
-    if (!process.argv.includes('--icons-only')) for (const [id, map] of Object.entries(manifest.maps)) {
+    const monstersOnly = process.argv.includes('--monsters-only');
+    const shardArg = process.argv.find(arg => arg.startsWith('--map-shard='));
+    const [shard, shardCount] = shardArg ? shardArg.slice('--map-shard='.length).split('/').map(Number) : [0, 1];
+    if (!Number.isInteger(shard) || !Number.isInteger(shardCount) || shard < 0 || shard >= shardCount) throw new Error('Use --map-shard=0/3, 1/3 or 2/3 with --maps-only.');
+    const idsArg = process.argv.find(arg => arg.startsWith('--map-ids='));
+    const selectedMapIds = idsArg ? new Set(idsArg.slice('--map-ids='.length).split(',')) : null;
+    const maps = Object.entries(manifest.maps).filter(([id], i) => i % shardCount === shard
+      && (!selectedMapIds || selectedMapIds.has(id) || selectedMapIds.has(id.split('_').at(-1))));
+    if (!monstersOnly && !process.argv.includes('--icons-only')) for (const [id, map] of maps) {
       for (const layer of map.layers) await render(layer.swf, layer.image, Math.ceil(map.width), Math.ceil(map.height), 180);
       console.log(`Map ${id} ready (${map.layers.length} layers).`);
     }
-    if (!process.argv.includes('--maps-only') && !process.argv.includes('--icons-only')) for (const variants of Object.values(manifest.classes)) {
+    if (!monstersOnly && !process.argv.includes('--maps-only') && !process.argv.includes('--icons-only')) for (const variants of Object.values(manifest.classes)) {
       for (const id of Object.values(variants)) {
         await render(`static/portraits/${id}.swf`, `portraits/${id}.png`, 96, 96);
       }
+    }
+    const monstersFile = path.join(__dirname, '../src/engine/monsterData.json');
+    const monsters = fs.existsSync(monstersFile) ? Object.values(JSON.parse(fs.readFileSync(monstersFile, 'utf8')).monsters) : [];
+    if (!process.argv.includes('--maps-only') && !process.argv.includes('--icons-only')) for (const monster of monsters) {
+      if (!fs.existsSync(path.join(assetRoot, `static/portraits/${monster.gfx}.swf`))) continue;
+      await render(`static/portraits/${monster.gfx}.swf`, `portraits/${monster.gfx}.png`, 96, 96);
     }
     // Only rasterize icons the combat engine exposes; all other raw icons
     // remain available in the imported library.
@@ -98,9 +112,10 @@ async function main() {
     const catalogueFile = path.join(assetRoot, 'spell-catalogue.json');
     const catalogue = fs.existsSync(catalogueFile) ? JSON.parse(fs.readFileSync(catalogueFile)) : {};
     const classSpellIds = [...Object.values(catalogue.classes || {}).flat(), ...(catalogue.common || [])].map(String);
-    const ids = [...new Set([...classSpellIds, ...[...spellSource.matchAll(/"id":\s*(\d+)/g)].map(m => m[1])])];
+    const monsterSpellIds = monsters.flatMap(m => Object.values(m.grades).flatMap(g => g.spells.map(s => String(s.id))));
+    const ids = [...new Set([...classSpellIds, ...monsterSpellIds, ...[...spellSource.matchAll(/"id":\s*(\d+)/g)].map(m => m[1])])];
     if (!process.argv.includes('--maps-only')) for (const id of ids) {
-      if (manifest.spells[id]?.icon) {
+      if ((!monstersOnly || monsterSpellIds.includes(id)) && manifest.spells[id]?.icon) {
         const visual = manifest.spells[id];
         await render(visual.iconSource || `static/icons/${id}.swf`, visual.icon, 64, 64, 60, visual.iconNeedsRender);
         delete visual.iconNeedsRender;

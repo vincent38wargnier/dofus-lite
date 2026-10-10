@@ -57,18 +57,18 @@ test.each([1, 100, 150, 199, 200])('all available class and selected common spel
   for (const classId of CLASS_IDS) {
     const result = resolveSpellLoadout(classId, { level, spells: { common: SPELL_LIBRARY.common } });
     expect(result.valid).toBe(true);
-    expect(Object.values(result.spells).every(s => s.grade === (level === 200 ? 6 : 5))).toBe(true);
+    expect(Object.values(result.spells).every(s => s.grade === (level === 200 || (level >= 100 && SPELL_LIBRARY.common.includes(s.id)) ? 6 : 5))).toBe(true);
     expect(Object.values(result.spells).every(s => s.requiredLevel <= level)).toBe(true);
   }
   expect(defaultSpellGrade(159, 99)).toBeUndefined(); // Colère remains locked.
 });
 
 test('automatic grades follow level changes; explicit spell customizations and order survive', () => {
-  const original = { ...emptyLoadout('IOP'), level: 199, spells: { common: [350, 367], order: [350, 367, 141], grades: { 350: 3 } } };
+  const original = { ...emptyLoadout('IOP'), level: 199, spells: { common: [350, 367], order: [350, 367, 141], grades: { 350: 3, 141: 3 } } };
   const raised = loadoutAtLevel('IOP', original, 200);
   const spells = Object.values(resolveSpellLoadout('IOP', raised).spells);
-  expect(spells.slice(0, 3).map(s => [s.id, s.grade])).toEqual([[350, 3], [367, 6], [141, 6]]);
+  expect(spells.slice(0, 3).map(s => [s.id, s.grade])).toEqual([[350, 6], [367, 6], [141, 3]]);
   const lowered = loadoutAtLevel('IOP', raised, 199);
-  expect(Object.values(resolveSpellLoadout('IOP', lowered).spells).slice(0, 3).map(s => s.grade)).toEqual([3, 5, 5]);
-  expect(original.spells.grades).toEqual({ 350: 3 });
+  expect(Object.values(resolveSpellLoadout('IOP', lowered).spells).slice(0, 3).map(s => s.grade)).toEqual([6, 6, 3]);
+  expect(original.spells.grades).toEqual({ 350: 3, 141: 3 });
 });

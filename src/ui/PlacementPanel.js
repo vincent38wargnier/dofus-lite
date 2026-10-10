@@ -3,6 +3,7 @@ import { Check, MapPin } from 'lucide-react';
 import '../styles/placement.css';
 
 export function placementDescription(map) {
+  if (map.placement.status === 'client') return 'Cases de placement du client Retro';
   if (map.placement.status === 'historical') return 'Placement historique · à confirmer sur Retro actuel';
   if (map.placement.status === 'custom') return 'Départs fixes de cette arène';
   return 'Départs locaux fixes · placement original indisponible';
@@ -11,6 +12,7 @@ export function placementDescription(map) {
 export default function PlacementPanel({ state, onReady }) {
   const cells = state.placement.cells.A;
   const historical = state.placement.source.status === 'historical';
+  const enemyCount = Object.values(state.fighters).filter(f => f.team !== state.fighters.A.team).length;
   return <section className="placement-controls" aria-label="Placement avant le combat">
     <div className="placement-instruction">
       <MapPin size={21} aria-hidden="true" />
@@ -21,10 +23,11 @@ export default function PlacementPanel({ state, onReady }) {
     </div>
     <div className="placement-legend">
       <span><i className="your-start" aria-hidden="true" />Vous · {cells.length} case{cells.length > 1 ? 's' : ''}</span>
-      <span><i className="enemy-start" aria-hidden="true" />Adversaire prêt</span>
+      <span><i className="enemy-start" aria-hidden="true" />{enemyCount > 1 ? `${enemyCount} adversaires prêts` : 'Adversaire prêt'}</span>
       <span>Le chrono démarre avec le combat.</span>
     </div>
-    <p className="placement-source">{historical
+    <p className="placement-source">{state.placement.source.status === 'client' ? 'Cases de départ du client Retro : votre camp en bleu, les monstres en rouge.'
+      : state.placement.source.expanded ? 'Les monstres sont répartis autour du départ adverse pour accueillir tout le groupe.' : historical
       ? 'Départs issus des archives 1.29 ; leur correspondance avec Retro actuel reste à confirmer.'
       : state.placement.source.status === 'custom' ? 'Cette arène utilise ses propres départs fixes.'
         : 'Placement original indisponible pour cette carte : les deux départs locaux restent fixes.'}</p>

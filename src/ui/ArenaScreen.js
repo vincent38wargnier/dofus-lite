@@ -162,7 +162,7 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed, active 
         {error ? <span style={{ color: 'var(--danger)', fontWeight: 700 }}>{error}</span> : null}
       </div>
 
-      {showEquipment ? <LoadoutPicker onClassChange={(side, id) => side === 'A' ? setClassA(id) : setClassB(id)} classes={{ A: classA, B: classB }} names={{ A: 'Combattant A', B: 'Combattant B' }} {...equipment} /> : null}
+      {showEquipment ? <LoadoutPicker classes={{ A: classA, B: classB }} names={{ A: 'Combattant A', B: 'Combattant B' }} {...equipment} /> : null}
 
       <div className="arena-layout">
         <div>

@@ -79,13 +79,14 @@ function expectedDamage(effect, caster, victim, fighters, spell = {}) {
 
 // Profil d'un kit: distance idéale (portée max du meilleur sort de dégâts)
 // et portée maximale d'attaque — sert au band de distance ET à la menace.
-function kitInfo(f) {
+function kitInfo(f, target = null) {
   let ideal = 1;
   let best = 0;
   let maxReach = 1;
   for (const s of f.spells || []) {
     if (s.pa > f.basePa) continue;
     for (const e of s.effects || []) {
+      if (target && !effectAcceptsTarget(e, f, target)) continue;
       if (e.kind === 'damage' || e.kind === 'lifeSteal' || e.kind === 'poison') {
         maxReach = Math.max(maxReach, s.range[1]);
         const d = avg(e) * (e.kind === 'poison' ? 1.5 : 1); // poison ≈ plusieurs tics
@@ -127,9 +128,9 @@ export function utilityDecide(view, api, weights) {
   };
 
   // ---- menace: BFS depuis chaque ennemi, portée = PM + portée du kit --
-  const myKit = kitInfo(you);
+  const myKit = kitInfo(you, leader);
   const threats = enemies.map((e) => {
-    const k = kitInfo(e);
+    const k = kitInfo(e, you);
     const reach = Math.min(e.basePm + k.maxReach, 15);
     const blocked = (x, y) => !(x === e.pos.x && y === e.pos.y) && moveBlocked(x, y);
     const { costs } = bfs(e.pos, reach, board.width, board.height, blocked);

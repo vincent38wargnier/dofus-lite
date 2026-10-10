@@ -125,6 +125,13 @@ export function statBuffTotal(fighter, stat) {
     .reduce((s, e) => s + e.value, 0);
 }
 
+export function turnResources(fighter) {
+  return {
+    pa: Math.max(0, fighter.basePa + statBuffTotal(fighter, 'pa')),
+    pm: Math.max(0, fighter.basePm + statBuffTotal(fighter, 'pm')),
+  };
+}
+
 export function effectiveStat(fighter, stat) {
   return Math.max(0, (fighter.stats[stat] || 0) + statBuffTotal(fighter, stat));
 }
@@ -141,7 +148,7 @@ export function armorReduction(target, element, fighters = {}) {
     const characteristic = effectiveStat(owner, ELEMENT_STAT[element] || 'force');
     const protectionStat = Math.max(characteristic, (intelligence + characteristic) / 2);
     return sum + Math.floor(e.value * (100 + protectionStat) / 100);
-  }, statBuffTotal(target, 'armor') + statBuffTotal(target, ['terre', 'neutre'].includes(element) ? 'armorPhysical' : 'armorMagic'));
+  }, statBuffTotal(target, 'armor'));
 }
 
 // Base jet -> element multiplier: floor(jet * (100 + stat + %power) / 100) + flat
@@ -159,12 +166,16 @@ export function damageAmount(jet, element, caster, options = {}) {
 // Ancestra Formulas.calculFinalDommage: fixed reduction before percentage.
 // Player percentage resistance is capped at 50%; monsters keep their own cap.
 export function resistanceValues(element, target, caster = null) {
+  const playerAttacker = caster?.leader && !caster.isMonster;
   let pct = (target.resistances && target.resistances[element]) || 0;
   pct += statBuffTotal(target, `res_${element}`);
-  if (caster?.leader) pct += statBuffTotal(target, `pvpRes_${element}`);
-  pct = Math.min(target.isSummon ? 100 : 50, pct);
+  if (playerAttacker) pct += statBuffTotal(target, `pvpRes_${element}`);
+  pct = Math.min(target.isSummon || target.isMonster ? 100 : 50, pct);
   const fixed = ((target.resistancesFixed && target.resistancesFixed[element]) || 0)
-    + (caster?.leader ? statBuffTotal(target, `pvpFixed_${element}`) : 0);
+    // Effects 183/184 are fixed magical/physical protection, including against
+    // periodic elemental damage (Puissance Sylvestre's poison protection).
+    + statBuffTotal(target, ['terre', 'neutre'].includes(element) ? 'armorPhysical' : 'armorMagic')
+    + (playerAttacker ? statBuffTotal(target, `pvpFixed_${element}`) : 0);
   return { percent: pct, fixed };
 }
 
