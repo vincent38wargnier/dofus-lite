@@ -1,6 +1,7 @@
 import MONSTERS from '../engine/monsterData.json';
 import { SPELL_LIBRARY, resolveSpellLoadout } from '../engine/classes';
-import { isCustomSpellbook, MAX_CUSTOM_SPELLS } from '../engine/customSpells';
+import { isCustomSpellbook, isCustomSpellbookDraft, MAX_CUSTOM_SPELLS } from '../engine/customSpells';
+import { spellBalance } from '../engine/spellBalance';
 import { addCustomDungeonMonster, customDungeonErrors, customDungeonRoster } from '../engine/customDungeons';
 import { emptyLoadout, resolveLoadout } from '../engine/equipment';
 import { createGame, applyAction, spellsOf } from '../engine/engine';
@@ -41,7 +42,7 @@ test('catalogue includes every class and imported monster spell, with unique val
   for (const entry of CREATION_SPELLS) {
     expect(entry.sources.length).toBeGreaterThan(0);
     expect(new Set(entry.grades.map(grade => grade.grade)).size).toBe(entry.grades.length);
-    for (const grade of entry.grades) expect(isCustomSpellbook([grade])).toBe(true);
+    for (const grade of entry.grades) expect(isCustomSpellbookDraft([grade])).toBe(true);
   }
 });
 
@@ -176,7 +177,7 @@ test('saved creations survive reload without touching normal drafts; failed and 
 
 test('custom classes allow ten spells plus the weapon, and refuse an eleventh in manual and AI combat', () => {
   expect(MAX_CUSTOM_SPELLS).toBe(10);
-  const ids = CREATION_SPELLS.slice(0, 11).map(entry => entry.id);
+  const ids = CREATION_SPELLS.filter(entry => spellBalance(entry.grades.at(-1)).score <= 40).slice(0, 11).map(entry => entry.id);
   const selected = loadout(ids.slice(0, 10));
   selected.slots.weapon = 2416;
   expect(isCustomSpellbook(selected.spells.custom)).toBe(true);
@@ -206,7 +207,7 @@ test('older forty-spell creations remain saved while their owner reduces the spe
   expect(readCreations(localStorage).value.characters[0].loadout.spells.custom).toHaveLength(39);
   expect(readCreations(localStorage).value.dungeons).toEqual(original.dungeons);
   expect(resolveLoadout('IOP', value.characters[0].loadout).valid).toBe(false);
-  value.characters[0].loadout.spells.custom = value.characters[0].loadout.spells.custom.slice(0, 10);
+  value.characters[0].loadout.spells.custom = value.characters[0].loadout.spells.custom.filter(spell => spellBalance(spell).score <= 40).slice(0, 10);
   persistCreations(localStorage, value);
   expect(resolveLoadout('IOP', readCreations(localStorage).value.characters[0].loadout).valid).toBe(true);
 });

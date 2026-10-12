@@ -81,6 +81,7 @@ test.each(Object.keys(EFFECT_TYPES))('%s authored effect executes through real c
   const effect = newAuthoredEffect(kind);
   const self = effect.targetMask === 32 || kind === 'heal';
   raw = edit(raw, { effects: [effect], ...(self && kind !== 'teleport' ? { targetMode: 'self', rangeMin: 0, rangeMax: 0 } : {}) });
+  if (kind === 'buffPa') raw = edit(raw, { maxPerTurn: 1, maxPerTarget: 1, cooldown: 2 });
   expect(authoredSpellErrors(raw)).toEqual([]);
   const state = setup([raw]);
   const target = kind === 'teleport' ? { x: 3, y: 5 } : self ? state.fighters.A.pos : state.fighters.B.pos;
@@ -109,7 +110,7 @@ test('effect ordering changes same-cast damage, and the bonus persists for the f
 });
 
 test('empty-center area casting uses actual area and recipient rules', () => {
-  const raw = edit(newAuthoredSpell(), { targetMode: 'cell', effects: [{ ...newAuthoredEffect(), min: 20, max: 20, zone: 'Cc', targetMask: 0 }] });
+  const raw = edit(newAuthoredSpell(), { pa: 6, targetMode: 'cell', effects: [{ ...newAuthoredEffect(), min: 20, max: 20, zone: 'Cc', targetMask: 0 }] });
   const state = setup([raw]); state.fighters.B.pos = { x: 5, y: 3 };
   const result = cast(state, raw, { x: 4, y: 3 });
   expect(result.ok).toBe(true);
@@ -155,9 +156,9 @@ test('AI can choose and cast an invented spell without any native spell-ID rule'
   expect(applyAction(state, action).events.some(e => e.t === 'damage')).toBe(true);
 });
 
-test('balance guidance catches high output and kit synergies without pretending to certify balance', () => {
+test('balance validation rejects high output while guidance still explains kit synergies', () => {
   const raw = edit(newAuthoredSpell(), { effects: [{ ...newAuthoredEffect(), min: 200, max: 250 }] });
-  expect(authoredSpellErrors(raw)).toEqual([]);
+  expect(authoredSpellErrors(raw).join()).toContain('score');
   expect(authoredSpellWarnings(raw, [newAuthoredSpell([], 'boost')]).join(' ')).toMatch(/Dégâts bruts.*Votre classe/);
   const criticalOnly = edit(newAuthoredSpell(), { critRate: 2, critEffects: raw.effects });
   expect(authoredSpellWarnings(criticalOnly).join(' ')).toContain('Dégâts critiques');

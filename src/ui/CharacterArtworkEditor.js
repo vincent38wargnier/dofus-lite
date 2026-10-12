@@ -2,8 +2,38 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Download, ImagePlus, Upload } from 'lucide-react';
 import { ARTWORK_TEMPLATE_BASE, CHARACTER_ARTWORK_SPEC, importCharacterArtwork, useCharacterArtwork } from './characterArtwork';
 import CustomCharacterSprite from './CustomCharacterSprite';
+import ShapeAppearancePicker from './ShapeAppearancePicker';
+import { CHARACTER_SHAPES, characterShapeId, parseCharacterShape, characterShapeImage, DEFAULT_CUSTOM_COLOR } from '../visuals/customShapes';
 
 export default function CharacterArtworkEditor({ artworkId, name, onChange }) {
+  const shape = parseCharacterShape(artworkId);
+  const [mode, setMode] = useState(shape ? 'shape' : artworkId ? 'images' : 'client');
+  const previousShape = useRef(shape || { shape: 'wanderer', color: DEFAULT_CUSTOM_COLOR });
+  const previousImages = useRef(!shape && artworkId ? artworkId : null);
+  const [pose, setPose] = useState('static');
+  const { artwork } = useCharacterArtwork(artworkId);
+  const pickShape = appearance => { previousShape.current = appearance; onChange(characterShapeId(appearance.shape, appearance.color)); };
+  return <section className="creator-card character-custom-appearance" aria-label="Apparence de la classe">
+    <h3>Apparence de votre classe</h3><p>Une silhouette et votre couleur pour reconnaître votre création au premier regard.</p>
+    <div className="appearance-source" role="group" aria-label="Type d’apparence de la classe">
+      <button type="button" className="btn" aria-pressed={mode === 'shape'} onClick={() => { setMode('shape'); pickShape(previousShape.current); }}>Forme personnalisée</button>
+      <button type="button" className="btn" aria-pressed={mode === 'images'} onClick={() => { setMode('images'); if (previousImages.current) onChange(previousImages.current); }}>Mes images</button>
+      <button type="button" className="btn" aria-pressed={mode === 'client'} onClick={() => { setMode('client'); onChange(null); }}>Visuel Dofus</button>
+    </div>
+    {mode === 'shape' && <div className="character-shape-layout">
+      <ShapeAppearancePicker shapes={CHARACTER_SHAPES} value={shape || previousShape.current} onChange={pickShape}
+        image={(id, color) => characterShapeImage(id, color, { pose: 'portrait' })} />
+      <div><div className="character-shape-preview">{artwork && <CustomCharacterSprite artwork={artwork} pose={pose} />}<span>Sur le terrain</span></div>
+        <label className="field">Aperçu de la silhouette<select value={pose} onChange={event => setPose(event.target.value)}>
+          <option value="static">Repos</option><option value="walk">Marche</option><option value="cast">Lancer un sort</option></select></label></div>
+    </div>}
+    {mode === 'images' && <ImportedArtworkEditor artworkId={shape ? null : artworkId} name={name}
+      onChange={id => { previousImages.current = id; onChange(id); }} />}
+    {mode === 'client' && <p className="muted small">Le personnage reprend le visuel de la classe de référence choisie ci-dessus.</p>}
+  </section>;
+}
+
+function ImportedArtworkEditor({ artworkId, name, onChange }) {
   const { artwork, error: readError } = useCharacterArtwork(artworkId);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -24,7 +54,7 @@ export default function CharacterArtworkEditor({ artworkId, name, onChange }) {
     finally { if (mounted.current) setBusy(false); }
   };
   const previewDirection = { suffix: ['NW', 'NE'].includes(direction) ? 'L' : 'R', mirror: ['SW', 'NE'].includes(direction) };
-  return <details className="creator-card creator-artwork" open={artworkId ? true : undefined}>
+  return <details className="creator-artwork" open>
     <summary><ImagePlus size={20} /><strong>Images du personnage</strong><span>{artwork ? 'Apparence personnalisée' : 'Vos PNG · gabarits et import'}</span></summary>
     <div className="creator-artwork-content">
       <p>Créez votre apparence avec <strong>3 PNG obligatoires</strong> : portrait, face et dos. Ajoutez les 6 planches d’animation quand vous le souhaitez.</p>
@@ -35,7 +65,6 @@ export default function CharacterArtworkEditor({ artworkId, name, onChange }) {
         <input ref={input} type="file" accept="image/png,.png" multiple hidden aria-label="Images PNG du personnage" onChange={event => {
           load(Array.from(event.target.files)); event.target.value = '';
         }} />
-        {artworkId && <button type="button" className="btn" disabled={busy} onClick={() => { onChange(null); setError(''); }}>Utiliser l’apparence du modèle</button>}
       </div>
       {(error || readError) && <p className="creator-warning" role="alert">{error || readError}</p>}
       <div className="creator-artwork-layout">

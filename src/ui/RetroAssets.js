@@ -234,7 +234,7 @@ export function RetroSpellIcon({ spell }) {
   const assets = useRetroAssets();
   const { artwork: customIcons } = useCharacterArtwork(spell.iconArtworkId);
   const visualId = spell.visualSpellId ?? spell.id;
-  const icon = spell.itemId ? itemIcon(ITEMS[spell.itemId])
+  const icon = spell.itemId ? (spell.itemIcon || itemIcon(ITEMS[spell.itemId]))
     : assets?.imagesReady && assets.renderedSpellIcons?.includes(String(visualId)) && assets.spells[visualId]?.icon;
   const [failed, setFailed] = useState(null);
   const { color, category } = spellPresentation(spell);

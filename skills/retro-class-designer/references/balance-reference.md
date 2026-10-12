@@ -73,3 +73,12 @@ For each candidate spell, select two native rows of the same grade and role. Rec
 Record a conclusion in plain language: “Less damage than A, but safer range and enemy-only area; reduce damage or increase cooldown.” A single ratio is insufficient.
 
 When comparisons use different stats, equipment, turn horizons, or target positions, state that limitation. Spell definitions alone cannot establish how competent human players will use them.
+
+
+## Enforced runtime budgets (version 1)
+
+The editor, ZIP importer and combat admission share `src/engine/spellBalance.js`: 100 points per spell and 650 per kit, including synergy and cooldown rotation. See the runtime ZIP rules for exact formulas and the repository `docs/spell-balance.md` for rationale. `node scripts/audit_spell_budgets.cjs` audits all 264 class grade-six entries. Native class/common spells retain their exact mechanics and spend at most 100 points in a custom kit; this exception never applies to edited copies or monster spells. New authored criticals must preserve every normal effect, element, area and recipient, with nondecreasing values/duration. Existing out-of-budget saves remain editable, with an explicit repair proposal.
+
+## Equipment controls
+
+Use [equipment-rules.md](equipment-rules.md) when selecting a comparison build or designing themed items. Each custom item is limited to 100 points normalized by its family and required level; outfits with custom items are limited to 1650, excluding Dofus, to accommodate optimized gear with legal exos. Exact family/level caps are in `equipment-limits.json`. A weapon remains an offensive outlet for the class's boosts, even if the spellbook contains no attacks. Spell and equipment scores are independent gates; competitive comparisons still require matched builds and combat tests. Equipment is created separately in the UI, not imported by the class ZIP.

@@ -1,0 +1,124 @@
+require('./ai_runtime.cjs');
+const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
+const puppeteer = require('puppeteer-core');
+const { emptyLoadout } = require('../src/engine/equipment');
+const out = process.env.PROOF_DIR || '/tmp/dofus-combat-lobby';
+const profile = (id, name, classId, base) => ({ id, name, classId, className: classId,
+  loadout: { ...emptyLoadout(classId), level: 200, base, slots: {} } });
+const profiles = [profile('iop', 'Iop capitaine', 'IOP', { force: 200 }), profile('cra', 'Crâ éclaireur', 'CRA', { intelligence: 100 }),
+  profile('eni', 'Eniripsa soutien', 'ENIRIPSA', { intelligence: 100 }), profile('sram', 'Sram assassin', 'SRAM', { force: 100 })];
+const entry = (p, controller = 'player') => ({ kind: 'character', name: p.name, classId: p.classId, loadout: p.loadout, controller, botId: 'maison' });
+const allies = [entry(profiles[1]), { ...entry(profiles[2], 'ai'), botId: 'pantin' }];
+const room = { id: 'lobby-room', name: 'Le refuge des Poutchs', mapId: 'dungeon_2083', members: [{ monsterId: 494, grade: 1, count: 2 }] };
+(async () => {
+  fs.mkdirSync(out, { recursive: true });
+  const browser = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true, pipe: true });
+  const page = await browser.newPage(), report = { errors: [], checks: [] };
+  page.setDefaultTimeout(30000);
+  page.on('pageerror', error => report.errors.push(error.message));
+  const capture = name => page.screenshot({ path: path.join(out, `${name}.png`) });
+  const click = async (selector, text = '') => {
+    const handle = await page.evaluateHandle(({ selector, text }) => [...document.querySelectorAll(selector)].find(e => e.checkVisibility() && e.textContent.includes(text)), { selector, text });
+    assert(handle.asElement(), `Missing ${selector}: ${text}`); await handle.asElement().click(); await handle.dispose();
+  };
+  const open = async () => { await click('.setup-play'); await page.waitForSelector('.combat-choice[open]'); };
+  const done = () => click('.combat-choice-done');
+  const check = value => { report.checks.push(value); console.log(value); };
+  const fits = () => page.evaluate(() => {
+    const d = document.querySelector('.combat-choice'), rect = d.getBoundingClientRect(), footer = d.querySelector('footer').getBoundingClientRect();
+    return rect.right <= innerWidth && rect.bottom <= innerHeight && d.scrollWidth <= d.clientWidth + 1 && footer.bottom <= innerHeight;
+  });
+  try {
+    await page.setViewport({ width: 1440, height: 960 });
+    await page.evaluateOnNewDocument(({ profiles, allies, enemy, room }) => {
+      if (localStorage.getItem('lobby-proof')) return;
+      localStorage.setItem('lobby-proof', '1');
+      localStorage.setItem('dofus-lite-profiles-v1', JSON.stringify({ version: 1, activeId: 'iop', profiles }));
+      localStorage.setItem('dofus-lite-ally-team-v1', JSON.stringify({ version: 1, entries: allies }));
+      localStorage.setItem('dofus-lite-opponent-team-v1', JSON.stringify({ version: 1, entries: [enemy] }));
+      localStorage.setItem('dofus-lite-creations-v1', JSON.stringify({ version: 1, characters: [], dungeons: [room] }));
+      localStorage.setItem('dofus-lite-player-setup-v1', JSON.stringify({ mode: 'duel', mapId: 'territoire_des_dopeuls_5383', botId: 'pantin', playerBotId: 'maison' }));
+      localStorage.setItem('dofus-lite-sound', JSON.stringify({ enabled: false, volume: 0 }));
+    }, { profiles, allies, enemy: entry(profiles[3]), room });
+    await page.goto(process.env.PROOF_URL || 'http://127.0.0.1:3013', { waitUntil: 'networkidle0' });
+    const original = await page.evaluate(() => localStorage.getItem('dofus-lite-profiles-v1'));
+    await open();
+    assert.equal(await page.$$eval('.combat-choice-modes button', es => es.length), 3);
+    assert.equal(await page.$('.combat-choice input[type="search"]'), null);
+    assert.equal(await page.$('.combat-choice .duel-composer'), null);
+    assert.equal(await page.$$eval('.combat-team-preview.friends .combat-member', es => es.length), 3);
+    assert(await fits()); await capture('overview-desktop');
+    check('three modes; both teams and map visible without opening a catalogue');
+    await click('[data-panel-trigger="allies"]');
+    await page.setDragInterception(true);
+    await (await page.$('[data-candidate-id="profile:sram"]')).dragAndDrop(await page.$('[data-ally-drop]'), { delay: 120 });
+    await page.setDragInterception(false);
+    await page.select('[aria-label="Contrôle de Sram assassin (3)"]', 'ai');
+    await page.select('[aria-label="IA de Sram assassin (3)"]', 'pantin');
+    await capture('team-editor'); await done();
+    assert.equal(await page.$$eval('.combat-team-preview.friends .combat-member', es => es.length), 4);
+    await click('[data-panel-trigger="settings"]');
+    await page.select('[aria-label="IA de votre personnage"]', 'cortex');
+    await done(); await click('.combat-control-toggle button', 'Tout en IA');
+    assert(await page.$eval('.combat-play-style', e => e.textContent.includes('Cortex')));
+    await click('.combat-control-toggle button', 'Je joue');
+    check('dragged ally keeps chosen AI; global play style is separate from encounter');
+    await click('[data-panel-trigger="map"]');
+    await page.type('[aria-label="Rechercher une carte"]', 'Bouftou');
+    await click('[data-map-id="dungeon_2083"]');
+    assert.equal(await page.$eval('[data-combat-panel]', e => e.dataset.combatPanel), 'overview');
+    assert(await page.$eval('.combat-terrain', e => e.textContent.includes('Bouftou')));
+    await click('[data-panel-trigger="opponents"]'); await click('.duel-team-clear');
+    await click('.duel-source-tabs button', 'Monstres'); await page.type('[aria-label="Rechercher un adversaire"]', 'Poutch');
+    await page.select('[aria-label="Niveau proposé pour Poutch Ingball"]', '1');
+    await click('[data-candidate-id="monster:494"] button'); await done();
+    await click('.combat-choice-launch'); await page.waitForSelector('.placement-ready');
+    assert.equal(await page.$$eval('.token.side-A', es => es.length), 4);
+    assert.equal(await page.$$eval('.token.side-B', es => es.length), 1);
+    await click('.placement-ready');
+    await page.waitForSelector('.end-turn:not([disabled])');
+    await click('.fight-heading-actions button', 'Abandonner');
+    check('manual launch receives the selected map, allied team and monster grade');
+    await open(); await click('.combat-choice-modes button[data-mode="boss"]');
+    await click('[data-panel-trigger="dungeons"]');
+    await click('.source-filters button', 'Personnalisés'); await click('[data-dungeon-id="lobby-room"]'); await done();
+    assert(await page.$eval('.combat-dungeon-title', e => e.textContent.includes('refuge')));
+    await click('.combat-control-toggle button', 'Tout en IA');
+    await page.reload({ waitUntil: 'networkidle0' }); await open();
+    assert.equal(await page.$eval('[data-mode="boss"]', e => e.getAttribute('aria-pressed')), 'true');
+    assert.equal(await page.$eval('.combat-control-toggle button:last-child', e => e.getAttribute('aria-pressed')), 'true');
+    assert(await page.$eval('.combat-dungeon-title', e => e.textContent.includes('refuge')));
+    await capture('dungeon-desktop');
+    check('reload retains dungeon, PvP map, allies and automatic control');
+    await page.setViewport({ width: 390, height: 844 });
+    assert(await fits()); await capture('overview-mobile');
+    await click('[data-panel-trigger="allies"]'); assert(await fits()); await capture('team-mobile');
+    await page.keyboard.press('Escape');
+    assert.equal(await page.$eval('[data-combat-panel]', e => e.dataset.combatPanel), 'overview');
+    assert(await page.evaluate(() => document.activeElement.dataset.panelTrigger === 'allies'));
+    for (let i = 0; i < 16; i++) {
+      await page.keyboard.press('Tab');
+      assert(await page.evaluate(() => document.querySelector('.combat-choice').contains(document.activeElement)), 'focus stays inside dialog');
+    }
+    await page.keyboard.press('Escape'); assert.equal(await page.$('.combat-choice'), null);
+    assert(await page.evaluate(() => document.activeElement.classList.contains('setup-play')));
+    check('mobile dialog and CTA fit; Escape returns then closes; keyboard focus stays in dialog');
+    await page.setViewport({ width: 1440, height: 960 }); await open();
+    await click('.combat-choice-modes [data-mode="kanojedo"]');
+    assert.equal(await page.$('.combat-control-toggle'), null);
+    await page.select('[aria-label="Niveau du Poutch"]', '2');
+    await click('.combat-choice-launch'); await page.waitForSelector('.placement-ready');
+    assert(await page.$eval('.fight-heading h1', e => e.textContent.includes('Kanojedo')));
+    await click('.fight-heading-actions button', 'Préparation'); await open();
+    await click('.combat-choice-modes [data-mode="boss"]'); await click('.combat-control-toggle button', 'Tout en IA');
+    await click('.combat-choice-launch'); await page.waitForSelector('[data-auto-dungeon]', { timeout: 120000 });
+    await click('.auto-result-button');
+    assert.equal(await page.$eval('[data-outcome]', e => e.dataset.outcome), 'victory');
+    assert.equal(await page.evaluate(() => localStorage.getItem('dofus-lite-profiles-v1')), original);
+    check('Kanojedo and automatic dungeon launch correctly; original profiles unchanged');
+    assert.deepEqual(report.errors, []);
+    fs.writeFileSync(path.join(out, 'report.json'), JSON.stringify(report, null, 2));
+  } catch (error) {
+    await capture('failure'); fs.writeFileSync(path.join(out, 'failure.txt'), await page.evaluate(() => document.body.innerText)); throw error;
+  } finally { await browser.close(); }
+})().catch(error => { console.error(error); process.exitCode = 1; });

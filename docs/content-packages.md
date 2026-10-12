@@ -17,6 +17,9 @@ Choose **Importer un ZIP** to install the resulting creation. The importer valid
 | [Dungeon example](../public/templates/content-packages/example-dungeon.zip) | Three enemies, two custom spellbooks |
 | [Class with artwork](../public/templates/content-packages/example-class-with-artwork.zip) | Mannequin animation strips and a custom spell icon |
 | [Dungeon with artwork](../public/templates/content-packages/example-dungeon-with-artwork.zip) | Custom boss sprite, icon and native companion models |
+| [Complete authoring kit](custom-class-authoring-kit.zip) | Skill, current prompts, spell/equipment rules, level tables and audits |
+| [Equipment restrictions](../public/templates/content-packages/equipment-rules.md) | Level scaling, stat/weapon limits, individual and outfit budgets |
+| [Equipment level tables](../public/templates/content-packages/equipment-limits.json) | Exact family allowances and stat caps at every level 1–200 |
 
 The downloadable examples contain demonstration art and modest example spell kits, not completed theme artwork or certified balanced content.
 
@@ -38,11 +41,17 @@ my-theme.zip
 | Effects | 1–4 per normal / critical variant; supported declarative primitives only |
 | Creatures | Exact native stat reference, 25–150% HP/stats, PA/PM offsets −2…+2 |
 | Cost / range | 1–8 PA; 0–12 PO; coherent targeting and duration |
-| Balance checks | Damage/PA ceilings, summed effect limits, stacking / PA-loop restrictions |
+| Spell budgets | 100 per spell; 650 per complete kit, including synergies and rotation |
+| Critical effects | Same effect order/kinds, elements, zones and targets; values/durations ≥ normal |
+| Equipment design | 100 per custom item, 1650 per outfit with custom gear; Dofus excluded |
 | Archive | STORE or DEFLATE, ≤32 MiB packed / 48 MiB expanded / 180 entries |
 | Files | JSON ≤512 KiB; each PNG ≤2 MiB; each character artwork set ≤12 MiB |
 
 See the full rules for exact variant budgets, effect ceilings and semantic requirements. JSON Schema alone cannot check all of them.
+
+Equipment rules are included in both copied prompts and the downloadable kit. An item's 100-point ceiling stays fixed while its raw allowance grows with **required item level** within its family; progression can plateau. Pets, mounts and shields use family envelopes without level scaling. The prompt includes level-200 caps; the full specification includes exact caps at every level. Spell and equipment budgets are separate and do not offset one another.
+
+**Equipment is not imported by the class/dungeon ZIP.** Create it in **Atelier → Mes équipements** or **Stuff → Créer un équipement**, then equip the imported class. Keep equipment proposals outside `content.json` and its ZIP. All-native outfits retain their existing admission rules, and Dofus still affect combat despite being excluded from equipment scoring.
 
 ## What is and is not supported
 
@@ -50,7 +59,7 @@ New spells use the existing engine's damage, healing, buffs, armor, resistance, 
 
 Choose an existing map; the ZIP does not import new terrain or background art. Custom spell animations and sound files, new summons, traps, poisons, state machines and JavaScript are not supported by this format. Native catalogue spells still exist in the UI separately. Optional artwork lets an AI without image tools deliver a playable package immediately.
 
-**Accepted does not mean balanced.** The numeric checks are broad guardrails. Warnings identify high efficiency and synergy risks; compare several equally equipped native classes, different maps and seeds, normal/critical builds and complete enemy teams. Neither the importer nor a package author awards an “evaluated” badge.
+**Accepted does not mean balanced.** The numeric budgets reject overpowered definitions under the local model; warnings identify remaining matchup and synergy risks. Compare several equally equipped native classes, different maps and seeds, normal/critical builds and complete enemy teams. Neither the importer nor a package author awards an “evaluated” badge.
 
 Imports create new immutable asset IDs and a new creation, including when the same ZIP is imported twice. Images live in IndexedDB; creations live in localStorage in this browser. A failed save rolls back the new image batch. Keep the original ZIP for backups and other browsers.
 
@@ -61,8 +70,11 @@ node scripts/content-pack.cjs validate path/to/creation.zip
 node scripts/content-pack.cjs validate path/to/folder
 node scripts/content-pack.cjs pack path/to/folder path/to/creation.zip
 node scripts/build_content_templates.cjs
+npm run templates:authoring
 ```
 
 The CLI and browser share the same manifest and archive rules. CLI PNG checks decode every frame; the browser checks decoding, dimensions, transparency and visible content. Both reject missing, undeclared, empty or corrupt assets.
 
 The older `skills/retro-class-designer/assets/example/class.json` and its `class-kit.cjs` validator remain a **legacy design-kit format**. Their ZIPs cannot be imported directly. For new deliverables use the builder's `content.json` prompt and this runtime contract; do not mix the two schemas.
+
+`templates:authoring` refreshes runtime templates, synchronizes the skill's generated references/prompts/examples and rebuilds the complete documentation ZIP in `docs/` and `public/templates/`. That authoring kit is documentation, not a class to import. Use its `assets/runtime-class.zip` or `assets/runtime-dungeon.zip` as playable package examples.

@@ -8,6 +8,7 @@ import {
 } from '../engine/engine';
 import { utilityDecide } from './utilityBrain';
 import { maisonDecide, maisonWeightsFor } from './maison';
+import { neuralDecide } from './neural';
 import { casterAfterSpell } from './tactics';
 import { key, dist, cellsInRange, hasLineOfSight } from '../engine/geometry';
 import { bfs, reachableCells, reconstructPath } from '../engine/pathfinding';
@@ -270,6 +271,10 @@ export function makeBotApi(view, rng) {
   api.maisonWeights = () => maisonWeightsFor(
     view.you.classId, view.enemy ? view.enemy.classId : null,
   );
+
+  // Synapse: la politique neuronale (self-play PPO). Repli api.maison()
+  // tant que les poids (public/models/synapse) ne sont pas chargés.
+  api.neural = () => neuralDecide(view, api);
 
   return api;
 }

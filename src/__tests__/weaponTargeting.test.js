@@ -11,7 +11,7 @@ import { LoadoutsProvider } from '../ui/LoadoutsContext';
 import PlayScreen from '../ui/PlayScreen';
 import { weaponTargetPlans } from '../ui/weaponTargeting';
 
-jest.mock('../ui/MapPicker', () => () => null);
+jest.mock('../ui/MapPicker', () => ({ __esModule: true, default: () => null, MapPreview: () => null }));
 
 function fight(itemId = 2416, target = { x: 7, y: 5 }) {
   const { state } = createGame({ seed: 7, fighters: [
@@ -118,6 +118,7 @@ test.each([[1, 0, null], [2, 0, null], [1, 1, null], [2, 0, '6,5'], [2, 0, '4,5'
   const actions = jest.spyOn(LiveMatch.prototype, 'humanAct');
   const { container } = render(<LoadoutsProvider><PlayScreen allBots={[bot]} /></LoadoutsProvider>);
   fireEvent.click(container.querySelector('.setup-play'));
+  fireEvent.click(container.querySelector('.combat-choice-launch'));
   fireEvent.click(screen.getByRole('button', { name: 'Prêt' }));
   fireEvent.click(within(container.querySelector('.spellbar')).getByText('Marteau du Bouftou'));
   expect(screen.getByRole('status')).toHaveTextContent('Visée 1 PO · Zone marteau · 4 cases');

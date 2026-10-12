@@ -32,12 +32,10 @@ function StandardSpellLoadoutPicker({ classId, loadout, change, weapon }) {
   const common = SPELL_LIBRARY.common.map(id => SPELL_LIBRARY.spells[id])
     .filter(s => s.name.toLocaleLowerCase('fr').includes(query.toLocaleLowerCase('fr')));
   return <section className="spell-loadout" aria-label="Sorts avant combat">
-    <div className="loadout-heading"><div><p className="eyebrow">SORTS ET RACCOURCIS</p><h2>Préparer les sorts</h2></div>
+    <div className="loadout-heading"><div><h2>Grimoire</h2><p className="muted small">Organisez votre barre et ajoutez des sorts communs.</p></div>
       <div className="spell-order-buttons"><button type="button" className="btn" onClick={() => update({ order: sortSpellsByType(spells) })}>Trier par type</button>
         <button type="button" className="btn subtle" onClick={() => update({ order: [] })}>Ordre de classe</button></div></div>
-    <p className="muted small">Glissez les sorts ou utilisez les flèches pour organiser votre barre. L’arme reste en première case. Choisissez le grade des sorts de classe et ajoutez les sorts appris par parchemin ou quête. La configuration est sauvegardée pour ce personnage.</p>
-    <div className="spell-defaults"><p>Sorts communs : <strong>niveau maximal accessible</strong>, automatiquement au niveau 6 dès le niveau 100 du personnage. Sorts de classe : niveau {level >= 200 ? 6 : 5} par défaut, avec choix du grade.</p>
-      <button type="button" className="btn" disabled={!Object.keys(config.grades || {}).length} onClick={() => update({ grades: {} })}>Rétablir les niveaux par défaut</button></div>
+    <p className="muted small">Glissez les sorts ou utilisez les flèches. L’arme reste en première case ; les raccourcis suivent cet ordre.</p>
     <div className="spell-loadout-columns">
       <div><h3>Votre barre · {spells.length} sorts</h3>
         <ol className="spell-loadout-order" aria-label="Ordre des sorts">
@@ -71,5 +69,7 @@ function StandardSpellLoadoutPicker({ classId, loadout, change, weapon }) {
         <p className="muted small">Les sorts spéciaux de votre classe sont inclus. Le niveau du personnage limite les grades accessibles ; les points de sorts supplémentaires sont supposés obtenus par parchemins dans ce mode de préparation libre.</p>
       </div>
     </div>
+    <details className="spell-defaults"><summary>Niveaux des sorts</summary><p>Sorts communs : <strong>niveau maximal accessible</strong>, automatiquement au niveau 6 dès le niveau 100 du personnage. Sorts de classe : niveau {level >= 200 ? 6 : 5} par défaut, avec choix du grade.</p>
+      <button type="button" className="btn" disabled={!Object.keys(config.grades || {}).length} onClick={() => update({ grades: {} })}>Rétablir les niveaux par défaut</button></details>
   </section>;
 }

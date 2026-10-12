@@ -35,7 +35,7 @@ test('search distinguishes the Gladiatrool variant from playable Peki rooms', ()
   expect(container.querySelector('.boss-unavailable')).toHaveTextContent('Gladiatrool');
   fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'boufmouth' } });
   expect(container.querySelectorAll('.boss-card')).toHaveLength(0);
-  expect(screen.getByRole('status')).toHaveTextContent('Aucun boss');
+  expect(screen.getByRole('status')).toHaveTextContent('Aucun donjon');
   expect(onBossChange).not.toHaveBeenCalled();
 });
 
@@ -45,16 +45,19 @@ test('a saved Gladiatrool selection can switch explicitly to the real Pandala bo
   localStorage.setItem('dofus-lite-loadouts-v1', JSON.stringify({ 'A:IOP': loadout }));
   const { container, unmount } = render(<LoadoutsProvider><PlayScreen allBots={[]} /></LoadoutsProvider>);
   fireEvent.click(screen.getByRole('tab', { name: /Combat/ }));
-  expect(container.querySelector('.setup-play')).toBeDisabled();
-  expect(screen.getByRole('status')).toHaveTextContent('Gladiatrool');
+  expect(container.querySelector('.combat-choice-launch')).toBeDisabled();
+  fireEvent.click(screen.getByRole('button', { name: 'Choisir un donjon' }));
+  expect(within(container.querySelector('.boss-setup')).getByRole('status')).toHaveTextContent('Gladiatrool');
   expect(screen.queryByRole('combobox', { name: 'Niveau du boss' })).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Choisir Fantôme de Péki Garou', exact: true }));
-  expect(container.querySelector('.setup-play')).toBeEnabled();
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   expect(screen.getByRole('combobox', { name: 'Niveau du boss' })).toHaveValue('5');
   expect(container.querySelector('[data-dungeon-map]')).toHaveAttribute('data-dungeon-map', '12307');
   expect(JSON.parse(localStorage.getItem('dofus-lite-player-setup-v1'))).toMatchObject({ bossId: 2997, bossGrade: 5, mapId: 'canyon' });
   expect(JSON.parse(localStorage.getItem('dofus-lite-loadouts-v1'))['A:IOP']).toMatchObject({ level: 200, base: { force: 100 } });
-  fireEvent.click(container.querySelector('.setup-play'));
+  fireEvent.click(screen.getByRole('button', { name: 'C’est prêt' }));
+  expect(container.querySelector('.combat-choice-launch')).toBeEnabled();
+  fireEvent.click(container.querySelector('.combat-choice-launch'));
   expect(screen.getByRole('heading', { name: 'Sanctuaire de Pandala [29;-60]' })).toBeInTheDocument();
   expect(container.querySelector('.token[data-fighter-id="B"]')).toBeInTheDocument();
   unmount();

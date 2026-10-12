@@ -1,5 +1,6 @@
 /* global globalThis */
 import LIBRARY from './spellLibrary.json';
+import { spellBalance, spellBudgetErrors, MAX_SPELL_SCORE } from './spellBalance';
 
 // Version one deliberately uses declarative effects already handled by combat
 // and the generic AI. Visual references never become a spell's mechanical ID.
@@ -88,7 +89,7 @@ export function duplicateAuthoredSpell(raw, existingIds) {
   return { ...copy(raw), id, key: `custom_${id}`, name: `${raw.name.slice(0, 70)} — copie` };
 }
 
-export function authoredSpellErrors(raw) {
+export function authoredSpellErrors(raw, { forStorage = false } = {}) {
   const errors = [];
   if (!raw || typeof raw !== 'object') return ['Sort créé invalide.'];
   const check = (valid, message) => { if (!valid) errors.push(message); };
@@ -138,7 +139,64 @@ export function authoredSpellErrors(raw) {
       if (type.movement) check(effect.targetMask !== 32 && raw.targetMode !== 'self', `${prefix}la poussée et l’attirance déplacent un autre combattant.`);
     });
   }
+  if (!errors.length && !forStorage) errors.push(...authoredCriticalErrors(raw), ...spellBudgetErrors(raw));
   return [...new Set(errors)];
+}
+
+// An authored critical is a stronger variant of the same action. Original
+// client spells keep their own special critical mechanics.
+export function authoredCriticalErrors(raw) {
+  if (!raw.critRate) return [];
+  const errors = [];
+  if (raw.effects.length !== raw.critEffects.length) errors.push('Le critique doit conserver tous les effets du lancer normal.');
+  raw.effects.forEach((effect, index) => {
+    const critical = raw.critEffects[index];
+    if (!critical) return;
+    if (['kind', 'element', 'stat', 'zone', 'targetMask'].some(key => critical[key] !== effect[key])) {
+      errors.push(`Critique, effet ${index + 1} : conservez l’action, l’élément, les destinataires et la zone du lancer normal.`);
+    }
+    if (critical.min < effect.min || critical.max < effect.max || critical.duration < effect.duration) {
+      errors.push(`Critique, effet ${index + 1} : les valeurs et la durée ne peuvent pas être inférieures au lancer normal.`);
+    }
+  });
+  return errors;
+}
+
+export function alignAuthoredCriticals(raw) {
+  if (!raw.critRate) return raw;
+  return normalizeAuthoredSpell({ ...raw, critEffects: raw.effects.map((effect, index) => {
+    const critical = raw.critEffects[index];
+    const same = critical && ['kind', 'element', 'stat', 'zone', 'targetMask'].every(key => critical[key] === effect[key]);
+    return { ...effect, min: Math.max(effect.min, same ? critical.min : effect.min),
+      max: Math.max(effect.max, same ? critical.max : effect.max), duration: Math.max(effect.duration, same ? critical.duration : effect.duration) };
+  }) });
+}
+
+// Reviewable repair: only the editor invokes this, never the save reader.
+// Keep identity, artwork, targeting and effect order; reduce values first,
+// increasing AP only if the minimum values still exceed the budget.
+export function rebalanceAuthoredSpell(raw) {
+  let original = alignAuthoredCriticals(raw);
+  const paGains = [...original.effects, ...original.critEffects].filter(effect => effect.kind === 'buffPa');
+  if (paGains.length) original = { ...original, maxPerTurn: 1, maxPerTarget: 1,
+    cooldown: Math.max(original.cooldown, ...paGains.map(effect => effect.duration + 1)) };
+  const scaled = (factor, pa) => normalizeAuthoredSpell({ ...original, pa,
+    ...Object.fromEntries(['effects', 'critEffects'].map(key => [key, original[key].map(effect => {
+      if (effect.kind === 'teleport') return { ...effect };
+      return { ...effect, min: Math.max(1, Math.floor(effect.min * factor)), max: Math.max(1, Math.floor(effect.max * factor)) };
+    })])) });
+  for (let pa = raw.pa; pa <= 8; pa++) {
+    let low = 0, high = 1;
+    const acceptable = candidate => authoredSpellErrors(candidate).length === 0 && spellBalance(candidate).score <= MAX_SPELL_SCORE;
+    if (!acceptable(scaled(0, pa))) continue;
+    if (acceptable(scaled(1, pa))) return scaled(1, pa);
+    for (let step = 0; step < 24; step++) {
+      const middle = (low + high) / 2;
+      if (acceptable(scaled(middle, pa))) low = middle; else high = middle;
+    }
+    return scaled(low, pa);
+  }
+  return original;
 }
 
 export function authoredSpellWarnings(raw, kit = []) {

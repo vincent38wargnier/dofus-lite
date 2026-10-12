@@ -1,0 +1,32 @@
+.board-tools { display: flex; gap: 5px; max-width: calc(100% - 20px); }
+.board-tools > button { flex-shrink: 0; }
+
+/* These hitboxes fit between adjacent isometric cells, including consecutive
+   cells in the same screen column. The large animation canvas stays inert. */
+.board .token.creature-token .figure {
+  width: calc(var(--hw) * .9); height: calc(var(--hw) * .9);
+  left: calc(var(--hw) * -.45); bottom: 0; animation: none;
+  pointer-events: auto; cursor: pointer;
+}
+.board .token.creature-token.targetable .figure { cursor: crosshair; }
+.creature-token .retro-figure .retro-actor {
+  left: calc(var(--hw) * -3.288318); top: calc(var(--hw) * -4.333645);
+}
+.creature-token .avatar { font-size: calc(var(--hw) * .55); border-width: 1px; }
+.board .token.creature-token .mini-hp {
+  width: calc(var(--hw) * .9); left: calc(var(--hw) * -.45);
+  bottom: calc(var(--hw) * 1.18); height: max(2px, calc(var(--hw) * .11));
+}
+.creature-turn-position {
+  position: absolute; left: calc(var(--hw) * .32); bottom: calc(var(--hw) * .6);
+  padding: 0 2px; min-width: calc(var(--hw) * .38); border-radius: 3px;
+  color: #fff; background: #30658ae8; border: 1px solid #c7d9e7;
+  font-size: clamp(6px, calc(var(--hw) * .38), 11px); font-weight: 750;
+  line-height: 1.15; text-align: center; pointer-events: none;
+}
+.creature-token.side-B .creature-turn-position { background: #a34e37ef; border-color: #edc3b2; }
+@media (max-width: 700px), (max-height: 500px) {
+  .board-tools { top: 6px; right: 6px; max-width: calc(100% - 12px); gap: 4px; }
+  .board-tools > button { min-height: 28px; padding: 4px 7px; gap: 4px; font-size: 9px; }
+  .board-tools .mode-indicator { display: none; }
+}

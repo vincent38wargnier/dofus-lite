@@ -1,6 +1,7 @@
 import { getMonster } from './monsters';
 import { buildSpell } from './classes';
 import { isCustomSpell } from './customSpells';
+import { spellbookBudgetErrors } from './spellBalance';
 
 export function validCustomMonster(value, { allowEmpty = false } = {}) {
   const inRange = (v, min, max) => Number.isInteger(v) && v >= min && v <= max;
@@ -8,7 +9,9 @@ export function validCustomMonster(value, { allowEmpty = false } = {}) {
     && !!getMonster(value.reference?.monsterId, value.reference?.grade)
     && inRange(value.tuning?.hpPercent, 25, 150) && inRange(value.tuning?.statsPercent, 25, 150)
     && inRange(value.tuning?.paBonus, -2, 2) && inRange(value.tuning?.pmBonus, -2, 2)
-    && Array.isArray(value.spells) && value.spells.length >= (allowEmpty ? 0 : 1) && value.spells.length <= 10 && value.spells.every(isCustomSpell)
+    && Array.isArray(value.spells) && value.spells.length >= (allowEmpty ? 0 : 1) && value.spells.length <= 10
+    && value.spells.every(spell => isCustomSpell(spell, { forStorage: allowEmpty }))
+    && (allowEmpty || spellbookBudgetErrors(value.spells).length === 0)
     && new Set(value.spells.map(spell => spell.id)).size === value.spells.length;
 }
 

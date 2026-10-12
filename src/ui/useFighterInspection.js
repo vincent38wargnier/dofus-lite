@@ -1,16 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-
-// Read the small character hitboxes while ground/spell clicks keep their existing targets.
-export function fighterUnderPointer(board, x, y) {
-  const hits = [...board.querySelectorAll('.token[data-fighter-id]')].filter(token =>
-    ['.figure', '.ring', '.mini-hp'].some(selector => {
-      const rect = token.querySelector(selector)?.getBoundingClientRect();
-      return rect?.width > 0 && rect.height > 0 && x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-    }));
-  hits.reverse().sort((a, b) => Number(b.style.zIndex) - Number(a.style.zIndex));
-  const token = hits[0];
-  return token ? { id: token.dataset.fighterId, anchor: token.querySelector('.figure') } : null;
-}
+import { fighterUnderPointer } from './fighterHitTesting';
+export { fighterUnderPointer } from './fighterHitTesting';
 
 export default function useFighterInspection(matchKey, enabled = true, fighters = null) {
   const [inspection, setInspection] = useState(null);
@@ -37,9 +27,8 @@ export default function useFighterInspection(matchKey, enabled = true, fighters 
     setInspection(null);
     if (restoreFocus && inspection?.anchor?.isConnected) inspection.anchor.focus({ preventScroll: true });
   };
-  const pointerMove = event => {
+  const pointerMove = (event, hit = fighterUnderPointer(event.currentTarget, event.clientX, event.clientY)) => {
     if (event.pointerType === 'touch' || event.target.closest?.('.fighter-inspector')) return;
-    const hit = fighterUnderPointer(event.currentTarget, event.clientX, event.clientY);
     if (hit) open(hit.id, hit.anchor);
     else { dismissed.current = null; closeSoon(); }
   };

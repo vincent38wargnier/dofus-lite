@@ -11,7 +11,7 @@ import { combatShortcut, combatShortcutIndex } from '../ui/combatShortcuts';
 import { sortSpellsByType } from '../ui/spellPresentation';
 import { spellsOf } from '../engine/engine';
 
-jest.mock('../ui/MapPicker', () => () => null);
+jest.mock('../ui/MapPicker', () => ({ __esModule: true, default: () => null, MapPreview: () => null }));
 
 const bot = { id: 'shortcut-test', name: 'Sparring', code: 'function decide(v,a) { return a.endTurn(); }' };
 const player = () => ({ ...emptyLoadout('IOP'), level: 200, base: { force: 100 }, slots: { weapon: 2416 },
@@ -24,6 +24,7 @@ const press = (code = 'Digit1', options = {}, target = window) => fireEvent.keyD
 
 function begin(result) {
   fireEvent.click(result.container.querySelector('.setup-play'));
+  fireEvent.click(result.container.querySelector('.combat-choice-launch'));
   fireEvent.click(screen.getByRole('button', { name: 'Prêt' }));
   act(() => jest.advanceTimersByTime(700));
   expect(screen.getByRole('button', { name: /Fin de tour/ })).toBeEnabled();
@@ -227,6 +228,7 @@ test('right-click stays inactive in placement, another screen, the opponent turn
   const actions = jest.spyOn(LiveMatch.prototype, 'humanAct');
   const result = render(app(true));
   fireEvent.click(result.container.querySelector('.setup-play'));
+  fireEvent.click(result.container.querySelector('.combat-choice-launch'));
   fireEvent.contextMenu(button(result.container, 153));
   expect(actions).not.toHaveBeenCalled();
   fireEvent.click(screen.getByRole('button', { name: 'Prêt' }));
@@ -252,6 +254,7 @@ test('shortcuts stay inactive in preparation, placement, another screen and the 
   const result = render(app(true));
   press(); expect(actions).not.toHaveBeenCalled();
   fireEvent.click(result.container.querySelector('.setup-play'));
+  fireEvent.click(result.container.querySelector('.combat-choice-launch'));
   press(); expect(actions).not.toHaveBeenCalled();
   fireEvent.click(screen.getByRole('button', { name: 'Prêt' }));
   act(() => jest.advanceTimersByTime(700));
@@ -301,8 +304,8 @@ test('automatic sorting preserves the live fight, updates shortcuts and persists
   const persisted = barIds(first.container);
   first.unmount();
   const next = render(app(true));
-  fireEvent.click(screen.getByRole('tab', { name: /Stuff et sorts/ }));
-  fireEvent.click(screen.getByRole('tab', { name: 'Sorts & raccourcis' }));
+  fireEvent.click(screen.getByRole('tab', { name: /Équipement/ }));
+  fireEvent.click(screen.getByRole('tab', { name: 'Sorts' }));
   expect([...next.container.querySelectorAll('.spell-loadout-order li')].map(e => Number(e.dataset.spellId))).toEqual(persisted);
   fireEvent.click(screen.getByRole('tab', { name: /Combat/ }));
   begin(next);

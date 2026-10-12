@@ -1,4 +1,5 @@
 import { isAuthoredSpell, authoredSpellErrors } from './authoredSpells';
+import { spellbookBudgetErrors } from './spellBalance';
 
 export const MAX_CUSTOM_SPELLS = 10;
 
@@ -11,21 +12,22 @@ const effectsValid = (effects, depth = 0) => Array.isArray(effects) && effects.l
 
 // Custom spellbooks store the imported grade, so replays and saved characters
 // do not depend on a catalogue request or on another character's class.
-export function isCustomSpell(raw) {
+export function isCustomSpell(raw, { forStorage = false } = {}) {
   return !!raw && integer(raw.id) && raw.id > 0 && typeof raw.name === 'string' && !!raw.name.trim()
     && typeof raw.key === 'string' && !!raw.key && integer(raw.grade) && raw.grade >= 1 && raw.grade <= 6
     && integer(raw.pa) && integer(raw.rangeMin) && integer(raw.rangeMax) && raw.rangeMax >= raw.rangeMin
     && effectsValid(raw.effects) && effectsValid(raw.critEffects)
-    && (!isAuthoredSpell(raw) || authoredSpellErrors(raw).length === 0);
+    && (!isAuthoredSpell(raw) || authoredSpellErrors(raw, { forStorage }).length === 0);
 }
 
 export function isCustomSpellbook(spells) {
-  return isCustomSpellbookDraft(spells) && spells.length <= MAX_CUSTOM_SPELLS;
+  return isCustomSpellbookDraft(spells) && spells.length <= MAX_CUSTOM_SPELLS
+    && spells.every(spell => isCustomSpell(spell)) && spellbookBudgetErrors(spells).length === 0;
 }
 
 // Older creations allowed 40 spells. Keep those drafts editable and saved while
 // their owner chooses which ten to keep; combat always uses the stricter check.
 export function isCustomSpellbookDraft(spells) {
-  return Array.isArray(spells) && spells.length <= 40 && spells.every(isCustomSpell)
+  return Array.isArray(spells) && spells.length <= 40 && spells.every(spell => isCustomSpell(spell, { forStorage: true }))
     && new Set(spells.map(spell => spell.id)).size === spells.length;
 }

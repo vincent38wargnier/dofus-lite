@@ -27,6 +27,14 @@ Read [the engine and import contract](references/engine-and-import.md) before in
 
 Evaluate at least three legal turn sequences: unprepared damage, prepared burst, and recovery/control. Include 10, 12, and 15 AP, immediate boosts, critical gear, flat damage per hit, area placement, resistance, weapon use, and the opponent's response. Inspect cross-spell loops and team stacking, not only individual spells.
 
+## Apply the current spell and equipment budgets
+
+Runtime spell requirements, exact formulas and critical consistency rules are in [runtime-zip.md](references/runtime-zip.md). New spells must fit **100 points each**, and the complete spellbook **650 including synergies**, with ten spells maximum. Read [spell-balance.md](references/spell-balance.md) for the calibration and its limits. The legacy compiler below is not a substitute for runtime admission.
+
+For themed equipment or class build comparisons, read [equipment-rules.md](references/equipment-rules.md). Custom items have **100 points each**, normalized by family and required item level; outfits containing custom gear have **1650 points**, allowing optimized gear with legal exos. Dofus are excluded from those budgets, but still affect combat. Spell and equipment budgets cannot subsidize each other. Exact equipment allowances for every level are bundled in `references/equipment-limits.json`; the audit and rationale are in [equipment-balance.md](references/equipment-balance.md). The level-200 reference table is also embedded in both AI prompts.
+
+Equipment is created in the UI and equipped after class import. **The current content.json ZIP does not accept items or loadouts.** Deliver equipment designs outside the importable ZIP when requested; do not invent schema fields or claim the item designs have been imported. Test the class with comparable equipment and identical Dofus, including immediate boosts and multi-line weapon interactions.
+
 ## Legacy design-kit package (not browser-importable)
 
 Start from `assets/example/class.json`; author new spell values and text. Read [the example walkthrough](references/example-walkthrough.md) for its decisions, legal combos and limitations. Use the schema at `assets/class.schema.json`. Required art and the exact animation dimensions are in the specification; `assets/artwork-spec.json` is the current game's contract. Use the image-generation skill when producing new bitmap art, then validate dimensions, orientation, transparency, and every frame. Do not generate portraits instead of usable sprite sheets.

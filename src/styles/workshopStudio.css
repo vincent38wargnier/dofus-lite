@@ -1,0 +1,230 @@
+.workshop-studio { max-width: 1740px; padding: 28px 32px 56px; }
+.workshop-studio [hidden], .equipment-workshop [hidden] { display: none !important; }
+.studio-heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin: 10px 0 30px; }
+.studio-eyebrow { display: flex; align-items: center; gap: 8px; color: #778461; font-size: 11px; font-weight: 700; letter-spacing: .12em; }
+.studio-heading h1 { margin: 8px 0 7px; font-size: clamp(32px, 4vw, 48px); line-height: 1.12; letter-spacing: -.045em; color: #303b2c; }
+.studio-heading h1 > span { color: #829459; }
+.studio-heading p { margin: 0; color: #78816e; font-size: 15px; }
+.studio-heading .creator-save-status { padding: 10px 14px; background: #eaf0df; border-radius: 30px; font-size: 12px; }
+.studio-categories { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 28px; }
+.studio-category { --category-color: #647641; --category-bg: #e5ecd5; display: flex; align-items: center; gap: 16px; min-width: 0; padding: 22px; text-align: left; color: #3d4535; background: #f8f7f0; border: 1px solid #d9ddcd; border-radius: 16px; cursor: pointer; font: inherit; transition: border-color .15s, background .15s, box-shadow .15s; }
+.studio-category.dungeons { --category-color: #7a6490; --category-bg: #eae3f0; }
+.studio-category.equipment { --category-color: #a37c3f; --category-bg: #f0e5d2; }
+.studio-category:hover { background: #fffef8; border-color: var(--category-color); }
+.studio-category.selected { background: #fffef9; border-color: var(--category-color); box-shadow: inset 0 -3px var(--category-color), 0 4px 16px #343d2d06; }
+.studio-category-icon { width: 54px; height: 54px; flex: none; display: inline-flex; align-items: center; justify-content: center; color: var(--category-color, #647641); background: var(--category-bg, #e5ecd5); border-radius: 16px; }
+.studio-category-label { min-width: 0; flex: 1; }
+.studio-category-label strong { display: block; font-size: 18px; letter-spacing: -.015em; }
+.studio-category-label small { display: block; font-size: 12px; color: #808572; margin-top: 5px; }
+.studio-category-count { padding: 4px 8px; border-radius: 6px; color: var(--category-color); background: var(--category-bg); font-size: 12px; font-weight: 700; }
+.studio-workspace { display: grid; grid-template-columns: 225px minmax(0, 1fr); gap: 22px; align-items: start; }
+.studio-library { min-width: 0; position: sticky; top: 18px; }
+.studio-new { width: 100%; justify-content: center; min-height: 44px; }
+.studio-library-search { display: flex; align-items: center; gap: 8px; padding: 0 10px; margin: 18px 0 12px; color: #899279; border: 1px solid #d9ddcd; border-radius: 9px; background: #faf9f3; }
+.studio-library-search input[type="search"] { background: transparent; border: 0; padding: 10px 0; font-size: 12px; }
+.studio-library-search svg { flex: none; }
+.studio-library-search:focus-within { outline: 2px solid #7b8f5d; outline-offset: 2px; }
+.studio-library-search input:focus { outline: none; }
+.studio-library-items { display: grid; gap: 8px; max-height: 60vh; overflow-y: auto; padding: 2px; }
+.studio-library-card { display: flex; align-items: center; gap: 10px; padding: 12px 9px; min-width: 0; width: 100%; font: inherit; text-align: left; color: #49503d; border: 1px solid transparent; border-radius: 11px; background: transparent; cursor: pointer; }
+.studio-library-card:hover { background: #f5f5eb; }
+.studio-library-card.selected { background: #eaf0dc; border-color: #bbca9f; }
+.studio-library-card > span:last-child { min-width: 0; flex: 1; }
+.studio-library-card strong { display: block; font-size: 13px; overflow-wrap: anywhere; }
+.studio-library-card small { display: block; color: #79836a; margin-top: 5px; font-size: 11px; }
+.studio-library-art { display: grid; place-items: center; flex: none; width: 48px; height: 52px; border-radius: 8px; overflow: hidden; }
+.studio-library-art .retro-portrait { width: 46px; height: 50px; object-fit: contain; }
+.studio-library-art.dungeons { background: #e3e9d5; width: 56px; }
+.studio-library-art .map-preview { width: 100%; }
+.studio-library-hint { font-size: 12px; color: #7b866b; line-height: 1.7; padding: 0 10px; }
+.studio-import-button { display: flex; align-items: center; gap: 10px; width: 100%; border: 1px solid #d6deca; padding: 15px 12px; border-radius: 12px; margin-top: 24px; background: #f4f4eb; color: #677a50; cursor: pointer; text-align: left; font: inherit; }
+.studio-import-button > span { flex: 1; min-width: 0; }
+.studio-import-button strong { display: block; font-size: 12px; }
+.studio-import-button small { display: block; margin-top: 4px; font-size: 11px; color: #858d7a; }
+.studio-import-button:hover { background: #e9efdb; }
+.studio-editor { border: 1px solid #d8ddcc; border-radius: 19px; background: #fdfcf7; padding: 24px; min-width: 0; box-shadow: 0 5px 20px #33432c03; }
+.studio-editor-heading { gap: 16px; margin-bottom: 22px; }
+.studio-editor-heading .field { font-size: 11px; color: #829070; text-transform: uppercase; letter-spacing: .06em; }
+.studio-editor-heading input[type="text"] { background: transparent; border-color: transparent; border-radius: 5px; padding: 4px 0; font-size: 24px !important; font-weight: 700; letter-spacing: -.025em; color: #35402e; }
+.studio-editor-heading input:hover { border-bottom-color: #cbd4bb; }
+.studio-editor-heading .field small { text-transform: none; letter-spacing: 0; font-size: 12px; font-weight: 400; color: #7f8973; }
+.studio-editor-portrait { flex: none; width: 65px; height: 73px; display: grid; place-items: center; background: #edf1e3; border-radius: 13px; overflow: hidden; }
+.studio-editor-portrait .retro-portrait { width: 60px; height: 66px; object-fit: contain; }
+.studio-editor-portrait.dungeons { width: 95px; }
+.studio-editor-portrait .map-preview { width: 100%; }
+.studio-editor-actions { margin-left: auto; display: flex; gap: 8px; }
+.studio-icon-button { padding: 10px !important; background: transparent; }
+.studio-editor-tabs { display: flex; align-items: stretch; gap: 6px; padding-bottom: 0; border-bottom: 1px solid #dce1d0; margin: 0 0 24px; }
+.studio-editor-tabs button { display: flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-bottom: 3px solid transparent; padding: 13px 15px; background: transparent; color: #828774; cursor: pointer; font: inherit; font-size: 13px; font-weight: 600; }
+.studio-editor-tabs button:hover { color: #50683b; background: #f3f5e9; }
+.studio-editor-tabs button[aria-pressed="true"] { color: #526e37; border-bottom-color: #708b4d; }
+.studio-editor-tabs button > span { font-size: 11px; border-radius: 5px; background: #e9eedc; padding: 3px 6px; }
+.studio-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 450px; padding: 40px 30px; text-align: center; }
+.studio-empty > .studio-category-icon { width: 88px; height: 88px; border-radius: 25px; background: #e8eedb; margin-bottom: 16px; }
+.studio-empty h2 { font-size: 26px; letter-spacing: -.03em; margin: 10px 0; }
+.studio-empty p { color: #7d876f; line-height: 1.8; max-width: 420px; margin: 0 0 28px; }
+.studio-empty > .btn { margin: 5px; }
+.studio-reference-class { display: flex; align-items: end; gap: 24px; padding: 18px; background: #f0f3e6; border-radius: 12px; margin-bottom: 24px; }
+.studio-reference-class .field { width: 220px; flex: none; }
+.studio-reference-class p { color: #7a846b; font-size: 12px; line-height: 1.7; margin: 0 0 6px; max-width: 360px; }
+.studio-native-appearance { max-width: 280px; }
+.workshop-studio .character-custom-appearance { border: 0; padding: 0; background: transparent; }
+.workshop-studio .character-custom-appearance .appearance-source { margin-top: 18px; }
+.workshop-studio .creator-dungeon-layout { grid-template-columns: minmax(0, 1fr) 300px; gap: 20px; }
+.workshop-studio .creator-dungeon-summary { grid-column: 2; grid-row: 1; display: block; }
+.workshop-studio .creator-monster-catalogue, .workshop-studio .creator-monster-spell-editor { grid-column: 1; grid-row: 1; padding: 0; border: 0; background: transparent; margin: 0; }
+.workshop-studio .creator-monster-catalogue .creator-section-heading { align-items: start; }
+.workshop-studio .creator-section-heading p { font-size: 12px; line-height: 1.6; }
+.workshop-studio .creator-section-heading > span { font-size: 11px; color: #879177; white-space: nowrap; }
+.workshop-studio .creator-roster-dropzone { border: 1px solid #cbd6b7; border-radius: 14px; background: #f0f4e6; padding: 16px; margin-bottom: 14px; }
+.workshop-studio .creator-roster-dropzone.drop-over { border-color: #6c834c; background: #e4efd3; }
+.workshop-studio .creator-roster { max-height: 480px; }
+.workshop-studio .creator-monster-filters { gap: 10px; margin: 14px 0; }
+.workshop-studio .creator-monster-filters > .field { min-width: 145px; font-size: 11px; }
+.workshop-studio .creator-monster-filters .creator-search { flex-basis: 100%; }
+.workshop-studio .creator-check { font-size: 11px; }
+.workshop-studio .creator-monster-results { grid-template-columns: repeat(auto-fill, minmax(205px, 1fr)); max-height: 680px; }
+.workshop-studio .creator-monster-card { padding: 13px; border-radius: 12px; }
+.workshop-studio .creator-monster-card:hover { border-color: #98aa7d; }
+.workshop-studio .creator-monster-card > .btn { background: #eef3e1; border-color: #d5dfc4; color: #607748; font-size: 12px; }
+.workshop-studio .creator-monster-heading strong { font-size: 13px; }
+.workshop-studio .creator-monster-heading small { font-size: 10px; }
+.workshop-studio .creator-monster-heading .retro-portrait { width: 46px; height: 52px; }
+.workshop-studio .creator-monster-card .field { font-size: 11px; }
+.studio-terrain-card { display: flex; align-items: center; gap: 13px; width: 100%; padding: 12px; border: 1px solid #d9dfce; border-radius: 12px; background: #f7f7ee; text-align: left; font: inherit; color: #536245; cursor: pointer; }
+.studio-terrain-card > .map-preview { flex: none; width: 92px; background: #e8edda; border-radius: 8px; }
+.studio-terrain-card > span:last-child { min-width: 0; }
+.studio-terrain-card small { display: block; font-size: 9px; color: #8b967b; letter-spacing: .1em; }
+.studio-terrain-card strong { display: block; font-size: 12px; margin: 5px 0; overflow-wrap: anywhere; }
+.studio-terrain-card span > span { display: flex; align-items: center; font-size: 11px; color: #7e8d68; }
+.studio-map-panel .duel-map-grid { max-height: 640px; overflow-y: auto; }
+.workshop-studio .custom-spell-picker > .creator-section-heading { margin: 0 0 20px; align-items: start; }
+.workshop-studio .custom-spell-picker > .creator-section-heading h3 { font-size: 18px; }
+.workshop-studio .creator-spell-columns { grid-template-columns: 250px minmax(0, 1fr); gap: 20px; }
+.workshop-studio .creator-spell-columns:has(> .spell-designer) { grid-template-columns: minmax(0, 1fr); }
+.workshop-studio .creator-spell-columns:has(> .spell-designer) > .creator-spell-selection { display: none; }
+.workshop-studio .spell-designer { border: 0; padding: 0; background: transparent; }
+.workshop-studio .spell-designer-review { border-radius: 14px; }
+.workshop-studio .spell-designer-save { padding: 14px 0; }
+.workshop-studio .creator-spell-selection { border-radius: 14px; padding: 14px; }
+.workshop-studio .creator-spell-selection .creator-section-heading { flex-wrap: wrap; }
+.workshop-studio .creator-spell-selection .spell-budget { margin: 12px 0; }
+.workshop-studio .creator-spell-results { grid-template-columns: repeat(auto-fill, minmax(205px, 1fr)); max-height: 660px; }
+.workshop-studio .creator-spell-card { border-radius: 12px; }
+.workshop-studio .creator-spell-facts { flex-wrap: wrap; }
+.studio-quick-filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+.studio-quick-filters button { border: 1px solid #dce2cf; border-radius: 7px; padding: 7px 11px; background: #f8f9f1; color: #7a866a; font: inherit; font-size: 11px; cursor: pointer; }
+.studio-quick-filters button[aria-pressed="true"] { background: #637b48; border-color: #637b48; color: #fffef4; }
+.studio-advanced-filters { margin: 12px 0 18px; color: #70805b; font-size: 12px; }
+.studio-advanced-filters summary { cursor: pointer; }
+.studio-advanced-filters .creator-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); background: #f1f4e7; padding: 14px; border-radius: 10px; gap: 12px; }
+.studio-dialog { width: min(840px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); padding: 0; border-radius: 20px; }
+.studio-dialog > header { padding: 24px; }
+.studio-dialog .character-dialog-body { padding: 0 24px 20px; }
+.studio-dialog .creator-package { margin: 0; padding: 0; border: 0; background: transparent; }
+.creator-package-resources { padding: 16px 0; color: #738261; font-size: 12px; }
+.creator-package-resources > summary { cursor: pointer; font-weight: 600; }
+.studio-dialog > footer { display: flex; justify-content: flex-end; padding: 18px 24px; border-top: 1px solid #dce2cf; }
+.studio-test-dialog { max-width: 620px; }
+.studio-test-dialog .creator-launch { margin: 0; border: 0; border-radius: 0; padding: 0 24px 26px; background: transparent; }
+.studio-test-dialog .creator-launch > div:first-child { display: none; }
+.studio-test-dialog .creator-launch .field { flex-basis: 100%; }
+.studio-test-dialog .creator-launch-buttons { width: 100%; margin-top: 8px; }
+.studio-test-dialog .creator-launch-buttons > .btn { flex: 1; }
+.workshop-studio .equipment-workshop-layout { grid-template-columns: 225px minmax(0, 1fr) 265px; gap: 22px; }
+.workshop-studio .equipment-design-library { padding: 0; border: 0; background: transparent; position: sticky; top: 18px; }
+.equipment-design-library-title .btn { width: 100%; min-height: 44px; justify-content: center; }
+.workshop-studio .equipment-design-saved { max-height: 55vh; }
+.workshop-studio .equipment-designer { padding: 24px; border-radius: 19px; background: #fdfcf7; }
+.workshop-studio .equipment-design-identity input { font-size: 23px; font-weight: 700; border-color: transparent; background: transparent; padding-inline: 0; }
+.equipment-design-weapon[hidden] { display: none; }
+.equipment-workshop .equipment-design-weapon { border: 0; padding: 0; margin: 0; }
+.equipment-workshop .equipment-design-actions { border-top: 1px solid #dce2cf; padding: 14px 0; margin-top: 20px; }
+.equipment-workshop .equipment-budget-card { border-radius: 16px; }
+.equipment-workshop .equipment-budget-references { display: block; margin-top: 0; border-top: 0; }
+.equipment-workshop .equipment-budget-references > div { display: flex; }
+.equipment-workshop .equipment-budget-note { display: block; }
+.equipment-workshop .equipment-budget-method { margin-top: 0; border-top: 0; margin-bottom: 14px; }
+.equipment-design-help summary { cursor: pointer; }
+@media (max-width: 1250px) {
+  .workshop-studio { padding-inline: 22px; }
+  .studio-workspace { grid-template-columns: 195px minmax(0, 1fr); gap: 18px; }
+  .studio-category { padding: 18px; gap: 12px; }
+  .studio-category-label strong { font-size: 16px; }
+  .studio-editor { padding: 20px; }
+  .workshop-studio .creator-dungeon-layout { grid-template-columns: minmax(0, 1fr) 270px; gap: 16px; }
+  .workshop-studio .creator-spell-columns { grid-template-columns: 225px minmax(0, 1fr); gap: 16px; }
+  .workshop-studio .equipment-workshop-layout { grid-template-columns: 195px minmax(0, 1fr) 230px; gap: 18px; }
+  .studio-editor-tabs button { padding: 13px 10px; }
+}
+@media (max-width: 1050px) {
+  .studio-workspace { grid-template-columns: minmax(0, 1fr); }
+  .studio-library { display: grid; grid-template-columns: 190px minmax(0, 1fr) 200px; gap: 12px; position: static; align-items: start; }
+  .studio-library-search { margin: 0; }
+  .studio-library-items { display: flex; gap: 8px; grid-column: 1 / -1; grid-row: 2; max-height: 170px; overflow: auto; }
+  .studio-library-card { width: 210px; flex: none; }
+  .studio-import-button { margin: 0; padding: 10px 12px; }
+  .studio-library-hint { grid-row: 2; grid-column: 1 / -1; margin: 0; }
+  .workshop-studio .equipment-workshop-layout { grid-template-columns: minmax(0, 1fr) 245px; }
+  .workshop-studio .equipment-design-library { position: static; grid-column: 1 / -1; }
+  .workshop-studio .equipment-design-library-title { max-width: 240px; }
+  .workshop-studio .equipment-design-search { max-width: 340px; }
+  .workshop-studio .equipment-design-saved { display: flex; flex-wrap: wrap; max-height: 175px; }
+  .studio-category-label small { font-size: 11px; }
+  .studio-category-count { display: none; }
+}
+@media (max-width: 760px) {
+  .workshop-studio { padding: 20px 12px 35px; }
+  .studio-heading { align-items: start; gap: 12px; margin-bottom: 22px; }
+  .studio-heading .creator-save-status { max-width: 140px; font-size: 10px; padding: 8px 10px; line-height: 1.5; }
+  .studio-heading h1 { font-size: 34px; }
+  .studio-eyebrow { font-size: 9px; letter-spacing: .04em; }
+  .studio-categories { gap: 8px; margin-bottom: 20px; }
+  .studio-category { flex-direction: column; align-items: center; text-align: center; padding: 14px 5px; gap: 9px; border-radius: 12px; }
+  .studio-category-icon { width: 38px; height: 38px; border-radius: 11px; }
+  .studio-category-label strong { font-size: 12px; }
+  .studio-category-label small { display: none; }
+  .studio-library { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+  .studio-library-search { grid-column: 1 / -1; grid-row: 2; }
+  .studio-library-items, .studio-library-hint { grid-row: 3; }
+  .studio-library-items { padding-bottom: 6px; }
+  .studio-library-card { width: 190px; }
+  .studio-new { height: 53px; padding-inline: 8px; font-size: 12px; }
+  .studio-import-button { height: 53px; padding: 8px; gap: 6px; }
+  .studio-import-button strong { font-size: 11px; }
+  .studio-import-button small { font-size: 10px; }
+  .studio-import-button > svg:last-child { display: none; }
+  .studio-editor { padding: 16px 12px; border-radius: 14px; }
+  .studio-editor-heading { gap: 12px; margin-bottom: 16px; }
+  .studio-editor-heading .field { flex: 1; min-width: 0; }
+  .studio-editor-heading input[type="text"] { font-size: 20px !important; }
+  .studio-editor-portrait { width: 46px; height: 58px; }
+  .studio-editor-portrait .retro-portrait { width: 44px; height: 54px; }
+  .studio-editor-portrait.dungeons { width: 64px; }
+  .studio-editor-actions { margin-left: 0; width: 100%; }
+  .studio-editor-actions > .primary { margin-left: auto; }
+  .studio-editor-tabs { gap: 0; justify-content: space-between; margin-bottom: 20px; }
+  .studio-editor-tabs button { flex: 1; padding: 12px 4px; flex-direction: column; gap: 7px; font-size: 11px; }
+  .studio-editor-tabs button > span { display: none; }
+  .workshop-studio .creator-dungeon-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .workshop-studio .creator-dungeon-summary { position: static; grid-column: 1; grid-row: 1; }
+  .workshop-studio .creator-monster-catalogue, .workshop-studio .creator-monster-spell-editor { grid-column: 1; grid-row: 2; }
+  .workshop-studio .creator-roster { max-height: 265px; }
+  .workshop-studio .creator-monster-results { grid-template-columns: repeat(auto-fill, minmax(205px, 1fr)); }
+  .workshop-studio .creator-spell-columns { grid-template-columns: minmax(0, 1fr); }
+  .workshop-studio .creator-spell-selection { position: static; }
+  .workshop-studio .custom-spell-picker > .creator-section-heading { gap: 10px; }
+  .studio-advanced-filters .creator-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .studio-reference-class { flex-direction: column; align-items: stretch; gap: 10px; }
+  .studio-reference-class .field { width: 100%; }
+  .studio-empty { min-height: 350px; padding: 30px 10px; }
+  .studio-empty h2 { font-size: 23px; }
+  .studio-empty p { font-size: 13px; }
+  .workshop-studio .equipment-workshop-layout { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .workshop-studio .equipment-designer { padding: 16px; grid-row: 3; }
+  .workshop-studio .equipment-budget-card { position: static; grid-row: 2; }
+  .equipment-workshop .equipment-budget-card { padding: 18px; }
+  .studio-dialog .character-dialog-body { padding: 0 16px 16px; }
+  .studio-dialog > header { padding: 20px 16px; }
+  .studio-test-dialog .creator-launch { padding: 0 16px 20px; }
+}

@@ -47,7 +47,7 @@ const out = process.env.PROOF_DIR || '/tmp/dofus-workshop';
     await click('.creator-library-strip button', 'Nouvelle classe');
     assert.equal((await saved()).characters[0].loadout.spells.custom.length, 0);
     await input('.creator-name-row input', 'Chimère des donjons');
-    await chooseLabel('Modèle du personnage', 'CRA');
+    await chooseLabel('Classe de référence', 'CRA');
     await chooseLabel('Apparence', '1');
     for (const [query, id] of [['Fureur', 305], ['Morsure du Bouftou', 202], ['Invocation d’Arakne', 214]]) {
       await input('[aria-label="Rechercher dans tous les sorts"]', query);

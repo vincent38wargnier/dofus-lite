@@ -23,3 +23,4 @@
 .inspector-resistances small { display: block; color: var(--muted); font-size: 9px; }
 .token .figure:focus-visible { outline: 2px solid #f4d87d; outline-offset: 3px; border-radius: 6px; }
 .token.is-inspected .ring { box-shadow: 0 0 0 2px #f4d87d, 0 0 12px #f4d87d70; }
+.board .token.is-inspected .figure { filter: drop-shadow(0 0 1px #fffce7) drop-shadow(0 0 3px #f4d87d); }

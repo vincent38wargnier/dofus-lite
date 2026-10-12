@@ -12,8 +12,17 @@ import LoadoutPicker, { useLoadouts } from './LoadoutPicker';
 import { useLoadoutLibrary } from './LoadoutsContext';
 import { applySavedEquipment, sameEquipment } from './loadoutStore';
 import { useCreations } from './CreationsContext';
+import { useProfiles } from './ProfilesContext';
 import { cloneCreation } from './creationsStore';
-import { loadoutAtLevel } from './playerSetupState';
+import { loadoutAtLevel, readPlayerSetup } from './playerSetupState';
+import BossSetup from './BossSetup';
+import AutoDungeonFight from './AutoDungeonFight';
+import { defaultMonsterGrade } from '../engine/monsters';
+import { dungeonForBoss } from '../engine/dungeons';
+import { customDungeonErrors } from '../engine/customDungeons';
+import { opponentTeamErrors } from '../engine/opponentTeam';
+import { compileAllyBots, compileCompleteTeamBots } from './allyBots';
+import { compileOpponentBots } from './opponentBots';
 import { AppearanceSelect, RetroPortrait, combatAnimationMs, useRetroAssets, useAppearances } from './RetroAssets';
 import '../styles/arenaSetup.css';
 
@@ -24,16 +33,44 @@ const SPEEDS = [
   { label: '×4', ms: 110 },
 ];
 
-export default function ArenaScreen({ allBots, replay, onReplayConsumed, active = true }) {
+export default function ArenaScreen({ allBots, replay, onReplayConsumed, active = true, onOpenCreator,
+  selectionRequest, customLaunch, onCustomConsumed, onFightChange, matchLaunch, onMatchConsumed,
+  onExit, exitLabel = 'Retour à Combat', onSessionChange }) {
   const assets = useRetroAssets();
   const { appearances, setAppearance } = useAppearances();
   const [botA, setBotA] = useState('maison');
   const [botB, setBotB] = useState('maison');
-  const [classA, setClassA] = useState('IOP');
+  const profiles = useProfiles();
+  const [initial] = useState(() => readPlayerSetup(localStorage));
+  const [mode, setMode] = useState('duel');
+  const [bossId, setBossId] = useState(initial.bossId);
+  const [bossGrade, setBossGrade] = useState(initial.bossGrade);
+  const [customDungeonId, setCustomDungeonId] = useState(initial.customDungeonId);
+  const [autoConfig, setAutoConfig] = useState(null);
+  const [classA, setClassA] = useState(profiles?.active.classId || 'IOP');
   const [classB, setClassB] = useState('CRA');
   const normalEquipment = useLoadouts(classA, classB);
   const creations = useCreations();
-  const [customCharacters, setCustomCharacters] = useState({});
+  const [customCharacters, setCustomCharacters] = useState(() => profiles ? { A: { ...cloneCreation(profiles.active), sourceProfileId: profiles.activeId } } : {});
+  const savedProfiles = profiles?.profiles;
+  useEffect(() => {
+    if (!active || !savedProfiles) return;
+    setCustomCharacters(previous => Object.fromEntries(Object.entries(previous).map(([side, character]) => {
+      const saved = savedProfiles.find(profile => profile.id === character?.sourceProfileId);
+      return [side, saved && !character.adjusted ? { ...cloneCreation(saved), sourceProfileId: saved.id } : character];
+    })));
+  }, [active, savedProfiles]); // Refresh saved profiles without discarding adjustments made for this match.
+  const customDungeon = creations?.dungeons.find(entry => entry.id === customDungeonId);
+  const dungeonErrors = customDungeon ? customDungeonErrors(customDungeon) : dungeonForBoss(bossId) ? [] : ['Choisissez une salle disponible.'];
+  useEffect(() => { if (customDungeonId && !customDungeon) setCustomDungeonId(null); }, [customDungeonId, customDungeon]);
+  useEffect(() => { onFightChange?.(!!autoConfig); }, [autoConfig, onFightChange]);
+  const handledSelection = useRef(null);
+  useEffect(() => {
+    if (!selectionRequest || handledSelection.current === selectionRequest.id) return;
+    handledSelection.current = selectionRequest.id;
+    setMode('dungeon'); setAutoConfig(null);
+    if (selectionRequest.entry) setCustomDungeonId(selectionRequest.entry.id);
+  }, [selectionRequest]);
   const customSummaries = useMemo(() => Object.fromEntries(Object.entries(customCharacters)
     .filter(([, character]) => character).map(([side, character]) => [side, resolveLoadout(character.classId, character.loadout)])), [customCharacters]);
   const equipment = { ...normalEquipment,
@@ -41,7 +78,7 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed, active 
     summaries: { ...normalEquipment.summaries, ...customSummaries },
     update: (side, change, targetClass) => {
       if (!customCharacters[side]) { normalEquipment.update(side, change, targetClass); return; }
-      setCustomCharacters(previous => ({ ...previous, [side]: { ...previous[side],
+      setCustomCharacters(previous => ({ ...previous, [side]: { ...previous[side], adjusted: true,
         loadout: typeof change === 'function' ? change(previous[side].loadout) : change } }));
     },
   };
@@ -64,6 +101,46 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed, active 
   const [frameIdx, setFrameIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [speedIdx, setSpeedIdx] = useState(1);
+  const hasSession = !!(autoConfig || result || running || error);
+  useEffect(() => { onSessionChange?.(hasSession); }, [hasSession, onSessionChange]);
+  const exit = () => {
+    simulation.current?.abort(); simulation.current = null;
+    setRunning(false); setPlaying(false); setAutoConfig(null); setResult(null); setError(null);
+    onExit?.();
+  };
+
+  const launchDungeon = (request) => {
+    try {
+      const bot = findBot(allBots, request?.botId || botA);
+      if (!request?.team && !bot) throw new Error('Choisissez une IA pour le personnage.');
+      const decide = request?.team ? undefined : compileBot(bot.code);
+      const dungeon = request && Object.prototype.hasOwnProperty.call(request, 'dungeon') ? request.dungeon : customDungeon;
+      if (dungeon && customDungeonErrors(dungeon).length) throw new Error(customDungeonErrors(dungeon).join(' '));
+      const selectedBoss = request?.bossId ?? bossId;
+      if (!dungeon && !dungeonForBoss(selectedBoss)) throw new Error('Choisissez une salle disponible.');
+      const character = request?.character || { classId: classA, name: customCharacters.A?.name || CLASSES[classA].name, loadout: equipment.loadouts.A };
+      const summary = resolveLoadout(character.classId, character.loadout);
+      if (!request?.team && !summary.valid) throw new Error(summary.errors.join(' '));
+      simulation.current?.abort(); simulation.current = null; setRunning(false);
+      setPlaying(false); setError(null);
+      setAutoConfig({ mode: dungeon ? 'custom' : 'boss', dungeon: dungeon ? cloneCreation(dungeon) : undefined,
+        allies: cloneCreation(request?.allies || []), team: request?.team,
+        bossId: selectedBoss, bossGrade: request?.bossGrade ?? bossGrade, seed: Number(request?.seed ?? seed) || 1, controllerName: request?.team ? 'IA de chaque combattant' : bot.name,
+        bots: request?.team ? compileCompleteTeamBots(request.team, allBots) : { A: { name: character.name, decide }, ...compileAllyBots(request?.allies || [], allBots, true) },
+        classes: { A: request?.team ? request.team[0]?.classId : character.classId }, loadouts: { A: cloneCreation(request?.team ? request.team[0]?.loadout || {} : character.loadout) } });
+    } catch (e) { setError(e.message); }
+  };
+  const handledLaunch = useRef(null);
+  useEffect(() => {
+    if (!customLaunch || handledLaunch.current === customLaunch.id) return;
+    handledLaunch.current = customLaunch.id;
+    setMode('dungeon'); setClassA(customLaunch.character.classId); setBotA(customLaunch.botId);
+    setCustomCharacters(previous => ({ ...previous, A: cloneCreation(customLaunch.character) }));
+    setCustomDungeonId(customLaunch.dungeon.id || null);
+    launchDungeon(customLaunch); onCustomConsumed?.();
+    // Requests contain a complete, immutable combat setup.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customLaunch]);
 
   const launch = async (cfg) => {
     const c = cfg || { botA, botB, classA, classB, mapId, seed, loadouts: equipment.loadouts,
@@ -104,9 +181,48 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed, active 
     }
   };
 
+  const handledMatch = useRef(null);
+  useEffect(() => {
+    if (!matchLaunch || handledMatch.current === matchLaunch.id) return;
+    handledMatch.current = matchLaunch.id;
+    const request = cloneCreation(matchLaunch);
+    setClassA(request.character.classId); setBotA(request.botId);
+    const firstCharacter = request.opponents?.find(entry => entry.kind === 'character') || request.opponent;
+    setClassB(firstCharacter.classId); setBotB(request.botB);
+    setCustomCharacters({ A: request.character, B: firstCharacter });
+    setMapId(request.mapId); setSeed(request.seed);
+    setBossId(request.bossId); setBossGrade(request.bossGrade); setCustomDungeonId(request.dungeon?.id || null);
+    setAutoConfig(null); setResult(null);
+    setMode(request.mode === 'duel' ? 'duel' : 'dungeon');
+    if (request.mode === 'duel' && request.opponents?.length) {
+      try {
+        const errors = opponentTeamErrors(request.opponents);
+        if (errors.length) throw new Error(errors.join(' '));
+        const playerBot = findBot(allBots, request.botId);
+        const opponentBots = compileOpponentBots(request.opponents, allBots, request.botB || 'maison');
+        if (!request.team && !playerBot) throw new Error('Choisissez une IA pour votre personnage.');
+        simulation.current?.abort(); simulation.current = null; setRunning(false); setPlaying(false); setError(null);
+        setAutoConfig({ mode: 'duel', opponents: request.opponents, mapId: request.mapId, seed: request.seed,
+          allies: request.allies || [], team: request.team,
+          controllerName: request.team ? 'IA de chaque combattant' : playerBot.name,
+          classes: { A: request.team ? request.team[0]?.classId : request.character.classId }, loadouts: { A: request.team ? request.team[0]?.loadout || {} : request.character.loadout },
+          bots: { ...(request.team ? compileCompleteTeamBots(request.team, allBots) : { A: { name: request.character.name, decide: compileBot(playerBot.code) }, ...compileAllyBots(request.allies || [], allBots, true) }),
+            ...opponentBots } });
+      } catch (e) { setError(e.message); }
+    } else if (request.mode === 'duel') launch({ botA: request.botId, botB: request.botB,
+      classA: request.character.classId, classB: request.opponent.classId, mapId: request.mapId, seed: request.seed,
+      loadouts: { A: request.character.loadout, B: request.opponent.loadout },
+      names: { A: request.character.name, B: request.opponent.name } });
+    else launchDungeon(request);
+    onMatchConsumed?.();
+    // The dialog provides the entire configuration, independent of previous Arena selections.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matchLaunch]);
+
   // Replay demandé depuis l'écran Tournoi.
   useEffect(() => {
     if (!replay) return;
+    setMode('duel'); setAutoConfig(null);
     setCustomCharacters({});
     setBotA(replay.botA); setBotB(replay.botB);
     setClassA(replay.classA); setClassB(replay.classB);
@@ -169,19 +285,32 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed, active 
     equipment.update(side, current => applySavedEquipment(current, build.loadout), classId);
   };
 
+  if (autoConfig) return <AutoDungeonFight config={autoConfig} active={active} onExit={onExit || exit} onCancel={exit} exitLabel={exitLabel}
+    onRematch={() => setAutoConfig(previous => ({ ...previous, seed: Math.floor(Math.random() * 1e9) }))} />;
+
   return (
     <div className="arena-screen">
+      {onExit ? <div className="setup-heading">
+        <div><p className="eyebrow">COMBAT AUTOMATIQUE</p><h1>{running ? 'Simulation du combat' : 'Relecture du combat'}</h1>
+          {running && <p role="status">{progress ? `Tour ${progress.turn}…` : 'Préparation du combat…'}</p>}
+          {error && <p className="penalty" role="alert">{error}</p>}</div>
+        <button type="button" className="btn" onClick={running || error ? exit : onExit || exit}>{running ? 'Annuler' : exitLabel}</button>
+      </div> : <>
       <div className="setup-heading">
-        <div><p className="eyebrow">DUEL AUTOMATIQUE</p><h1>IA contre IA</h1>
-          <p>Choisissez deux personnages et l’IA qui les pilote, puis regardez leur combat.</p></div>
+        <div><p className="eyebrow">COMBATS AUTOMATIQUES</p><h1>IA contre IA</h1>
+          <p>Confiez vos profils à une IA, en duel ou contre un donjon.</p></div>
       </div>
       <section className="panel arena-setup" aria-label="Préparer un duel IA contre IA" aria-busy={running}>
         <fieldset className="arena-setup-fields" disabled={running}>
-        <div className="arena-combatants">
+        <div className="match-modes" role="group" aria-label="Mode IA contre IA">
+          <button type="button" aria-pressed={mode === 'duel'} onClick={() => setMode('duel')}><strong>Duel</strong><span>Deux personnages, deux IA au choix</span></button>
+          <button type="button" aria-pressed={mode === 'dungeon'} onClick={() => setMode('dungeon')}><strong>Contre un donjon</strong><span>Votre profil face à toute une salle</span></button>
+        </div>
+        <div className={`arena-combatants${mode === 'dungeon' ? ' single' : ''}`}>
           {[
             { side: 'A', classId: classA, botId: botA, setClass: setClassA, setBot: setBotA },
             { side: 'B', classId: classB, botId: botB, setClass: setClassB, setBot: setBotB },
-          ].map(({ side, classId, botId, setClass, setBot }) => {
+          ].filter(entry => mode === 'duel' || entry.side === 'A').map(({ side, classId, botId, setClass, setBot }) => {
             const loadout = equipment.loadouts[side], summary = equipment.summaries[side];
             const savedStuff = library.builds.find(build => build.id === library.active[`${side}:${classId}`]
               && sameEquipment(build.loadout, loadout));
@@ -191,16 +320,28 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed, active 
                 <div><h2>{customCharacters[side]?.name || `Personnage ${side}`}</h2><p>{CLASSES[classId].name} · niveau {summary.level}</p></div>
                 <span className="arena-side-badge" aria-hidden="true">{side}</span>
               </div>
-              {!!creations?.characters.length && <label className="field">Création de l’atelier {side}<select aria-label={`Personnage personnalisé ${side}`} value={customCharacters[side]?.id || ''}
+              {profiles && <label className="field">Profil {side}<select aria-label={`Profil ${side}`} value={customCharacters[side]?.sourceProfileId || ''} onChange={event => {
+                const profile = profiles.profiles.find(entry => entry.id === event.target.value);
+                setCustomCharacters(previous => ({ ...previous, [side]: profile ? { ...cloneCreation(profile), sourceProfileId: profile.id } : null }));
+                if (profile) setClass(profile.classId);
+              }}><option value="">Configuration libre</option>{profiles.profiles.map(profile => <option key={profile.id} value={profile.id}>{profile.name} · {profile.className}</option>)}</select>
+                <small>Copie pour ce combat · votre profil enregistré reste intact.</small></label>}
+              <div className="arena-ai-choice">
+                <label className="field">IA {side}<select aria-label={`IA ${side}`} value={botId} onChange={e => setBot(e.target.value)}>{botOptions}</select></label>
+                {side === 'B' ? <button type="button" className="btn" disabled={botA === botB || !findBot(allBots, botA)}
+                  onClick={() => setBotB(botA)}>Même IA que A</button> : null}
+              </div>
+              <details className="arena-adjustments" open={!profiles || undefined}><summary>Ajuster pour ce combat</summary>
+              {!!creations?.characters.length && <label className="field">Classe personnalisée {side}<select aria-label={`Personnage personnalisé ${side}`} value={customCharacters[side]?.customCharacterId || (creations.characters.some(entry => entry.id === customCharacters[side]?.id) ? customCharacters[side].id : '')}
                 onChange={event => {
                   const character = creations.characters.find(entry => entry.id === event.target.value);
                   setCustomCharacters(previous => ({ ...previous, [side]: character ? cloneCreation(character) : null }));
                   if (character) setClass(character.classId);
                 }}><option value="">Personnage classique</option>{creations.characters.map(character => <option key={character.id} value={character.id}>{character.name} · {CLASSES[character.classId].name}</option>)}</select>
-                {customCharacters[side] && <small>Copie indépendante pour ce duel. L’original reste dans l’atelier.</small>}
+                {customCharacters[side] && <small>Copie indépendante pour ce combat.</small>}
               </label>}
               <div className="arena-character-fields">
-                <label className="field">Classe {side}<select aria-label={`Classe ${side}`} disabled={!!customCharacters[side]} value={classId} onChange={e => setClass(e.target.value)}>{classOptions}</select></label>
+                <label className="field">Classe {side}<select aria-label={`Classe ${side}`} disabled={!!customCharacters[side]?.loadout.spells?.custom} value={classId} onChange={e => { setCustomCharacters(previous => ({ ...previous, [side]: null })); setClass(e.target.value); }}>{classOptions}</select></label>
                 <label className="field">Niveau {side}<select aria-label={`Niveau ${side}`} value={summary.level}
                   onChange={e => equipment.update(side, current => loadoutAtLevel(classId, current, e.target.value))}>
                   {Array.from({ length: 200 }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}
@@ -208,34 +349,34 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed, active 
                 <AppearanceSelect side={side} value={loadout.profile?.sex === 1 ? 'female' : 'male'}
                   onChange={value => equipment.update(side, current => ({ ...current, profile: { ...current.profile, sex: value === 'female' ? 1 : 0 } }))} />
               </div>
-              <div className="arena-ai-choice">
-                <label className="field">IA {side}<select aria-label={`IA ${side}`} value={botId} onChange={e => setBot(e.target.value)}>{botOptions}</select></label>
-                {side === 'B' ? <button type="button" className="btn" disabled={botA === botB || !findBot(allBots, botA)}
-                  onClick={() => setBotB(botA)}>Même IA que A</button> : null}
-              </div>
               <label className="field">Stuff {side}<select aria-label={`Stuff ${side}`} value={savedStuff?.id || ''} disabled={!library.builds.length}
                 onChange={e => chooseStuff(side, classId, e.target.value)}>
                 <option value="">{library.builds.length ? 'Stuff actuel · choisir un stuff enregistré…' : 'Stuff actuel · aucun stuff enregistré'}</option>
                 {library.builds.map(build => <option key={build.id} value={build.id}>{build.name}</option>)}
-              </select></label>
+              </select></label></details>
               <div className="arena-character-totals"><span>{summary.hp} PV</span><span>{summary.pa} PA</span><span>{summary.pm} PM</span><span>{summary.items.length} objets</span></div>
               {!summary.valid ? <ul className="penalty small" role="alert">{summary.errors.map(message => <li key={message}>{message}</li>)}</ul> : null}
             </section>;
           })}
         </div>
-        <p className="arena-ai-note">{botA === botB ? 'La même IA pilote les deux personnages.' : 'Chaque personnage utilise l’IA sélectionnée.'} Les classes, niveaux, stuffs et sorts restent indépendants.</p>
+        {mode === 'duel' ? <p className="arena-ai-note">{botA === botB ? 'La même IA pilote les deux personnages.' : 'Chaque personnage utilise l’IA sélectionnée.'} Les classes, niveaux, stuffs et sorts restent indépendants.</p>
+          : <BossSetup bossId={bossId} grade={bossGrade} seed={seed} onGradeChange={setBossGrade}
+            onBossChange={id => { setBossId(id); setBossGrade(defaultMonsterGrade(id)); setCustomDungeonId(null); }}
+            customDungeons={creations?.dungeons} customDungeonId={customDungeonId} onCustomChange={setCustomDungeonId}
+            onCreate={onOpenCreator ? () => onOpenCreator('dungeons') : undefined}
+            onEdit={onOpenCreator ? entry => onOpenCreator('dungeons', entry.id) : undefined} />}
         <div className="arena-match-options">
-          <MapPicker value={mapId} onChange={setMapId} />
+          {mode === 'duel' && <MapPicker value={mapId} onChange={setMapId} />}
           <details className="arena-randomness"><summary>Aléatoire du combat</summary><div>
             <label className="field">Graine<input type="number" aria-label="Graine du combat" value={seed} onChange={e => setSeed(e.target.value)} /></label>
             <button type="button" className="btn icon" title="Nouvelle graine aléatoire" onClick={() => setSeed(Math.floor(Math.random() * 1e9))}>🎲</button>
           </div></details>
           <div className="arena-setup-actions">
             <button type="button" className="btn" aria-expanded={showEquipment} aria-controls="arena-equipment" onClick={() => setShowEquipment(!showEquipment)}>
-              {showEquipment ? 'Fermer la personnalisation' : 'Personnaliser les personnages'}
+              {showEquipment ? 'Fermer la personnalisation' : mode === 'dungeon' ? 'Ajuster l’équipement et les sorts' : 'Personnaliser les personnages'}
             </button>
-            <button type="button" className="btn primary arena-launch" disabled={running || !equipment.summaries.A.valid || !equipment.summaries.B.valid} onClick={() => launch()}>
-              {running ? 'Simulation en cours…' : '⚔️ Lancer le combat'}
+            <button type="button" className="btn primary arena-launch" disabled={running || !equipment.summaries.A.valid || (mode === 'duel' ? !equipment.summaries.B.valid : !!dungeonErrors.length)} onClick={() => mode === 'duel' ? launch() : launchDungeon()}>
+              {running ? 'Simulation en cours…' : mode === 'duel' ? '⚔️ Lancer le combat' : 'Simuler le donjon'}
             </button>
           </div>
         </div>
@@ -244,9 +385,10 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed, active 
         {error || libraryError ? <p className="penalty" role="alert">{error || libraryError}</p> : null}
       </section>
 
-      {showEquipment ? <div id="arena-equipment"><LoadoutPicker classes={{ A: classA, B: classB }} names={{ A: 'Personnage A', B: 'Personnage B' }} {...equipment} /></div> : null}
+      {showEquipment ? <div id="arena-equipment"><LoadoutPicker fixedSide={mode === 'dungeon' ? 'A' : undefined} classes={{ A: classA, B: classB }} names={{ A: 'Personnage A', B: 'Personnage B' }} {...equipment} /></div> : null}
+      </>}
 
-      <div className="arena-layout">
+      {mode === 'duel' && result && <><div className="arena-layout">
         <div>
           {frame
             ? (
@@ -324,7 +466,7 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed, active 
 
       <div style={{ marginTop: 14 }}>
         <LogPanel events={logEvents} namesById={namesById} state={frame?.state} />
-      </div>
+      </div></>}
     </div>
   );
 }

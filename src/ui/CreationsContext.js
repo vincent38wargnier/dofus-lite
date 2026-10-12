@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useRef, useState } from 'react';
-import { readCreations, persistCreations } from './creationsStore';
+import { readCreations, persistCreations, persistCreationsTogether } from './creationsStore';
 
 const Context = createContext(null);
 export function CreationsProvider({ children }) {
@@ -16,10 +16,10 @@ export function CreationsProvider({ children }) {
       persistCreations(localStorage, next); setError('');
     } catch (e) { setError(initial.error || 'Sauvegarde impossible dans ce navigateur. Gardez cette page ouverte pour conserver vos modifications.'); }
   };
-  const commit = change => {
+  const commit = (change, persistOther) => {
     if (initial.error) throw new Error(initial.error);
     const next = change(current.current);
-    persistCreations(localStorage, next);
+    persistCreationsTogether(localStorage, next, persistOther);
     current.current = next; setValue(next); setError('');
   };
   return <Context.Provider value={{ ...value, update, commit, error }}>{children}</Context.Provider>;

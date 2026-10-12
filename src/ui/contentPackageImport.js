@@ -5,11 +5,11 @@ import { newCreationId } from './creationsStore';
 import { CHARACTER_ARTWORK_SPEC as SPEC, validateArtworkFiles, validateArtworkPng, verifyArtworkPixels,
   writeArtworkRecords, removeArtworkRecords } from './characterArtwork';
 
-function pngHeader(path, bytes) {
+export function pngHeader(path, bytes, { strict = true } = {}) {
   const signature = [137, 80, 78, 71, 13, 10, 26, 10];
   if (bytes.length < 33 || !signature.every((byte, i) => bytes[i] === byte)
-    || String.fromCharCode(...bytes.slice(12, 16)) !== 'IHDR' || bytes[24] !== 8 || bytes[25] !== 6
-    || bytes[26] !== 0 || bytes[27] !== 0 || bytes[28] !== 0) throw new Error(`${path} : PNG RGBA 8 bits, non entrelacé requis.`);
+    || String.fromCharCode(...bytes.slice(12, 16)) !== 'IHDR'
+    || (strict && (bytes[24] !== 8 || bytes[25] !== 6 || bytes[26] !== 0 || bytes[27] !== 0 || bytes[28] !== 0))) throw new Error(`${path} : PNG RGBA 8 bits, non entrelacé requis.`);
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   if (view.getUint32(8) !== 13) throw new Error(`${path} : en-tête PNG invalide.`);
   let offset = 8, ended = false;

@@ -1,11 +1,17 @@
 // Original client templates + pure, deterministic pre-match loadout rules.
 // Permanent equipment bonuses are never stored as dispellable combat buffs.
 import DATA from './equipmentData.json';
+import { effectDefinition, WEAPON_EFFECTS } from './equipmentEffects';
+import { equipmentItem, validateCustomEquipment } from './customEquipment';
+import { equipmentKitBalance } from './equipmentBalance';
+import { equipmentShapeImage } from '../visuals/customShapes';
 import { createRng, hashSeed } from './rng';
 import { initiative } from './formulas';
 import { resolveSpellLoadout } from './classes';
 import { PARCHMENT_STAT, baseActionPoints } from './characteristicDefaults';
 import { matchingForge, validateForgedItem, forgedEffects, convertedWeaponRows, replaceEquipment } from './forgedItems';
+export { STAT_LABELS, SPELL_MODIFIERS, effectDefinition } from './equipmentEffects';
+export { equipmentItem } from './customEquipment';
 export { PARCHMENT_STAT } from './characteristicDefaults';
 
 export const EQUIPMENT = DATA;
@@ -15,13 +21,6 @@ export const EQUIPMENT_LEVEL = 100;
 export const CHARACTERISTIC_POINTS = (EQUIPMENT_LEVEL - 1) * 5;
 export const ELEMENTS = ['terre', 'feu', 'eau', 'air', 'neutre'];
 export const CHARACTERISTICS = ['vitalite', 'force', 'intelligence', 'chance', 'agilite', 'sagesse'];
-export const STAT_LABELS = {
-  vitalite: 'Vitalité', force: 'Force', intelligence: 'Intelligence', chance: 'Chance', agilite: 'Agilité', sagesse: 'Sagesse',
-  pa: 'PA', pm: 'PM', range: 'Portée', damage: 'Dommages', power: '% dommages', crit: 'Coups critiques',
-  heal: 'Soins', initiative: 'Initiative', summons: 'Invocations', dodgePa: 'Esquive PA', dodgePm: 'Esquive PM',
-  physicalDamage: 'Dommages physiques', trapDamage: 'Dommages pièges', trapPower: '% dommages pièges',
-  reflect: 'Renvoi de dommages', fail: 'Échecs critiques', pods: 'Pods', prospecting: 'Prospection',
-};
 const weapons = [2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 83, 99, 114];
 export const EQUIPMENT_SLOTS = [
   { id: 'hat', name: 'Coiffe', types: [16], icon: '♜' },
@@ -37,33 +36,9 @@ export const EQUIPMENT_SLOTS = [
   ...Array.from({ length: 6 }, (_, i) => ({ id: `dofus${i + 1}`, name: `Dofus ${i + 1}`, types: [23], icon: '◒' })),
 ];
 
-const POSITIVE = { 110: 'vitalite', 111: 'pa', 112: 'damage', 115: 'crit', 117: 'range', 118: 'force', 119: 'agilite',
-  121: 'damage', 122: 'fail', 123: 'chance', 124: 'sagesse', 125: 'vitalite', 126: 'intelligence', 128: 'pm',
-  138: 'power', 142: 'physicalDamage', 158: 'pods', 160: 'dodgePa', 161: 'dodgePm', 174: 'initiative',
-  176: 'prospecting', 178: 'heal', 182: 'summons', 220: 'reflect', 225: 'trapDamage', 226: 'trapPower' };
-const NEGATIVE = { 116: 'range', 127: 'pm', 145: 'damage', 152: 'chance', 153: 'vitalite', 154: 'agilite',
-  155: 'intelligence', 156: 'sagesse', 157: 'force', 159: 'pods', 162: 'dodgePa', 163: 'dodgePm',
-  168: 'pa', 169: 'pm', 171: 'crit', 175: 'initiative', 177: 'prospecting', 179: 'heal', 2100: 'pa' };
-const orderedElements = ['terre', 'eau', 'air', 'feu', 'neutre'];
-for (const [start, prefix, negative] of [[210, 'res_', false], [215, 'res_', true],
-  [240, 'fixed_', false], [245, 'fixed_', true], [250, 'pvpRes_', false], [255, 'pvpRes_', true], [260, 'pvpFixed_', false]]) {
-  orderedElements.forEach((element, i) => { (negative ? NEGATIVE : POSITIVE)[start + i] = prefix + element; });
-}
-export const SPELL_MODIFIERS = { 281: 'range', 282: 'adjustableRange', 283: 'damage', 284: 'heal', 285: 'pa',
-  286: 'cooldown', 287: 'crit', 288: 'lineOnly', 289: 'needsLos', 290: 'usesPerTurn', 291: 'usesPerTarget' };
-// Display these separately; they have no effect in a single offline fight.
-const METADATA = new Set([10, 130, 146, 148, 149, 239, 601, 705, 706, 723, 724, 740, 795, 800, 806, 807, 808, 811, 812,
-  940, 983, 2146, 2149, 2151, 2179, 2184]);
-const WEAPON_EFFECTS = new Set([84, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 108]);
-export function effectDefinition(id) {
-  const stat = POSITIVE[id] || NEGATIVE[id];
-  if (stat) return { kind: ['pods', 'prospecting'].includes(stat) ? 'utility' : 'stat', stat, sign: NEGATIVE[id] ? -1 : 1 };
-  if (SPELL_MODIFIERS[id]) return { kind: 'spell', modifier: SPELL_MODIFIERS[id] };
-  if (WEAPON_EFFECTS.has(id)) return { kind: 'weapon' };
-  return { kind: METADATA.has(id) ? 'metadata' : 'unsupported' };
-}
 
 export function itemIcon(item) {
+  if (item?.customEquipment?.appearance) return equipmentShapeImage(item.type, item.customEquipment.appearance);
   return item && !item.missingIcon ? `/dofus-local/equipment/icons/${item.type}_${item.gfx}.png` : null;
 }
 
@@ -191,7 +166,7 @@ export function weaponSpell(item) {
   if (!effects.length) return null;
   const critEffects = effects.map(e => ['damage', 'lifeSteal', 'heal'].includes(e.kind)
     ? { ...e, min: e.min + w.critBonus, max: e.max + w.critBonus } : { ...e });
-  return { key: 'weapon', id: 0, itemId: item.id, weaponType: item.type, name: item.name, emoji: '⚔️', isWeapon: true,
+  return { key: 'weapon', id: 0, itemId: item.id, weaponType: item.type, name: item.name, emoji: '⚔️', isWeapon: true, itemIcon: itemIcon(item),
     grade: 1, pa: w.pa, range: [...w.range], adjustableRange: false, lineOnly: false, needsLos: true,
     targetMode: 'cell', emptyCellOnly: false, critRate: w.critRate, failRate: w.failRate,
     endsTurnOnFailure: true, usesPerTurn: 0, usesPerTarget: 0, cooldown: 0,
@@ -228,8 +203,9 @@ export function resolveLoadout(classId, loadout) {
   for (const slot of EQUIPMENT_SLOTS) {
     const id = slots[slot.id];
     if (!id) continue;
-    const item = ITEMS[id];
+    const item = equipmentItem(id, loadout);
     if (!item) { errors.push(`${slot.name} : objet inconnu (${id}).`); continue; }
+    if (item.customEquipment) errors.push(...validateCustomEquipment(item.customEquipment).errors.map(error => `${item.name} : ${error}`));
     if (!slot.types.includes(item.type)) errors.push(`${item.name} ne va pas dans ${slot.name}.`);
     if (item.level > level) errors.push(`${item.name} nécessite le niveau ${item.level}.`);
     // Identical set rings and identical Dofus are forbidden. Two identical
@@ -257,7 +233,7 @@ export function resolveLoadout(classId, loadout) {
     rows.forEach(row => add(row, row[1], set.name));
     return { id: Number(id), name: set?.name || `Panoplie ${id}`, count, total: set?.items.length || count, effects: rows };
   });
-  const weapon = ITEMS[slots.weapon];
+  const weapon = equipmentItem(slots.weapon, loadout);
   if (weapon?.weapon?.twoHanded && slots.shield) errors.push('Une arme à deux mains ne permet pas de porter un bouclier.');
   const parchments = Object.fromEntries(CHARACTERISTICS.map(stat => [stat, PARCHMENT_STAT]));
   const baseStats = Object.fromEntries(CHARACTERISTICS.map(stat => [stat, parchments[stat] + base[stat]]));
@@ -270,7 +246,7 @@ export function resolveLoadout(classId, loadout) {
     CI: stats.intelligence, CV: stats.vitalite, CA: stats.agilite, CW: stats.sagesse, CC: stats.chance, CS: stats.force,
     Ci: baseStats.intelligence, Cv: baseStats.vitalite, Ca: baseStats.agilite, Cw: baseStats.sagesse, Cc: baseStats.chance, Cs: baseStats.force };
   for (const equipped of resolvedItems) {
-    const item = ITEMS[equipped.id];
+    const item = equipmentItem(equipped.id, loadout);
     const condition = checkCondition(item.condition, values);
     if (!condition.ok) errors.push(`${item.name} : ${condition.unsupported ? 'condition non simulée' : 'conditions non remplies'} (${item.condition}).`);
   }
@@ -281,7 +257,12 @@ export function resolveLoadout(classId, loadout) {
     && !['pa', 'pm'].includes(stat) && !stat.startsWith('res_') && !stat.startsWith('fixed_')));
   const resistances = Object.fromEntries(ELEMENTS.map(e => [e, bonuses[`res_${e}`] || 0]));
   const resistancesFixed = Object.fromEntries(ELEMENTS.map(e => [e, bonuses[`fixed_${e}`] || 0]));
-  return { valid: !errors.length, errors: [...new Set(errors)], level, characteristicPoints, points, base, baseStats, parchments, stats, bonuses, permanent,
+  const equipmentBudget = equipmentKitBalance(resolvedItems.map(equipped => {
+    const item = equipmentItem(equipped.id, loadout);
+    return { ...item, pet: undefined, effects: equipped.effects.map(({ row, value }) => WEAPON_EFFECTS.has(row[0]) ? row : [row[0], value, 0, row[3]]) };
+  }), level, sets.flatMap(set => set.effects));
+  errors.push(...equipmentBudget.errors);
+  return { equipmentBudget, valid: !errors.length, errors: [...new Set(errors)], level, characteristicPoints, points, base, baseStats, parchments, stats, bonuses, permanent,
     hp, pa, pm, resistances, resistancesFixed, sets, items: resolvedItems, spellModifiers,
     initiative: initiative(stats, hp, hp, bonuses.initiative || 0),
     weaponSpell: weaponSpell(weapon ? { ...weapon, effects: convertedWeaponRows(weapon, matchingForge(weapon, loadout, 'weapon')) } : null), snapshot: JSON.parse(JSON.stringify(loadout)) };

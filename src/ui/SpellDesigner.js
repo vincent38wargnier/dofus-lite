@@ -2,7 +2,10 @@ import React, { useMemo, useState } from 'react';
 import { buildSpell } from '../engine/classes';
 import { spellZoneCells } from '../engine/geometry';
 import { AUTHORED_LEVEL, EFFECT_TYPES, ELEMENTS, EFFECT_STATS, EFFECT_ZONES, EFFECT_RECIPIENTS, SPELL_TARGETS,
-  newAuthoredSpell, newAuthoredEffect, normalizeAuthoredSpell, authoredSpellErrors, authoredSpellWarnings } from '../engine/authoredSpells';
+  newAuthoredSpell, newAuthoredEffect, normalizeAuthoredSpell, authoredSpellErrors, authoredSpellWarnings,
+  alignAuthoredCriticals, rebalanceAuthoredSpell } from '../engine/authoredSpells';
+import { spellBalance, spellbookBalance } from '../engine/spellBalance';
+import SpellBudget from './SpellBudget';
 import { CREATION_SPELLS } from './creationCatalogue';
 import { RetroSpellIcon } from './RetroAssets';
 import '../styles/spellDesigner.css';
@@ -64,24 +67,36 @@ function comparisons(spell) {
   if (!main) return [];
   return visuals.map(entry => ({ entry, raw: entry.grades.find(g => g.grade === 6) }))
     .filter(({ raw }) => raw?.effects.some(effect => effect.kind === main.kind)
-      && !raw.requiredStates?.length && !raw.initialCooldown && raw.effects.every(effect => !effect.chance && !effect.trigger))
+      && !raw.requiredStates?.length && !raw.initialCooldown && raw.effects.every(effect => !effect.chance && !effect.trigger && !(effect.targetMask & 8)))
     .map(value => ({ ...value, score: Math.abs(value.raw.pa - spell.pa) + Math.abs(value.raw.rangeMax - spell.rangeMax) / 4
+      + Math.abs(value.raw.cooldown - spell.cooldown) / 2
+      + (value.raw.needsLos === spell.needsLos ? 0 : 1) + (value.raw.lineOnly === spell.lineOnly ? 0 : 1)
       + (value.raw.effects[0]?.zone === main.zone ? 0 : 2) + (value.raw.effects[0]?.element === main.element ? 0 : 1) }))
     .sort((a, b) => a.score - b.score).slice(0, 3);
 }
 
-export default function SpellDesigner({ initialSpell, existingSpells, editing, onSave, onCancel }) {
+export default function SpellDesigner({ initialSpell, existingSpells = [], editing, onSave, onCancel }) {
   const [draft, setDraft] = useState(() => clone(initialSpell));
   const [criticalTab, setCriticalTab] = useState(false);
   const [visualQuery, setVisualQuery] = useState('');
+  const [repairNotice, setRepairNotice] = useState('');
   const raw = normalizeAuthoredSpell(draft);
   const errors = authoredSpellErrors(raw);
+  const balance = spellBalance(raw);
+  const beforeKit = spellbookBalance(existingSpells);
+  const kit = spellbookBalance([...existingSpells.filter(spell => spell.id !== raw.id), raw]);
+  const improvingLegacy = editing && beforeKit.score > beforeKit.limit && kit.score < beforeKit.score;
+  if (kit.score > kit.limit && !improvingLegacy) errors.push(`Budget de la classe dépassé : ${kit.score}/${kit.limit}. Allégez ce sort ou les autres sorts du kit.`);
   const warnings = authoredSpellWarnings(raw, existingSpells);
   const reference = useMemo(() => comparisons(raw), [raw]);
   const patch = values => setDraft(previous => ({ ...previous, ...values }));
   const listKey = criticalTab && draft.critRate ? 'critEffects' : 'effects';
   const effects = draft[listKey];
-  const changeEffects = next => patch({ [listKey]: next });
+  const changeEffects = next => {
+    // Until the critical has been customized, keep it linked to normal edits.
+    const linked = listKey === 'effects' && draft.critRate && JSON.stringify(draft.effects) === JSON.stringify(draft.critEffects);
+    patch({ [listKey]: next, ...(linked ? { critEffects: clone(next) } : {}) });
+  };
   const moveEffect = (index, offset) => {
     const next = [...effects]; next.splice(index + offset, 0, next.splice(index, 1)[0]); changeEffects(next);
   };
@@ -123,7 +138,9 @@ export default function SpellDesigner({ initialSpell, existingSpells, editing, o
         {!!draft.critRate && <><NumberField label="Critique : 1 chance sur" value={draft.critRate} min={2} max={100} onChange={critRate => patch({ critRate })} hint="Avant les bonus de critiques du personnage." />
           <div className="spell-designer-variants" role="group" aria-label="Variante des effets"><button type="button" className={`btn${!criticalTab ? ' primary' : ''}`} aria-pressed={!criticalTab} onClick={() => setCriticalTab(false)}>Effets normaux</button>
             <button type="button" className={`btn${criticalTab ? ' primary' : ''}`} aria-pressed={criticalTab} onClick={() => setCriticalTab(true)}>Effets critiques</button></div>
-          {criticalTab && <p className="muted small">Cette liste remplace entièrement les effets normaux. <button className="btn" type="button" onClick={() => patch({ critEffects: clone(draft.effects) })}>Copier les effets normaux</button></p>}</>}
+          {criticalTab && <p className="muted small">Le critique conserve les mêmes effets, éléments et zones, avec des valeurs au moins égales.
+            <button className="btn" type="button" onClick={() => setDraft(alignAuthoredCriticals(raw))}>Aligner sur les effets normaux</button>
+            <button className="btn" type="button" onClick={() => patch({ critEffects: clone(draft.effects) })}>Copier les effets normaux</button></p>}</>}
         <div aria-label={listKey === 'effects' ? 'Liste des effets normaux' : 'Liste des effets critiques'}>{effects.map((effect, index) => <EffectEditor key={`${listKey}-${index}`} effect={effect} index={index} count={effects.length}
           onChange={value => changeEffects(effects.map((e, i) => i === index ? value : e))} onMove={offset => moveEffect(index, offset)} onRemove={() => changeEffects(effects.filter((_, i) => i !== index))} />)}</div>
         <button type="button" className="btn" disabled={effects.length >= 4} onClick={() => changeEffects([...effects, newAuthoredEffect()])}>+ Ajouter un effet</button>
@@ -139,13 +156,22 @@ export default function SpellDesigner({ initialSpell, existingSpells, editing, o
     </div>
     <aside className="spell-designer-review" aria-label="Aperçu du sort"><div className="creator-spell-inspect"><RetroSpellIcon spell={preview} /><div><strong>{raw.name || 'Votre sort'}</strong><small>Grade 6 · niveau {AUTHORED_LEVEL}</small></div></div>
       <p className="spell-designer-numbers"><strong>{draft.pa || '—'} PA</strong><span>{draft.rangeMin}–{draft.rangeMax} PO</span><span>Relance {draft.cooldown || 0}</span></p>
+      <SpellBudget report={balance} label="Budget du sort" />
+      <SpellBudget report={kit} label="Budget de la classe" />
+      <p className="muted small">PA, portée, zone, relance, durée, cumul et critiques sont comptés ensemble. Le budget de classe inclut les synergies.</p>
+      {(!balance.valid || errors.some(error => /critique/i.test(error))) && <button type="button" className="btn" onClick={() => {
+        const next = rebalanceAuthoredSpell(raw); setDraft(next);
+        setRepairNotice(`Proposition : ${raw.pa} → ${next.pa} PA, relance ${raw.cooldown} → ${next.cooldown}, score ${balance.score} → ${spellBalance(next).score}. Vérifiez les valeurs avant d’enregistrer.`);
+      }}>Rééquilibrer les valeurs</button>}
+      {repairNotice && <p role="status" className="creator-spell-save-notice">{repairNotice}</p>}
+      {improvingLegacy && <p className="creator-warning">Cette correction peut être enregistrée. La classe restera indisponible en combat tant que son budget est dépassé.</p>}
       <ol className="spell-designer-preview-effects">{effects.map((effect, index) => <li key={index}>
         <strong>{EFFECT_TYPES[effect.kind].label}</strong><span>{effect.kind !== 'teleport' && `${effect.min}–${effect.max} `}{ELEMENTS[effect.element] || EFFECT_STATS[effect.stat] || ''}{effect.duration ? ` · ${effect.duration} tour(s)` : ''}</span>
         <small>{EFFECT_RECIPIENTS[effect.targetMask]} · {EFFECT_ZONES[effect.zone]}</small>
         <ZonePreview zone={effect.zone} self={effect.targetMask === 32} />
       </li>)}</ol><p className="muted small">Bleu : lanceur. Point sombre : case visée. Les valeurs sont brutes, avant caractéristiques, résistances et coefficients de zone.</p>
       <div className="spell-designer-balance"><h4>Repères d’équilibrage</h4>
-        <p>Un sort valide n’est pas forcément équilibré. Testez la classe complète contre plusieurs adversaires, avec et sans équipement.</p>
+        <p>Plafonds fondés sur les 264 sorts des 12 classes au grade 6. Un budget respecté reste à tester en combat, avec et sans équipement.</p>
         {!!warnings.length && <ul>{warnings.map(message => <li key={message}>{message}</li>)}</ul>}
         {!!reference.length && <details><summary>Comparer aux sorts existants</summary><table><thead><tr><th>Grade 6</th><th>PA / PO</th><th>Effet brut</th></tr></thead><tbody>{reference.map(({ entry, raw: value }) => {
           const effect = value.effects.find(e => e.kind === raw.effects[0].kind);
@@ -154,6 +180,6 @@ export default function SpellDesigner({ initialSpell, existingSpells, editing, o
       </div>
     </aside></div>
     {!!errors.length && <div className="spell-designer-errors" role="alert"><strong>À corriger avant d’enregistrer</strong><ul>{errors.map(error => <li key={error}>{error}</li>)}</ul></div>}
-    <div className="spell-designer-save"><span>{errors.length ? `${errors.length} point(s) à corriger` : 'Définition valide · équilibre à tester'}</span><button type="submit" className="btn primary" disabled={!!errors.length}>{editing ? 'Enregistrer les modifications' : 'Ajouter à ma classe'}</button></div>
+    <div className="spell-designer-save"><span>{errors.length ? `${errors.length} point(s) à corriger` : improvingLegacy ? 'Correction enregistrable · classe à rééquilibrer' : 'Budgets respectés · équilibre à tester'}</span><button type="submit" className="btn primary" disabled={!!errors.length}>{editing ? 'Enregistrer les modifications' : 'Ajouter à ma classe'}</button></div>
   </form>;
 }

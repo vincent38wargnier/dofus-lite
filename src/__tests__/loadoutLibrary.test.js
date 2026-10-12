@@ -166,7 +166,9 @@ test('library and quick load reuse a legacy Iop stuff on Cra and Sacrieur, with 
   const onClassChange = jest.fn();
   const renderLibrary = side => render(<LoadoutsProvider><LibraryHarness side={side} onClassChange={onClassChange} /></LoadoutsProvider>);
   let view = renderLibrary('A');
-  fireEvent.click(screen.getByRole('button', { name: /Mes stuffs/ }));
+  expect(screen.queryByRole('combobox', { name: 'Charger un stuff' })).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Équiper le stuff Terre' })).toBeVisible();
+  fireEvent.click(screen.getByRole('button', { name: 'Gérer' }));
   expect(screen.queryByRole('combobox', { name: 'Classes de la bibliothèque' })).not.toBeInTheDocument();
   const card = view.container.querySelector('.stuff-card');
   const preview = resolveLoadout('CRA', applySavedEquipment(cra, config()));
@@ -180,10 +182,10 @@ test('library and quick load reuse a legacy Iop stuff on Cra and Sacrieur, with 
   expect(screen.getByRole('button', { name: 'Mettre à jour' })).toBeDisabled();
   fireEvent.click(screen.getByRole('button', { name: 'Annuler l’action' }));
   expect(JSON.parse(localStorage.getItem(DRAFT_STORAGE))['A:CRA']).toEqual(cra);
-  fireEvent.change(screen.getByRole('combobox', { name: 'Charger un stuff' }), { target: { value: 'old-iop' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Équiper le stuff Terre' }));
   view.unmount();
   view = renderLibrary('B');
-  fireEvent.change(screen.getByRole('combobox', { name: 'Charger un stuff' }), { target: { value: 'old-iop' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Équiper le stuff Terre' }));
   stored = JSON.parse(localStorage.getItem(DRAFT_STORAGE));
   expect(stored['A:CRA']).toEqual(applySavedEquipment(cra, config()));
   expect(stored['B:SACRIEUR']).toEqual(applySavedEquipment(sacri, config()));

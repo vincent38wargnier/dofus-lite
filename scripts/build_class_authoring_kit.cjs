@@ -1,4 +1,5 @@
-// Rebuild the portable authoring assets. Runtime game files are not modified.
+// Rebuild the legacy class.json example assets. Runtime game files are not modified.
+// For current prompts, budgets and the complete ZIP use build_authoring_kit.cjs.
 const fs = require('node:fs');
 const path = require('node:path');
 const zlib = require('node:zlib');

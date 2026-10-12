@@ -1,7 +1,8 @@
+import { equipmentItem } from '../engine/customEquipment';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Backpack } from 'lucide-react';
+import { Backpack, Check, Settings2 } from 'lucide-react';
 import { CLASSES } from '../engine/classes';
-import { EQUIPMENT_SLOTS, ITEMS, resolveLoadout } from '../engine/equipment';
+import { EQUIPMENT_SLOTS, resolveLoadout } from '../engine/equipment';
 import EquipmentIcon from './EquipmentIcon';
 import { useLoadoutLibrary } from './LoadoutsContext';
 import { applySavedEquipment, sameEquipment } from './loadoutStore';
@@ -27,7 +28,7 @@ export default function LoadoutLibrary({ side, classId, draftKey, loadout, updat
     .filter(b => fold(b.name).includes(fold(query)))
     .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))
     .map(b => ({ ...b, summary: resolveLoadout(classId, applySavedEquipment(loadout, b.loadout)),
-      minimumLevel: Math.max(1, ...Object.values(b.loadout.slots).map(id => ITEMS[id]?.level || 1)) })), [library.builds, classId, loadout, query]);
+      minimumLevel: Math.max(1, ...Object.values(b.loadout.slots).map(id => equipmentItem(id, b.loadout)?.level || 1)) })), [library.builds, classId, loadout, query]);
   useEffect(() => { setForm(null); setNotice(null); }, [key]);
   useEffect(() => { if (editingName) { input.current?.focus(); input.current?.select(); } }, [editingName]);
 
@@ -61,9 +62,9 @@ export default function LoadoutLibrary({ side, classId, draftKey, loadout, updat
 
   return <div className={`stuff-library${compact ? ' stuff-library-compact' : ''}`}>
     <div className="stuff-savebar">
-      <div className="stuff-current"><span className="eyebrow">{compact ? side === 'B' ? 'STUFF ADVERSE' : 'MON STUFF' : 'STUFF EN PRÉPARATION'}</span>
-        <h3>{active?.name || 'Nouveau stuff'}{dirty ? <span className="stuff-dirty" title="Modifications non enregistrées dans ce stuff">●</span> : null}</h3>
-        <p>{saveError ? 'Brouillon non sauvegardé' : dirty ? 'Brouillon conservé · enregistrez pour mettre à jour ce stuff' : active ? 'Identique à la version enregistrée' : 'Brouillon conservé automatiquement sur ce navigateur'}</p>
+      <div className="stuff-current">
+        <h3>Mes stuffs <span className="collection-count">{library.builds.length}</span></h3>
+        <p>{saveError ? 'Préparation non sauvegardée' : active ? `${active.name}${dirty ? ' · modifié' : ' · équipé'}` : 'Un clic pour équiper un ensemble.'}</p>
       </div>
       <div className="stuff-save-actions">
         {active ? <button type="button" className="btn primary" disabled={!dirty} onClick={() => save(active.name, true)}>Mettre à jour</button> : null}
@@ -71,17 +72,22 @@ export default function LoadoutLibrary({ side, classId, draftKey, loadout, updat
           {active ? 'Enregistrer sous…' : 'Enregistrer ce stuff'}
         </button>
         <button type="button" className={`btn stuff-library-toggle${open ? ' selected' : ''}`} aria-expanded={open} onClick={() => setOpen(!open)}>
-          Mes stuffs <span>{library.builds.length}</span>
+          <Settings2 size={14} /> Gérer
         </button>
       </div>
     </div>
-    {(!compact || library.builds.length > 0) && <div className="stuff-quick-row">
-      <label>Chargement rapide <select aria-label="Charger un stuff" value="" disabled={!library.builds.length} onChange={e => load(library.builds.find(b => b.id === e.target.value))}>
-        <option value="">{library.builds.length ? 'Choisir un stuff…' : 'Aucun stuff enregistré'}</option>
-        {library.builds.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
-      </select></label>
-      <span>Objets, jets, exos et familier inclus. Votre personnage conserve son niveau, ses caractéristiques et ses sorts.</span>
-    </div>}
+    {library.builds.length > 0 ? <div className="stuff-shortcuts" role="group" aria-label="Mes stuffs enregistrés">
+      {library.builds.map(build => {
+        const items = EQUIPMENT_SLOTS.map(slot => equipmentItem(build.loadout.slots[slot.id], build.loadout)).filter(Boolean);
+        const current = active?.id === build.id;
+        return <button type="button" key={build.id} className={`stuff-shortcut${current ? ' selected' : ''}`} data-stuff-id={build.id}
+          aria-label={`Équiper le stuff ${build.name}`} aria-pressed={current} title={`${build.name} · ${items.length} objets`} onClick={() => load(build)}>
+          <span className="stuff-shortcut-art" aria-hidden="true">{items.length ? items.slice(0, 3).map((item, i) => <EquipmentIcon key={i} item={item} />) : <Backpack size={32} />}
+            {current && <span className="stuff-shortcut-check"><Check size={12} /></span>}</span>
+          <strong>{build.name}</strong>
+        </button>;
+      })}
+    </div> : null}
     {form ? <form className="stuff-name-form" onSubmit={e => {
       e.preventDefault();
       if (form.type === 'save') save(form.name);
@@ -103,7 +109,7 @@ export default function LoadoutLibrary({ side, classId, draftKey, loadout, updat
       <div className="stuff-card-grid">{builds.map(build => <article className={`stuff-card${active?.id === build.id ? ' active' : ''}`} key={build.id} data-build-id={build.id}>
         <div className="stuff-card-heading"><span className="stuff-card-symbol" aria-hidden="true"><Backpack size={24} /></span>
           <div><h4>{build.name}</h4><p>Niv. minimum {build.minimumLevel}{active?.id === build.id ? ' · En préparation' : ''}</p></div></div>
-        <div className="stuff-card-items" aria-label="Objets enregistrés">{EQUIPMENT_SLOTS.map(slot => ITEMS[build.loadout.slots[slot.id]]).filter(Boolean).slice(0, 10).map((item, index) => <span title={item.name} key={index}><EquipmentIcon item={item} /></span>)}</div>
+        <div className="stuff-card-items" aria-label="Objets enregistrés">{EQUIPMENT_SLOTS.map(slot => equipmentItem(build.loadout.slots[slot.id], build.loadout)).filter(Boolean).slice(0, 10).map((item, index) => <span title={item.name} key={index}><EquipmentIcon item={item} /></span>)}</div>
         <div className="stuff-card-totals"><span>{build.summary.hp} PV</span><span>{build.summary.pa} PA</span><span>{build.summary.pm} PM</span><span>{build.summary.items.length} objets</span></div>
         {!build.summary.valid ? <p className="penalty small">Prérequis à vérifier pour votre personnage</p> : null}
         <button type="button" className="btn primary stuff-load" onClick={() => load(build)}>Charger ce stuff</button>

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { emptyLoadout } from '../engine/equipment';
-import { newAuthoredSpell, duplicateAuthoredSpell } from '../engine/authoredSpells';
+import { newAuthoredSpell, duplicateAuthoredSpell, normalizeAuthoredSpell, newAuthoredEffect } from '../engine/authoredSpells';
+import { spellbookBalance } from '../engine/spellBalance';
 import { emptyCreations, readCreations, persistCreations, CREATIONS_STORAGE } from '../ui/creationsStore';
 import CustomSpellPicker from '../ui/CustomSpellPicker';
 
@@ -99,4 +100,55 @@ test('at ten spells creation and duplication are disabled, but editing an existi
   fireEvent.click(editor().getByRole('button', { name: 'Enregistrer les modifications' }));
   expect(saved().spells.custom).toHaveLength(10);
   expect(saved().spells.custom[0].name).toBe('Premier sort');
+});
+
+test('normal edits keep untouched criticals synchronized, but a weaker custom critical blocks saving', () => {
+  render(<App />); fireEvent.click(screen.getByRole('button', { name: '+ Créer un sort' }));
+  const form = editor();
+  fireEvent.click(form.getByLabelText('Activer les coups critiques'));
+  change(form, 'Minimum', 24); change(form, 'Maximum', 24);
+  fireEvent.click(form.getByRole('button', { name: 'Effets critiques' }));
+  expect(form.getByLabelText('Minimum')).toHaveValue(24);
+  change(form, 'Minimum', 10); change(form, 'Maximum', 10);
+  expect(form.getByRole('alert')).toHaveTextContent('inférieures');
+  expect(form.getByRole('button', { name: 'Ajouter à ma classe' })).toBeDisabled();
+  fireEvent.click(form.getByRole('button', { name: 'Aligner sur les effets normaux' }));
+  expect(form.getByLabelText('Minimum')).toHaveValue(24);
+  fireEvent.click(form.getByRole('button', { name: 'Ajouter à ma classe' }));
+  expect(saved().spells.custom[0].critEffects).toEqual(saved().spells.custom[0].effects);
+});
+
+test('budget updates live, blocks a nuke, and offers a reviewable repair before saving', () => {
+  render(<App />); fireEvent.click(screen.getByRole('button', { name: '+ Créer un sort' }));
+  const form = editor();
+  change(form, 'Nom du sort', 'Argent russe'); change(form, 'Coût en PA', 1);
+  change(form, 'Minimum', 150); change(form, 'Maximum', 150);
+  expect(form.getByRole('region', { name: 'Budget du sort' })).toHaveTextContent('points à retirer');
+  expect(form.getByRole('button', { name: 'Ajouter à ma classe' })).toBeDisabled();
+  fireEvent.click(form.getByRole('button', { name: 'Rééquilibrer les valeurs' }));
+  expect(form.getByRole('status')).toHaveTextContent('Vérifiez les valeurs');
+  expect(form.getByRole('button', { name: 'Ajouter à ma classe' })).toBeEnabled();
+  expect(localStorage.getItem(CREATIONS_STORAGE)).toBeNull();
+  fireEvent.click(form.getByRole('button', { name: 'Ajouter à ma classe' }));
+  expect(spellbookBalance(saved().spells.custom).valid).toBe(true);
+});
+
+test('total kit budget blocks adding another strong spell and permits gradual legacy repairs', () => {
+  const first = normalizeAuthoredSpell({ ...newAuthoredSpell(), name: 'Frappe', effects: [{ ...newAuthoredEffect(), min: 30, max: 30 }] });
+  const spells = Array.from({ length: 7 }, (_, i) => ({ ...first, id: 1000000000000 + i, key: `custom_${1000000000000 + i}`, name: `Frappe ${i}` }));
+  const view = render(<App initial={spells} />);
+  fireEvent.click(screen.getByRole('button', { name: '+ Créer un sort' }));
+  change(editor(), 'Minimum', 30); change(editor(), 'Maximum', 30);
+  expect(editor().getByRole('button', { name: 'Ajouter à ma classe' })).toBeDisabled();
+  expect(editor().getByRole('alert')).toHaveTextContent('Budget de la classe dépassé');
+  view.unmount();
+  const over = [...spells, { ...first, id: 1000000000010, key: 'custom_1000000000010' }];
+  render(<App initial={over} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Modifier Frappe 0' }));
+  change(editor(), 'Minimum', 18); change(editor(), 'Maximum', 18);
+  expect(editor().getByRole('button', { name: 'Enregistrer les modifications' })).toBeEnabled();
+  fireEvent.click(editor().getByRole('button', { name: 'Enregistrer les modifications' }));
+  expect(saved().spells.custom).toHaveLength(8);
+  expect(saved().spells.custom[0].effects[0].max).toBe(18);
+  expect(spellbookBalance(saved().spells.custom).valid).toBe(false);
 });

@@ -4,6 +4,8 @@ import { TextEncoder, TextDecoder } from 'util';
 import { inflateRawSync } from 'zlib';
 import { packageExample, validateContentManifest, compileContentManifest, expectedPackageFiles } from '../content/contentPackage';
 import { buildContentPrompt, packageSpecDocument } from '../content/packagePrompt';
+import { equipmentSpecDocument } from '../content/equipmentRules';
+import { equipmentBudget, EQUIPMENT_FAMILIES, EQUIPMENT_STAT_RULES } from '../engine/equipmentBalance';
 import { writeContentZip, readContentZip } from '../content/zip';
 import { prepareContentFiles, importContentFile } from '../ui/contentPackageImport';
 import { customDungeonRoster } from '../engine/customDungeons';
@@ -48,6 +50,41 @@ test.each(['class', 'dungeon'])('the %s prompt, schema, example, compiler, stora
   expect(copy.warnings.some(warning => warning.includes('équilibre prouvé'))).toBe(true);
 });
 
+test('portable equipment tables preserve exact engine caps at every required level, without interpolation', () => {
+  const reference = equipmentSpecDocument();
+  expect(reference.dofusExcluded).toBe(true);
+  expect(reference.families.map(family => family.id)).toEqual(EQUIPMENT_FAMILIES.map(family => family.id));
+  for (const family of reference.families) {
+    expect(family.bands[0].fromLevel).toBe(1);
+    expect(family.bands.at(-1).throughLevel).toBe(200);
+    for (let i = 1; i < family.bands.length; i++) {
+      expect(family.bands[i].fromLevel).toBe(family.bands[i - 1].throughLevel + 1);
+    }
+    for (let level = 1; level <= 200; level++) {
+      const exported = family.bands.find(band => band.fromLevel <= level && band.throughLevel >= level);
+      const runtime = equipmentBudget({ type: family.types[0], level });
+      for (const key of ['total', 'passive', 'attack']) expect(exported[key]).toBe(runtime[key]);
+      for (const [key, cap] of Object.entries(runtime.statLimits)) expect(exported.statLimits[key] || 0).toBe(cap);
+    }
+  }
+  expect(reference.families.filter(family => !family.scalesWithRequiredLevel).map(family => family.bands.length)).toEqual([1, 1, 1]);
+  for (const [key, rule] of Object.entries(EQUIPMENT_STAT_RULES)) {
+    expect(reference.stats[key]).toMatchObject({ weight: rule.weight, allowsNegative: !!rule.negativeEffect });
+  }
+});
+
+test('equipment design references do not advertise or silently enable unsupported ZIP fields', () => {
+  const spec = packageSpecDocument();
+  expect(spec.equipment.importableInContentZip).toBe(false);
+  for (const type of ['class', 'dungeon']) {
+    for (const key of ['equipment', 'customEquipment', 'loadout']) {
+      const manifest = packageExample(type);
+      manifest[type][key] = {};
+      expect(validateContentManifest(manifest).errors.length).toBeGreaterThan(0);
+    }
+  }
+});
+
 test.each([
   ['eleven spells', m => { m.class.spells = Array.from({ length: 11 }, (_, i) => ({ ...m.class.spells[0], key: `s${i}` })); }],
   ['no spells', m => { m.class.spells = []; }],
@@ -58,7 +95,7 @@ test.each([
   ['large damage/AP', m => { m.class.spells[0].effects[0].min = 200; m.class.spells[0].effects[0].max = 250; }],
   ['split damage bypass', m => { m.class.spells[0].effects = Array(4).fill(m.class.spells[0].effects[0]); }],
   ['high boost', m => { m.class.spells[1].effects[0].min = 100; m.class.spells[1].effects[0].max = 100; }],
-  ['permanent buff stacking', m => { m.class.spells[1].cooldown = 0; }],
+  ['excessive repeatable buff stacking', m => { m.class.spells[1].cooldown = 0; m.class.spells[1].maxPerTurn = 3; m.class.spells[1].effects[0].duration = 5; }],
   ['AP refund loop', m => { m.class.spells[1].effects[0] = { kind: 'buffPa', min: 2, max: 2, duration: 2, zone: 'Pa', target: 'self' }; }],
   ['wrong self range', m => { m.class.spells[1].rangeMax = 4; }],
   ['wrong element', m => { m.class.spells[0].effects[0].element = 'lightning'; }],

@@ -2,8 +2,9 @@
 // and summon stats are separately sourced; see spell-audit.json and README.
 
 import LIBRARY from './spellLibrary.json';
-import { isCustomSpellbook, MAX_CUSTOM_SPELLS } from './customSpells';
-import { isAuthoredSpell } from './authoredSpells';
+import { isCustomSpellbookDraft, MAX_CUSTOM_SPELLS } from './customSpells';
+import { isAuthoredSpell, authoredSpellErrors } from './authoredSpells';
+import { spellbookBudgetErrors } from './spellBalance';
 import { PARCHMENT_STAT, baseActionPoints } from './characteristicDefaults';
 export const SPELL_LIBRARY = LIBRARY;
 
@@ -171,7 +172,9 @@ export function resolveSpellLoadout(classId, loadout = {}) {
     if (Array.isArray(config.custom) && config.custom.length > MAX_CUSTOM_SPELLS) {
       return { spells: {}, errors: [`Une classe personnalisée peut avoir au maximum ${MAX_CUSTOM_SPELLS} sorts. Retirez ${config.custom.length - MAX_CUSTOM_SPELLS} sort(s) avant de jouer.`], valid: false };
     }
-    if (!isCustomSpellbook(config.custom)) return { spells: {}, errors: ['Liste de sorts personnalisés invalide.'], valid: false };
+    if (!isCustomSpellbookDraft(config.custom)) return { spells: {}, errors: ['Liste de sorts personnalisés invalide.'], valid: false };
+    const budgetErrors = [...config.custom.filter(isAuthoredSpell).flatMap(raw => authoredSpellErrors(raw)), ...spellbookBudgetErrors(config.custom)];
+    if (budgetErrors.length) return { spells: {}, errors: [...new Set(budgetErrors)], valid: false };
     const locked = config.custom.filter(raw => isAuthoredSpell(raw) && raw.requiredLevel > level);
     if (locked.length) return { spells: {}, errors: locked.map(raw => `${raw.name} : niveau ${raw.requiredLevel} requis pour un sort créé.`), valid: false };
     const order = config.order || [];

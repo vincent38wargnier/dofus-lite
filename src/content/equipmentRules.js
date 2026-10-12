@@ -1,0 +1,72 @@
+import { EQUIPMENT_BUDGET_VERSION, MAX_ITEM_SCORE, MAX_EQUIPMENT_SCORE,
+  EQUIPMENT_CENSUS, EQUIPMENT_FAMILIES, EQUIPMENT_STAT_RULES, equipmentBudget } from '../engine/equipmentBalance';
+
+// Describes the existing equipment creator. It is NOT an extension to content.json.
+export const EQUIPMENT_CREATION_RULES = `## Equipment restrictions and class design
+Equipment budget v${EQUIPMENT_BUDGET_VERSION}: ${MAX_ITEM_SCORE} points per custom item and ${MAX_EQUIPMENT_SCORE} points per outfit containing any custom item. These are SEPARATE from the spell and spellbook budgets: unused equipment points cannot buy stronger spells, and unused spell points cannot buy stronger equipment. Dofus are excluded from the item census, creator, outfit score and AP/MP/range surcharges; their combat bonuses still apply. Keep Dofus equal between comparison builds or omit them from both.
+
+### Required level and calibration
+The maximum item score stays ${MAX_ITEM_SCORE} at every level. Higher REQUIRED ITEM LEVEL unlocks a larger raw power allowance, so the same permanent bonuses usually cost fewer points at higher levels. This progression follows native data and can plateau; it is not a linear level multiplier. Required item level, not the wearer's level, controls admission of each custom item. Wearing it on a level-200 class does not make a level-50 item eligible for level-200 bonuses. Weapons also have a level-dependent flat-damage reference scenario, so their score is not a simple fixed ratio across levels.
+Compare only the same family. For level L, use native references between L-30 and L; if there are fewer than 12, use all that family's references at or below L. Raw total/passive/attack allowances are the 90th percentile of positive values, at least 1 and at least their previous-level allowance. Per-stat ceilings are the 95th percentile of positive stat lines, rounded UP and never lower than at the previous level. Quantiles use linear interpolation. Pets, mounts and shields use their whole family, independently of required level; a mount still requires level 60. Ordinary creations allow at most +1 AP and +1 MP each, only if the other budget checks pass. Missing/zero stat ceilings mean the bonus is unavailable in that family at that level.
+Calibration: ${EQUIPMENT_CENSUS.items} non-Dofus entries audited; ${EQUIPMENT_CENSUS.references} distinct ordinary combat references retained. Ethereal weapons, tools, reserved/admin items and unsupported/class-specific effects are excluded from calibration. Utility-only items can still provide numerical utility caps. Use best natural rolls; trained pets contribute one legal specialization, not every alternative added together. Mount bonuses use mount level 100. Native outliers are comparisons, not permission to copy all their strongest bonuses. The downloadable specification contains exact unrounded family/level allowances and stat ceilings; the prompt lists level-200 allowances because imported classes currently start at level 200.
+
+### Permanent bonuses and weapon score
+Each positive stat contributes value*weight; the exact allowed stat keys, weights and negative-bonus support are listed below. Pods and prospecting have zero combat weight but still have numerical caps. PvP resistance remains PvP-only. Maluses, equip conditions, set membership, two-handed use and critical failures earn NO discount. Add 40 raw passive points when one item grants both AP and MP, plus 100 for each AP above its first and 90 for each MP above its first.
+For weapons, at item level L set F=(10+.15*L)/(1+(100+2*L)/100). Each damage/heal line contributes (mean(min,max)+F), multiplied by 1.5 for lifeSteal and by 1 otherwise. Each AP removal/steal line contributes mean(min,max)*24 instead. For the critical scenario add critBonus to EVERY damage, lifeSteal and heal line before its multiplier when criticals are enabled. Let N and K be the summed normal/critical values. Raw attack power = max(N,(N+K)/2)/AP * area * reach *16, where area=1.35 for hammer/staff zone Xb/Tb and 1 otherwise, reach=1+.035*max(0,rangeMax-1). Critical denominator does not discount this 1/2-critical gear scenario; critical failures do not discount it either.
+Raw total = passive+attack. Item score = 100*max(rawTotal/totalAllowance, passive/passiveAllowance, attack/attackAllowance), with the attack ratio zero for non-weapons. Every positive stat must ALSO fit its independent numerical cap; a legal +1 AP is not automatically a 100-point item. Check the unrounded score against ${MAX_ITEM_SCORE}; the displayed decimal is not extra budget. Negative stats require a supported negative effect and magnitude <=max(1,the positive stat ceiling), with no budget credit.
+
+### Equipment creator limits
+Supported families: hats, capes/bags, amulets, rings, belts, boots, bows, wands, staves, daggers, swords, hammers, shovels, axes, shields, pets and mounts. Name 1-80 characters; required level 1-200; supported integer bonuses and fixed permanent rolls. Dofus, special tools, arbitrary effects/scripts and custom set bonuses cannot be created. Appearance comes from a native model; its type, weapon area, handedness and failure rate cannot be overridden. Shields retain their model's rank conditions. Mounted animations are not added by the creator.
+Weapon: 2-7 AP; 1-4 lines; melee range exactly 1-1, bows/wands min/max 1-10 with min<=max. Damage/lifeSteal/heal bounds 1-80 per line, AP removal/steal 1-2, min<=max. Critical disabled (0) or denominator 20-100, bonus 0-20 per eligible line. These are structural ceilings, not allowances to set every field to its maximum. Permanent bonus caps AND all power budgets must still pass. Custom gear has fixed rolls and cannot be forgemaged; edit it in the equipment workshop. Saved revisions keep existing equipped copies/replays intact.
+
+### Whole-outfit budget
+The ${MAX_EQUIPMENT_SCORE}-point ceiling accommodates an optimized level-200 native outfit with maximum natural rolls and legal forgemaging/exos scoring 1606.5 (884.3 from items, 22.2 from sets, 700 from AP stacking), with a small margin. This is an outfit allowance; it does not raise the ${MAX_ITEM_SCORE}-point ceiling or numerical stat caps for any newly created item. Native forgemaging remains subject to its own rules, and custom gear still has fixed rolls.
+Count every occupied non-Dofus slot, including both rings, with only one pet OR mount. At character level P, evaluate each item's raw COMBINED power and total allowance at max(P,itemRequiredLevel), and contribute min(100,100*rawTotal/totalAllowance). Each custom item must separately pass its own required-level checks. Add the active set tier's raw permanent power once, normalized as 100*setRawPower/mean(equipped total allowances). Add 175 points per equipment AP above 3, 175 per equipment MP above 2, and 15 per range above 5. Include set stats in these totals; exclude Dofus, base character AP/MP and temporary spell boosts. Round the final outfit score to one decimal as the runtime does.
+An outfit with any custom item must score <=${MAX_EQUIPMENT_SCORE}. All-native outfits retain their existing admission rules; their score is informational. Native level, slot, weapon/shield compatibility and equip conditions still apply. Class-specific set spell modifiers are not fully priced, so passing the score does not establish competitive balance.
+
+### How equipment is delivered today
+The class/dungeon ZIP format v1 DOES NOT import equipment, equipped loadouts or equipment artwork. Do not add equipment, customEquipment, loadout or item JSON files to content.json or the ZIP. Create equipment in Atelier → Mes équipements or Stuff → Créer un équipement, then equip it after importing the class. If equipment is part of the theme, supply its design and budget calculations OUTSIDE the importable ZIP. The equipment rules here guide that design and class playtesting; they do not extend the JSON schema.
+Test each class with equal-level, comparable-budget gear: baseline stats, high flat damage with multi-line spells/weapons, critical gear approaching 1/2, AP/MP breakpoints, range, resistances and sustain. Boosts apply immediately and may amplify the equipped weapon even in a spellbook without direct attacks. Passing the spell, item and outfit gates separately is necessary but does not prove their combined combat balance.
+`;
+
+const flatFamilies = new Set(['pet', 'mount', 'shield']);
+function limitsFor(family, level) {
+  const limits = equipmentBudget({ type: family.types[0], level });
+  return { total: limits.total, passive: limits.passive, attack: limits.attack,
+    // Zero is implicit; preserve all nonzero bounds, with full precision.
+    statLimits: Object.fromEntries(Object.entries(limits.statLimits).filter(([, value]) => value > 0)) };
+}
+
+export function equipmentLevelReferences(level = 200) {
+  return EQUIPMENT_FAMILIES.map(family => ({ family: family.id, name: family.name,
+    level, scalesWithRequiredLevel: !flatFamilies.has(family.id), ...limitsFor(family, level) }));
+}
+
+export function equipmentSpecDocument() {
+  return { version: EQUIPMENT_BUDGET_VERSION, importableInContentZip: false,
+    itemLimit: MAX_ITEM_SCORE, outfitLimit: MAX_EQUIPMENT_SCORE, dofusExcluded: true,
+    census: EQUIPMENT_CENSUS,
+    stats: Object.fromEntries(Object.entries(EQUIPMENT_STAT_RULES).map(([key, rule]) =>
+      [key, { label: rule.label, weight: rule.weight, allowsNegative: !!rule.negativeEffect }])),
+    // Adjacent levels sharing exactly the same bounds are stored as one band.
+    // No interpolation or rounding: each level 1..200 has its runtime limits.
+    families: EQUIPMENT_FAMILIES.map(family => {
+      const bands = [];
+      let previous = '';
+      for (let level = 1; level <= 200; level++) {
+        const limits = limitsFor(family, level), signature = JSON.stringify(limits);
+        if (signature === previous) bands[bands.length - 1].throughLevel = level;
+        else bands.push({ fromLevel: level, throughLevel: level, ...limits });
+        previous = signature;
+      }
+      return { ...family, scalesWithRequiredLevel: !flatFamilies.has(family.id), bands };
+    }) };
+}
+
+export function equipmentPromptReferences() {
+  return `## Equipment stat weights and level-200 allowances (design only, not ZIP fields)\n`
+    + `Stat rows are [key,weight,negativeAllowed]. An omitted stat ceiling is zero.\n`
+    + Object.entries(EQUIPMENT_STAT_RULES).map(([key, rule]) => JSON.stringify([key, rule.weight, !!rule.negativeEffect])).join('\n')
+    + `\nFamily rows contain raw total/passive/attack allowances and independent statLimits. Do not round before checking.\n`
+    + equipmentLevelReferences().map(row => JSON.stringify(row)).join('\n');
+}

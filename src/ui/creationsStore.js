@@ -2,6 +2,7 @@ import { CLASSES } from '../engine/classes';
 import { MAPS } from '../engine/maps';
 import { monsterGrades } from '../engine/monsters';
 import { validCustomMonster } from '../engine/customMonsters';
+import { dungeonMemberKind, isDungeonCharacter } from '../engine/customDungeons';
 import { isLoadout } from './loadoutStore';
 
 export const CREATIONS_STORAGE = 'dofus-lite-creations-v1';
@@ -15,7 +16,8 @@ export function validCreations(value) {
   return value?.version === 1 && identified(value.characters) && identified(value.dungeons)
     && value.characters.every(entry => CLASSES[entry.classId] && isLoadout(entry.loadout))
     && value.dungeons.every(entry => Object.prototype.hasOwnProperty.call(MAPS, entry.mapId) && Array.isArray(entry.members) && entry.members.length <= 8
-      && entry.members.every(member => member && (member.customMonster ? validCustomMonster(member.customMonster, { allowEmpty: true }) : monsterGrades(member.monsterId).some(grade => grade.grade === member.grade))
+      && entry.members.every(member => dungeonMemberKind(member) && (member.character ? isDungeonCharacter(member.character) && isLoadout(member.character.loadout)
+        : member.customMonster ? validCustomMonster(member.customMonster, { allowEmpty: true }) : monsterGrades(member.monsterId).some(grade => grade.grade === member.grade))
         && Number.isInteger(member.count) && member.count >= 1 && member.count <= 8)
       && entry.members.reduce((sum, member) => sum + member.count, 0) <= 8);
 }
@@ -31,4 +33,17 @@ export function readCreations(storage) {
 export function persistCreations(storage, value) {
   if (!validCreations(value)) throw new Error('Création invalide.');
   storage.setItem(CREATIONS_STORAGE, JSON.stringify(value));
+}
+
+// Coordinate the two localStorage collections without exposing a half-import
+// to React. If equipment persistence fails, restore the exact previous bytes.
+export function persistCreationsTogether(storage, value, persistOther) {
+  const previous = storage.getItem(CREATIONS_STORAGE);
+  persistCreations(storage, value);
+  try { persistOther?.(); }
+  catch (error) {
+    if (previous === null) storage.removeItem(CREATIONS_STORAGE);
+    else storage.setItem(CREATIONS_STORAGE, previous);
+    throw error;
+  }
 }

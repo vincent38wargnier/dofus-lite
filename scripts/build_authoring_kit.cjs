@@ -1,0 +1,47 @@
+// Refresh the portable skill and its runtime references from current game rules.
+// This documentation archive is separate from the importable class/dungeon ZIPs.
+const fs = require('node:fs');
+const path = require('node:path');
+const { execFileSync } = require('node:child_process');
+const { writeZip } = require('../skills/retro-class-designer/scripts/class-kit.cjs');
+const root = path.resolve(__dirname, '..');
+const skill = path.join(root, 'skills/retro-class-designer');
+const generated = path.join(root, 'public/templates/content-packages');
+const copy = (from, to) => {
+  fs.mkdirSync(path.dirname(to), { recursive: true });
+  fs.copyFileSync(from, to);
+};
+
+execFileSync(process.execPath, [path.join(__dirname, 'build_content_templates.cjs')], { cwd: root, stdio: 'inherit' });
+for (const [source, destination] of [
+  ['rules.md', 'references/runtime-zip.md'],
+  ['equipment-rules.md', 'references/equipment-rules.md'],
+  ['equipment-limits.json', 'references/equipment-limits.json'],
+  ['content.schema.json', 'assets/content.schema.json'],
+  ['spec.json', 'assets/runtime-spec.json'],
+  ['prompt-class.txt', 'assets/runtime-class-prompt.txt'],
+  ['prompt-dungeon.txt', 'assets/runtime-dungeon-prompt.txt'],
+  ['example-class-with-artwork.zip', 'assets/runtime-class.zip'],
+  ['example-dungeon-with-artwork.zip', 'assets/runtime-dungeon.zip'],
+]) copy(path.join(generated, source), path.join(skill, destination));
+for (const name of ['spell-balance.md', 'equipment-balance.md', 'equipment-balance-census.csv']) {
+  copy(path.join(root, 'docs', name), path.join(skill, 'references', name));
+}
+
+const files = new Map();
+function collect(directory) {
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    if (entry.name.startsWith('.') || entry.name === '__pycache__') continue;
+    const file = path.join(directory, entry.name);
+    if (entry.isSymbolicLink()) throw new Error(`Do not bundle a symbolic link: ${file}`);
+    if (entry.isDirectory()) collect(file);
+    else files.set(`retro-class-designer/${path.relative(skill, file).split(path.sep).join('/')}`, fs.readFileSync(file));
+  }
+}
+collect(skill);
+const archive = writeZip(files);
+const target = path.join(root, 'docs/custom-class-authoring-kit.zip');
+fs.writeFileSync(target, archive);
+copy(target, path.join(root, 'public/templates/custom-class-authoring-kit.zip'));
+console.log(JSON.stringify({ files: files.size, bytes: archive.length, archive: target,
+  download: '/templates/custom-class-authoring-kit.zip' }, null, 2));

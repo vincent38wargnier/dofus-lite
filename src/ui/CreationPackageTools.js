@@ -3,8 +3,11 @@ import { Copy, Download, Upload, Sparkles } from 'lucide-react';
 import { buildContentPrompt, packageSpecDocument } from '../content/packagePrompt';
 import { packageExample } from '../content/contentPackage';
 import { writeContentZip } from '../content/zip';
-import { importContentFile } from './contentPackageImport';
+import { importWorkshopFile, atelierCounts } from './atelierArchive';
 import { useCreations } from './CreationsContext';
+import { useCustomEquipment } from './CustomEquipmentContext';
+import { MAX_SPELL_SCORE, MAX_KIT_SCORE } from '../engine/spellBalance';
+import { MAX_ITEM_SCORE, MAX_EQUIPMENT_SCORE } from '../engine/equipmentBalance';
 
 function download(name, data, type) {
   const url = URL.createObjectURL(new Blob([data], { type }));
@@ -12,10 +15,13 @@ function download(name, data, type) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export default function CreationPackageTools({ tab, onImported }) {
+export default function CreationPackageTools({ tab, onImported, compact = false, themes: savedThemes, onThemesChange }) {
   const { commit } = useCreations();
+  const equipment = useCustomEquipment();
   const type = tab === 'characters' ? 'class' : 'dungeon';
-  const [themes, setThemes] = useState({});
+  const [localThemes, setLocalThemes] = useState({});
+  const themes = savedThemes || localThemes;
+  const setThemes = onThemesChange || setLocalThemes;
   const theme = themes[type] || '';
   const [expanded, setExpanded] = useState(false);
   const [notice, setNotice] = useState('');
@@ -37,17 +43,20 @@ export default function CreationPackageTools({ tab, onImported }) {
     if (!file) return;
     setBusy(true); setReport(null); setNotice('Vérification du JSON, des règles et des images…');
     try {
-      const result = await importContentFile(file, commit);
-      setReport({ name: result.entry.name, warnings: result.warnings });
-      setNotice(`« ${result.entry.name} » importé et sauvegardé. La création est prête à tester.`);
-      onImported(result.tab, result.entry.id);
+      const result = await importWorkshopFile(file, { commitCreations: commit, importEquipment: equipment?.importItems });
+      const nextTab = ['characters', 'dungeons', 'equipment'].find(key => result[key].length);
+      const entry = result[nextTab][0];
+      setReport({ name: entry.name, warnings: result.warnings });
+      setNotice(`« ${entry.name} » importé et sauvegardé. ${atelierCounts(result)}.`);
+      onImported(nextTab, entry.id);
     } catch (error) { setReport({ errors: error.message.split('\n') }); setNotice('Import refusé : corrigez les erreurs ci-dessous. Vos créations existantes sont conservées.'); }
     finally { setBusy(false); }
   };
   return <section className="creator-package creator-card" aria-label="Créer avec une IA et importer un ZIP" data-package-panel>
-    <div className="creator-section-heading"><div><h3><Sparkles size={19} /> Créer avec une IA</h3>
+    {!compact && <div className="creator-section-heading"><div><h3><Sparkles size={19} /> Créer avec une IA</h3>
       <p>Décrivez votre thème, copiez le prompt complet, puis importez le ZIP produit par votre IA.</p></div>
-      <span className="creator-count">{type === 'class' ? 'Classe · 10 sorts max.' : 'Donjon · 8 ennemis max.'}</span></div>
+      <span className="creator-count">{type === 'class' ? 'Classe · 10 sorts max.' : 'Donjon · 8 ennemis max.'}</span></div>}
+    {compact && <span className="creator-count">{type === 'class' ? 'Classe · 10 sorts max.' : 'Donjon · 8 ennemis max.'}</span>}
     <div className="creator-package-workflow">
       <label className="field">1. Ce que je veux créer<textarea rows="3" value={theme} onChange={event => { setThemes(previous => ({ ...previous, [type]: event.target.value })); setNotice(''); }}
         placeholder={type === 'class' ? 'Une classe Jedi : sabre, poussée de Force, mobilité… Précisez les sorts et les faiblesses.' : 'Un donjon Game of Thrones : un roi, deux gardes, un dragon… Précisez les rôles et les sorts de chaque monstre.'} /></label>
@@ -56,13 +65,16 @@ export default function CreationPackageTools({ tab, onImported }) {
         <input ref={picker} type="file" accept=".zip,application/zip" aria-label="Importer une classe ou un donjon ZIP" onChange={importFile} hidden />
       </div>
     </div>
-    <p className="muted small">Règles, schéma JSON, visuels, références du jeu et exemple inclus dans le prompt. Images facultatives. Les plafonds sont contrôlés ; l’équilibre se vérifie ensuite en combat.</p>
+    <details className="creator-package-resources" open={!compact}><summary>Règles & fichiers utiles</summary>
+    <p className="muted small">Le prompt inclut les règles des sorts et des équipements : {MAX_SPELL_SCORE} points par sort, {MAX_KIT_SCORE} par grimoire ; {MAX_ITEM_SCORE} par objet, {MAX_EQUIPMENT_SCORE} par stuff avec des créations, hors Dofus. Le budget des objets dépend de leur niveau requis et de leur famille.</p>
+    <p className="muted small">Le prompt IA crée une classe ou un donjon avec ses images. Pour partager aussi des équipements ou plusieurs créations, utilisez « Exporter » en haut de l’Atelier. L’équilibre se vérifie ensuite en combat.</p>
     <div className="creator-package-downloads">
       <button type="button" className="btn subtle" onClick={() => setExpanded(value => !value)} aria-expanded={expanded}>{expanded ? 'Masquer le prompt' : 'Voir le prompt complet'}</button>
       <button type="button" className="btn subtle" onClick={() => download(`prompt-${type}.txt`, prompt, 'text/plain;charset=utf-8')}><Download size={15} />Prompt .txt</button>
       <button type="button" className="btn subtle" onClick={() => download('dofus-lite-content-spec.json', JSON.stringify(packageSpecDocument(), null, 2), 'application/json')}><Download size={15} />Spécification et références</button>
+      <a className="btn subtle" href="/templates/custom-class-authoring-kit.zip" download><Download size={15} />Kit de création complet</a>
       <button type="button" className="btn subtle" onClick={() => download(`exemple-${type}.zip`, writeContentZip(new Map([['content.json', JSON.stringify(packageExample(type), null, 2)]])), 'application/zip')}><Download size={15} />Exemple ZIP jouable</button>
-    </div>
+    </div></details>
     {expanded && <label className="field creator-package-preview">Prompt prêt à copier · {prompt.length.toLocaleString('fr')} caractères<textarea ref={preview} readOnly rows="12" value={prompt} onFocus={event => event.target.select()} /></label>}
     {notice && <p role="status" className={report?.errors ? 'creator-warning' : 'creator-spell-save-notice'}>{notice}</p>}
     {report?.errors && <ul className="creator-package-errors" role="alert">{report.errors.map((error, i) => <li key={i}>{error}</li>)}</ul>}

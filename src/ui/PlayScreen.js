@@ -2,10 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CLASSES } from '../engine/classes';
 import { resolveLoadout } from '../engine/equipment';
 import { MAPS } from '../engine/maps';
-import { KANOJEDO_MAP_ID } from '../engine/monsters';
+import { KANOJEDO_MAP_ID, POUTCH_ID } from '../engine/monsters';
 import { key, cellsInRange } from '../engine/geometry';
-import { compileBot } from '../bots/compile';
-import { findBot } from './botsStore';
 import { LiveMatch, TURN_SECONDS } from '../game/liveMatch';
 import { isInvisible, spellsOf, validateAction } from '../engine/engine';
 import { useLoadouts } from './LoadoutPicker';
@@ -16,17 +14,24 @@ import LogPanel from './LogPanel';
 import PlayerSetup from './PlayerSetup';
 import CombatTurnControls from './CombatTurnControls';
 import CombatSpellBar from './CombatSpellBar';
+import CombatTimeline, { timelineFighterVisible } from './CombatTimeline';
 import { readPlayerSetup, SETUP_STORAGE } from './playerSetupState';
 import { combatAnimationMs, useRetroAssets, useAppearances } from './RetroAssets';
 import { weaponTargetPlans, weaponZoneLabel } from './weaponTargeting';
 import { spellTargetPreview } from './spellTargeting';
 import { combatResources } from './combatResources';
-import AutoDungeonFight from './AutoDungeonFight';
 import { useCreations } from './CreationsContext';
+import { useProfiles } from './ProfilesContext';
+import { cloneCreation, newCreationId } from './creationsStore';
+import { readOpponentTeam, persistOpponentTeam } from './opponentTeamStore';
+import { readAllyTeam, persistAllyTeam } from './allyTeamStore';
+import { allyFighterId, teamFighterId, isAutomaticTeam } from '../engine/allyTeam';
+import { compileAllyBots, compileCompleteTeamBots } from './allyBots';
+import { compileOpponentBots } from './opponentBots';
 
 const BOT_STEP_MS = 620;
 
-export default function PlayScreen({ allBots, active = true, onFightChange, customLaunch, onCustomConsumed, onCustomExit }) {
+export default function PlayScreen({ allBots, active = true, onFightChange, customLaunch, onCustomConsumed, onCustomExit, onOpenCreator, selectionRequest, onAutomaticLaunch, onResumeAutomatic }) {
   const assets = useRetroAssets();
   const { appearances, setAppearance } = useAppearances();
   const [initial] = useState(() => readPlayerSetup({ getItem: key => localStorage.getItem(key) }));
@@ -34,22 +39,48 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const [standardPlayerClass, setStandardPlayerClass] = useState(initial.playerClass);
   const [customCharacterId, setCustomCharacterId] = useState(initial.customCharacterId);
   const creations = useCreations();
-  const customCharacter = creations?.characters.find(character => character.id === customCharacterId);
-  const playerClass = customCharacter?.classId || standardPlayerClass;
-  const setPlayerClass = classId => { setStandardPlayerClass(classId); setCustomCharacterId(null); };
+  const profiles = useProfiles();
+  const profile = profiles?.active;
+  const customCharacter = useMemo(() => profile ? (profile.loadout.spells?.custom ? { ...profile, name: profile.className } : null)
+    : creations?.characters.find(character => character.id === customCharacterId), [profile, creations?.characters, customCharacterId]);
+  const playerClass = profile?.classId || customCharacter?.classId || standardPlayerClass;
+  const setPlayerClass = classId => { if (profiles) profiles.create(classId); else { setStandardPlayerClass(classId); setCustomCharacterId(null); } };
   const selectCustomCharacter = character => {
-    setStandardPlayerClass(character.classId); setCustomCharacterId(character.id);
+    if (profiles) profiles.create(character.classId, character);
+    else { setStandardPlayerClass(character.classId); setCustomCharacterId(character.id); }
   };
   useEffect(() => {
     if (customCharacterId && !customCharacter) setCustomCharacterId(null);
   }, [customCharacterId, customCharacter]);
   const [botId, setBotId] = useState(() => allBots.some(bot => bot.id === initial.botId) ? initial.botId : 'maison');
-  const [botClass, setBotClass] = useState(initial.botClass);
+  const [playerBotId, setPlayerBotId] = useState(() => allBots.some(bot => bot.id === initial.playerBotId) ? initial.playerBotId : 'maison');
+  const [controller, setController] = useState(initial.controller);
+  const [legacyBotClass, setLegacyBotClass] = useState(initial.botClass);
+  const [savedOpponents] = useState(() => readOpponentTeam(localStorage, botId));
+  const [opponentDraft, setOpponentDraft] = useState(savedOpponents.entries);
+  const [opponentSaveError, setOpponentSaveError] = useState(savedOpponents.error);
+  const [savedAllies] = useState(() => readAllyTeam(localStorage));
+  const [allies, setAllies] = useState(savedAllies.entries);
+  const [includePlayer, setIncludePlayer] = useState(savedAllies.includePlayer);
+  const [allySaveError, setAllySaveError] = useState(savedAllies.error);
+  const [editingTeam, setEditingTeam] = useState('opponents');
+  const [editingOpponentIndex, setEditingOpponentIndex] = useState(0);
+  const editingOpponent = (editingTeam === 'allies' ? allies : opponentDraft)?.[editingOpponentIndex];
+  const botClass = editingOpponent?.kind === 'character' ? editingOpponent.classId : legacyBotClass;
+  const setBotClass = classId => { setLegacyBotClass(classId); setOpponentDraft(null); };
   const standardEquipment = useLoadouts(playerClass, botClass);
   const customSummary = useMemo(() => customCharacter && resolveLoadout(customCharacter.classId, customCharacter.loadout), [customCharacter]);
-  // Edit the original Atelier creation by ID; two classes using the same
-  // character model must never overwrite each other or the standard draft.
-  const equipment = customCharacter ? {
+  const profileSummary = useMemo(() => profile && resolveLoadout(profile.classId, profile.loadout), [profile]);
+  // Profiles own their full preparation. Keep the legacy draft path available
+  // for standalone integrations that do not mount ProfilesProvider.
+  const playerEquipment = profile ? { ...standardEquipment,
+    loadouts: { ...standardEquipment.loadouts, A: profile.loadout },
+    summaries: { ...standardEquipment.summaries, A: profileSummary },
+    saveError: standardEquipment.saveError || !!profiles.error,
+    update: (side, change, targetClass) => side === 'A'
+      ? profiles.update(current => ({ ...current, loadout: typeof change === 'function' ? change(current.loadout) : change }))
+      : standardEquipment.update(side, change, targetClass),
+  } : customCharacter ? {
     ...standardEquipment,
     loadouts: { ...standardEquipment.loadouts, A: customCharacter.loadout },
     summaries: { ...standardEquipment.summaries, A: customSummary },
@@ -60,22 +91,49 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
         ? { ...character, loadout: typeof change === 'function' ? change(character.loadout) : change } : character) }));
     },
   } : standardEquipment;
+  const opponentSummary = useMemo(() => editingOpponent?.kind === 'character' ? resolveLoadout(editingOpponent.classId, editingOpponent.loadout) : null, [editingOpponent]);
+  const equipment = opponentSummary ? { ...playerEquipment,
+    loadouts: { ...playerEquipment.loadouts, B: editingOpponent.loadout },
+    summaries: { ...playerEquipment.summaries, B: opponentSummary },
+    update: (side, change, targetClass) => {
+      if (side !== 'B') { playerEquipment.update(side, change, targetClass); return; }
+      (editingTeam === 'allies' ? setAllies : setOpponentDraft)(previous => previous.map((entry, index) => index === editingOpponentIndex
+        ? { ...entry, loadout: typeof change === 'function' ? change(entry.loadout) : change } : entry));
+    },
+  } : playerEquipment;
+  const opponents = useMemo(() => opponentDraft || [{ kind: 'character', name: CLASSES[legacyBotClass].name,
+    classId: legacyBotClass, loadout: standardEquipment.loadouts.B, botId }], [opponentDraft, legacyBotClass, standardEquipment.loadouts.B, botId]);
+  const team = [...(includePlayer ? [{ kind: 'character', classId: playerClass, name: profile?.name || customCharacter?.name || CLASSES[playerClass].name,
+    loadout: equipment.loadouts.A, controller, botId: playerBotId }] : []), ...allies];
+  useEffect(() => {
+    if (opponentDraft === null) return;
+    try { persistOpponentTeam(localStorage, opponentDraft); setOpponentSaveError(''); }
+    catch (_) { setOpponentSaveError('Le groupe n’a pas pu être sauvegardé dans ce navigateur.'); }
+  }, [opponentDraft]);
+  useEffect(() => {
+    if (savedAllies.error && allies === savedAllies.entries && includePlayer === savedAllies.includePlayer) return;
+    try { persistAllyTeam(localStorage, allies, includePlayer); setAllySaveError(''); }
+    catch (_) { setAllySaveError('Votre équipe n’a pas pu être sauvegardée dans ce navigateur.'); }
+  }, [allies, includePlayer, savedAllies]);
   const [mapId, setMapId] = useState(initial.mapId);
   const [mode, setMode] = useState(initial.mode);
   const [monsterGrade, setMonsterGrade] = useState(initial.monsterGrade);
   const [bossId, setBossId] = useState(initial.bossId);
   const [bossGrade, setBossGrade] = useState(initial.bossGrade);
-  const [playerBotId, setPlayerBotId] = useState(() => allBots.some(bot => bot.id === initial.playerBotId) ? initial.playerBotId : 'maison');
-  const [autoConfig, setAutoConfig] = useState(null);
+  const [customDungeonId, setCustomDungeonId] = useState(initial.customDungeonId);
+  const customDungeon = creations?.dungeons.find(entry => entry.id === customDungeonId);
+  useEffect(() => { if (customDungeonId && !customDungeon) setCustomDungeonId(null); }, [customDungeonId, customDungeon]);
+  const handledSelection = useRef(null);
   const [externalSession, setExternalSession] = useState(null);
   const handledLaunch = useRef(null);
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1e9));
   const [error, setError] = useState(null);
+  useEffect(() => { setError(null); }, [mode, controller, botId, playerBotId, bossId, bossGrade, customDungeonId, opponents, allies, includePlayer]);
   const [settingsError, setSettingsError] = useState(false);
   useEffect(() => {
-    try { localStorage.setItem(SETUP_STORAGE, JSON.stringify({ playerClass, customCharacterId: customCharacter?.id || null, botClass, botId, playerBotId, mapId, mode, monsterGrade, bossId, bossGrade })); setSettingsError(false); }
+    try { localStorage.setItem(SETUP_STORAGE, JSON.stringify({ playerClass, customCharacterId: profile?.customCharacterId || customCharacter?.id || null, botClass, botId, playerBotId, controller, mapId, mode, monsterGrade, bossId, bossGrade, customDungeonId })); setSettingsError(false); }
     catch (_) { setSettingsError(true); }
-  }, [playerClass, customCharacter?.id, botClass, botId, playerBotId, mapId, mode, monsterGrade, bossId, bossGrade]);
+  }, [playerClass, profile?.customCharacterId, customCharacter?.id, botClass, botId, playerBotId, controller, mapId, mode, monsterGrade, bossId, bossGrade, customDungeonId]);
   const playerSex = (externalSession?.character.loadout || equipment.loadouts.A).profile?.sex || 0;
   const botSex = equipment.loadouts.B.profile?.sex || 0;
   useEffect(() => {
@@ -91,8 +149,10 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const [log, setLog] = useState([]);
   const [selectedSpell, setSelectedSpell] = useState(null);
   const [hoverCell, setHoverCell] = useState(null);
+  const [timelineHoverId, setTimelineHoverId] = useState(null);
   const [hoveredSpell, setHoveredSpell] = useState(null);
   const [timeLeft, setTimeLeft] = useState(TURN_SECONDS);
+  const [placementId, setPlacementId] = useState('A');
   const [wideLog, setWideLog] = useState(true);
   const [compactLog, setCompactLog] = useState(false);
   const [compactScreen, setCompactScreen] = useState(() => window.innerWidth < 1000);
@@ -106,6 +166,23 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const showLog = compactScreen ? compactLog : wideLog;
   const setShowLog = compactScreen ? setCompactLog : setWideLog;
   const matchRef = useRef(null);
+  useEffect(() => {
+    if (!selectionRequest || handledSelection.current === selectionRequest.id) return;
+    handledSelection.current = selectionRequest.id;
+    if (selectionRequest.entry && selectionRequest.tab === 'characters') selectCustomCharacter(selectionRequest.entry);
+    if (selectionRequest.tab === 'dungeons') {
+      setMode('boss');
+      if (selectionRequest.entry) setCustomDungeonId(selectionRequest.entry.id);
+    }
+    if (selectionRequest.openDialog) {
+      // Testing a room prepares the shared lobby, even if a previous fight
+      // was left mounted while editing in the Atelier.
+      animationUntil.current = 0; matchRef.current = null;
+      setExternalSession(null); setPhase('setup'); setError(null);
+    }
+    // Navigation requests are immutable and consumed once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectionRequest]);
   useEffect(() => { onFightChange?.(phase !== 'setup'); }, [phase, onFightChange]);
   const inspection = useFighterInspection(`${phase}:${seed}`, active && phase === 'fight', matchRef.current?.state.fighters);
 
@@ -121,32 +198,20 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const start = (newSeed) => {
     animationUntil.current = 0;
     setError(null);
-    const bot = findBot(allBots, botId);
-    if (mode === 'duel' && !bot) { setError('Choisissez un adversaire.'); return; }
-    let decideB;
-    if (mode === 'duel') {
-      try { decideB = compileBot(bot.code); } catch (e) { setError(`${bot.name} : ${e.message}`); return; }
-    }
     const s = newSeed ?? (Number(seed) || 1);
     setSeed(s);
-    if (mode === 'boss-auto') {
-      const controller = findBot(allBots, playerBotId);
-      if (!controller) { setError('Choisissez une IA pour votre personnage.'); return; }
-      let decide;
-      try { decide = compileBot(controller.code); } catch (e) { setError(`${controller.name} : ${e.message}`); return; }
-      setAutoConfig({ mode: 'boss', bossId, bossGrade, seed: s, controllerName: controller.name,
-        bots: { A: { name: customCharacter?.name || 'Vous', decide } }, classes: { A: playerClass },
-        loadouts: { A: JSON.parse(JSON.stringify(equipment.loadouts.A)) } });
-      matchRef.current = null;
-      setPhase('auto');
-      return;
-    }
     let m;
     try {
-      m = new LiveMatch({ playerClass, playerName: customCharacter?.name || 'Vous', botClass, mapId: mode === 'kanojedo' ? KANOJEDO_MAP_ID : mapId,
-        mode, monsterGrade, bossId, bossGrade, seed: s, botName: bot?.name, botDecide: decideB, loadouts: equipment.loadouts });
+      m = new LiveMatch({ playerClass, playerName: profile?.name || customCharacter?.name || 'Vous', botClass, mapId: mode === 'kanojedo' ? KANOJEDO_MAP_ID : mapId,
+        mode: mode === 'boss' && customDungeon ? 'custom' : mode, dungeon: customDungeon,
+        opponents: mode === 'duel' ? opponents : undefined,
+        opponentBots: mode === 'duel' ? compileOpponentBots(opponents, allBots, botId) : {},
+        team, allyBots: compileCompleteTeamBots(team, allBots),
+        monsterGrade, bossId, bossGrade, seed: s, loadouts: equipment.loadouts });
     } catch (e) { setError(e.message); return; }
     matchRef.current = m;
+    m.includeProfile = includePlayer;
+    setPlacementId('A');
     setBotName(m.state.fighters.B.name);
     setLog(m.initialEvents);
     setLastEvents(m.initialEvents);
@@ -158,27 +223,40 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
     setStep((x) => x + 1);
   };
 
+  const startAutomatic = () => {
+    // Only a fully automatic team uses the replay runner. A manual companion
+    // must keep its controls even when the principal character has an AI.
+    if (!isAutomaticTeam(controller, allies, includePlayer)) { start(); return false; }
+    try {
+      compileCompleteTeamBots(team, allBots);
+      if (mode === 'duel') compileOpponentBots(opponents, allBots, botId);
+      onAutomaticLaunch(cloneCreation({ id: newCreationId(), mode: mode === 'kanojedo' ? 'duel' : mode === 'boss' && customDungeon ? 'custom' : mode,
+        character: team[0]?.kind === 'character' ? { classId: team[0].classId, name: team[0].name, loadout: team[0].loadout }
+          : { classId: playerClass, name: profile?.name || customCharacter?.name || CLASSES[playerClass].name, loadout: equipment.loadouts.A },
+        opponent: { classId: botClass, name: CLASSES[botClass].name, loadout: equipment.loadouts.B },
+        opponents: mode === 'kanojedo' ? [{ kind: 'monster', monsterId: POUTCH_ID, grade: monsterGrade }] : mode === 'duel' ? opponents : undefined,
+        allies, team,
+        botId: team[0]?.botId || playerBotId, botB: botId, mapId: mode === 'kanojedo' ? KANOJEDO_MAP_ID : mapId, bossId, bossGrade, dungeon: mode === 'boss' ? customDungeon || null : null,
+        seed: Number(seed) || 1 }));
+      setError(null);
+      return true;
+    } catch (e) { setError(e.message); return false; }
+  };
+
   const startCustom = (request, newSeed = Math.floor(Math.random() * 1e9)) => {
-    const { character, dungeon, automatic } = request;
+    const { character, dungeon } = request;
     const loadouts = { A: JSON.parse(JSON.stringify(character.loadout)) };
     try {
       animationUntil.current = 0;
       setError(null); setSeed(newSeed);
-      if (automatic) {
-        const controller = findBot(allBots, request.botId);
-        if (!controller) throw new Error('Choisissez une IA disponible pour le personnage.');
-        const decide = compileBot(controller.code);
-        setAutoConfig({ mode: 'custom', dungeon, seed: newSeed, controllerName: controller.name,
-          bots: { A: { name: character.name, decide } }, classes: { A: character.classId }, loadouts });
-        matchRef.current = null; setPhase('auto');
-      } else {
-        const match = new LiveMatch({ mode: 'custom', dungeon, seed: newSeed,
-          playerClass: character.classId, playerName: character.name, loadouts });
-        matchRef.current = match; setBotName(dungeon.name);
-        setLog(match.initialEvents); setLastEvents(match.initialEvents);
-        setSelectedSpell(null); setHoverCell(null); setHoveredSpell(null); setCompactLog(false);
-        setPhase('fight'); setStep(value => value + 1);
-      }
+      const match = new LiveMatch({ mode: 'custom', dungeon, seed: newSeed,
+        allies, allyBots: compileAllyBots(allies, allBots),
+        playerClass: character.classId, playerName: character.name, loadouts });
+      setPlacementId('A');
+      matchRef.current = match; setBotName(dungeon.name);
+      setLog(match.initialEvents); setLastEvents(match.initialEvents);
+      setSelectedSpell(null); setHoverCell(null); setHoveredSpell(null); setCompactLog(false);
+      setPhase('fight'); setStep(value => value + 1);
       setExternalSession(request);
     } catch (e) { setExternalSession(null); setPhase('setup'); onCustomExit?.(e.message); }
   };
@@ -193,6 +271,9 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const m = phase === 'fight' ? matchRef.current : null;
   const placing = !!m?.placing;
   const humanTurn = !!(m && m.isHumanTurn());
+  const controlled = placing ? m.state.fighters[placementId] || m.state.fighters.A : m?.controlledFighter();
+  const controlledId = controlled?.id;
+  useEffect(() => { setSelectedSpell(null); setHoverCell(null); setTimelineHoverId(null); setHoveredSpell(null); inspection.dismiss(); }, [controlledId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Vue + api officielles côté joueur (mêmes règles que les bots).
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -202,14 +283,17 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const selectedInfo = view?.you.spells.find(spell => spell.key === selectedSpell);
   const weaponTargets = useMemo(() => weaponTargetPlans(selectedInfo, view, api), [selectedInfo, view, api]);
   const hoveredSelfInfo = view?.you.spells.find(spell => spell.key === hoveredSpell && spell.targetMode === 'self');
+  const timelineHoverFighter = m?.state.fighters[timelineHoverId];
+  const aimCell = timelineHoverId ? (timelineFighterVisible(timelineHoverFighter, 'A') && !timelineHoverFighter.carriedBy
+    ? key(timelineHoverFighter.pos.x, timelineHoverFighter.pos.y) : null) : hoverCell;
   const targetPreview = useMemo(() => {
     if (!active || !view || !api) return null;
     if (hoveredSelfInfo) return spellTargetPreview(hoveredSelfInfo, view, api, view.you.pos);
-    if (!selectedInfo || !hoverCell) return null;
-    if (selectedInfo.isWeapon) return weaponTargets.get(hoverCell) || null;
-    const [x, y] = hoverCell.split(',').map(Number);
+    if (!selectedInfo || !aimCell) return null;
+    if (selectedInfo.isWeapon) return weaponTargets.get(aimCell) || null;
+    const [x, y] = aimCell.split(',').map(Number);
     return spellTargetPreview(selectedInfo, view, api, { x, y });
-  }, [active, view, api, hoveredSelfInfo, selectedInfo, hoverCell, weaponTargets]);
+  }, [active, view, api, hoveredSelfInfo, selectedInfo, aimCell, weaponTargets]);
 
   // Cases atteignables (avec leur chemin) — pour le surlignage ET le survol.
   const reachInfo = useMemo(() => {
@@ -249,11 +333,13 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   }, [reachInfo, hoverCell]);
 
   const onCellHover = (x, y) => {
+    setTimelineHoverId(null);
     setHoveredSpell(null);
     setHoverCell(x === null || x === undefined ? null : key(x, y));
   };
 
   const onSpellHover = info => {
+    setTimelineHoverId(null);
     setHoveredSpell(info?.key || null);
     setHoverCell(null);
   };
@@ -267,7 +353,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   }, [step, phase]);
 
   // Chrono de tour (30 s, comme en 1.29) — uniquement pour l'humain.
-  const humanTurnKey = humanTurn ? `h${m.state.turn}` : 'none';
+  const humanTurnKey = humanTurn ? `${m.current().id}:${m.state.turn}` : 'none';
   useEffect(() => {
     if (humanTurnKey === 'none') return undefined;
     setTimeLeft(TURN_SECONDS);
@@ -291,7 +377,9 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const onCellClick = (x, y) => {
     const mm = matchRef.current;
     if (mm?.placing) {
-      const result = mm.placeHuman({ x, y });
+      const ally = Object.values(mm.state.fighters).find(f => f.team === 'A' && f.pos.x === x && f.pos.y === y);
+      if (ally) { setPlacementId(ally.id); return; }
+      const result = mm.placeHuman({ x, y }, placementId);
       if (result.ok) {
         setLastEvents(result.events);
         setLog(l => [...l, ...result.events]);
@@ -314,10 +402,21 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
     }
   };
 
+  const canTargetPortrait = fighter => active && humanTurn && !!selectedInfo
+    && timelineFighterVisible(fighter, 'A') && !fighter.carriedBy
+    && (highlights?.[key(fighter.pos.x, fighter.pos.y)] === 'target' || weaponTargets.has(key(fighter.pos.x, fighter.pos.y)));
+  const onPortraitTarget = id => {
+    // Read the current fighter, not the position saved when its card rendered.
+    const fighter = matchRef.current?.state.fighters[id];
+    if (!canTargetPortrait(fighter)) return;
+    onCellClick(fighter.pos.x, fighter.pos.y);
+  };
+  const onPortraitHover = id => { setTimelineHoverId(id); setHoverCell(null); setHoveredSpell(null); };
+
   const onSpellSelfCast = (info) => {
     const mm = matchRef.current;
     if (!active || !mm?.isHumanTurn()) return;
-    const action = { type: 'CAST', spell: info.key, target: { ...mm.state.fighters.A.pos } };
+    const action = { type: 'CAST', spell: info.key, target: { ...mm.current().pos } };
     // Check the current state, including range, occupied cells, states and
     // per-target limits, before spending PA or cancelling the current aim.
     if (!validateAction(mm.state, action).ok) return;
@@ -339,13 +438,17 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const reorderSpells = order => {
     const mm = matchRef.current;
     if (!active || !mm || mm.over) return;
-    const fighter = mm.state.fighters.A;
+    const fighter = mm.controlledFighter();
+    if (!fighter.loadout) return;
     const withOrder = loadout => ({ ...loadout, spells: { ...loadout.spells,
       order: [...order, ...(loadout.spells?.order || []).filter(id => !order.includes(id))] } });
     // Cosmetic preference only: keep the current combat export and saved draft
     // in sync without advancing the turn or replaying the last animation.
-    mm.state = { ...mm.state, fighters: { ...mm.state.fighters, A: { ...fighter, loadout: withOrder(fighter.loadout) } } };
-    if (externalSession) {
+    mm.state = { ...mm.state, fighters: { ...mm.state.fighters, [fighter.id]: { ...fighter, loadout: withOrder(fighter.loadout) } } };
+    if (fighter.id !== 'A' || mm.includeProfile === false) {
+      setAllies(previous => previous.map((entry, index) => (mm.includeProfile === false ? teamFighterId(index) : allyFighterId(index)) === fighter.id ? { ...entry, loadout: withOrder(entry.loadout) } : entry));
+      setStep(value => value + 1);
+    } else if (externalSession) {
       const character = { ...externalSession.character, loadout: withOrder(fighter.loadout) };
       setExternalSession(previous => ({ ...previous, character }));
       if (character.id) creations?.update(previous => ({ ...previous,
@@ -380,7 +483,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const spellInfo = view ? Object.fromEntries(view.you.spells.map((s) => [s.key, s])) : {};
   const hoveredFighter = m?.state.fighters[inspection.inspection?.id];
   const inspectedFighter = hoveredFighter && (hoveredFighter.team === 'A' || !isInvisible(hoveredFighter)) ? hoveredFighter : null;
-  const statsFighter = inspectedFighter || m?.state.fighters.A;
+  const statsFighter = inspectedFighter || controlled;
   const leaveFight = () => {
     matchRef.current = null; setPhase('setup'); setHoverCell(null);
     if (externalSession) { setExternalSession(null); onCustomExit?.(); }
@@ -389,14 +492,16 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
     ? `${selectedInfo.name} · ${selectedInfo.pa} PA · Visée ${selectedInfo.range[0] === selectedInfo.range[1] ? selectedInfo.range[0] : selectedInfo.range.join('–')} PO · ${weaponZoneLabel(selectedInfo)}`
     : selectedInfo ? `${selectedInfo.name} · Choisissez une cible` : '';
 
-  if (phase === 'auto') return <AutoDungeonFight config={autoConfig} active={active} onExit={leaveFight}
-    onRematch={() => externalSession ? startCustom(externalSession) : start(Math.floor(Math.random() * 1e9))} />;
-
   return (
     <div className={phase === 'fight' ? 'play-screen fight-screen' : 'play-screen'}>
       {phase !== 'fight' ? (
-        <PlayerSetup {...{ playerClass, setPlayerClass, customCharacter, selectCustomCharacter, botClass, setBotClass, botId, setBotId, playerBotId, setPlayerBotId, allBots, mapId, setMapId, mode, setMode, monsterGrade, setMonsterGrade, bossId, setBossId, bossGrade, setBossGrade, seed, setSeed, equipment, error, settingsError }}
-          customCharacters={creations?.characters} onStart={() => start()} />
+        <PlayerSetup {...{ playerClass, setPlayerClass, customCharacter, selectCustomCharacter, botClass, setBotClass, botId, allBots, mapId, setMapId, mode, setMode, monsterGrade, setMonsterGrade, bossId, setBossId, bossGrade, setBossGrade, seed, setSeed, equipment, error, settingsError,
+          profiles, onOpenCreator, selectionRequest, customDungeonId, setCustomDungeonId, active, controller, setController, playerBotId, setPlayerBotId,
+          opponents, opponentSaveError, editingOpponentIndex, editingTeam, allies, allySaveError, includePlayer, setIncludePlayer }}
+          onAlliesChange={setAllies} onSelectAlly={index => { setEditingTeam('allies'); setEditingOpponentIndex(index); }}
+          onOpponentsChange={setOpponentDraft} onSelectOpponent={index => { setEditingTeam('opponents'); setEditingOpponentIndex(index); }}
+          onAutomaticStart={onAutomaticLaunch ? startAutomatic : undefined} onResumeAutomatic={onResumeAutomatic}
+          customDungeons={creations?.dungeons} customCharacters={creations?.characters} onStart={() => start()} />
       ) : (
         <div className={`fight-workspace${showLog ? ' log-open' : ''}`}>
           {showLog && <section className="fight-log" id="fight-log" aria-label="Journal du combat">
@@ -404,16 +509,20 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
             <LogPanel events={log} namesById={namesById} state={m.state} />
           </section>}
           <div className="fight-main">
-          <div className="fight-heading"><div><h1>{MAPS[m.state.mapId].name.replace(/^🗺\s*/, '')}</h1><p>{placing ? 'Placement' : m.over ? 'Combat terminé' : `Tour ${m.state.turn} / ${m.state.maxTurns}`} · {externalSession?.character.name || customCharacter?.name || CLASSES[playerClass].name}</p></div>
+          <div className="fight-heading"><div><h1>{MAPS[m.state.mapId].name.replace(/^🗺\s*/, '')}</h1><p>{placing ? 'Placement' : m.over ? 'Combat terminé' : `Tour ${m.state.turn} / ${m.state.maxTurns}`} · {m.state.fighters.A.name}</p></div>
             <div className="fight-heading-actions"><button className="btn" aria-expanded={showLog} aria-controls="fight-log" onClick={() => setShowLog(open => !open)}>Journal</button>
               <button className="btn" onClick={leaveFight}>{m.over || placing ? externalSession ? 'Retour à l’atelier' : 'Préparation' : 'Abandonner'}</button></div></div>
           {error ? <p className="loadout-errors" role="alert">{error}</p> : null}
+          {placing && Object.values(m.state.fighters).filter(f => f.team === 'A').length > 1 && <div className="team-placement" role="group" aria-label="Placer votre équipe">
+            <span>À placer :</span>{Object.values(m.state.fighters).filter(f => f.team === 'A').map(f => <button type="button" key={f.id} className="btn" aria-pressed={placementId === f.id} onClick={() => setPlacementId(f.id)}>{f.name}</button>)}
+          </div>}
           <div className="fight-map">
               <BoardView
                 fitToContainer
                 inspectionController={inspection}
                 inspectionPanelId="combat-stats"
                 viewerTeam="A"
+                placementFighterId={placementId}
                 state={m.state}
                 frameEvents={lastEvents}
                 frameIdx={step}
@@ -428,22 +537,24 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
               />
           </div>
           <div className="combat-dock">
-              <CombatSpellBar spells={Object.values(spellsOf(m.state.fighters.A))} spellInfo={spellInfo}
+              {!placing && <CombatTimeline state={m.state} controller={inspection} panelId="combat-stats"
+                casting={!!selectedInfo} canTarget={canTargetPortrait} onTarget={onPortraitTarget} onTargetHover={onPortraitHover} />}
+              <CombatSpellBar key={controlled.id} spells={Object.values(spellsOf(controlled))} spellInfo={spellInfo}
                 pa={view?.you.pa || 0} humanTurn={humanTurn} active={active && !placing && !m.over} selectedSpell={selectedSpell}
                 onSelect={onSpellClick} onSelfCast={onSpellSelfCast} onHover={onSpellHover}
-                onCancel={() => setSelectedSpell(null)} onReorder={reorderSpells} saveError={equipment.saveError}
+                onCancel={() => setSelectedSpell(null)} onReorder={controlled.loadout ? reorderSpells : undefined} saveError={equipment.saveError || !!allySaveError}
                 status={<div className={`turn-status${humanTurn ? ' yours' : ''}`} role="status"
                   title={selectedInfo ? `${selectionLabel}. Glissez les sorts pour réorganiser la barre.` : 'Glissez les sorts pour les réorganiser ; leur ordre est sauvegardé.'}>
                   {placing ? (m.state.placement.cells.A.length > 1 ? 'Choisissez une case bleue, puis cliquez sur Prêt' : 'Position de départ fixée · Cliquez sur Prêt') : m.over ? 'Combat terminé'
-                    : humanTurn ? (selectedInfo ? selectionLabel : 'À vous de jouer')
+                    : humanTurn ? (selectedInfo ? selectionLabel : `${m.humanIds.size > 1 ? `${controlled.name} · ` : ''}À vous de jouer`)
                       : `${namesById[m.current().id] || m.current().name} joue…`}
                   {tackle?.inContact && <span className="tackle-chance" title="Probabilité de réussir un déplacement au contact"> · Fuite {tackle.escapeChance}%</span>}
                 </div>} />
             <CombatStatsPanel id="combat-stats" fighter={statsFighter} fighters={m.state.fighters}
               resources={combatResources(statsFighter, m.state)}
               isActive={!placing && !m.over && m.current().id === statsFighter.id}
-              controller={inspection} inspecting={statsFighter.id !== 'A'}
-              controls={<CombatTurnControls player={m.state.fighters.A} resources={combatResources(m.state.fighters.A, m.state)} turn={m.state.turn} {...{ placing, humanTurn, timeLeft }}
+              controller={inspection} inspecting={statsFighter.id !== controlled.id}
+              controls={<CombatTurnControls player={controlled} resources={combatResources(controlled, m.state)} turn={m.state.turn} {...{ placing, humanTurn, timeLeft }}
                 over={m.over} onReady={confirmPlacement} onEndTurn={endTurn} onRematch={() => start(Math.floor(Math.random() * 1e9))}
                 onPlayerFocus={() => inspection.dismiss()} />} />
           </div>

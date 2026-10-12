@@ -14,10 +14,14 @@ import HealthChangeFloats from './HealthChangeFloats';
 import { healthChangeGroups } from './healthChanges';
 import FighterInspector from './FighterInspector';
 import useFighterInspection from './useFighterInspection';
-import { Grid2X2 } from 'lucide-react';
+import { fighterUnderPointer, groundUnderPointer } from './fighterHitTesting';
+import { Grid2X2, Rabbit } from 'lucide-react';
 import TacticalTerrain, { tacticalCellKind, TACTICAL_LABELS } from './TacticalTerrain';
 import useTacticalMode from './useTacticalMode';
+import useCreatureMode from './useCreatureMode';
+import { creatureActorId } from './creatureMode';
 import '../styles/tacticalMode.css';
+import '../styles/creatureMode.css';
 import '../styles/placement.css';
 
 // ---------------------------------------------------------------- projection
@@ -30,6 +34,7 @@ import '../styles/placement.css';
 
 const MAX_BOARD_PX = 760;
 const TACTICAL_LEGEND_PX = 28;
+const NO_ACCESSORIES = Object.freeze({});
 
 export function makeLayout(width, height, availPx, retroMap = null, availHeight = null, mapFrame = null) {
   const frame = mapFrame || retroMap;
@@ -360,21 +365,26 @@ function Prop({ type, x, y, L }) {
 function FighterToken({
   f, L, activeId, frameIdx, frameEvents, bubble, targetable, onCellClick, onCellHover,
   inspectorId, isInspected, onInspect, onInspectLeave, placing, inlineInspection,
+  creatureMode, viewerTeam, turnPosition,
 }) {
   const assets = useRetroAssets();
   const { appearances } = useAppearances();
-  const actorId = getActorId(assets, f, appearances[f.team]);
+  const originalActorId = getActorId(assets, f, appearances[f.team]);
+  const actorId = creatureMode ? creatureActorId(f, assets, viewerTeam) : originalActorId;
   const { artwork } = useCharacterArtwork(f.artworkId || (!f.isMonster && (!f.isSummon || f.isDouble) ? f.loadout?.artworkId : null));
-  const actor = artwork ? CUSTOM_ARTWORK_ACTOR : assets?.actors[actorId];
+  const showArtwork = !creatureMode && artwork;
+  const actor = showArtwork ? CUSTOM_ARTWORK_ACTOR : assets?.actors[actorId];
   const { hat, cape, pet } = f.loadout?.slots || {};
   const accessories = useMemo(() => fighterAccessories({ isMonster: f.isMonster, isSummon: f.isSummon,
-    loadout: { slots: { hat, cape, pet } } }, assets), [assets, hat, cape, pet, f.isMonster, f.isSummon]);
+    loadout: { slots: { hat, cape, pet }, customEquipment: f.loadout?.customEquipment } }, assets), [assets, hat, cape, pet, f.loadout?.customEquipment, f.isMonster, f.isSummon]);
   const [failedActor, setFailedActor] = useState(null);
-  const { pose, direction, restart, position } = useFighterAnimation(f, frameEvents, frameIdx, actor, assets);
-  const useOriginal = !artwork && actor && failedActor !== actorId;
+  // Toggling the display must not replay the last action or restart a walk.
+  const animationActor = artwork ? CUSTOM_ARTWORK_ACTOR : assets?.actors[originalActorId];
+  const { pose, direction, restart, position } = useFighterAnimation(f, frameEvents, frameIdx, animationActor, assets);
+  const useOriginal = !showArtwork && actor && failedActor !== actorId;
   const midWalk = pose === 'walk' && position;
   const pos = position || f.pos;
-  const animation = resolveAnimation(actor, pose, direction.suffix);
+  const animation = resolveAnimation(actor, creatureMode && pose?.startsWith('anim') ? 'anim1' : pose, direction.suffix);
   const previousLayout = useRef(L);
   const [settlingLayout, setSettlingLayout] = useState(false);
   const resized = previousLayout.current !== L;
@@ -393,7 +403,7 @@ function FighterToken({
 
   return (
     <div
-      className={`token side-${f.team}${useOriginal || artwork ? ' retro-token' : ''}${artwork ? ' custom-artwork-token' : ''}${f.isSummon ? ' summon' : ''}${f.id === activeId ? ' active' : ''}${targetable ? ' targetable' : ''}${midWalk ? ' walking' : ''}${isInspected ? ' is-inspected' : ''}`}
+      className={`token side-${f.team}${useOriginal || showArtwork ? ' retro-token' : ''}${showArtwork ? ' custom-artwork-token' : ''}${creatureMode ? ' creature-token' : ''}${f.isSummon ? ' summon' : ''}${f.id === activeId ? ' active' : ''}${targetable ? ' targetable' : ''}${midWalk ? ' walking' : ''}${isInspected ? ' is-inspected' : ''}`}
       data-fighter-id={f.id}
       data-actor={actorId || undefined}
       data-animation={animation || undefined}
@@ -402,24 +412,28 @@ function FighterToken({
       style={{ left: L.cx(pos.x, pos.y), top: L.cy(pos.x, pos.y) - (f.carriedBy ? L.fig * .75 : 0), opacity: isInvisible(f) ? .45 : 1, transition: resized || settlingLayout ? 'none' : undefined, zIndex: (placing ? 2150 : 10) + (pos.x + pos.y) * 4 + 3 }}
     >
       <div className="ring" />
-      {/* Ciblable : cliquer le corps vise sa case. Sinon les clics traversent
-          jusqu'au sol, pour viser précisément la case derrière. */}
+      {/* Pointer targeting is resolved by the board against painted pixels.
+          These handlers also preserve keyboard/assistive activation. */}
       <div
-        className={`figure${useOriginal || artwork ? ' retro-figure' : ''}`}
+        className={`figure${useOriginal || showArtwork ? ' retro-figure' : ''}`}
         role="button" tabIndex={0} aria-label={`Inspecter ${f.name}`} aria-haspopup={inlineInspection ? undefined : 'dialog'}
         aria-expanded={isInspected} aria-controls={isInspected ? inspectorId : undefined}
         onFocus={event => onInspect(f.id, event.currentTarget)} onBlur={onInspectLeave}
         onKeyDown={event => {
-          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onInspect(f.id, event.currentTarget, true); }
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            if (targetable) onCellClick(f.pos.x, f.pos.y);
+            else onInspect(f.id, event.currentTarget, true);
+          }
         }}
         onClick={targetable ? () => onCellClick(f.pos.x, f.pos.y) : event => onInspect(f.id, event.currentTarget, true)}
         onMouseEnter={targetable && onCellHover ? () => onCellHover(f.pos.x, f.pos.y) : undefined}
       >
-        {artwork ? <CustomCharacterSprite artwork={artwork} pose={pose} direction={direction} restart={restart}
+        {showArtwork ? <CustomCharacterSprite artwork={artwork} pose={pose} direction={direction} restart={restart}
           castSound={customActorCastSound(assets?.actors[actorId], pose, direction.suffix, assets)} /> : useOriginal ? (
           <RetroMovie
             url={actor.url} animation={animation} restart={restart}
-            accessories={accessories} mirrored={direction.mirror}
+            accessories={creatureMode ? NO_ACCESSORIES : accessories} mirrored={direction.mirror}
             className="retro-actor" scriptAccess combatSteps
             style={{ transform: direction.mirror ? 'scaleX(-1)' : undefined }}
             onFailure={() => setFailedActor(actorId)}
@@ -429,6 +443,7 @@ function FighterToken({
       <div className="mini-hp">
         <div style={{ transform: `scaleX(${Math.max(0, f.hp / f.maxHp)})` }} />
       </div>
+      {creatureMode && turnPosition > 0 && <span className="creature-turn-position" aria-hidden="true">{turnPosition}</span>}
       {bubble ? <div className="bubble">{bubble}</div> : null}
     </div>
   );
@@ -471,12 +486,14 @@ export default function BoardView({
   highlights = null, onCellClick = null, onCellHover = null, pathPreview = null,
   targetPreview = null,
   viewerTeam = null,
+  placementFighterId = 'A',
   fitToContainer = false, inspectionController = null, inspectionPanelId = null,
 }) {
   const wrapRef = useRef(null);
   const avail = useParentSize(wrapRef);
   const uid = useId().replace(/:/g, '');
   const [tacticalMode, toggleTacticalMode] = useTacticalMode();
+  const [creatureMode, toggleCreatureMode] = useCreatureMode();
   const localInspection = useFighterInspection(`${state.mapId}:${state.seed}`, !inspectionController, state.fighters);
   const inspection = inspectionController || localInspection;
   const inspectorId = inspectionPanelId || `${uid}-fighter-inspector`;
@@ -488,11 +505,12 @@ export default function BoardView({
   const bottomInset = fitToContainer && tacticalMode ? TACTICAL_LEGEND_PX : 0;
   const fittedHeight = fitToContainer && avail.height !== null ? avail.height - bottomInset : null;
   const L = useMemo(() => makeLayout(width, height, avail.width, retroMap, fittedHeight, mapFrame), [width, height, avail.width, retroMap, fittedHeight, mapFrame]);
-  const visible = f => f && (!viewerTeam || f.team === viewerTeam || !isInvisible(f));
+  const visible = f => f && !f.hidden && (!viewerTeam || f.team === viewerTeam || !isInvisible(f));
   const fighters = Object.values(state.fighters).filter(visible);
   // Keep defeated fighters for the final damage numbers, but remove their
   // sprites, rings, health bars and inspection targets as soon as they die.
   const livingFighters = fighters.filter(f => f.hp > 0);
+  const turnPositions = Object.fromEntries(state.order.filter(id => state.fighters[id]?.hp > 0).map((id, i) => [id, i + 1]));
   const inspectedFighter = livingFighters.find(f => f.id === inspection.inspection?.id);
   // Keep actual invisible positions out of movement/effect overlays.
   frameEvents = (frameEvents || []).filter(e => (!e.fighter || visible(state.fighters[e.fighter])) && (!e.target || typeof e.target !== 'string' || visible(state.fighters[e.target])));
@@ -508,6 +526,33 @@ export default function BoardView({
 
   const fighterAt = {};
   for (const f of livingFighters) if (!f.carriedBy) fighterAt[key(f.pos.x, f.pos.y)] = f;
+  const pointerTarget = event => {
+    const hit = fighterUnderPointer(event.currentTarget, event.clientX, event.clientY);
+    const fighter = hit && state.fighters[hit.id];
+    return { hit, cell: fighter ? (!fighter.carriedBy ? fighter.pos : null)
+      : groundUnderPointer(event.currentTarget, event.clientX, event.clientY) };
+  };
+  const pointerMove = event => {
+    if (event.pointerType === 'touch') return;
+    const { hit, cell } = pointerTarget(event);
+    inspection.pointerMove(event, hit);
+    onCellHover?.(cell?.x ?? null, cell?.y ?? null);
+  };
+  const pointerClick = event => {
+    // Keyboard and assistive clicks have no pointer coordinates; the focused
+    // figure/cell owns those. Real mouse/touch clicks all use the hover resolver.
+    if (event.detail === 0) return;
+    const { hit, cell } = pointerTarget(event);
+    event.stopPropagation();
+    if (hit) {
+      inspection.open(hit.id, hit.anchor, true);
+      const canTarget = cell && (placing || ['target', 'splash'].includes(highlights?.[key(cell.x, cell.y)]));
+      if (canTarget) onCellClick?.(cell.x, cell.y);
+      // An invalid fighter must not accidentally cast on the floor behind it.
+      return;
+    }
+    if (cell) onCellClick?.(cell.x, cell.y);
+  };
   // un sort vise le buste d'un combattant, sinon le sol
   const aim = (pos) => (fighterAt[key(pos.x, pos.y)] ? L.chest(pos) : L.ground(pos));
   const at = (id) => state.fighters[id]?.pos;
@@ -645,11 +690,12 @@ export default function BoardView({
         <polygon
           key={`${x}-${y}`}
           data-cell={key(x, y)}
+          aria-label={tacticalMode ? TACTICAL_LABELS[tacticalCellKind(obs)] : undefined}
           className={`cell${obs ? ` ${obs.type.toLowerCase()}` : ''}${hl ? ` hl-${hl}` : ''}`}
           points={L.diamond(x, y)}
           onClick={onCellClick ? () => onCellClick(x, y) : undefined}
           onMouseEnter={onCellHover ? () => onCellHover(x, y) : undefined}
-        >{tacticalMode && <title>{TACTICAL_LABELS[tacticalCellKind(obs)]}</title>}</polygon>,
+        />,
       );
     }
   }
@@ -658,7 +704,7 @@ export default function BoardView({
     <div
       ref={wrapRef}
       id={`retro-sound-${soundScope}`}
-      className={`board-wrap${tacticalMode ? ' tactical-mode' : ''}${fitToContainer ? ' fitted-board' : ''}`}
+      className={`board-wrap${tacticalMode ? ' tactical-mode' : ''}${creatureMode ? ' creature-mode' : ''}${fitToContainer ? ' fitted-board' : ''}`}
       style={{ '--hw': `${L.hw}px`, '--hh': `${L.hh}px`, '--fig': `${L.fig}px`, '--lift': `${L.lift}px`, paddingBottom: bottomInset || undefined }}
     >
       <div className="board-tools">
@@ -667,11 +713,22 @@ export default function BoardView({
           onClick={() => { inspection.dismiss(); toggleTacticalMode(); }}>
           <Grid2X2 size={15} aria-hidden="true" /><span>Mode tactique</span><i className="mode-indicator" aria-hidden="true" />
         </button>
+        <button type="button" className="board-mode-toggle board-creature-toggle" aria-pressed={creatureMode}
+          title="Mode créatures : petites silhouettes du client pour viser les combattants qui se masquent. Les numéros correspondent à la barre des tours."
+          onClick={() => { inspection.dismiss(); onCellHover?.(null, null); toggleCreatureMode(); }}>
+          <Rabbit size={15} aria-hidden="true" /><span>Mode créatures</span><i className="mode-indicator" aria-hidden="true" />
+        </button>
       </div>
       <div
         className={`board${shake ? ' shake' : ''}`}
         style={{ width: L.w, height: L.h }}
-        onPointerMove={inspection.pointerMove} onPointerLeave={inspection.pointerLeave}
+        onPointerMove={pointerMove} onPointerLeave={inspection.pointerLeave}
+        onPointerDownCapture={event => {
+          // A transparent foreground rectangle must not receive focus and
+          // replace the fighter just resolved by pointerMove.
+          if (event.button === 0) event.preventDefault();
+        }}
+        onClickCapture={pointerClick}
         onMouseLeave={onCellHover ? () => onCellHover(null, null) : undefined}
       >
         {tacticalMode ? <TacticalTerrain L={L} board={state.board} uid={uid} /> : retroMap ? retroMap.layers.map(layer => (
@@ -706,11 +763,12 @@ export default function BoardView({
             const own = state.fighters[id].team === viewerTeam;
             const selected = Object.values(state.fighters).some(f => f.team === state.fighters[id].team
               && key(cell.x, cell.y) === key(f.pos.x, f.pos.y));
-            const canPlace = own && onCellClick && !state.placement.ready[id];
+            const canPlace = own && onCellClick && !state.placement.ready[placementFighterId];
+            const active = own && state.fighters[placementFighterId]?.pos.x === cell.x && state.fighters[placementFighterId]?.pos.y === cell.y;
             const label = `${own ? 'Votre' : 'Adversaire :'} départ ${index + 1}`;
             return <g key={`${id}-${index}`}>
               <polygon points={L.diamond(cell.x, cell.y, .92)}
-                className={`placement-cell ${own ? 'yours' : 'enemy'}${selected ? ' selected' : ''}`}
+                className={`placement-cell ${own ? 'yours' : 'enemy'}${selected ? ' selected' : ''}${active ? ' active-placement' : ''}`}
                 data-placement-cell={key(cell.x, cell.y)} data-team={state.fighters[id].team}
                 role={canPlace ? 'button' : 'img'} tabIndex={canPlace ? 0 : undefined}
                 aria-label={label} aria-pressed={canPlace ? selected : undefined}
@@ -755,13 +813,14 @@ export default function BoardView({
             frameIdx={frameIdx}
             frameEvents={frameEvents}
             bubble={bubbles[f.id] || null}
-            targetable={Boolean(onCellClick && highlights && ['target', 'splash'].includes(highlights[key(f.pos.x, f.pos.y)]))}
+            targetable={Boolean(!f.carriedBy && onCellClick && highlights && ['target', 'splash'].includes(highlights[key(f.pos.x, f.pos.y)]))}
             onCellClick={onCellClick}
             onCellHover={onCellHover}
             inspectorId={inspectorId}
             inlineInspection={!!inspectionController}
             isInspected={f.id === inspectedFighter?.id}
             onInspect={inspection.open} onInspectLeave={inspection.closeSoon}
+            creatureMode={creatureMode} viewerTeam={viewerTeam} turnPosition={turnPositions[f.id]}
           />
         ))}
 

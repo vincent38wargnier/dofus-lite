@@ -1,0 +1,46 @@
+.profile-identity { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 20px; margin-bottom: 22px; border-bottom: 1px solid var(--border); }
+.profile-identity h2 { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 6px 0; font-size: 21px; overflow-wrap: anywhere; }
+.profile-identity p { color: var(--muted); font-size: 12px; margin: 5px 0 0; }
+.profile-identity form { display: flex; align-items: end; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.profile-identity .btn, .setup-inline-actions .btn { flex-shrink: 0; }
+.profile-identity > .btn, .setup-inline-actions > .btn, .profile-library .setup-section-heading > .btn, .boss-catalogue-heading > .btn { display: inline-flex; align-items: center; gap: 8px; }
+.profile-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.profile-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; min-width: 0; overflow: hidden; }
+.profile-card.selected { border-color: var(--gold); background: #edf1e4; box-shadow: inset 0 0 0 1px var(--gold); }
+.profile-select { width: 100%; background: transparent; border: 0; color: inherit; display: flex; align-items: center; gap: 14px; padding: 17px; text-align: left; cursor: pointer; }
+.profile-select .retro-portrait { width: 64px; height: 64px; flex-shrink: 0; }
+.profile-select > span { flex: 1; min-width: 0; display: grid; gap: 6px; }
+.profile-select strong { overflow-wrap: anywhere; font-size: 16px; }
+.profile-select small { color: var(--muted); font-size: 12px; }
+.profile-card-actions { display: flex; justify-content: space-between; align-items: center; padding: 2px 10px 10px; gap: 8px; }
+.profile-card-actions .btn { font-size: 12px; }
+.profile-character-settings, .profile-stuffs { margin: 24px 0 12px; }
+.profile-character-settings { padding: 18px; background: var(--bg-soft); border: 1px solid var(--border-soft); border-radius: 10px; }
+.profile-character-settings h3 { margin: 0 0 14px; font-size: 14px; }
+.profile-character-settings .character-options { padding: 0; margin: 0; border: 0; }
+.profile-character-settings > summary, .profile-stuffs > summary, .arena-adjustments > summary { cursor: pointer; font-weight: 600; color: var(--gold); padding: 10px 0; }
+.profile-notice { display: flex; align-items: center; gap: 12px; padding: 10px; background: #e8eddc; margin-bottom: 12px; border-radius: 8px; }
+.setup-inline-actions, .source-filters, .creator-return-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.creator-return-bar { justify-content: space-between; margin: 0 0 18px; position: sticky; top: 0; z-index: 6; background: var(--bg); padding: 12px 0; }
+.dungeon-filters { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 15px 0; flex-wrap: wrap; }
+.dungeon-filters .boss-search { flex: 1; max-width: 420px; min-width: 180px; }
+.source-filters .btn[aria-pressed=true] { background: #e8eddc; color: #455c30; border-color: var(--gold); }
+.arena-combatants.single { grid-template-columns: 1fr; max-width: 640px; margin-bottom: 24px; }
+.arena-adjustments { margin-bottom: 10px; }
+.arena-adjustments[open] > summary { margin-bottom: 8px; }
+.arena-screen .boss-setup { margin-top: 20px; }
+.custom-dungeon-selection .match-options { align-items: start; }
+@media (max-width: 850px) {
+  .profile-identity { align-items: start; flex-direction: column; gap: 8px; }
+  .profile-grid { grid-template-columns: 1fr; }
+  .profile-library .setup-section-heading, .new-profile-classes .setup-section-heading { align-items: start; flex-wrap: wrap; }
+  .dungeon-filters .boss-search { max-width: none; }
+  .creator-return-bar { position: static; }
+}
+@media (max-width: 480px) {
+  .profile-select { padding: 12px; gap: 10px; }
+  .profile-select .retro-portrait { width: 50px; height: 50px; }
+  .source-filters { width: 100%; }
+  .source-filters .btn { flex: 1; padding: 9px 8px; }
+  .boss-catalogue-heading { align-items: start; flex-direction: column; }
+}

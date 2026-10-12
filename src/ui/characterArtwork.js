@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import SPEC from './characterArtworkSpec.json';
+import { parseCharacterShape, characterShapeImage } from '../visuals/customShapes';
 
 export const CHARACTER_ARTWORK_SPEC = SPEC;
 export const ARTWORK_TEMPLATE_BASE = `${process.env.PUBLIC_URL || ''}/templates/character-artwork`;
@@ -117,13 +118,26 @@ export async function removeArtworkRecords(ids) {
   });
 }
 
+const builtInCache = new Map();
+export function builtInCharacterArtwork(id) {
+  if (builtInCache.has(id)) return builtInCache.get(id);
+  const appearance = parseCharacterShape(id);
+  if (!appearance) return null;
+  const artwork = { id, version: SPEC.version, builtin: true, images: Object.fromEntries(SPEC.files.map(file => [file.name,
+    characterShapeImage(appearance.shape, appearance.color, { pose: file.pose, back: file.direction === 'L', frames: file.frames })])) };
+  if (builtInCache.size >= 64) builtInCache.delete(builtInCache.keys().next().value);
+  builtInCache.set(id, artwork);
+  return artwork;
+}
+
 export function useCharacterArtwork(id) {
+  const builtin = useMemo(() => builtInCharacterArtwork(id), [id]);
   const [state, setState] = useState({ artwork: null, error: '' });
   useEffect(() => {
     let cancelled = false;
     const urls = [];
     setState(previous => !previous.artwork && !previous.error ? previous : { artwork: null, error: '' });
-    if (id) readCharacterArtwork(id).then(record => {
+    if (id && !builtin) readCharacterArtwork(id).then(record => {
       if (cancelled) return;
       const images = Object.fromEntries(Object.entries(record.images).map(([name, blob]) => {
         const url = URL.createObjectURL(blob); urls.push(url); return [name, url];
@@ -131,7 +145,8 @@ export function useCharacterArtwork(id) {
       setState({ artwork: { ...record, images }, error: '' });
     }).catch(error => { if (!cancelled) setState({ artwork: null, error: error.message }); });
     return () => { cancelled = true; urls.forEach(url => URL.revokeObjectURL(url)); };
-  }, [id]);
+  }, [id, builtin]);
+  if (builtin) return { artwork: builtin, error: '' };
   return state.artwork?.id === id || !state.artwork ? state : { artwork: null, error: '' };
 }
 

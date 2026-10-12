@@ -3,10 +3,24 @@ import { MAPS, MAP_IDS } from '../engine/maps';
 import { RETRO_BASE, useRetroAssets } from './RetroAssets';
 import { placementDescription } from './PlacementPanel';
 
+function TacticalThumbnail({ map }) {
+  const hw = 9, hh = 4.5, top = 6;
+  return <svg className="map-tactical-thumbnail" viewBox={`0 0 ${(map.width + map.height) * hw} ${(map.width + map.height) * hh + top * 2}`} aria-hidden="true">
+    {Array.from({ length: map.width * map.height }, (_, index) => {
+      const x = index % map.width, y = Math.floor(index / map.width), obstacle = map.obstacles[`${x},${y}`];
+      if (obstacle?.type === 'VOID') return null;
+      const px = (x - y + map.height) * hw, py = (x + y) * hh + top;
+      const spawn = map.spawns.findIndex(pos => pos.x === x && pos.y === y);
+      return <path key={index} d={`M${px},${py}l${hw},${hh}l${-hw},${hh}l${-hw},${-hh}Z`}
+        fill={spawn === 0 ? '#80b5cc' : spawn === 1 ? '#c48b77' : obstacle?.blocksLos ? '#64715f' : obstacle?.blocksMove ? '#b2bb9f' : '#d4dfbd'} stroke="#97a68d" strokeWidth=".45" />;
+    })}
+  </svg>;
+}
+
 export function MapPreview({ map, artwork }) {
   return <span className="map-preview" style={{ aspectRatio: artwork ? `${artwork.width}/${artwork.height}` : '1.6' }}>
     {artwork ? artwork.layers.map(layer => <img key={layer.name} loading="lazy" src={RETRO_BASE + layer.image} alt="" />)
-      : <span className="map-placeholder">{map.id === 'canyon' ? '🏜️' : map.id === 'muraille' ? '🏰' : '⚔️'}</span>}
+      : <TacticalThumbnail map={map} />}
   </span>;
 }
 

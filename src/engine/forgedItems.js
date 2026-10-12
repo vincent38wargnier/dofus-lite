@@ -11,6 +11,7 @@ const types = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 16, 17, 81]);
 
 export function forgeRestriction(item) {
   if (!item) return 'Choisissez un équipement.';
+  if (item.customEquipment) return 'Équipement créé : jets fixes, à modifier dans Atelier → Mes équipements.';
   if (!types.has(item.type)) return 'Ce type d’objet ne peut pas être forgemagé (Dofus, familiers, boucliers, outils…).';
   if (blocked.has(item.id)) return 'Cet objet est déclaré non forgemageable par le client.';
   return '';

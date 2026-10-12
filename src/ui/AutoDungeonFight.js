@@ -8,9 +8,10 @@ import { combatResources } from './combatResources';
 import useFighterInspection from './useFighterInspection';
 import BoardView from './BoardView';
 import CombatStatsPanel from './CombatStatsPanel';
+import CombatTimeline from './CombatTimeline';
 import LogPanel from './LogPanel';
 
-export default function AutoDungeonFight({ config, active, onExit, onRematch }) {
+export default function AutoDungeonFight({ config, active, onExit, onCancel = onExit, onRematch, exitLabel = 'Retour à Combat' }) {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [progress, setProgress] = useState(1);
@@ -50,16 +51,17 @@ export default function AutoDungeonFight({ config, active, onExit, onRematch }) 
   const outcome = useMemo(() => result ? dungeonOutcome(result) : null, [result]);
   const seek = value => { setPlaying(false); setIndex(value); };
   const errors = result?.events.filter(event => event.t === 'bot_error').length || 0;
+  const composed = !!config.opponents;
   const state = frame?.state;
   const fighter = state?.fighters[inspection.inspection?.id] || state?.fighters.A;
   const playerResources = state ? combatResources(state.fighters.A, state) : null;
 
   if (!frame) return <div className="play-screen fight-screen auto-dungeon">
     <div className="auto-simulation panel">
-      <h1>{error ? 'Simulation interrompue' : 'Simulation du donjon'}</h1>
+      <h1>{error ? 'Simulation interrompue' : composed ? 'Simulation du combat' : 'Simulation du donjon'}</h1>
       <p role={error ? 'alert' : 'status'}>{error || `Votre personnage joue avec ${config.controllerName} · Tour ${progress}`}</p>
       {!error && <p className="muted">Le combat complet se prépare. Vous pourrez ensuite le regarder ou voir directement le résultat.</p>}
-      <button className="btn" onClick={onExit}>{error ? config.mode === 'custom' ? 'Retour à l’atelier' : 'Retour à la préparation' : 'Annuler'}</button>
+      <button className="btn" onClick={onCancel}>{error ? exitLabel : 'Annuler'}</button>
     </div>
   </div>;
 
@@ -71,13 +73,14 @@ export default function AutoDungeonFight({ config, active, onExit, onRematch }) 
       </section>}
       <div className="fight-main">
         <div className="fight-heading"><div><h1>{MAPS[state.mapId].name.replace(/^🗺\s*/, '')}</h1>
-          <p>Donjon automatique · {config.controllerName} · Tour {state.turn}</p></div>
+          <p>{composed ? 'IA contre IA' : 'IA contre donjon'} · {config.controllerName} · Tour {state.turn}</p></div>
           <div className="fight-heading-actions"><button className="btn" aria-expanded={showLog} aria-controls="auto-fight-log" onClick={() => setShowLog(value => !value)}>Journal</button>
-            <button className="btn" onClick={onExit}>{config.mode === 'custom' ? 'Retour à l’atelier' : 'Préparation'}</button></div>
+            <button className="btn" onClick={onExit}>{exitLabel}</button></div>
         </div>
         <div className="fight-map"><BoardView fitToContainer state={state} frameEvents={frame.events} frameIdx={index}
           inspectionController={inspection} inspectionPanelId="auto-combat-stats" viewerTeam="A" showWinner={false} /></div>
         <div className="combat-dock">
+          <CombatTimeline state={state} controller={inspection} panelId="auto-combat-stats" />
           <div className="auto-replay-controls" aria-label="Lecture du combat">
             <button className="btn icon" aria-label="Revenir au début" onClick={() => seek(0)} disabled={!index}><SkipBack size={15} /></button>
             <button className="btn icon" aria-label="Action précédente" onClick={() => seek(Math.max(0, index - 1))} disabled={!index}><StepBack size={15} /></button>
@@ -91,7 +94,7 @@ export default function AutoDungeonFight({ config, active, onExit, onRematch }) 
             <button className="btn auto-result-button" disabled={atEnd} onClick={() => seek(lastIndex)}><SkipForward size={15} />Voir le résultat</button>
           </div>
           {atEnd ? <div className={`auto-result ${outcome.status}`} role="status" data-outcome={outcome.status}>
-            <strong>{outcome.label}</strong><span>{outcome.defeated} / {outcome.total} monstres vaincus · {outcome.turns} tours · {outcome.hp} / {outcome.maxHp} PV restants</span>
+            <strong>{composed && outcome.status === 'victory' ? 'Victoire · Camp adverse vaincu' : outcome.label}</strong><span>{outcome.defeated} / {outcome.total} {composed ? 'adversaires' : config.mode === 'custom' ? 'combattants' : 'monstres'} vaincus · {outcome.turns} tours · {outcome.hp} / {outcome.maxHp} PV restants</span>
             {errors > 0 && <span>{errors} erreur{errors > 1 ? 's' : ''} d’IA · Voir le journal</span>}
           </div> : <div className="auto-combat-status" role="status">{playing ? `${names[state.order[state.currentIndex]]} joue` : 'Lecture en pause'} · {index + 1} / {result.frames.length} actions</div>}
           <CombatStatsPanel id="auto-combat-stats" fighter={fighter} fighters={state.fighters}

@@ -44,6 +44,7 @@ export default function CombatSpellBar({ spells, spellInfo, pa, humanTurn, activ
 
   const clearDrag = () => { drag.current = null; setDragged(null); setDropTarget(null); };
   const move = (from, to) => {
+    if (!onReorder) return;
     const ids = spells.map(spell => spell.id);
     const next = moveCombatSpell(ids, from, to);
     if (next !== ids) onReorder(next);
@@ -74,7 +75,7 @@ export default function CombatSpellBar({ spells, spellInfo, pa, humanTurn, activ
         return <div key={spell.key} data-spell-id={spell.id}
           data-spell-category={presentation.category} style={{ '--spell-color': presentation.color }}
           className={`spell-slot${dragged === spell.id ? ' dragging' : ''}${dropTarget === spell.id && dragged !== spell.id ? ' drop-target' : ''}`}
-          draggable={!spell.isWeapon} title={`${title} · ${spell.isWeapon ? 'Arme toujours en première case' : 'Glissez pour déplacer ; Alt + ← / → au clavier'}`}
+          draggable={!spell.isWeapon && !!onReorder} title={`${title} · ${spell.isWeapon ? 'Arme toujours en première case' : onReorder ? 'Glissez pour déplacer ; Alt + ← / → au clavier' : 'Sort du monstre'}`}
           tabIndex={disabled ? 0 : undefined} aria-label={disabled ? `${spell.name}, indisponible. ${spell.isWeapon ? 'Arme en première case.' : 'Alt + flèches pour déplacer.'}` : undefined}
           onMouseEnter={() => onHover?.(active && !disabled && drag.current === null ? info : null)}
           onMouseLeave={() => onHover?.(null)}
@@ -85,7 +86,7 @@ export default function CombatSpellBar({ spells, spellInfo, pa, humanTurn, activ
             if (active && !disabled && drag.current === null) onSelfCast?.(info);
           }}
           onDragStart={event => {
-            if (spell.isWeapon) { event.preventDefault(); return; }
+            if (spell.isWeapon || !onReorder) { event.preventDefault(); return; }
             onHover?.(null);
             drag.current = spell.id; setDragged(spell.id); suppressClick.current = true;
             event.dataTransfer.effectAllowed = 'move';

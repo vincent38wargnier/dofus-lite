@@ -6,6 +6,10 @@ import { utilityDecide } from '../bots/utilityBrain';
 import { monsterDecide } from '../engine/monsters';
 import { dist } from '../engine/geometry';
 
+// These controlled AI puzzles deliberately use exaggerated synthetic spells.
+// Creation admission is exercised separately in spellBalance.test.js.
+jest.mock('../engine/spellBalance', () => ({ ...jest.requireActual('../engine/spellBalance'), spellbookBudgetErrors: () => [] }));
+
 const hit = (amount, extra = {}) => ({ kind: 'damage', element: 'feu', min: amount, max: amount, zone: 'Pa', targetMask: 1, ...extra });
 const spell = (key, pa, effects, extra = {}) => ({ id: 9000 + [...key].reduce((n, c) => n + c.charCodeAt(0), 0),
   key, name: key, grade: 1, pa, effects, critEffects: [], rangeMin: 1, rangeMax: 7, targetMode: 'enemy',

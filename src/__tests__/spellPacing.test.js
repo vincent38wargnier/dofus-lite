@@ -7,7 +7,7 @@ import { LoadoutsProvider } from '../ui/LoadoutsContext';
 import PlayScreen from '../ui/PlayScreen';
 import { combatAnimationMs, RetroSpellEffect } from '../ui/RetroAssets';
 
-jest.mock('../ui/MapPicker', () => () => null);
+jest.mock('../ui/MapPicker', () => ({ __esModule: true, default: () => null, MapPreview: () => null }));
 
 const bot = { id: 'sparring', name: 'Sparring', code: 'function decide(v, a) { return a.endTurn(); }' };
 
@@ -33,6 +33,7 @@ function startFight() {
   jest.spyOn(Math, 'random').mockReturnValue(0.000007);
   const result = render(<LoadoutsProvider><PlayScreen allBots={[bot]} /></LoadoutsProvider>);
   fireEvent.click(result.container.querySelector('.setup-play'));
+  fireEvent.click(result.container.querySelector('.combat-choice-launch'));
   fireEvent.click(screen.getByRole('button', { name: 'Prêt' }));
   act(() => jest.advanceTimersByTime(700));
   expect(screen.getByRole('button', { name: /Fin de tour/ })).toBeEnabled();

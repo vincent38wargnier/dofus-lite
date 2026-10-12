@@ -1,0 +1,64 @@
+.studio-transfer-tools { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
+.studio-transfer-tools > div { display: flex; flex-wrap: wrap; gap: 8px; }
+.atelier-transfer-dialog { width: min(900px, calc(100vw - 32px)); }
+.atelier-transfer-dialog[open] { display: flex; flex-direction: column; overflow: hidden; }
+.atelier-transfer-dialog > header, .atelier-transfer-dialog > footer { flex-shrink: 0; }
+.atelier-transfer-dialog > .character-dialog-body { min-height: 0; overflow-y: auto; }
+.atelier-transfer-dialog .character-dialog-body { padding-top: 8px; }
+.atelier-transfer-dialog > header h2 { letter-spacing: -.035em; }
+.atelier-transfer-toolbar { display: flex; gap: 12px; align-items: center; }
+.atelier-transfer-toolbar .studio-library-search { flex: 1; margin: 0; min-width: 0; padding: 0 14px; }
+.atelier-transfer-toolbar input { width: 100%; min-width: 0; min-height: 44px; }
+.atelier-transfer-included { display: flex; align-items: center; gap: 12px; padding: 16px; border-radius: 12px; margin: 20px 0 24px; color: #66784b; background: #edf1e4; }
+.atelier-transfer-included strong, .atelier-transfer-included small { display: block; }
+.atelier-transfer-included strong { font-size: 13px; }
+.atelier-transfer-included small { font-size: 12px; margin-top: 4px; color: #7b846e; line-height: 1.5; }
+.atelier-export-group { --export-color: #718653; --export-bg: #f1f5e9; margin: 0 0 24px; }
+.atelier-export-group.dungeons { --export-color: #8b7099; --export-bg: #f4eff7; }
+.atelier-export-group.equipment { --export-color: #ac8243; --export-bg: #faf4e8; }
+.atelier-export-group > header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
+.atelier-export-group h3 { display: flex; align-items: center; gap: 9px; margin: 0; color: var(--export-color); font-size: 15px; }
+.atelier-export-group h3 span { font-size: 11px; font-weight: 500; color: #939986; }
+.atelier-export-group > header .btn { font-size: 11px; min-height: 32px; padding: 4px 8px; }
+.atelier-export-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.atelier-export-card { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 14px; border: 1px solid #dfe2d5; border-radius: 13px; background: #fffdf8; cursor: pointer; }
+.atelier-export-card.selected { border-color: var(--export-color); background: var(--export-bg); }
+.atelier-export-card:hover { box-shadow: 0 3px 10px #39472a0c; }
+.atelier-export-card:focus-within { outline: 2px solid var(--export-color); outline-offset: 2px; }
+.atelier-export-card input { width: 17px; height: 17px; flex: none; accent-color: var(--export-color); cursor: pointer; }
+.atelier-export-art { width: 50px; height: 52px; flex: none; display: grid; place-items: center; overflow: hidden; border-radius: 8px; }
+.atelier-export-art .retro-portrait, .atelier-export-art .equipment-icon { width: 48px; height: 50px; object-fit: contain; }
+.atelier-export-art .map-preview { width: 65px; height: 50px; }
+.atelier-export-card > span:last-child { min-width: 0; }
+.atelier-export-card strong { display: block; font-size: 13px; color: #37412f; overflow-wrap: anywhere; }
+.atelier-export-card small { display: block; font-size: 11px; margin-top: 6px; color: #848c77; }
+.atelier-transfer-summary { margin-right: auto; min-width: 0; }
+.atelier-transfer-summary strong { display: block; font-size: 13px; color: #4e603b; }
+.atelier-transfer-summary small { display: block; font-size: 11px; color: #8b947d; margin-top: 5px; }
+.atelier-transfer-success { display: flex; align-items: center; gap: 9px; color: #577546; font-size: 13px; line-height: 1.6; }
+.atelier-transfer-success svg { flex: none; }
+.atelier-single-export { display: inline-flex; flex-wrap: wrap; align-items: center; position: relative; }
+.atelier-single-export .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.atelier-transfer-error { display: block; flex-basis: 100%; color: #a44236; font-size: 12px; max-width: 260px; line-height: 1.5; }
+.atelier-import-drop { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; width: 100%; padding: 38px 20px; min-height: 230px; border: 1.5px dashed #a5b78a; border-radius: 16px; color: #526b3b; background: #f3f5eb; font: inherit; cursor: pointer; }
+.atelier-import-drop > span { display: grid; place-items: center; width: 62px; height: 62px; background: #e4ebd5; border-radius: 19px; }
+.atelier-import-drop strong { font-size: 19px; letter-spacing: -.02em; }
+.atelier-import-drop small { color: #88917d; font-size: 12px; line-height: 1.6; }
+.atelier-import-drop.over, .atelier-import-drop:hover { background: #e9efdd; border-color: #657c48; }
+.atelier-import-drop:disabled { cursor: wait; }
+.atelier-import-note { color: #89917e; font-size: 12px; text-align: center; line-height: 1.7; margin: 16px 0 4px; }
+.atelier-import-result { padding-top: 16px; }
+.atelier-import-result .btn { margin: 0 8px 8px 0; }
+.atelier-import-result details { font-size: 12px; color: #817455; margin: 16px 0 0; line-height: 1.6; }
+@media (max-width: 700px) {
+  .workshop-studio .studio-heading { flex-direction: column; }
+  .studio-transfer-tools { align-items: flex-start; width: 100%; }
+  .studio-transfer-tools .creator-save-status { display: none; }
+  .atelier-transfer-dialog { width: calc(100vw - 16px); }
+  .atelier-transfer-toolbar { flex-wrap: wrap; gap: 5px; }
+  .atelier-transfer-toolbar .studio-library-search { flex-basis: 100%; }
+  .atelier-export-cards { grid-template-columns: 1fr; }
+  .atelier-transfer-dialog > footer { flex-wrap: wrap; }
+  .atelier-transfer-dialog > footer .btn.primary { width: 100%; justify-content: center; }
+  .atelier-transfer-summary { flex-basis: 100%; }
+}

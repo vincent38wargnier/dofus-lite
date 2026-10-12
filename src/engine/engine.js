@@ -37,7 +37,7 @@ import {
 import { resolveLoadout, applySpellModifiers } from './equipment';
 
 export const MAX_TURNS = 40;
-export const COMBAT_RULES_VERSION = 9;
+export const COMBAT_RULES_VERSION = 10;
 export { FIGHTER_LEVEL };
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
@@ -172,6 +172,32 @@ function onEffectRemoved(f, e) {
     f.maxHp = Math.max(10, f.maxHp - e.value);
     f.hp = Math.min(f.hp, f.maxHp);
   }
+}
+
+// Remove only the requested effects, preserving points already spent this turn.
+// Both dispels and a caster's death must update the live PA/PM budget as well
+// as the stats derived from effects (range, resistances, damage, etc.).
+function removeFighterEffects(fighter, predicate) {
+  const removed = fighter.effects.filter(predicate);
+  if (!removed.length) return removed;
+  const before = turnResources(fighter);
+  fighter.effects = fighter.effects.filter(effect => !removed.includes(effect));
+  for (const effect of removed) onEffectRemoved(fighter, effect);
+  const after = turnResources(fighter);
+  for (const stat of ['pa', 'pm']) fighter[stat] = Math.max(0, fighter[stat] + after[stat] - before[stat]);
+  return removed;
+}
+
+function removeCasterEffects(state, events, source) {
+  for (const fighter of fighterList(state)) {
+    for (const effect of removeFighterEffects(fighter, effect => effect.source === source)) {
+      events.push({ t: 'effect_end', fighter: fighter.id, source, name: effect.name,
+        kind: effect.kind, spellId: effect.spellId, stat: effect.stat, value: effect.value, reason: 'caster_death' });
+    }
+  }
+  const hazards = (state.hazards || []).filter(hazard => hazard.owner === source);
+  state.hazards = (state.hazards || []).filter(hazard => hazard.owner !== source);
+  for (const hazard of hazards) events.push({ t: 'hazard_end', id: hazard.id, name: hazard.name, reason: 'caster_death' });
 }
 
 function adjacentLivingEnemies(state, fighter) {
@@ -444,7 +470,7 @@ function startTurn(state, events) {
     }
   }
   for (const hazard of [...(state.hazards || [])]) {
-    if (hazard.kind !== 'glyph' || state.over) continue;
+    if (hazard.kind !== 'glyph' || state.over || !state.hazards.some(active => active.id === hazard.id)) continue;
     if (hazard.owner === f.id) hazard.turnsLeft -= 1;
     if (hazard.turnsLeft <= 0 || state.fighters[hazard.owner]?.hp <= 0) {
       state.hazards = state.hazards.filter(h => h.id !== hazard.id);
@@ -592,6 +618,7 @@ function applyDamage(state, events, sourceId, targetId, amount, label, opts = {}
       target.carriedBy = null;
     }
     events.push({ t: 'death', fighter: targetId });
+    removeCasterEffects(state, events, targetId);
     for (const dependent of fighterList(state)) if (dependent.hp > 0
       && (dependent.revivedBy === targetId || dependent.ownerId === targetId)) {
       applyDamage(state, events, targetId, dependent.id, dependent.hp,
@@ -1059,8 +1086,8 @@ function doCast(state, events, spell, target, trigger = null) {
         const patient = targets.find(v => v.id !== f.id);
         if (!patient) break;
         patient.carriedBy = f.id; f.carrying = patient.id; patient.pos = { ...f.pos };
-        f.effects.push({ kind: 'state', stateId: 3, turnsLeft: 9999, name: spell.name });
-        patient.effects.push({ kind: 'state', stateId: 8, turnsLeft: 9999, name: spell.name });
+        f.effects.push({ kind: 'state', stateId: 3, turnsLeft: 9999, name: spell.name, source: f.id, spellId: spell.id });
+        patient.effects.push({ kind: 'state', stateId: 8, turnsLeft: 9999, name: spell.name, source: f.id, spellId: spell.id });
         events.push({ t: 'carry', fighter: f.id, target: patient.id });
         break;
       }
@@ -1385,16 +1412,7 @@ function doCast(state, events, spell, target, trigger = null) {
         // Désenvoûtement: retire TOUS les effets (buffs comme malus).
         for (const victim of targets) {
           if (victim.effects.length === 0) continue;
-          const available = { pa: Math.max(0, victim.basePa + statBuff(victim, 'pa')),
-            pm: Math.max(0, victim.basePm + statBuff(victim, 'pm')) };
-          const dispellable = victim.effects.filter(e => e.kind !== 'state');
-          for (const ef of dispellable) onEffectRemoved(victim, ef);
-          const removed = dispellable.length;
-          victim.effects = victim.effects.filter(e => e.kind === 'state');
-          for (const stat of ['pa', 'pm']) {
-            const capacity = Math.max(0, (stat === 'pa' ? victim.basePa : victim.basePm) + statBuff(victim, stat));
-            victim[stat] = Math.max(0, victim[stat] + capacity - available[stat]);
-          }
+          const removed = removeFighterEffects(victim, e => e.kind !== 'state').length;
           events.push({ t: 'dispel', fighter: f.id, target: victim.id, removed, name: spell.name });
         }
         break;
@@ -1431,7 +1449,7 @@ function doCast(state, events, spell, target, trigger = null) {
       case 'spellBoost': {
         f.effects = f.effects.filter(e => !(e.kind === 'spellBoost' && e.boostSpell === effect.p1));
         f.effects.push({ kind: 'spellBoost', boostSpell: effect.p1, value: effect.p3 || 0,
-          turnsLeft: (effect.duration || 1) + 1, name: spell.name });
+          turnsLeft: (effect.duration || 1) + 1, name: spell.name, source: f.id, spellId: spell.id });
         break;
       }
       case 'selfDamage':
@@ -1466,6 +1484,7 @@ function doCast(state, events, spell, target, trigger = null) {
             else { victim.pm = Math.max(0, victim.pm - removed); f.pm += removed; }
             victim.effects.push({
               kind: 'buff', stat, value: -removed, turnsLeft: effect.duration || 1, name: spell.name,
+              source: f.id, spellId: spell.id, effectId: effect.id,
             });
           }
           events.push({
@@ -1533,6 +1552,9 @@ function doCast(state, events, spell, target, trigger = null) {
     }
   }
 
+  // A reflected hit or a sacrifice can kill the caster before the last effect
+  // of a multi-effect spell. Do not leave newly added effects from that corpse.
+  if (f.hp <= 0) removeCasterEffects(state, events, f.id);
   saveRng(state, rng);
 }
 

@@ -11,7 +11,7 @@ import { LoadoutsProvider } from '../ui/LoadoutsContext';
 import PlayScreen from '../ui/PlayScreen';
 import { spellTargetPreview } from '../ui/spellTargeting';
 
-jest.mock('../ui/MapPicker', () => () => null);
+jest.mock('../ui/MapPicker', () => ({ __esModule: true, default: () => null, MapPreview: () => null }));
 
 function fight(classId = 'IOP', grades = {}) {
   const { state } = createGame({ seed: 7, fighters: [
@@ -168,6 +168,7 @@ function start(tactical = true) {
   const actions = jest.spyOn(LiveMatch.prototype, 'humanAct');
   const result = render(<LoadoutsProvider><PlayScreen allBots={[bot]} /></LoadoutsProvider>);
   fireEvent.click(result.container.querySelector('.setup-play'));
+  fireEvent.click(result.container.querySelector('.combat-choice-launch'));
   fireEvent.click(screen.getByRole('button', { name: 'Prêt' }));
   return { ...result, actions, match: readySpy.mock.instances[0] };
 }

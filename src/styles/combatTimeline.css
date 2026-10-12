@@ -1,0 +1,49 @@
+/* A compact target rail outside the map, so portraits never cover a cell. */
+.combat-timeline { display: flex; align-items: center; justify-content: flex-end; flex: none; gap: 6px; min-width: 0; height: 62px; padding: 0 3px 0 9px; border: 1px solid #d0d4bf; border-radius: 7px; background: #e8e9de; }
+.combat-timeline-heading { display: flex; gap: 8px; align-items: center; flex-shrink: 0; margin-right: auto; color: #687257; }
+.combat-timeline-heading > span { display: flex; flex-direction: column; gap: 3px; }
+.combat-timeline-heading strong { color: #3d4b32; font-size: 11px; font-weight: 650; white-space: nowrap; }
+.combat-timeline-heading small { margin-left: 3px; color: #687257; font-size: 10px; font-variant-numeric: tabular-nums; }
+.combat-timeline-heading > span > span { font-size: 9px; }
+.combat-timeline-rail { position: relative; display: flex; flex: 0 1 auto; gap: 5px; align-items: center; min-width: 0; max-width: 100%; margin: 0; padding: 6px 3px 3px; list-style: none; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; overscroll-behavior-x: contain; }
+.combat-timeline-rail::-webkit-scrollbar { display: none; }
+.combat-timeline-rail li { flex: none; padding: 0; }
+.timeline-fighter { --timeline-team: #458aba; position: relative; display: block; width: 46px; height: 48px; padding: 3px 8px 2px 2px; border: 1px solid #aeb89a; border-left: 3px solid var(--timeline-team); border-radius: 5px; background: linear-gradient(150deg, #fffef3, #dedfce); cursor: pointer; color: #263b4e; }
+.timeline-fighter.side-B { --timeline-team: #c76b50; }
+.timeline-fighter:hover, .timeline-fighter.inspected { box-shadow: 0 0 0 2px #b49754; }
+.timeline-fighter.current { border-top-color: #9e762d; border-bottom-color: #9e762d; background: linear-gradient(145deg, #fff5cf, #e9ddb4); }
+.timeline-current-marker { position: absolute; z-index: 2; top: -6px; left: calc(50% - 5px); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid #b37426; }
+.timeline-position { position: absolute; top: 2px; left: 2px; z-index: 1; min-width: 9px; padding: 0 1px; border-radius: 2px; color: #546447; background: #fcfbeddf; font-size: 8px; font-weight: 700; line-height: 10px; font-variant-numeric: tabular-nums; }
+.timeline-portrait { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; pointer-events: none; font-size: 24px; }
+.timeline-portrait img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.timeline-hp { position: absolute; top: 4px; bottom: 4px; right: 3px; width: 4px; overflow: hidden; border-radius: 2px; background: #aab49c; }
+.timeline-hp i { display: block; position: absolute; bottom: 0; width: 100%; background: var(--timeline-team); }
+.timeline-summon, .timeline-aim, .timeline-hidden { position: absolute; bottom: 2px; left: 2px; border-radius: 2px; background: #fffcef; }
+.timeline-summon { color: #667052; }
+.timeline-aim { color: #527327; }
+.timeline-hidden { left: calc(50% - 8px); bottom: 4px; color: #5f6859; }
+.timeline-fighter[data-hidden=true] .timeline-portrait { opacity: .4; }
+.timeline-fighter.targetable { border-color: #819e4b; border-left-color: var(--timeline-team); cursor: crosshair; }
+.timeline-fighter.targetable:hover, .timeline-fighter.targetable.inspected { box-shadow: 0 0 0 2px #6c8f35; background: #eef4d7; }
+.timeline-fighter.unavailable { opacity: .55; cursor: not-allowed; }
+.timeline-fighter.unavailable:hover, .timeline-fighter.unavailable:focus-visible { opacity: .85; }
+.timeline-scroll { display: grid; place-items: center; flex: 0 0 25px; width: 25px; height: 35px; padding: 0; color: #475a35; background: #f5f5e9; border: 1px solid #c0c8ad; border-radius: 4px; cursor: pointer; }
+.timeline-scroll:disabled { opacity: .35; cursor: default; }
+.timeline-fighter:focus-visible, .timeline-scroll:focus-visible { outline: 2px solid #456c91; outline-offset: 2px; }
+@container (max-width: 700px) {
+  .combat-timeline { padding-left: 5px; gap: 3px; }
+  .combat-timeline-heading { gap: 3px; }
+  .combat-timeline-heading > svg, .combat-timeline-heading > span > span { display: none; }
+  .combat-timeline-heading strong { font-size: 0; }
+  .combat-timeline-heading strong::before { content: 'En vie'; font-size: 9px; display: block; }
+  .combat-timeline-heading small { display: block; margin: 1px 0 0; font-size: 12px; text-align: center; }
+}
+@media (max-height: 620px) {
+  .combat-timeline { height: 47px; }
+  .timeline-fighter { width: 39px; height: 35px; padding-right: 7px; }
+  .timeline-position { font-size: 7px; line-height: 8px; }
+  .timeline-portrait { font-size: 20px; }
+  .timeline-hp { right: 2px; width: 3px; }
+  .combat-timeline-heading > span > span { display: none; }
+  .timeline-scroll { height: 30px; }
+}

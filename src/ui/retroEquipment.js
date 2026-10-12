@@ -1,4 +1,4 @@
-import { ITEMS } from '../engine/equipment';
+import { equipmentItem } from '../engine/customEquipment';
 
 const SLOTS = [['hat', 1, [16]], ['cape', 2, [17, 81]], ['pet', 3, [18]]];
 
@@ -8,8 +8,8 @@ export function fighterAccessories(fighter, assets) {
   const parameters = {}, imports = [];
   if (fighter.isMonster || fighter.isSummon) return { parameters, imports };
   for (const [slot, index, types] of SLOTS) {
-    const item = ITEMS[fighter.loadout?.slots?.[slot]];
-    if (!item || !types.includes(item.type)) continue;
+    const item = equipmentItem(fighter.loadout?.slots?.[slot], fighter.loadout);
+    if (!item || !types.includes(item.type) || item.customEquipment?.appearance) continue;
     const name = `${item.type}_${item.gfx}`;
     const url = assets?.accessories?.symbols[name];
     if (!url) continue;

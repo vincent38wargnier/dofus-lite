@@ -117,6 +117,7 @@ test('killing two dungeon monsters clears the shared stats dock and lets the pla
   });
   const { container } = render(<LoadoutsProvider><PlayScreen allBots={[]} /></LoadoutsProvider>);
   fireEvent.click(container.querySelector('.setup-play'));
+  fireEvent.click(container.querySelector('.combat-choice-launch'));
   fireEvent.click(screen.getByRole('button', { name: 'Prêt' }));
   expect(container.querySelectorAll('.token.side-B')).toHaveLength(8);
   const victim = container.querySelector('.token[data-fighter-id="B"] .figure');

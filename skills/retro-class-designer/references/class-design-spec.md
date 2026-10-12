@@ -16,7 +16,24 @@ Version 1 · 10 October 2026 · target: this repository's imported Retro data an
 
 Passing the first two gates never proves the third. Existing spells are examples with context, not a menu of maximum allowances. A class built from the strongest ten original spells is not necessarily fair.
 
-The game currently allows much stronger combinations through its unrestricted workshop. These proposed rules govern the **new authoring package**, not a retroactive deletion or weakening of existing creations. A future importer should distinguish an experimental class from an evaluated class; the package author cannot grant themselves an evaluated badge.
+The graphical workshop and runtime ZIP importer now share enforced design budgets: 100 points per spell and 650 per complete kit, with at most ten spells. The score includes costs, reach, area, cooldown, durations, stacking, critical variants and kit amplification. Exact formulas are in the generated runtime ZIP rules. Original class kits are unchanged; old creations remain editable but must meet the new gates before entering combat. Budget admission still does not certify competitive balance.
+
+### Current equipment requirements
+
+The class must also be evaluated with its intended equipment. The [equipment rules](equipment-rules.md) include the formulas, level scaling, numerical restrictions and weapon rules. [Spell budget rationale](spell-balance.md) and [equipment calibration](equipment-balance.md) are bundled with this kit.
+
+| Gate | Maximum | Applies to |
+| --- | ---: | --- |
+| Spell | 100 | All normal/critical effects and casting constraints |
+| Spellbook | 650 | Up to ten spells, synergies and burst rotation |
+| Custom item | 100 | Family and **required item level**, plus separate stat caps |
+| Outfit with custom gear | 1650 | Equipped non-Dofus items, set bonuses and resource surcharges, allowing optimized gear with legal exos |
+
+These budgets are independent. Higher-level ordinary equipment can carry more raw power while its displayed ceiling remains 100. Family/level reference envelopes can plateau; the progression is not linear. Pets, mounts and shields use separate family envelopes without level scaling. The outfit calculation uses character level, while each custom item's own admission still uses its required level. Exact unrounded allowances for levels 1–200 are in `equipment-limits.json`; the prompts include the level-200 table used for imported classes.
+
+Dofus are excluded from equipment calibration and scoring, not from combat. Match them between control and candidate builds. Fixed damage on every hit, critical equipment, AP breakpoints, immediate boosts, resistances and sustain must be evaluated together with the spellbook.
+
+Equipment creation is available in **Atelier → Mes équipements** and **Stuff → Créer un équipement**. Custom equipment and loadouts are **not fields in the current class/dungeon ZIP format**. Supply any equipment proposal outside the playable ZIP and equip it in the UI after importing the class. A legacy `class.json` compiler result also does not prove passage of the current spell budgets; validate the runtime `content.json` package with the game or repository CLI.
 
 ## 2. Class design brief
 

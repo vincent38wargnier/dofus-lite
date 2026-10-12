@@ -1,9 +1,9 @@
+import { equipmentItem } from '../engine/customEquipment';
 import React from 'react';
 import { CLASSES } from '../engine/classes';
 import { ELEMENT_EMOJI, effectiveStat } from '../engine/formulas';
 import { RetroPortrait, RetroSpellIcon } from './RetroAssets';
 import { spellsOf } from '../engine/engine';
-import { ITEMS } from '../engine/equipment';
 import { EquipmentIcon } from './LoadoutPicker';
 import FighterEffects from './FighterEffects';
 import FighterCombatStats from './FighterCombatStats';
@@ -64,7 +64,7 @@ export default function FighterPanel({ fighter, fighters, side, isActive, compac
       <FighterEffects fighter={fighter} fighters={fighters} isActive={isActive} />
 
       {!compact && fighter.equipment ? <details className="fighter-equipment"><summary>{fighter.equipment.items.length} objets équipés</summary>
-        {fighter.equipment.items.map(item => <div key={item.slot}><EquipmentIcon item={ITEMS[item.id]} /><span>{item.name}</span></div>)}
+        {fighter.equipment.items.map(item => <div key={item.slot}><EquipmentIcon item={equipmentItem(item.id, fighter.loadout)} /><span>{item.name}</span></div>)}
         {fighter.equipment.sets.filter(set => set.effects.length).map(set => <p key={set.id}>{set.name} · {set.count}/{set.total}</p>)}
       </details> : null}
 

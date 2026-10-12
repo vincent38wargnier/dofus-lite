@@ -1,8 +1,7 @@
-// Match en direct: un humain contre un bot, sur le MÊME moteur et avec les
-// MÊMES règles d'arbitrage que l'arène (budget d'actions, actions invalides,
-// invocations autonomes des deux camps). La différence: le combat avance pas
-// à pas — le joueur clique, le bot joue une action à la fois pour que l'UI
-// puisse animer chaque coup.
+// Match en direct: une équipe d'alliés manuels ou automatiques contre des
+// adversaires, sur le même moteur et avec les mêmes règles que l'arène.
+// Le joueur contrôle chaque allié manuel à son tour; bots et invocations
+// avancent une action à la fois pour que l'UI puisse animer chaque coup.
 
 import {
   createGame, applyAction, getView, currentFighter, placeFighter, readyFighter,
@@ -14,20 +13,22 @@ import { MAX_ACTIONS_PER_TURN, MAX_INVALID_PER_TURN } from '../arena/runner';
 import { KANOJEDO_MAP_ID, POUTCH_ID, DEFAULT_BOSS_ID, defaultMonsterGrade, monsterDecide, BOSSES } from '../engine/monsters';
 import { dungeonRoster, dungeonMapId } from '../engine/dungeons';
 import { customDungeonRoster } from '../engine/customDungeons';
+import { opponentRoster } from '../engine/opponentTeam';
+import { allyRoster, allyFighterId, teamRoster, teamFighterId } from '../engine/allyTeam';
 
 export const HUMAN_ID = 'A';
 export const TURN_SECONDS = 30; // comme en 1.29
 
 export class LiveMatch {
-  constructor({ playerClass, botClass, mapId, seed, botName, botDecide, playerName = 'Vous', loadouts = {}, mode = 'duel', monsterGrade = 5, bossId = DEFAULT_BOSS_ID, bossGrade = defaultMonsterGrade(bossId), dungeon }) {
+  constructor({ playerClass, botClass, mapId, seed, botName, botDecide, playerName = 'Vous', playerController = 'player', loadouts = {}, mode = 'duel', monsterGrade = 5, bossId = DEFAULT_BOSS_ID, bossGrade = defaultMonsterGrade(bossId), dungeon, opponents, opponentBots = {}, allies = [], allyBots = {}, team }) {
     if (mode === 'boss' && !BOSSES.some(boss => boss.id === bossId)) throw new Error('Boss inconnu.');
     const init = createGame({
       mapId: mode === 'custom' ? dungeon?.mapId : mode === 'kanojedo' ? KANOJEDO_MAP_ID : mode === 'boss' ? dungeonMapId(bossId) : mapId,
       seed,
       placement: true,
       fighters: [
-        { id: 'A', name: playerName, botName: playerName, classId: playerClass, loadout: loadouts.A },
-        ...(mode === 'custom' ? customDungeonRoster(dungeon)
+        ...(team ? teamRoster(team) : [{ id: 'A', name: playerName, botName: playerName, classId: playerClass, loadout: loadouts.A }, ...allyRoster(allies)]),
+        ...(mode === 'duel' && opponents ? opponentRoster(opponents) : mode === 'custom' ? customDungeonRoster(dungeon)
           : mode === 'kanojedo' ? [{ id: 'B', monsterId: POUTCH_ID, monsterGrade }]
           : mode === 'boss' ? dungeonRoster(bossId, bossGrade, seed)
           : [{ id: 'B', name: botName, botName, classId: botClass, loadout: loadouts.B }]),
@@ -35,7 +36,13 @@ export class LiveMatch {
     });
     this.state = init.state;
     this.initialEvents = [...init.events];
-    for (const opponent of Object.values(init.state.fighters).filter(f => f.id !== HUMAN_ID)) {
+    this.humanIds = new Set(team ? team.flatMap((entry, index) => entry.controller === 'player' ? [teamFighterId(index)] : [])
+      : [...(playerController === 'player' ? [HUMAN_ID] : []), ...allies.flatMap((entry, index) => entry.controller === 'player' ? [allyFighterId(index)] : [])]);
+    this.lastHumanId = this.humanIds.values().next().value || HUMAN_ID;
+    this.allyBots = allyBots;
+    this.opponentBots = opponentBots;
+    this.dungeonCharacters = new Set(mode === 'custom' ? Object.values(init.state.fighters).filter(f => f.team === 'B' && !f.isMonster).map(f => f.id) : []);
+    for (const opponent of Object.values(init.state.fighters).filter(f => f.team !== 'A')) {
       const ready = readyFighter(this.state, opponent.id);
       this.state = ready.state;
       this.initialEvents.push(...ready.events);
@@ -54,21 +61,32 @@ export class LiveMatch {
 
   current() { return currentFighter(this.state); }
 
-  isHumanTurn() { return !this.placing && !this.state.over && this.current().id === HUMAN_ID; }
+  isHumanTurn() { return !this.placing && !this.state.over && this.humanIds.has(this.current().id); }
 
-  placeHuman(to) {
-    const result = placeFighter(this.state, HUMAN_ID, to);
+  controlledFighter() {
+    if (this.isHumanTurn()) return this.current();
+    return [this.lastHumanId, ...this.humanIds].map(id => this.state.fighters[id]).find(f => f?.hp > 0) || this.state.fighters.A;
+  }
+
+  placeHuman(to, fighterId = HUMAN_ID) {
+    if (this.state.fighters[fighterId]?.team !== 'A') return { ok: false, reason: 'Choisissez un membre de votre équipe.', events: [] };
+    const result = placeFighter(this.state, fighterId, to);
     this.state = result.state;
     return result;
   }
 
   ready() {
-    const result = readyFighter(this.state, HUMAN_ID);
-    this.state = result.state;
-    return result;
+    const events = [];
+    for (const fighter of Object.values(this.state.fighters).filter(f => f.team === 'A')) {
+      if (this.state.placement.ready[fighter.id]) continue;
+      const result = readyFighter(this.state, fighter.id);
+      if (!result.ok) return result;
+      this.state = result.state; events.push(...result.events);
+    }
+    return { ok: true, state: this.state, events };
   }
 
-  humanView() { return getView(this.state, HUMAN_ID); }
+  humanView() { return getView(this.state, this.controlledFighter().id); }
 
   // L'api officielle sur la vue du joueur: cases atteignables, cibles de
   // sorts, tacle… — exactement ce que verrait un bot à sa place.
@@ -76,6 +94,7 @@ export class LiveMatch {
 
   humanAct(action) {
     if (!this.isHumanTurn()) return { ok: false, events: [] };
+    this.lastHumanId = this.current().id;
     const r = applyAction(this.state, action);
     this.state = r.state;
     return { ok: r.ok, events: r.events };
@@ -96,8 +115,12 @@ export class LiveMatch {
     try {
       const view = getView(this.state, fid);
       const api = makeBotApi(view, this.rngs[fid]);
-      action = f.isMonster ? monsterDecide(view, api, utilityDecide)
-        : (fid === 'B' && !f.isSummon) ? this.botDecide(view, api) : utilityDecide(view, api);
+      const assignedBot = this.opponentBots[fid] || this.allyBots[fid];
+      action = !f.isSummon && assignedBot ? assignedBot.decide(view, api)
+        : f.isMonster ? monsterDecide(view, api, utilityDecide)
+        : this.dungeonCharacters.has(fid) ? utilityDecide(view, api)
+        : f.isSummon ? utilityDecide(view, api)
+          : ((f.team === 'B' ? this.botDecide : null) || utilityDecide)(view, api);
     } catch (err) {
       const events = [{ t: 'bot_error', fighter: fid, message: String(err && err.message ? err.message : err) }];
       const p = applyAction(this.state, { type: 'PASS' });

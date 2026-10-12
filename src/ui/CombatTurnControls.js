@@ -4,7 +4,7 @@ import { TURN_SECONDS } from '../game/liveMatch';
 
 export default function CombatTurnControls({ player, resources = player, turn, placing, over, humanTurn, timeLeft, onReady, onEndTurn, onRematch, onPlayerFocus }) {
   const remaining = Math.max(0, Math.ceil(timeLeft));
-  return <div className={`play-controls combat-turn-controls${humanTurn ? ' your-turn' : ''}`} aria-label="Vos commandes de combat" onFocus={onPlayerFocus}>
+  return <div className={`play-controls combat-turn-controls${humanTurn ? ' your-turn' : ''}`} data-controlled-fighter={player.id} aria-label="Vos commandes de combat" onFocus={onPlayerFocus}>
     <div className="player-resources" data-points-mode={resources.preview ? 'next-turn' : 'current'}
       aria-label={resources.preview ? 'Vos PA et PM prévus au prochain tour' : 'Vos points actuels'}>
       <span className="hp" title={`Vos PV : ${player.hp} / ${player.maxHp}`}><Heart size={13} aria-hidden="true" /><strong>{player.hp}</strong><small>PV</small></span>

@@ -15,13 +15,15 @@ import { utilityDecide } from '../bots/utilityBrain';
 import { monsterDecide } from '../engine/monsters';
 import { dungeonMapId, dungeonRoster, dungeonForBoss } from '../engine/dungeons';
 import { customDungeonRoster } from '../engine/customDungeons';
+import { opponentRoster, opponentFighterId } from '../engine/opponentTeam';
+import { allyRoster, teamRoster } from '../engine/allyTeam';
 
 export const MAX_ACTIONS_PER_TURN = 25;
 export const MAX_SAYS_PER_TURN = 2;
 export const MAX_INVALID_PER_TURN = 3;
 
 function* matchSteps({
-  bots,            // { A: {name, decide}, B: {name, decide} }
+  bots,            // Per-fighter { A: {name, decide}, B: {...}, B2: {...}, ... }
   classes,         // { A: 'IOP', B: 'CRA' }
   mapId = 'arene',
   seed = 1,
@@ -31,6 +33,9 @@ function* matchSteps({
   bossId,
   bossGrade,
   dungeon,
+  opponents,
+  allies = [],
+  team,
 }) {
   if (mode === 'boss') mapId = dungeonMapId(bossId);
   if (mode === 'custom') mapId = dungeon?.mapId;
@@ -38,8 +43,8 @@ function* matchSteps({
     mapId,
     seed,
     fighters: [
-      { id: 'A', name: bots.A.name, botName: bots.A.name, classId: classes.A, loadout: loadouts.A },
-      ...(mode === 'custom' ? customDungeonRoster(dungeon) : mode === 'boss' ? dungeonRoster(bossId, bossGrade, seed)
+      ...(team ? teamRoster(team) : [{ id: 'A', name: bots.A.name, botName: bots.A.name, classId: classes.A, loadout: loadouts.A }, ...allyRoster(allies)]),
+      ...(opponents ? opponentRoster(opponents) : mode === 'custom' ? customDungeonRoster(dungeon) : mode === 'boss' ? dungeonRoster(bossId, bossGrade, seed)
         : [{ id: 'B', name: bots.B.name, botName: bots.B.name, classId: classes.B, loadout: loadouts.B }]),
     ],
   });
@@ -77,6 +82,8 @@ function* matchSteps({
   // Les invocations sont autonomes: le cerveau utilitaire joue leur tour
   // (comme les serveurs 1.29 où chaque monstre a sa propre IA).
   const summonRngs = {};
+  const controlledMonsters = new Set((opponents || []).flatMap((entry, index) =>
+    entry.kind === 'monster' && entry.botId ? [opponentFighterId(index)] : []));
   const summonBot = (fid) => {
     if (!summonRngs[fid]) summonRngs[fid] = createRng(hashSeed(`${seed}:${fid}`));
     return {
@@ -91,7 +98,9 @@ function* matchSteps({
     guard += 1;
     const current = currentFighter(state);
     const fid = current.id;
-    const bot = current.isSummon || current.isMonster ? summonBot(fid) : bots[fid];
+    const bot = current.isSummon || (current.isMonster && !controlledMonsters.has(fid))
+      || (mode === 'custom' && current.team === 'B' && !bots[fid] && !bots.B) ? summonBot(fid) : bots[fid] || bots[current.team];
+    if (!botRngs[fid]) botRngs[fid] = createRng(hashSeed(`${seed}:${fid}`));
     const turnAtStart = state.turn;
 
     let actionsThisTurn = 0;
@@ -180,9 +189,12 @@ function* matchSteps({
 
   return {
     config: { mapId, seed, classes, loadouts: JSON.parse(JSON.stringify(loadouts)),
+      ...(team ? { team: JSON.parse(JSON.stringify(team)) } : {}),
+      ...(allies.length ? { allies: JSON.parse(JSON.stringify(allies)) } : {}),
+      ...(opponents ? { opponents: JSON.parse(JSON.stringify(opponents)) } : {}),
       ...(mode === 'boss' ? { mode, bossId, bossGrade } : {}),
       ...(mode === 'custom' ? { mode, dungeon: JSON.parse(JSON.stringify(dungeon)) } : {}),
-      botNames: { A: bots.A.name, B: mode === 'custom' ? dungeon.name : mode === 'boss' ? dungeonForBoss(bossId).name : bots.B.name } },
+      botNames: { A: team ? state.fighters.A.name : bots.A.name, B: opponents ? state.fighters.B.name : mode === 'custom' ? dungeon.name : mode === 'boss' ? dungeonForBoss(bossId).name : bots.B.name } },
     winner: state.winner,          // 'A' | 'B' | null (draw)
     endReason: state.endReason,
     turns: state.turn,

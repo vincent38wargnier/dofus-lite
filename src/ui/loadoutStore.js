@@ -1,3 +1,4 @@
+import { customEquipmentShape } from '../engine/customEquipment';
 import { CLASSES } from '../engine/classes';
 import { isCustomSpellbookDraft } from '../engine/customSpells';
 import { isForgeSnapshot } from '../engine/forgedItems';
@@ -23,6 +24,7 @@ export function isLoadout(value) {
     && (value.profile == null || record(value.profile))
     && (value.artworkId == null || (typeof value.artworkId === 'string' && /^[a-zA-Z0-9_-]{1,100}$/.test(value.artworkId)))
     && (value.petBonuses == null || (record(value.petBonuses) && Object.values(value.petBonuses).every(integer)))
+    && (value.customEquipment == null || (record(value.customEquipment) && Object.entries(value.customEquipment).every(([id, definition]) => customEquipmentShape(definition) && String(definition.id) === id)))
     && (value.forgedItems == null || (record(value.forgedItems) && Object.values(value.forgedItems).every(isForgeSnapshot)))
     && (value.spells == null || (record(value.spells)
       && (value.spells.custom === undefined || isCustomSpellbookDraft(value.spells.custom))
@@ -67,7 +69,7 @@ export function sameLoadout(a, b) {
   return JSON.stringify(canonical(a)) === JSON.stringify(canonical(b));
 }
 
-const EQUIPMENT_FIELDS = ['slots', 'rollMode', 'rollSeed', 'rollOrigins', 'forgedItems', 'petBonuses'];
+const EQUIPMENT_FIELDS = ['slots', 'rollMode', 'rollSeed', 'rollOrigins', 'forgedItems', 'petBonuses', 'customEquipment'];
 
 export function equipmentSnapshot(loadout) {
   return clone(Object.fromEntries(EQUIPMENT_FIELDS.filter(key => loadout[key] !== undefined).map(key => [key, loadout[key]])));

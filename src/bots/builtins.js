@@ -269,6 +269,25 @@ function decide(view, api) {
   },
 
   {
+    id: 'synapse',
+    name: 'Synapse',
+    emoji: '🧬',
+    recommendedClass: null,
+    description: 'Prototype expérimental : réseau de neurones entraîné par self-play (PPO) au niveau 100 sans équipement. Hors de ces conditions (niveau 200, objets) il joue mal — boucles de buffs, pas de calcul de létale. Adversaire sérieux : IA Maison.',
+    code: `// Synapse — la politique neuronale (CNN spatial, ~1,6M de paramètres).
+// Entraînée par imitation de l'IA Maison puis self-play PPO: le réseau lit
+// la vue complète (plateau, 12 jetons combattants, 24 jetons sorts avec
+// cooldowns et timers) et joue la meilleure action légale selon ses logits.
+//
+// Les poids se chargent en tâche de fond (public/models/synapse).
+// Tant qu'ils n'y sont pas, api.neural() répond comme l'IA Maison.
+
+function decide(view, api) {
+  return api.neural();
+}`,
+  },
+
+  {
     id: 'cortex',
     name: 'Cortex',
     emoji: '🧠',

@@ -63,8 +63,15 @@
     "ai:benchmark": "node scripts/benchmark_ai.cjs",
     "ai:calibrate": "node scripts/calibrate_ai_profiles.cjs",
     "templates:content": "node scripts/build_content_templates.cjs",
+    "templates:authoring": "node scripts/build_authoring_kit.cjs",
     "validate:content": "node scripts/content-pack.cjs validate",
-    "proof:content": "node scripts/proof_content_packages.cjs"
+    "proof:content": "node scripts/proof_content_packages.cjs",
+    "proof:profiles": "node scripts/proof_profiles_navigation.cjs",
+    "proof:combat-choice": "node scripts/proof_combat_choice.cjs",
+    "proof:combat-lobby": "node scripts/proof_combat_lobby.cjs",
+    "proof:duel-composer": "node scripts/proof_duel_composer.cjs",
+    "audit:equipment-balance": "node scripts/audit_equipment_balance.cjs",
+    "proof:custom-equipment": "node scripts/proof_custom_equipment.cjs"
   },
   "eslintConfig": {
     "extends": [
@@ -85,6 +92,7 @@
     ]
   },
   "devDependencies": {
+    "onnxruntime-node": "^1.30.0",
     "puppeteer-core": "^25.3.0"
   }
 }

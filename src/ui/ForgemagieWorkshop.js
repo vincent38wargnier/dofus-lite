@@ -1,6 +1,7 @@
+import { equipmentItem } from '../engine/customEquipment';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Anvil, FlaskConical, Gem, History, Sparkles } from 'lucide-react';
-import { EQUIPMENT_SLOTS, ITEMS, rolledEffects } from '../engine/equipment';
+import { EQUIPMENT_SLOTS, rolledEffects } from '../engine/equipment';
 import { RUNES, POTIONS, FORGE_SOURCES, FM_STATS, OUTCOMES, createForgedItem, naturalBounds,
   extraWeight, forgeRestriction, forgeChances, forgeAttempt, runeWeight } from '../engine/forgemagie';
 import { matchingForge, validateForgedItem, convertedWeaponRows } from '../engine/forgedItems';
@@ -29,10 +30,10 @@ function StartingValue({ value, min, max, disabled, name, onCommit }) {
 
 export default function ForgemagieWorkshop({ loadout, change, initialSlot, saveError }) {
   const root = useRef(null);
-  const equipped = EQUIPMENT_SLOTS.filter(s => ITEMS[loadout.slots[s.id]]);
+  const equipped = EQUIPMENT_SLOTS.filter(s => equipmentItem(loadout.slots[s.id], loadout));
   const [chosenSlot, setChosenSlot] = useState(initialSlot);
-  const slot = equipped.find(s => s.id === chosenSlot) || equipped.find(s => !forgeRestriction(ITEMS[loadout.slots[s.id]])) || equipped[0];
-  const item = ITEMS[loadout.slots[slot?.id]];
+  const slot = equipped.find(s => s.id === chosenSlot) || equipped.find(s => !forgeRestriction(equipmentItem(loadout.slots[s.id], loadout))) || equipped[0];
+  const item = equipmentItem(loadout.slots[slot?.id], loadout);
   const [seed] = useState(() => window.crypto.getRandomValues(new Uint32Array(1))[0]);
   const [kind, setKind] = useState('rune');
   const [runeChoices, setRuneChoices] = useState({});
@@ -124,7 +125,7 @@ export default function ForgemagieWorkshop({ loadout, change, initialSlot, saveE
       : 'Simulation Retro : poids documentés, chances et pertes reconstituées. Les pourcentages affichés sont des estimations.'}</p>
     {!equipped.length ? <p className="fm-empty">Équipe un objet dans l’onglet Équipements pour commencer.</p> : <>
       <div className="fm-equipped" aria-label="Objets à forgemager">{equipped.map(s => {
-        const it = ITEMS[loadout.slots[s.id]];
+        const it = equipmentItem(loadout.slots[s.id], loadout);
         return <button type="button" key={s.id} aria-pressed={slot?.id === s.id} data-forge-slot={s.id} className={slot?.id === s.id ? 'selected' : ''}
           onClick={() => { setChosenSlot(s.id); setKind('rune'); setRemaining(0); setNotice(''); setUndo(null); }}>
           <EquipmentIcon item={it} /><span>{s.name}<small>{it.name}</small></span>{matchingForge(it, loadout, s.id) ? <b>FM</b> : null}</button>;
@@ -147,7 +148,7 @@ export default function ForgemagieWorkshop({ loadout, change, initialSlot, saveE
             </div>
             <div className="fm-meters"><div><span>Puits disponible</span><strong data-forge-puits>{state.puits}</strong><small>Réserve du simulateur</small></div>
               <div><span>Poids over / exo</span><strong>{extraWeight(item, state.stats).toLocaleString('fr-FR', { maximumFractionDigits: 2 })}<small> / 101</small></strong></div></div>
-            <p className="fm-save-hint">Jet conservé dans ce brouillon. Utilise <b>Mes stuffs</b> pour enregistrer ou mettre à jour ta variante. Les réglages de jets naturels ne le remplacent pas.</p>
+            <p className="fm-save-hint">Jet enregistré automatiquement dans <b>Mes équipements</b>. Retrouve cet objet dans l’inventaire, même après l’avoir retiré du stuff.</p>
           </section>
           <section className="fm-fusion-panel" aria-label="Fusion de rune">
             <div className="fm-reagent-tabs"><button type="button" className={kind === 'rune' ? 'selected' : ''} onClick={() => { setKind('rune'); setRemaining(0); }}><Gem size={16} /> Runes</button>

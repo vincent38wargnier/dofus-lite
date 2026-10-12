@@ -1,0 +1,235 @@
+.combat-choice {
+  width: min(1000px, calc(100vw - 32px)); max-width: none; max-height: none;
+  height: min(860px, calc(100dvh - 48px)); padding: 0; margin: auto;
+  border: 1px solid var(--border); border-radius: 18px;
+  background: var(--panel); color: var(--text); box-shadow: 0 24px 100px #14251d50;
+  overflow: hidden;
+}
+dialog.combat-choice:not([open]) { display: none; }
+.combat-choice::backdrop { background: #202c29a6; backdrop-filter: blur(5px); }
+.combat-choice-layout { height: 100%; display: flex; flex-direction: column; min-height: 0; }
+.combat-choice-heading { display: flex; justify-content: space-between; align-items: flex-start; padding: 22px 26px 18px; gap: 16px; border-bottom: 1px solid var(--border); }
+.combat-choice-heading h2 { margin: 0 0 6px; font-size: 26px; }
+.combat-choice-heading p { margin: 0; font-size: 14px; color: var(--muted); }
+.combat-choice-close { padding: 8px; flex: 0 0 auto; }
+.combat-choice-body { padding: 22px 26px; overflow: auto; min-height: 0; flex: 1; overscroll-behavior: contain; }
+.combat-resume { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 13px; margin-bottom: 16px; border: 1px solid var(--border); border-radius: 9px; background: #edf2e2; font-size: 12px; color: var(--gold); }
+.combat-choice-modes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 22px; }
+.combat-choice-modes button { display: grid; justify-items: start; gap: 8px; padding: 16px; border-radius: 10px; background: #f6f5ed; border: 1px solid var(--border); color: var(--text); text-align: left; cursor: pointer; font: inherit; }
+.combat-choice-modes button svg { color: #647748; }
+.combat-choice-modes button strong { font-size: 16px; }
+.combat-choice-modes button span { font-size: 12px; color: var(--muted); }
+.combat-choice-modes button[aria-pressed=true] { background: #e6edda; border-color: #647748; box-shadow: inset 0 0 0 1px #647748; }
+.combat-choice button:focus-visible { outline: 3px solid #647748; outline-offset: 3px; }
+.combat-choice .match-options { gap: 16px; grid-template-columns: 1fr 1fr; }
+.combat-choice .setup-map, .combat-choice .setup-opponent { padding: 16px; }
+.combat-choice .opponent-preview { margin-bottom: 12px; }
+.combat-choice .opponent-preview .retro-portrait { width: 58px; height: 64px; }
+.combat-choice .opponent-preview h2 { font-size: 21px; }
+.combat-choice .setup-map .map-preview { height: 150px; max-height: 150px; }
+.combat-choice .map-placeholder { height: 100%; }
+.combat-choice .field { font-size: 13px; }
+.combat-choice .field select, .combat-choice .field input { padding: 9px 11px; }
+.combat-choice .match-advanced { margin: 18px 0 0; }
+.combat-choice-automation { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-bottom: 18px; }
+.combat-choice-automation .field { min-width: 220px; }
+.combat-choice-footer { flex: 0 0 auto; padding: 18px 26px; border-top: 1px solid var(--border); background: #f4f4e9; }
+.combat-choice-footer .loadout-errors { margin: 0 0 12px; }
+.combat-choice-confirm { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.combat-choice-confirm > div:first-child { min-width: 0; }
+.combat-choice-confirm strong { display: block; font-size: 14px; }
+.combat-choice-confirm small { display: flex; align-items: center; gap: 5px; color: var(--muted); font-size: 11px; margin-top: 6px; }
+.combat-choice-actions { display: flex; gap: 8px; flex: 0 0 auto; }
+.combat-choice-actions .btn { padding: 12px 16px; }
+.combat-choice .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background-color .15s, color .15s, border-color .15s, box-shadow .15s; }
+.combat-choice .boss-catalogue-heading h3 { font-size: 18px; }
+.combat-choice .boss-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); max-height: 230px; overflow-y: auto; overscroll-behavior: contain; padding: 3px; scrollbar-gutter: stable; }
+.combat-choice .boss-card { padding: 10px; gap: 9px; min-height: 84px; }
+.combat-choice .boss-card .retro-portrait { width: 40px; height: 44px; }
+.combat-choice .boss-card strong { font-size: 12px; }
+.combat-choice .boss-card small { font-size: 11px; }
+.combat-choice .boss-count { margin: 8px 0; }
+.combat-choice .boss-unavailable { margin: 10px 0; }
+.combat-choice .dungeon-compact-selection { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px; background: #e8eddd; border-radius: 8px; margin: 14px 0; }
+.combat-choice .dungeon-compact-selection h3 { margin: 0; font-size: 16px; }
+.combat-choice .dungeon-compact-selection .field { margin: 0; }
+.combat-choice .dungeon-combat-details > summary { cursor: pointer; color: #58693b; font-size: 13px; }
+
+/* A ready-to-play overview, with one focused editor at a time. */
+.combat-choice.combat-lobby, .combat-choice.combat-lobby:has(.duel-composer) {
+  --duel-ink: #34412f; --duel-accent: #647a47; --duel-line: #dce0d1;
+  width: min(1060px, calc(100vw - 32px)); height: min(740px, calc(100dvh - 32px));
+  background: #faf9f3; border: 1px solid #e0e2d1; border-radius: 22px;
+}
+.combat-choice.combat-lobby.editing { width: min(1140px, calc(100vw - 32px)); height: min(840px, calc(100dvh - 32px)); }
+.combat-lobby .combat-choice-heading { padding: 22px 28px 18px; border-bottom: 0; align-items: flex-start; }
+.combat-lobby .combat-choice-heading h2 { font-size: 27px; letter-spacing: -.04em; margin-bottom: 5px; }
+.combat-lobby .combat-choice-heading p { font-size: 12px; color: #77806d; }
+.combat-lobby .combat-choice-close { width: 40px; height: 40px; min-height: 40px; border-radius: 50%; background: #f0f0e7; border-color: transparent; }
+.combat-choice-back { display: flex; align-items: center; gap: 6px; min-height: 32px; padding: 0; border: 0; background: none; color: #607646; font: inherit; font-size: 12px; cursor: pointer; margin-bottom: 10px; }
+.combat-choice.combat-lobby .combat-choice-body { padding: 0 28px 22px; }
+.combat-lobby .combat-choice-modes { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 22px; }
+.combat-lobby .combat-choice-modes button { position: relative; display: flex; flex-direction: row; align-items: center; gap: 12px; padding: 14px; border-radius: 12px; background: #f5f4ed; border: 1px solid #e2e1d5; }
+.combat-lobby .combat-choice-modes button > span:last-of-type { min-width: 0; display: grid; gap: 4px; }
+.combat-lobby .combat-choice-modes button strong { display: block; font-size: 14px; color: #3b4534; }
+.combat-lobby .combat-choice-modes button small { font-size: 11px; line-height: 1.4; color: #7a8171; }
+.combat-lobby .combat-choice-modes .combat-mode-icon { width: 42px; height: 42px; flex: 0 0 42px; display: grid; place-items: center; border-radius: 11px; background: #e9dfce; }
+.combat-lobby .combat-choice-modes .combat-mode-icon svg { color: #9d7942; }
+.combat-lobby .combat-choice-modes button[data-mode=boss] .combat-mode-icon { background: #e7e0ee; }.combat-lobby .combat-choice-modes button[data-mode=boss] .combat-mode-icon svg { color: #846298; }
+.combat-lobby .combat-choice-modes button[data-mode=kanojedo] .combat-mode-icon { background: #dce8df; }.combat-lobby .combat-choice-modes button[data-mode=kanojedo] .combat-mode-icon svg { color: #528067; }
+.combat-lobby .combat-choice-modes button[aria-pressed=true] { border-color: #859665; background: #eff3e6; box-shadow: 0 2px 8px #647a4710, inset 0 0 0 1px #859665; }
+.combat-lobby .combat-mode-check { position: absolute; top: 7px; right: 7px; opacity: 0; }
+.combat-lobby [aria-pressed=true] > .combat-mode-check { opacity: 1; }
+.combat-versus { display: grid; grid-template-columns: minmax(0, 1fr) 50px minmax(0, 1fr); align-items: center; gap: 6px; }
+.combat-team-preview { min-width: 0; align-self: stretch; display: flex; flex-direction: column; border: 1px solid #d7e0c7; border-radius: 16px; background: linear-gradient(160deg, #f0f5e7, #fffdf6 75%); padding: 16px; }
+.combat-team-preview.enemies { border-color: #e6d7c8; background: linear-gradient(160deg, #f6ede3, #fffdf6 75%); }
+.combat-team-preview > header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.combat-team-preview h3 { display: flex; align-items: center; gap: 7px; min-width: 0; margin: 0; font-size: 14px; color: #566e3e; }
+.combat-team-preview.enemies h3 { color: #95704e; }
+.combat-team-preview h3 span { font-size: 10px; font-weight: 500; color: #808673; }
+.combat-edit-link { display: inline-flex; align-items: center; gap: 2px; border: 0; background: none; color: #667b4f; font: inherit; font-size: 11px; min-height: 32px; padding: 4px; cursor: pointer; }
+.combat-team-preview.enemies .combat-edit-link { color: #967251; }
+.combat-versus-medal { display: grid; place-items: center; gap: 2px; width: 44px; height: 54px; justify-self: center; color: #a99772; font-size: 11px; font-weight: 800; letter-spacing: .1em; }
+.combat-members { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; gap: 10px 7px; list-style: none; padding: 0; margin: 0 0 8px; }
+.combat-member { display: grid; justify-items: center; min-width: 0; text-align: center; gap: 4px; }
+.combat-member-art { display: grid; place-items: center; width: 64px; height: 68px; max-width: 100%; border-radius: 13px; background: #e4eaca91; }
+.enemies .combat-member-art { background: #eedfc580; }
+.combat-member-art { position: relative; }
+.combat-member-remove { position: absolute; top: -6px; right: -7px; width: 28px; height: 28px; padding: 0; display: grid; place-items: center; border: 1px solid #d5dcc9; border-radius: 50%; background: #fffdf6; color: #69765b; cursor: pointer; box-shadow: 0 2px 5px #3b45251a; }
+.combat-member-remove:hover { color: #963f35; border-color: #c6897a; background: #fceee7; }
+.combat-member-remove:focus-visible { outline: 2px solid #617944; outline-offset: 2px; }
+.combat-member-art .retro-portrait { width: 55px; height: 63px; max-width: 100%; filter: drop-shadow(0 4px 2px #3e43251c); }
+.combat-member strong { font-size: 10px; line-height: 1.3; font-weight: 650; max-width: 100%; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.combat-member small { display: flex; align-items: center; justify-content: center; gap: 3px; font-size: 10px; color: #7d826f; }
+.combat-add-member { min-width: 0; }
+.combat-add-member button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; min-height: 90px; width: 100%; border: 1px dashed #bccbab; border-radius: 12px; padding: 8px 4px; background: #f5f7ed; color: #7b9264; font: inherit; font-size: 10px; cursor: pointer; }
+.enemies .combat-add-member button { border-color: #d6c2a8; background: #faf5eb; color: #a28c6a; }
+.combat-add-member button:hover { background: #e9f0dc; }.enemies .combat-add-member button:hover { background: #f5e8d5; }
+.combat-team-caption { display: flex; align-items: center; gap: 5px; font-size: 10px; line-height: 1.5; color: #929580; margin: auto 0 0; padding-top: 12px; }
+.combat-team-caption svg { flex: 0 0 auto; }
+.combat-dungeon-title { display: flex; justify-content: space-between; align-items: center; gap: 4px; padding: 0; margin: 0 0 13px; border: 0; background: none; color: #725835; font: inherit; font-size: 14px; font-weight: 650; text-align: left; cursor: pointer; min-height: 30px; }
+.combat-dungeon-title svg { flex-shrink: 0; }
+.dungeon-members { gap: 8px 5px; }.dungeon-members .combat-member-art { height: 44px; width: 50px; }.dungeon-members .retro-portrait { height: 43px; width: 40px; }.dungeon-members .combat-member strong { font-size: 9px; }.dungeon-members .combat-member small { font-size: 9px; }
+.combat-grade { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; margin-top: auto; padding-top: 10px; font-size: 11px; color: #89704e; }
+.combat-grade select { min-width: 0; max-width: 100%; font: inherit; font-size: 11px; color: #695940; background: #fffdf7; border: 1px solid #e1d7c7; border-radius: 7px; min-height: 34px; padding: 5px; }
+.combat-terrain { margin-top: 18px; display: flex; gap: 17px; align-items: center; padding: 11px; border: 1px solid #dedfcc; border-radius: 13px; background: #f0f1e5; }
+.combat-terrain > .map-preview { flex: 0 0 128px; width: 128px; height: 77px; border-radius: 8px; overflow: hidden; background: #d8ddc4; }
+.combat-terrain-name { flex: 1; min-width: 0; display: grid; gap: 5px; }
+.combat-terrain-name small { display: flex; align-items: center; gap: 4px; font-size: 9px; letter-spacing: .1em; color: #81906c; }
+.combat-terrain-name strong { font-size: 14px; color: #45543a; overflow-wrap: anywhere; }.combat-terrain-name > span { font-size: 10px; color: #879078; }
+.combat-terrain .btn { font-size: 11px; background: #fffef6; white-space: nowrap; padding: 10px 12px; }
+.combat-play-style { display: flex; align-items: center; gap: 18px; margin-top: 18px; }
+.combat-control-toggle { display: flex; flex: 0 0 auto; gap: 4px; padding: 4px; border: 1px solid #e1e2d3; background: #efefe6; border-radius: 11px; }
+.combat-control-toggle button { font: inherit; font-size: 12px; display: flex; align-items: center; gap: 7px; color: #89907d; border: 0; border-radius: 8px; padding: 10px 15px; cursor: pointer; background: transparent; }
+.combat-control-toggle button[aria-pressed=true] { background: #fffef8; color: #4d6439; box-shadow: 0 2px 5px #445a2f15; font-weight: 650; }
+.combat-play-style > p { color: #89917c; font-size: 11px; line-height: 1.5; max-width: 300px; margin: 0; }
+.combat-lobby .combat-choice-footer { padding: 16px 28px; background: #f2f3e8; }
+.combat-lobby .combat-choice-confirm { gap: 14px; }
+.combat-lobby .combat-choice-recap > strong { font-size: 12px; font-weight: 500; color: #626f54; }
+.combat-lobby .combat-choice-recap small { font-size: 10px; color: #869579; }
+.combat-lobby .combat-choice-actions .btn { min-height: 44px; font-size: 12px; padding: 12px 14px; border-radius: 9px; }
+.combat-lobby .combat-choice-actions .primary { font-size: 13px; padding: 12px 22px; box-shadow: 0 3px 0 #485d32; }
+.combat-lobby .combat-settings-button { border-color: transparent; background: transparent; color: #7b886a; }
+.combat-settings { max-width: 590px; display: grid; gap: 25px; margin: 12px auto; padding: 25px; background: #f0f3e6; border: 1px solid #dbe1d0; border-radius: 14px; }
+.combat-settings .field { display: grid; gap: 8px; margin: 0; }.combat-settings small, .combat-settings > p { font-size: 12px; line-height: 1.5; color: #838f76; }.combat-settings input, .combat-settings select { width: 100%; box-sizing: border-box; }
+.combat-lobby.editing .duel-catalogue-heading { margin-bottom: 10px; justify-content: flex-end; }.combat-lobby.editing .duel-catalogue-heading h3, .combat-lobby.editing .duel-catalogue-heading p { display: none; }
+.combat-lobby.editing .duel-catalogue-grid { max-height: none; overflow: visible; }
+.combat-lobby.editing .duel-team { position: sticky; top: 0; }
+.combat-lobby.editing .duel-team-list { max-height: min(430px, calc(100dvh - 365px)); }
+.combat-lobby.editing .duel-candidate-add { min-height: 34px; }
+.combat-lobby.editing .duel-team-member-info select { min-height: 30px; }
+.combat-lobby.editing .duel-map-grid, .combat-lobby.editing .boss-cards { max-height: none; overflow: visible; }
+.combat-lobby.editing .duel-map-browser { padding: 0 2px; }
+.combat-lobby.editing .boss-unavailable { font-size: 12px; }
+.combat-lobby .duel-map-card { transition: transform .15s, box-shadow .15s; }.combat-lobby .duel-map-card:hover { transform: translateY(-2px); box-shadow: 0 5px 15px #566b3420; }
+@media (max-width: 900px) {
+  .combat-members { grid-template-columns: repeat(3, minmax(0, 1fr)); }.dungeon-members { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .combat-lobby .combat-choice-modes button small { font-size: 10px; }
+}
+@media (max-width: 680px) {
+  .combat-choice.combat-lobby, .combat-choice.combat-lobby.editing { width: calc(100vw - 16px); height: calc(100dvh - 16px); border-radius: 15px; }
+  .combat-lobby .combat-choice-heading { padding: 17px 16px 15px; }.combat-lobby .combat-choice-heading h2 { font-size: 23px; }.combat-lobby .combat-choice-heading p { font-size: 11px; }
+  .combat-choice.combat-lobby .combat-choice-body { padding: 0 14px 16px; }
+  .combat-lobby .combat-choice-modes { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin-bottom: 15px; }
+  .combat-lobby .combat-choice-modes button { padding: 10px 4px; flex-direction: column; gap: 7px; justify-content: center; text-align: center; }
+  .combat-lobby .combat-choice-modes .combat-mode-icon { width: 32px; height: 30px; flex-basis: 30px; border-radius: 8px; }.combat-lobby .combat-mode-icon svg { width: 20px; height: 20px; }
+  .combat-lobby .combat-choice-modes button strong { font-size: 11px; }.combat-lobby .combat-choice-modes button small { display: none; }
+  .combat-lobby .combat-mode-check { width: 12px; height: 12px; top: 4px; right: 4px; }
+  .combat-versus { grid-template-columns: minmax(0, 1fr) 18px minmax(0, 1fr); gap: 3px; }
+  .combat-team-preview { border-radius: 12px; padding: 9px; }.combat-team-preview > header { flex-wrap: wrap; gap: 2px; align-items: start; margin-bottom: 6px; }
+  .combat-team-preview h3 { font-size: 11px; gap: 4px; }.combat-team-preview h3 svg { width: 13px; }.combat-team-preview h3 span { font-size: 9px; }
+  .combat-edit-link { font-size: 10px; min-height: 26px; padding: 0; }.combat-edit-link svg { width: 12px; }
+  .combat-versus-medal { width: 18px; font-size: 9px; }.combat-versus-medal > svg { display: none; }
+  .combat-members { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 4px; }
+  .combat-member-art { width: 52px; height: 58px; }.combat-member-art .retro-portrait { width: 43px; height: 53px; }.combat-member strong, .combat-member small { font-size: 9px; }
+  .combat-add-member button { min-height: 77px; font-size: 9px; }.combat-add-member button svg { width: 18px; }
+  .combat-members:has(> .combat-member:nth-child(4)) .combat-add-member { grid-column: 1/-1; }
+  .combat-members:has(> .combat-member:nth-child(4)) .combat-add-member button { flex-direction: row; min-height: 34px; }
+  .combat-team-caption { font-size: 9px; padding-top: 8px; }.combat-team-caption svg { display: none; }
+  .combat-dungeon-title { font-size: 11px; margin-bottom: 7px; }.dungeon-members .combat-member-art { width: 42px; height: 35px; }.dungeon-members .retro-portrait { width: 34px; height: 34px; }.dungeon-members .combat-member small { display: none; }
+  .combat-grade { font-size: 10px; }.combat-grade select { width: 100%; font-size: 10px; }
+  .combat-terrain { gap: 10px; flex-wrap: wrap; padding: 8px; margin-top: 13px; }.combat-terrain > .map-preview { width: 74px; flex-basis: 74px; height: 58px; }.combat-terrain-name strong { font-size: 11px; }.combat-terrain-name > span { display: none; }
+  .combat-terrain .btn { width: 100%; padding: 7px; min-height: 34px; font-size: 10px; }
+  .combat-play-style { gap: 8px; flex-direction: column; align-items: stretch; margin-top: 13px; }.combat-control-toggle { justify-content: center; }.combat-control-toggle button { flex: 1; justify-content: center; padding: 8px; font-size: 11px; }.combat-play-style > p { font-size: 10px; text-align: center; max-width: none; }
+  .combat-lobby .combat-choice-footer { padding: 12px 14px; }.combat-lobby .combat-choice-confirm { flex-direction: column; align-items: stretch; gap: 9px; }.combat-lobby .combat-choice-recap > strong { font-size: 11px; }.combat-lobby .combat-choice-recap small { display: none; }
+  .combat-lobby .combat-choice-actions .primary { flex: 1; font-size: 12px; padding: 10px 12px; }.combat-lobby .combat-choice-actions .btn { padding: 10px; font-size: 11px; }
+  .combat-lobby.editing .duel-team { position: static; }.combat-lobby.editing .duel-team-list { max-height: 230px; }
+  .combat-settings { margin: 0; padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .combat-lobby .duel-map-card { transition: none; }.combat-lobby .duel-map-card:hover { transform: none; }
+}
+@media (max-width: 680px) {
+  .combat-choice { width: calc(100vw - 16px); height: calc(100dvh - 16px); border-radius: 12px; }
+  .combat-choice-heading { padding: 16px; }.combat-choice-heading h2 { font-size: 22px; }
+  .combat-choice-body { padding: 16px; }.combat-choice-footer { padding: 14px 16px; }
+  .combat-choice-modes { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .combat-choice-modes button { padding: 12px; gap: 6px; }.combat-choice-modes button strong { font-size: 14px; }
+  .combat-choice .match-options { grid-template-columns: 1fr; }
+  .combat-choice .match-options > .setup-opponent { order: -1; }
+  .combat-choice .boss-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .combat-choice .boss-card .retro-portrait { width: 28px; height: 36px; }
+  .combat-choice-automation, .combat-choice .dungeon-compact-selection { align-items: stretch; flex-direction: column; }
+  .combat-choice-confirm { align-items: stretch; flex-direction: column; gap: 12px; }
+  .combat-choice-actions .primary { flex: 1; }
+}
+
+/* The Combat tab shares the composer, but remains part of the page. */
+.setup-main .setup-combat-content { padding: 0; }
+.setup-combat-content > .loadout-errors { margin: 18px 22px; }
+.setup-main .combat-choice.combat-inline,
+.setup-main .combat-choice.combat-inline.editing,
+.setup-main .combat-choice.combat-inline:has(.duel-composer) {
+  display: block; width: 100%; height: auto; max-width: 100%; max-height: none;
+  margin: 0; border: 0; border-radius: 0 0 14px 14px; box-shadow: none; overflow: visible;
+}
+.combat-inline .combat-choice-layout { height: auto; }
+.combat-inline.combat-lobby .combat-choice-body { overflow: visible; padding: 0 22px 22px; }
+.combat-inline.combat-lobby .combat-choice-heading { padding: 22px; }
+.combat-inline.combat-lobby .combat-choice-heading h2 { font-size: 23px; }
+.combat-inline.combat-lobby .combat-choice-footer { padding: 16px 22px; border-radius: 0 0 14px 14px; }
+.combat-inline.combat-lobby .combat-choice-modes button { padding: 12px 10px; gap: 8px; }
+.combat-inline.combat-lobby .combat-choice-modes .combat-mode-icon { width: 34px; height: 34px; flex-basis: 34px; }
+.combat-inline.combat-lobby .combat-choice-modes button small { font-size: 10px; }
+.combat-inline .duel-catalogue-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 1001px) and (max-width: 1250px) {
+  .player-setup .setup-navigation button { flex-direction: column; gap: 6px; }
+  .combat-inline .combat-choice-confirm { align-items: stretch; flex-direction: column; }
+  .combat-inline .combat-choice-actions { justify-content: flex-end; }
+  .combat-inline .combat-team-preview > header { flex-wrap: wrap; }
+  .combat-inline.combat-lobby .combat-choice-modes button small { display: none; }
+}
+@media (max-width: 680px) {
+  .combat-inline.combat-lobby .combat-choice-heading { padding: 18px 14px; }
+  .combat-inline.combat-lobby .combat-choice-body { padding: 0 12px 16px; }
+  .combat-inline.combat-lobby .combat-choice-footer { padding: 14px 12px; }
+  .combat-inline.combat-lobby .combat-choice-modes button { padding: 10px 3px; }
+  .combat-inline .duel-catalogue-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 580px) {
+  .combat-inline.combat-lobby .combat-choice-footer {
+    position: fixed; z-index: 50; bottom: 0; left: 0; right: 0; border-radius: 0;
+    padding: 10px 14px max(10px, env(safe-area-inset-bottom));
+    box-shadow: 0 -4px 18px #303b2c18; max-height: 40dvh; overflow: auto;
+  }
+}

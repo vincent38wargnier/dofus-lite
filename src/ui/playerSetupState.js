@@ -1,5 +1,5 @@
 import { CLASSES, availableSpellGrades } from '../engine/classes';
-import { MAP_IDS } from '../engine/maps';
+import { MAPS } from '../engine/maps';
 import { POUTCH_GRADES, BOSSES, DEFAULT_BOSS_ID, defaultMonsterGrade, monsterGrades } from '../engine/monsters';
 
 export const SETUP_STORAGE = 'dofus-lite-player-setup-v1';
@@ -11,11 +11,13 @@ export function readPlayerSetup(storage) {
   return {
     playerClass: Object.prototype.hasOwnProperty.call(CLASSES, saved?.playerClass) ? saved.playerClass : 'IOP',
     customCharacterId: typeof saved?.customCharacterId === 'string' ? saved.customCharacterId : null,
+    customDungeonId: typeof saved?.customDungeonId === 'string' ? saved.customDungeonId : null,
     botClass: Object.prototype.hasOwnProperty.call(CLASSES, saved?.botClass) ? saved.botClass : 'CRA',
     botId: typeof saved?.botId === 'string' ? saved.botId : 'maison',
     playerBotId: typeof saved?.playerBotId === 'string' ? saved.playerBotId : 'maison',
-    mapId: MAP_IDS.includes(saved?.mapId) ? saved.mapId : 'territoire_des_dopeuls_5383',
-    mode: ['kanojedo', 'boss', 'boss-auto'].includes(saved?.mode) ? saved.mode : 'duel',
+    controller: saved?.controller === 'ai' ? 'ai' : 'player',
+    mapId: Object.prototype.hasOwnProperty.call(MAPS, saved?.mapId) ? saved.mapId : 'territoire_des_dopeuls_5383',
+    mode: saved?.mode === 'boss-auto' ? 'boss' : ['kanojedo', 'boss'].includes(saved?.mode) ? saved.mode : 'duel',
     monsterGrade: POUTCH_GRADES.some(g => g.grade === saved?.monsterGrade) ? saved.monsterGrade : 5,
     bossId,
     bossGrade: monsterGrades(bossId).some(g => g.grade === saved?.bossGrade) ? saved.bossGrade : defaultMonsterGrade(bossId),

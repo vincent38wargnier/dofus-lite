@@ -1,6 +1,7 @@
 import { PACKAGE_SCHEMA, schemaErrors } from './packageSchema';
 import { authoredSpellErrors, authoredSpellWarnings, newAuthoredSpell, normalizeAuthoredSpell, EFFECT_TYPES } from '../engine/authoredSpells';
 import { emptyLoadout } from '../engine/equipment';
+import { spellBudgetErrors, spellbookBudgetErrors } from '../engine/spellBalance';
 import { MAPS } from '../engine/maps';
 import { getMonster, KANOJEDO_MAP_ID } from '../engine/monsters';
 import { resolveCustomMonster } from '../engine/customMonsters';
@@ -22,24 +23,9 @@ export function compilePackageSpell(spell, existingIds = []) {
 }
 
 export function packageBalanceErrors(spell) {
-  const errors = [];
-  for (const [effects, critical] of [[spell.effects, false], [spell.critEffects, true]]) {
-    const damage = effects.filter(effect => ['damage', 'lifeSteal'].includes(effect.kind));
-    const area = damage.some(effect => effect.zone !== 'Pa');
-    // Wide guardrails, not a claim of competitive balance. Cooldowns buy a
-    // limited burst budget; unlimited raw values never become acceptable.
-    const burst = spell.cooldown >= 2 ? 2 : 1;
-    const ceiling = (area ? 9 : 12) * (critical ? 1.35 : 1) * burst;
-    if (damage.reduce((sum, effect) => sum + effect.max, 0) / spell.pa > ceiling) errors.push(`Dégâts ${critical ? 'critiques' : 'normaux'} : maximum ${ceiling.toFixed(2)} dégâts bruts par PA, toutes les lignes additionnées.`);
-    if (effects.filter(effect => effect.kind === 'heal').reduce((sum, effect) => sum + effect.max, 0) > spell.pa * 15 * burst) errors.push('Soin : maximum 15 PV bruts par PA (30 avec une relance ≥ 2).');
-    const budget = { buffPa: 2, buffPm: 3, removePa: 3, removePm: 3, buffDamage: 20, buffPower: 150, buffStat: 150, armor: 20, resistBuff: 30, resistDebuff: 30 };
-    for (const [kind, max] of Object.entries(budget)) {
-      if (effects.filter(effect => effect.kind === kind).reduce((sum, effect) => sum + effect.max, 0) > max) errors.push(`${kind} : plafond par lancer ${max}, toutes les lignes additionnées.`);
-    }
+  const errors = spellBudgetErrors(compilePackageSpell(spell));
+  for (const effects of [spell.effects, spell.critEffects]) {
     for (const effect of effects) {
-      if (effect.kind === 'buffPa' && (spell.cooldown < effect.duration + 1 || spell.maxPerTurn !== 1 || effect.max >= spell.pa)) errors.push('Bonus PA : gain < coût, un lancer par tour, relance supérieure à la durée.');
-      if (['buffDamage', 'buffPower', 'buffStat', 'armor', 'resistBuff', 'buffPm'].includes(effect.kind)
-        && effect.duration > 0 && (spell.cooldown <= effect.duration || spell.maxPerTurn !== 1)) errors.push(`${effect.kind} : un lancer par tour et relance supérieure à la durée pour éviter le cumul sans limite.`);
       if (effect.kind === 'heal' && ['enemy', 'fighter'].includes(effect.target)) errors.push('Le soin doit cibler self, ally ou otherAlly.');
       if (!EFFECT_TYPES[effect.kind].element && effect.element !== undefined) errors.push(`${effect.kind} n’utilise pas de champ element.`);
       if (!EFFECT_TYPES[effect.kind].stat && effect.stat !== undefined) errors.push(`${effect.kind} n’utilise pas de champ stat.`);
@@ -64,6 +50,7 @@ export function validateContentManifest(manifest) {
       errors.push(...packageBalanceErrors(spell).map(error => `${owner.name} / ${spell.key} : ${error}`));
       warnings.push(...authoredSpellWarnings(kit[index], kit).map(warning => `${owner.name} / ${spell.name} : ${warning}`));
     });
+    errors.push(...spellbookBudgetErrors(kit).map(error => `${owner.name} : ${error}`));
     if (!owner.spells.some(spell => spell.effects.some(effect => ['damage', 'lifeSteal'].includes(effect.kind)))) warnings.push(`${owner.name} n’a pas d’attaque directe : prévoyez un allié offensif ou une arme.`);
   }
   if (manifest.type === 'dungeon') {

@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { packageExample } = require('../src/content/contentPackage');
 const { buildContentPrompt, packageSpecDocument, PACKAGE_RULES } = require('../src/content/packagePrompt');
+const { EQUIPMENT_CREATION_RULES } = require('../src/content/equipmentRules');
 const { writeContentZip } = require('../src/content/zip');
 const { validateFiles } = require('./content-pack.cjs');
 
@@ -12,6 +13,11 @@ const { validateFiles } = require('./content-pack.cjs');
   fs.writeFileSync(path.join(root, 'spec.json'), JSON.stringify(spec, null, 2));
   fs.writeFileSync(path.join(root, 'content.schema.json'), JSON.stringify(spec.schema, null, 2));
   fs.writeFileSync(path.join(root, 'rules.md'), '# Dofus Lite content packages v1\n\n' + PACKAGE_RULES);
+  fs.writeFileSync(path.join(root, 'equipment-rules.md'), '# Equipment design rules\n\n'
+    + EQUIPMENT_CREATION_RULES + '\nExact limits at every level: [equipment-limits.json](equipment-limits.json). '
+    + 'Each family has contiguous inclusive level bands; omitted stat limits are zero. '
+    + 'These are design references, not additional content.json fields.\n');
+  fs.writeFileSync(path.join(root, 'equipment-limits.json'), JSON.stringify(spec.equipment, null, 2) + '\n');
   for (const type of ['class', 'dungeon']) {
     const manifest = packageExample(type);
     const files = new Map([['content.json', new Uint8Array(Buffer.from(JSON.stringify(manifest, null, 2)))]]);

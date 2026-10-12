@@ -32,9 +32,10 @@ async function inflateBrowser(bytes, size) {
   return output;
 }
 
-export async function readContentZip(input, inflate = inflateBrowser) {
+export async function readContentZip(input, inflate = inflateBrowser, { limits = LIMIT, allowName = safeName } = {}) {
+  const LIMIT = limits;
   const bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
-  check(bytes.length >= 22 && bytes.length <= LIMIT.zipBytes, 'ZIP : archive vide, invalide ou supérieure à 32 Mio.');
+  check(bytes.length >= 22 && bytes.length <= LIMIT.zipBytes, `ZIP : archive vide, invalide ou supérieure à ${LIMIT.zipBytes / 1048576} Mio.`);
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   const u16 = offset => view.getUint16(offset, true), u32 = offset => view.getUint32(offset, true);
   let end = -1;
@@ -54,14 +55,14 @@ export async function readContentZip(input, inflate = inflateBrowser) {
     const nameLength = u16(offset + 28), extra = u16(offset + 30), comment = u16(offset + 32), local = u32(offset + 42);
     check(offset + 46 + nameLength + extra + comment <= end, 'ZIP : entrée tronquée.');
     const name = decoder.decode(bytes.subarray(offset + 46, offset + 46 + nameLength));
-    check(safeName(name) && !names.has(name), `ZIP : chemin interdit ou dupliqué « ${name} ». content.json doit être à la racine.`);
+    check(allowName(name) && !names.has(name), `ZIP : chemin interdit ou dupliqué « ${name} ». Le manifeste doit être à la racine.`);
     names.add(name);
     check(u16(offset + 6) <= 20 && u16(offset + 34) === 0 && !(flags & ~0x0808)
       && [0, 8].includes(method) && ((u32(offset + 38) >>> 16) & 0xf000) !== 0xa000,
     `${name} : ZIP chiffré, lien symbolique, ZIP64 ou compression non prise en charge.`);
     const directory = name.endsWith('/');
-    check(directory ? size === 0 : size > 0 && size <= (name.endsWith('.json') ? LIMIT.jsonBytes : LIMIT.pngBytes), `${name} : taille non autorisée (JSON 512 Kio, PNG 2 Mio).`);
-    total += size; check(total <= LIMIT.expandedBytes, 'ZIP : maximum 48 Mio décompressés.');
+    check(directory ? size === 0 : size > 0 && size <= (name.endsWith('.json') ? LIMIT.jsonBytes : LIMIT.pngBytes), `${name} : taille non autorisée.`);
+    total += size; check(total <= LIMIT.expandedBytes, `ZIP : maximum ${LIMIT.expandedBytes / 1048576} Mio décompressés.`);
     check(local + 30 <= start && u32(local) === 0x04034b50, `${name} : en-tête local invalide.`);
     const data = local + 30 + u16(local + 26) + u16(local + 28);
     check(data <= start && data + packed <= start && u16(local + 4) <= 20 && u16(local + 6) === flags && u16(local + 8) === method

@@ -121,6 +121,7 @@ test('the fight dock shows the hovered monster, its spells, and restores the pla
   const onFightChange = jest.fn();
   const { container } = render(<LoadoutsProvider><PlayScreen allBots={[]} onFightChange={onFightChange} /></LoadoutsProvider>);
   fireEvent.click(container.querySelector('.setup-play'));
+  fireEvent.click(container.querySelector('.combat-choice-launch'));
   expect(onFightChange).toHaveBeenLastCalledWith(true);
   expect(screen.getByRole('button', { name: 'Journal', exact: true })).toHaveAttribute('aria-expanded', 'true');
   expect(screen.getByRole('button', { name: 'Exporter le journal' })).toBeInTheDocument();
