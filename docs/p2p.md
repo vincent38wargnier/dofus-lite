@@ -1,8 +1,281 @@
-# Peer-to-peer connection (P2P)
+# Peer-to-peer combat: host and guests
 
-How two players connect their games directly, with no server, by exchanging a short text code.
+**Implemented:** a shared room with **one host and up to seven guests**. The host
+runs the combat locally and launches it. Everyone can contribute their own
+characters or monsters; each team supports up to eight fighters.
 
-**Status:** prototype tested outside the game on 2026-10-10. Nothing is in `src/` yet. Every number below comes from those tests; anything not tested says so.
+The original prototype notes remain below as historical reference. Their
+blockchain/on-chain proposals are not implemented by this friendly mode.
+
+## Playing together
+
+1. In **Jouer → Combat**, choose a duel, dungeon or training map, then
+   **Jouer avec des amis**.
+2. Choose your first character and **Créer le salon**. You become the host.
+3. Send the invitation link. Your friend opens it, chooses a character, clicks
+   **Créer ma réponse**, and sends the response back. Paste it into your original
+   tab and click **Connecter l’invité**.
+4. Use **Inviter un ami** again for each additional guest. Each link connects
+   exactly one guest; do not reuse it for several friends.
+5. Everyone adds saved characters, custom classes or selected monsters using
+   the **+** for either team. The catalogue supports search, monster levels and
+   drag-and-drop. Custom creatures from local dungeons are available too.
+6. **Configurer** changes a fighter's camp and manual/AI control. Guests can
+   edit/remove their own contributions. The host can edit/remove all units and
+   assign their control to another participant.
+7. Guests click **Je suis prêt**. Only the host clicks **Lancer le combat**.
+   Readiness never launches automatically. Any roster change clears readiness.
+8. Each person places their manual fighters and clicks **Prêt** once for all
+   of them. Their controls follow whichever of their characters is playing.
+
+| Initial mode | Starting roster |
+|---|---|
+| Duel | Host in team A; joining guests in B |
+| Donjon | Host and guests in A; complete selected room in B |
+| Entraînement | Host and guests in A; selected Poutch in B |
+
+These are starting suggestions: either team can be freely composed in the room.
+The local solo preparation's extra allies/opponents are not automatically copied.
+The selected dungeon's complete group **is** copied, including custom characters
+and creatures. If the default side is full, a guest joins without an initial unit
+and can add one to the other side, replace a contribution, or spectate.
+
+## Links and connectivity
+
+This uses WebRTC's **offer + answer** workflow without a signalling server.
+A response link is necessary. A one-click join experience would additionally
+require a signalling service; see the browser's
+[WebRTC signalling model](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Connectivity#signaling).
+
+The URL fragment `#p2p=RT1.…` contains ICE credentials, network candidates
+(IP addresses/ports or local mDNS names), and the DTLS fingerprint. It is
+removed from browser history on receipt and is not included in HTTP requests.
+Share invitation links only with the people you want in the room.
+
+All participants need **the same built version of the game**. P2P transfers
+combat data; it does not publish the website or open router ports.
+
+- A `localhost` / `127.0.0.1` link opens the **recipient's computer**.
+  It works when they also serve this build at that address.
+- Friends can paste the full link/code into **Rejoindre un salon** on their copy.
+- For a common hosted game, use its HTTPS URL. **Adresse du jeu pour le lien**
+  overrides the share URL; a deployment can set `REACT_APP_PUBLIC_GAME_URL`.
+- STUN is enabled by default (Google's public service), for address discovery.
+  Gameplay goes directly through encrypted WebRTC links, not through STUN.
+- **Options réseau** accepts an explicit IPv4/IPv6 address and disables STUN
+  when one is entered. Public IPv4 with NAT port translation can still fail.
+- There is **no TURN relay**. Some NAT/firewall combinations cannot connect.
+  Try fresh links with a different host/network. This implementation cannot
+  guarantee connectivity between arbitrary routers.
+- Keep the host tab open. A reload does not restore live connections.
+
+## Shared characters and images
+
+Each contributed unit is a complete, immutable snapshot packaged by the
+Atelier exporter: equipment definitions, natural rolls, forgemagie, stats,
+native/authored spells, appearance and PNG artwork. Custom monsters carry
+their own reference stats and spellbooks. Official maps/assets resolve from
+the common game build.
+
+The host assigns a unique unit namespace, validates the package, and distributes
+it to the room. Metadata edits do not retransmit already received images.
+New guests receive all current units. The existing archive and combat validators
+reject invalid spells, equipment, monsters, images and paths.
+
+| Limit | Value |
+|---|---|
+| Browsers in a room | 8 including host |
+| Initial fighters per team | 8 |
+| Shared archives, total | 32 MiB |
+| Single expanded archive | 36 MiB |
+| PNG file | 2 MiB |
+| JSON per archive | 2 MiB |
+| Files per unit archive | 240 |
+| Chat message / history | 500 characters / 100 messages |
+
+Received images are held **in memory for the session**. Other players' saved
+profiles, equipment, dungeons and IndexedDB artwork are never overwritten or
+silently imported. Nothing executes remote JavaScript: authored spells are
+validated declarative data, and the host uses the game's general AI.
+
+## Authority and lifecycle
+
+| Responsibility | Owner |
+|---|---|
+| Map, mode, initial dungeon and seed | Host |
+| Adding own characters/monsters | Every participant |
+| Editing a contribution | Its owner; host can manage all |
+| Starting combat | Host only, after guests are ready |
+| Rules, dice, damage, effects and NPC decisions | Host only |
+| Manual commands | Fighter's assigned participant |
+| Target previews | Local read-only combat APIs |
+| Turn deadline | Host, 30 seconds; actions do not reset it |
+| State distribution | Host sends complete snapshots/events |
+| Delivery checks | Monotonic sequence, state hash, all guests acknowledge |
+
+Each guest has one reliable ordered data channel to the host (a star topology).
+Guest requests are bound to that connection's participant identity. The host
+checks ownership, turn, placement, AP/MP, range, cooldowns and normal combat rules
+before applying an action. Guests **do not replay the engine to determine results**:
+they render the host's state and events. Invocations and AI-controlled units are
+played by the host. A participant may own multiple manual characters, on either
+team, or watch while AI controls all their units.
+
+| Failure | Behavior |
+|---|---|
+| Invalid/stale command | Rejected; no state change |
+| Wrong build/protocol | Join refused |
+| Guest leaves before combat | Mark disconnected; host can remove them and their units |
+| Any link lost during combat | Stop actions/AI/clock; keep final board, no invented winner |
+| Corrupt/out-of-sequence state | Stop session |
+| Unacknowledged combat state | Stop after 20 seconds |
+| No network activity | Stop after 30 seconds |
+| Incomplete initial share | Timeout after 120 seconds |
+| Unused invitation/reply | Expires after 10 minutes |
+
+This is friendly play, **not an anti-cheat system**. Clients receive the full
+combat state, including the seed and information hidden by the normal UI.
+A modified client can inspect it; a modified host can change outcomes.
+DTLS protects transport, and the checksum detects accidental corruption.
+There is no wallet, reward, blockchain settlement, migration to a new host,
+or reconnect/resume protocol. Restart with a fresh salon if a combat disconnects.
+
+## Implementation and verification
+
+| File | Responsibility |
+|---|---|
+| `src/net/p2p.js` | Versioned codec, links, ICE, role checks and cancellation |
+| `src/net/jsonChannel.js` | Bounded chunks, ordering, transfer timeouts and backpressure |
+| `src/net/content.js` | Validated unit archives and temporary artwork |
+| `src/net/peerRoom.js` | Multiple links, ownership, lobby, host authority and snapshots |
+| `src/game/peerMatch.js` | Arbitrary teams, owned controls and host combat adapter |
+| `src/ui/PeerLobby.js` | Invitations, participants, team composition and chat |
+| `src/ui/PlayScreen.js` | Existing combat UI with local/remote turns |
+| `src/__tests__/p2p.test.js` | Codec, transfers, multi-guest protocol and full combat |
+| `scripts/proof_p2p.cjs` | Three/four independent Chrome players; optional guest on a remote Linux network |
+
+```sh
+CI=true npm test -- --watchAll=false --runInBand --runTestsByPath src/__tests__/p2p.test.js src/__tests__/peerUi.test.js
+npm run build
+node scripts/proof_p2p.cjs
+# Also exercise automatic candidate gathering:
+P2P_AUTO=1 node scripts/proof_p2p.cjs
+# Three guests plus the host, simultaneously:
+P2P_PLAYERS=4 PROOF_OUT=/tmp/dofus-p2p-four-player-proof node scripts/proof_p2p.cjs
+```
+
+The proof targets the built game at port 3013; override with `PROOF_URL`.
+Default explicit loopback candidates exercise real DTLS/data channels without
+depending on STUN. Automatic mode gathers native candidates. These local
+browser checks alone are **not a cross-router Internet connectivity test**.
+Reports/screenshots are written to `/tmp/dofus-p2p-proof`.
+
+### Testing an actual remote player
+
+`REMOTE_CDP_URL` runs the first guest in a separate Linux Chrome instead of
+launching it on the Mac. Use a dedicated temporary Chrome profile and expose its
+debugging endpoint on **loopback only**. Forward that endpoint over SSH, and, if
+the Linux machine does not already serve the same build, forward the game's HTTP
+server in the other direction:
+
+```sh
+# Add your normal SSH identity/port options and replace user@linux-host.
+ssh -N -o ExitOnForwardFailure=yes \
+  -L 127.0.0.1:39222:127.0.0.1:39222 \
+  -R 127.0.0.1:33013:127.0.0.1:3013 user@linux-host
+
+# Linux Chrome must already be listening on remote-debugging-port=39222.
+REMOTE_CDP_URL=http://127.0.0.1:39222 \
+REMOTE_GAME_URL=http://127.0.0.1:33013 \
+node scripts/proof_p2p.cjs
+```
+
+The HTTP/CDP tunnels deliver the website and drive the test browser. **They do
+not forward WebRTC UDP.** Automatic STUN gathering is mandatory in this mode;
+the proof rejects a loopback, relayed or unsuccessful selected ICE path on the
+Linux guest. It records the selected candidates, packet/byte counters and RTT,
+then compares every participant's complete game state during placement and combat.
+The same `main.*.js` build must be loaded on both machines. Reports and screenshots
+go to `/tmp/dofus-p2p-remote-proof`; `PROOF_OUT` overrides either output directory.
+Add `P2P_PLAYERS=4` to test three guests plus the host. All guests confirm
+readiness concurrently; every participant must move, cast and finish at least
+two turns. The report includes action counts per player, so a connected spectator
+cannot satisfy the test. The harness closes all test browsers, including the remote one.
+Close the SSH forwarding process and remove its temporary profile afterwards.
+
+### Cross-network verification — 12 October 2026
+
+Passed with an automated Chrome player actually running on the remote Ubuntu
+machine, a Mac host, and a second guest on the Mac. All browsers used isolated
+profiles. This run used automatic candidates and the existing production build;
+no gameplay fix was needed.
+
+| Check | Observed result |
+|---|---|
+| Game build | `main.a0a3ad4c.js` on all three browsers |
+| Host / remote guest | macOS Chrome 154 / Ubuntu Chrome 130 |
+| Selected Internet path | Direct UDP over public IPv6; no TURN |
+| Measured RTT at combat checkpoint | Host 103 ms; Linux guest 112 ms |
+| Linux data channel | `game`, open; 210 received / 135 sent messages |
+| Linux data-channel payload | 434,334 bytes received / 9,401 bytes sent |
+| Shared roster | Seven fighters; guest adds a second manual character |
+| Shared assets | Nine custom PNGs; no persistent guest-library changes |
+| Combat exercised | Six boosts, four attacks, eight moves, eight manual turns and AI turns |
+| Synchronization | Complete state equality on all browsers after actions |
+| Final checked snapshot | Sequence 33; checksum `e572e10c` |
+| Departure | Leaving guest stops host and remaining remote guest; no invented winner |
+| Browser errors | None |
+
+Artifacts: `/tmp/dofus-p2p-remote-proof/report.json`, `guest-combat.png` (Linux),
+`host-combat.png` (Mac), and the room screenshots. The JSON records selected
+candidate pairs and increasing byte counters before and after combat, proving
+that gameplay used the Internet WebRTC path rather than the SSH HTTP/CDP tunnels.
+
+This verifies these two networks on IPv6. IPv4-only NAT traversal, other routers,
+Linux hosting, reconnection and TURN fallback were not established by this run.
+
+### Four simultaneous players — 12 October 2026
+
+A second run used **one host and three guests in the same room**, with four
+independent Chrome processes and profiles across the Mac and remote Linux.
+Each guest joined with a separate invitation. All three guest readiness clicks
+were sent concurrently; only the host launched. Every player actually moved,
+cast spells and ended at least two turns.
+
+| Player | Machine | Manual turns | Spell casts | Moves |
+|---|---|---:|---:|---:|
+| Iop voyageur — host | Mac | 2 | 3 | 2 |
+| Archer azur — two characters | Remote Linux | 4 | 6 | 4 |
+| Gardienne | Mac, separate browser | 2 | 3 | 2 |
+| Éclaireuse cuivre | Mac, separate browser | 2 | 3 | 1 |
+
+Eight fighters were present: five manual characters and three AI monsters.
+The test completed **10 manual turns, seven boosts, eight attacks and nine
+moves**, comparing the complete state across **all four browsers** after actions
+and AI turns. Snapshot 44 had checksum `6afd65ac` on the common
+`main.da33f79b.js` build. The host held three simultaneous WebRTC connections;
+the Linux path stayed direct IPv6/UDP with a measured 100–103 ms RTT at the
+combat checkpoint. No browser errors occurred.
+
+All guests received the custom artwork and additions from the other players;
+their persistent libraries remained unchanged. The third guest's departure
+stopped actions on the host and both remaining guests without declaring a winner.
+
+Artifacts are in `/tmp/dofus-p2p-four-player-proof/`: `report.json` includes
+per-player action counts and network stats; `shared-room.png`, `host-combat.png`,
+`guest-combat.png` (Linux) and `third-guest-combat.png` show the shared session.
+This proves four simultaneous players across **two networks**, not four separate
+physical machines or four networks. No gameplay code change was required.
+
+The codec retains the prototype's SDP reconstruction, adding a version byte,
+`RT1.` prefix, strict validation and a bounded mDNS-host form for LAN.
+Unversioned prototype codes are intentionally rejected.
+
+## Original prototype notes (2026-10-10)
+
+The remaining sections describe the earlier prototype and the proposed future
+blockchain architecture. References to an on-chain fallback or to code "not
+built" apply to that historical proposal, not the friendly mode above.
 
 ## What it is for
 

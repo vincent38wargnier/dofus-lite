@@ -1,5 +1,5 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
-import { ArrowLeft, Bot, Castle, Check, Gamepad2, Play, Settings2, Swords, Target, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Bot, Castle, Check, Gamepad2, Play, Settings2, Swords, Target, Users, X } from 'lucide-react';
 import { defaultMonsterGrade } from '../engine/monsters';
 import { isAutomaticTeam } from '../engine/allyTeam';
 import BossSetup from './BossSetup';
@@ -28,7 +28,7 @@ export default function CombatChoiceDialog({ playerClass, playerName, botId, all
   controller, setController, playerBotId, setPlayerBotId, onAutomaticStart, onResumeAutomatic,
   customDungeons, customDungeonId, setCustomDungeonId, onOpenCreator, onEditEquipment,
   mapId, setMapId, mode, setMode, monsterGrade, setMonsterGrade, bossId, setBossId, bossGrade, setBossGrade,
-  seed, setSeed, equipment, canPlay, validation, selectionLabel, error, settingsError, onStart, onClose, embedded = false }) {
+  seed, setSeed, equipment, canPlay, validation, selectionLabel, error, settingsError, onStart, onFriends, onClose, embedded = false }) {
   const id = useId();
   const ref = useRef(null);
   const backdropDown = useRef(false);
@@ -112,6 +112,7 @@ export default function CombatChoiceDialog({ playerClass, playerName, botId, all
             <button type="button" className="btn" onClick={() => { onClose(); onResumeAutomatic(); }}><Play size={15} />Reprendre le combat</button></div>}
           <div className="combat-choice-modes" role="group" aria-label="Type de combat">{MODES.map(({ id: key, title, description, Icon }) => <button type="button" key={key} data-mode={key}
             aria-pressed={mode === key} onClick={() => setMode(key)}><span className="combat-mode-icon"><Icon size={24} /></span><span><strong>{title}</strong><small>{description}</small></span><Check className="combat-mode-check" size={17} /></button>)}</div>
+          {onFriends && <button type="button" className="peer-entry" onClick={onFriends}><Users size={24} /><span><strong>Jouer avec des amis</strong><small>Créez un salon, invitez vos amis et composez vos équipes</small></span><ArrowRight size={20} /></button>}
           <CombatPreview {...{ mode, leader, allies, opponents, automatic, bossId, bossGrade, setBossGrade, customDungeon, monsterGrade, setMonsterGrade, mapId, seed }}
             onRemoveLeader={removeLeader} onRemoveAlly={removeAlly} onRemoveOpponent={removeOpponent} onOpen={changePanel} />
           {onAutomaticStart && teamCount > 0 && <div className="combat-play-style">

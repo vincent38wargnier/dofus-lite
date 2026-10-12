@@ -26,7 +26,8 @@ function Portrait({ entry }) {
 
 export default function DuelComposer({ profiles = [], customCharacters = [], opponents, onChange,
   mapId, setMapId, botId, allBots, onEditOpponent, onCreateProfile,
-  allied = false, leader, onLeaderControllerChange, onLeaderBotChange, onRemoveLeader, automatic = false, allyCount = 1, hideTerrain = false }) {
+  allied = false, leader, onLeaderControllerChange, onLeaderBotChange, onRemoveLeader, automatic = false, allyCount = 1, hideTerrain = false,
+  onAddCandidate, onCandidateDrag, catalogueFull = false }) {
   const assets = useRetroAssets();
   const [catalogue, setCatalogue] = useState('profiles');
   const [query, setQuery] = useState('');
@@ -42,7 +43,7 @@ export default function DuelComposer({ profiles = [], customCharacters = [], opp
   const dragEntry = useRef(null);
   const teamList = useRef(null);
   const leaderCount = Number(allied && !!leader);
-  const full = opponents.length >= MAX_OPPONENTS - leaderCount;
+  const full = onAddCandidate ? catalogueFull : opponents.length >= MAX_OPPONENTS - leaderCount;
   const teamLabel = allied ? 'Mon équipe' : 'Camp adverse';
   const leaderSummary = leader ? opponentSummary(leader) : null;
   const selectedMap = MAPS[mapId];
@@ -63,6 +64,7 @@ export default function DuelComposer({ profiles = [], customCharacters = [], opp
   const add = candidate => {
     if (full) return;
     const { summary, key, source, ...entry } = candidate;
+    if (onAddCandidate) { onAddCandidate(cloneCreation(entry)); return; }
     onChange([...opponents, cloneCreation({ ...entry, ...(allied ? { controller: entry.kind === 'monster' ? 'ai' : 'player', botId: 'maison' }
       : entry.kind === 'character' ? { botId: botId || 'maison' } : {}) })]);
     setAnnouncement(`${opponentSummary(entry).name} ajouté au camp. ${opponents.length + 1 + leaderCount} combattants.`);
@@ -71,11 +73,12 @@ export default function DuelComposer({ profiles = [], customCharacters = [], opp
   const beginDrag = (event, entry) => {
     if (full || entry.summary?.valid === false || event.target.closest('button, select, input')) { event.preventDefault(); return; }
     dragEntry.current = entry; setDragging(true);
+    onCandidateDrag?.(entry);
     event.dataTransfer.effectAllowed = 'copy';
     event.dataTransfer.setData(OPPONENT_DRAG_TYPE, entry.key);
     event.dataTransfer.setData('text/plain', entry.name || entry.summary?.name || 'Adversaire');
   };
-  const clearDrag = () => { dragEntry.current = null; setDragging(false); setDropOver(false); };
+  const clearDrag = () => { dragEntry.current = null; onCandidateDrag?.(null); setDragging(false); setDropOver(false); };
   const drop = event => {
     if (!Array.from(event.dataTransfer.types || []).includes(OPPONENT_DRAG_TYPE)) return;
     event.preventDefault();
@@ -131,7 +134,7 @@ export default function DuelComposer({ profiles = [], customCharacters = [], opp
         </div>
         {!count && <div className="duel-catalogue-empty"><Users size={26} /><strong>{catalogue === 'profiles' && !query ? 'Vos personnages apparaîtront ici' : 'Aucun résultat'}</strong><p>{catalogue === 'profiles' && !query ? 'Créez un personnage ou choisissez une classe dans le catalogue.' : 'Essayez un autre nom ou modifiez les filtres.'}</p></div>}
       </section>
-      <section className={`duel-team${dragging ? ' accepting' : ''}${dropOver ? ' drag-over' : ''}`} aria-label={teamLabel} data-opponent-drop={allied ? undefined : true} data-ally-drop={allied ? true : undefined}
+      {!onAddCandidate && <section className={`duel-team${dragging ? ' accepting' : ''}${dropOver ? ' drag-over' : ''}`} aria-label={teamLabel} data-opponent-drop={allied ? undefined : true} data-ally-drop={allied ? true : undefined}
         onDragOver={event => { if (!full && Array.from(event.dataTransfer.types || []).includes(OPPONENT_DRAG_TYPE)) { event.preventDefault(); event.dataTransfer.dropEffect = 'copy'; setDropOver(true); } }}
         onDragLeave={event => { if (!event.currentTarget.contains(event.relatedTarget)) setDropOver(false); }} onDrop={drop}>
         <div className="duel-team-heading"><div><Shield size={18} /><h3>{teamLabel}</h3><span>{opponents.length + leaderCount}/{MAX_OPPONENTS}</span></div><button type="button" className="duel-team-clear" disabled={!opponents.length && !leaderCount} onClick={() => { onChange([]); if (leaderCount) onRemoveLeader(); }} aria-label={allied ? 'Retirer tous les alliés' : 'Vider le camp adverse'}><Trash2 size={14} />Vider</button></div>
@@ -170,7 +173,7 @@ export default function DuelComposer({ profiles = [], customCharacters = [], opp
             : <p className="duel-monster-ai"><Bot size={14} />Chaque adversaire joue avec l’IA choisie sur sa fiche.</p>}
           {full && <p className="duel-team-full">Camp complet · 8 {allied ? 'combattants' : 'adversaires'}</p>}
         </div>
-      </section>
+      </section>}
     </div>}
     <span className="sr-only" role="status" aria-live="polite">{announcement}</span>
   </div>;

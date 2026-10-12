@@ -37,6 +37,8 @@ const MODE = args.mode || 'maison';
 const SEED0 = Number(args.seed0 || 0);
 const EPS = Number(args.eps ?? 0.08);
 const CLS = args.cls || 'CRA';
+const LK = args.lk || 'l100'; // clé LOADOUTS du banc (l100 | l200 | l200gear)
+if (!sb.LOADOUTS[LK]) { console.error(`--lk inconnu: ${LK}`); process.exit(1); }
 if (args.budget) process.env.SB_BUDGET = args.budget; // AVANT tout searchDecide
 const JUDGE = args.model ? (sb.useValueModel(args.model), args.model) : 'heuristic';
 if (!OUT) { console.error('--out requis'); process.exit(1); }
@@ -50,6 +52,10 @@ const streams = {
   z: fs.createWriteStream(`${OUT}.z.f32`),
   m: fs.createWriteStream(`${OUT}.m.u32`),
   v: fs.createWriteStream(`${OUT}.v.u8`),
+  // Valeur de recherche du joueur au trait à CETTE décision (∈[−1,1]),
+  // sentinelle 2.0 quand le joueur n'est pas un calculateur (maison/ε) —
+  // cible dense « verdict du prof » (C2), en plus de l'issue z.
+  sv: fs.createWriteStream(`${OUT}.sv.f32`),
 };
 function writeChunk(stream, buf) {
   return stream.write(buf) ? Promise.resolve() : new Promise((res) => stream.once('drain', res));
@@ -71,11 +77,13 @@ async function main() {
   const t0 = Date.now();
 
   for (let i = 0; i < MATCHES; i++) {
-    const uid = hashSeed(`vg:${MODE}:${CLS}:${SEED0 + i}`); // identité STABLE du match
+    // Identité STABLE du match. LK absent de la clé historique (l100): les
+    // shards C1/C2 gardent exactement leurs uid/splits d'origine.
+    const uid = hashSeed(LK === 'l100' ? `vg:${MODE}:${CLS}:${SEED0 + i}` : `vg:${MODE}:${CLS}:${LK}:${SEED0 + i}`);
     const isVal = uid % 17 === 0;
     const map = MAPS[(SEED0 + i) % MAPS.length];
     const searchId = i % 2 === 0 ? 'A' : 'B';
-    let { state } = createGame({ mapId: map, seed: uid, fighters: sb.makeFighters('l100', CLS, CLS) });
+    let { state } = createGame({ mapId: map, seed: uid, fighters: sb.makeFighters(LK, CLS, CLS) });
     const rngs = {};
     const noiseRng = createRng(hashSeed(`eps:${uid}`));
     const counters = { applies: 0, ms: 0, decisions: 0, endsSum: 0, invalid: 0 };
@@ -86,7 +94,8 @@ async function main() {
       const view = getView(state, actor.id);
       const api = makeBotApi(view, rngs[actor.id] ||= createRng(hashSeed(`vg:${uid}:${actor.id}`)));
       enc.encodeSampleV3({ view, board: view.board }, null, buf);
-      match.push({ obs: Buffer.from(Buffer.from(buf.buffer, 0, buf.byteLength)), team: actor.team });
+      const rec = { obs: Buffer.from(Buffer.from(buf.buffer, 0, buf.byteLength)), team: actor.team, sv: 2.0 };
+      match.push(rec);
       const isSearchSide = MODE === 'self' || (MODE === 'search' && actor.id === searchId);
       let action;
       if (EPS > 0 && noiseRng.next() < EPS && (MODE !== 'search' || !isSearchSide)) {
@@ -95,6 +104,7 @@ async function main() {
         action = randomLegal(view, api, noiseRng);
       } else if (isSearchSide) {
         action = sb.searchDecide(state, counters);
+        rec.sv = counters.lastSearchValue ?? 2.0; // verdict du prof à CETTE décision
       } else {
         try { action = api.maison() || { type: 'PASS' }; } catch { action = { type: 'PASS' }; }
       }
@@ -112,17 +122,20 @@ async function main() {
     const zBuf = Buffer.alloc(4 * match.length);
     const mBuf = Buffer.alloc(4 * match.length);
     const vBuf = Buffer.alloc(match.length, isVal ? 1 : 0);
+    const svBuf = Buffer.alloc(4 * match.length);
     const obsBufs = [];
     match.forEach((rec, k) => {
       const z = winner == null ? 0 : winner === rec.team ? 1 : -1;
       zBuf.writeFloatLE(z, 4 * k);
       mBuf.writeUInt32LE(SEED0 + i, 4 * k);
+      svBuf.writeFloatLE(rec.sv, 4 * k);
       obsBufs.push(rec.obs);
     });
     await writeChunk(streams.obs, Buffer.concat(obsBufs));
     await writeChunk(streams.z, zBuf);
     await writeChunk(streams.m, mBuf);
     await writeChunk(streams.v, vBuf);
+    await writeChunk(streams.sv, svBuf);
     records += match.length;
     if ((i + 1) % 10 === 0 || i === MATCHES - 1) {
       console.log(JSON.stringify({ mode: MODE, done: i + 1, records, wins, aborts,
@@ -135,7 +148,7 @@ async function main() {
   // Manifest ATOMIQUE: présent ⇔ shard complet et flush terminé.
   const meta = {
     featureVersion: enc.FEATURE_VERSION_V3, obsDim: enc.OBS_DIM_V3, records, matches: MATCHES,
-    mode: MODE, cls: CLS, eps: EPS, seed0: SEED0, maps: MAPS, wins, aborts,
+    mode: MODE, cls: CLS, lk: LK, eps: EPS, seed0: SEED0, maps: MAPS, wins, aborts,
     searchVersion: sb.SEARCH_VERSION, judge: JUDGE, budget: Number(process.env.SB_BUDGET || 8000),
     valSplit: 'uid%17==0 (flag .v.u8 écrit à la génération)',
   };

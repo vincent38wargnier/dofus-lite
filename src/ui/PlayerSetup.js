@@ -36,7 +36,7 @@ export default function PlayerSetup({ playerClass, setPlayerClass, botClass, bot
   profiles, onOpenCreator, selectionRequest, customDungeons = [], customDungeonId, setCustomDungeonId,
   mapId, setMapId, mode = 'duel', setMode, monsterGrade = 5, setMonsterGrade,
   bossId = DEFAULT_BOSS_ID, setBossId, bossGrade = defaultMonsterGrade(bossId), setBossGrade,
-  seed, setSeed, equipment, onStart, error, settingsError }) {
+  seed, setSeed, equipment, onStart, onFriends, error, settingsError }) {
   const id = useId();
   const [section, setSection] = useState('equipment');
   const [view, setView] = useState('equipment');
@@ -95,12 +95,13 @@ export default function PlayerSetup({ playerClass, setPlayerClass, botClass, bot
     opponents, onOpponentsChange, onSelectOpponent, opponentSaveError, customCharacters,
     allies, onAlliesChange, onSelectAlly, allySaveError, includePlayer, setIncludePlayer, profiles: profiles?.profiles,
     onCreateProfile: newCharacter,
+    onFriends: onFriends ? () => { setMatchOpen(false); setSection('match'); onFriends(); } : undefined,
     onAutomaticStart: onAutomaticStart ? () => { if (onAutomaticStart()) setMatchOpen(false); } : undefined,
     onEditEquipment: editStuff, onClose: () => setMatchOpen(false), onResumeAutomatic };
 
   return <div className="player-setup" data-setup-section={section}>
     <div className="setup-heading"><div><p className="eyebrow">PRÉPARATION DU COMBAT</p><h1>À vous de jouer.</h1><p>Préparez votre personnage, composez vos équipes et jouez.</p></div>
-      <span className="local-badge"><span /> Jeu local · solo</span></div>
+      <span className="local-badge"><span /> Solo ou avec des amis</span></div>
     <div className="setup-layout">
       <aside className="player-summary" aria-label="Résumé du personnage">
         <CharacterSwitcher profiles={profiles} playerClass={playerClass} name={playerName} loadout={loadout} level={summary.level}

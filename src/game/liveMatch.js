@@ -19,6 +19,11 @@ import { allyRoster, allyFighterId, teamRoster, teamFighterId } from '../engine/
 export const HUMAN_ID = 'A';
 export const TURN_SECONDS = 30; // comme en 1.29
 
+// Plafond des SAY par tour (hors budget d'actions): à 150 ms de polling, 200
+// ticks ≈ 30 s de réflexion — large pour le pire cas mesuré du Stratège
+// (~8 s soit ~52 ticks), mais borne tout bot qui tenterait de bloquer le tour.
+const MAX_SAYS_PER_TURN = 200;
+
 export class LiveMatch {
   constructor({ playerClass, botClass, mapId, seed, botName, botDecide, playerName = 'Vous', playerController = 'player', loadouts = {}, mode = 'duel', monsterGrade = 5, bossId = DEFAULT_BOSS_ID, bossGrade = defaultMonsterGrade(bossId), dungeon, opponents, opponentBots = {}, allies = [], allyBots = {}, team }) {
     if (mode === 'boss' && !BOSSES.some(boss => boss.id === bossId)) throw new Error('Boss inconnu.');
@@ -108,7 +113,7 @@ export class LiveMatch {
     const fid = f.id;
 
     const tk = `${fid}:${this.state.turn}`;
-    if (tk !== this.turnKey) { this.turnKey = tk; this.actions = 0; this.invalid = 0; }
+    if (tk !== this.turnKey) { this.turnKey = tk; this.actions = 0; this.invalid = 0; this.says = 0; }
     if (!this.rngs[fid]) this.rngs[fid] = createRng(hashSeed(`${this.seed}:${fid}`));
 
     let action = null;
@@ -135,8 +140,18 @@ export class LiveMatch {
     }
 
     if (action.type === 'SAY') {
-      this.actions += 1;
-      return { events: [{ t: 'say', fighter: fid, text: String(action.text || '').slice(0, 80) }] };
+      // Les SAY ne consomment PAS le budget d'actions: les bots asynchrones
+      // (Stratège via Worker) émettent des ticks « calcule… » en attendant leur
+      // décision — les compter tronquait leur tour à ~2 vraies actions. Plafond
+      // séparé pour qu'un bot ne puisse pas bloquer le tour indéfiniment.
+      this.says = (this.says || 0) + 1;
+      const events = [{ t: 'say', fighter: fid, text: String(action.text || '').slice(0, 80) }];
+      if (this.says >= MAX_SAYS_PER_TURN && !this.state.over && this.current().id === fid) {
+        const p = applyAction(this.state, { type: 'PASS' });
+        this.state = p.state;
+        return { events: [...events, ...p.events] };
+      }
+      return { events };
     }
 
     const r = applyAction(this.state, action);

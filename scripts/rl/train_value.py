@@ -50,7 +50,7 @@ class ValueNet(nn.Module):
 def load_shards(shard_dir):
     global OBS_DIM, FEATURE_VERSION
     metas = sorted(Path(shard_dir).glob("*.meta.json"))
-    obs_list, z_list, m_list, step_list, val_list = [], [], [], [], []
+    obs_list, z_list, m_list, step_list, val_list, sv_list = [], [], [], [], [], []
     mat_offset = 0
     for meta_path in metas:
         meta = json.loads(meta_path.read_text())
@@ -77,6 +77,15 @@ def load_shards(shard_dir):
         else:
             vflags = (m_raw % 17) == 0
         val_list.append(vflags)
+        # Verdict de recherche du prof (sidecar .sv.f32, sentinelle 2.0 si la
+        # décision n'était pas celle d'un calculateur). Shards legacy: que des 2.0.
+        svpath = Path(base + ".sv.f32")
+        if svpath.exists():
+            sv = np.fromfile(svpath, dtype=np.float32)
+            assert sv.size == n, f"sv.f32 désaligné: {sv.size} vs {n}"
+        else:
+            sv = np.full(n, 2.0, dtype=np.float32)
+        sv_list.append(sv)
         m = m_raw + mat_offset
         mat_offset = int(m.max()) + 1
         # index du pas dans son match (phase de partie), vectorisé
@@ -90,7 +99,7 @@ def load_shards(shard_dir):
         obs_list.append(obs); z_list.append(z); m_list.append(m); step_list.append(step)
         print(f"shard {base}: {n} records, {meta['matches']} matchs, mode={meta['mode']}, val={int(vflags.sum())}")
     return (obs_list, np.concatenate(z_list), np.concatenate(m_list),
-            np.concatenate(step_list), np.concatenate(val_list))
+            np.concatenate(step_list), np.concatenate(val_list), np.concatenate(sv_list))
 
 
 def gather(obs_list, sizes, idx):
@@ -110,15 +119,69 @@ def main():
     ap.add_argument("--epochs", type=int, default=4)
     ap.add_argument("--bs", type=int, default=2048)
     ap.add_argument("--lr", type=float, default=3e-4)
+    # Retours λ (TD hors-ligne, siège TD-Gammon): cible_t = (1−λ)·V(s_{t+1})
+    # + λ·cible_{t+1} au sein de la TRAJECTOIRE DU MÊME JOUEUR, cible finale z.
+    # Traite le trou mesuré « début de partie ≈ pile-ou-face » (diagnostic C1:
+    # 56% early sur parties équilibrées): l'issue lointaine est trop bruitée,
+    # le jugement du net quelques coups plus tard l'est moins. La VALIDATION
+    # reste notée contre z RÉEL (on ne se note pas contre ses propres cibles).
+    ap.add_argument("--lam", type=float, default=None)
+    # Cible mixte « verdict du prof »: y = α·sv + (1−α)·z là où sv est valide
+    # (décisions d'un calculateur), z ailleurs. Traite le trou tempo (C2).
+    ap.add_argument("--sv-alpha", type=float, default=None)
+    ap.add_argument("--bootstrap", default=None, help="MODEL_DIR du V qui amorce les retours λ")
     args = ap.parse_args()
 
     device = "mps" if torch.backends.mps.is_available() else "cpu"
     torch.manual_seed(7)  # init reproductible (audit F12: le shuffle était seedé, pas l'init)
-    obs_list, z, m, step, val_mask = load_shards(args.shards)
+    obs_list, z, m, step, val_mask, sv = load_shards(args.shards)
     sizes = [o.shape[0] for o in obs_list]
     n = int(sum(sizes))
     train_idx = np.flatnonzero(~val_mask)
     val_idx = np.flatnonzero(val_mask)
+
+    y = z.copy()  # cibles d'entraînement (z brut, ou retours λ si --lam)
+    if args.lam is not None:
+        assert args.bootstrap, "--lam requiert --bootstrap MODEL_DIR"
+        boot = ValueNet().to(device)
+        ck = torch.load(Path(args.bootstrap) / "value.pt", map_location=device)
+        boot.load_state_dict(ck["model"])
+        boot.eval()
+        vpred = np.empty(n, dtype=np.float32)
+        off = 0
+        with torch.no_grad():
+            for ob in obs_list:
+                for k in range(0, ob.shape[0], 8192):
+                    xb = torch.from_numpy(np.ascontiguousarray(ob[k:k + 8192])).to(device)
+                    vpred[off + k: off + k + xb.shape[0]] = boot(xb).cpu().numpy()
+                off += ob.shape[0]
+        lam = args.lam
+        # Trajectoire PAR JOUEUR: dans le flux entrelacé, les records d'un même
+        # match portent z=+1 (camp vainqueur) ou −1 (perdant) — le signe isole
+        # la trajectoire de chaque joueur. Matchs nuls (z=0): cibles z gardées.
+        bounds = np.flatnonzero(np.diff(m)) + 1
+        starts = np.concatenate([[0], bounds])
+        ends = np.concatenate([bounds, [n]])
+        for s, e in zip(starts, ends):
+            for sign in (1.0, -1.0):
+                idxs = s + np.flatnonzero(z[s:e] == sign)
+                if len(idxs) < 2:
+                    continue
+                G = sign  # dernier point de décision: l'issue est la cible
+                for t in range(len(idxs) - 2, -1, -1):
+                    G = (1 - lam) * float(vpred[idxs[t + 1]]) + lam * G
+                    y[idxs[t]] = G
+        drift = np.abs(y - z)
+        print(json.dumps({"lam": lam, "bootstrap": args.bootstrap,
+                          "targetDriftEarly": round(float(drift[step == 0].mean()), 4),
+                          "targetDriftLate": round(float(drift[step == 2].mean()), 4)}))
+
+    if args.sv_alpha is not None:
+        a = args.sv_alpha
+        valid = sv <= 1.0  # sentinelle 2.0 = pas de verdict de recherche
+        y[valid] = a * sv[valid] + (1 - a) * y[valid]
+        print(json.dumps({"svAlpha": a, "svCovered": int(valid.sum()),
+                          "svCoverage": round(float(valid.mean()), 4)}))
     print(f"total {n} positions | train {len(train_idx)} | val {len(val_idx)} (par match) | z moyen {z.mean():+.3f}")
 
     model = ValueNet().to(device)
@@ -155,7 +218,7 @@ def main():
         for k in range(0, len(order), args.bs):
             idx = np.sort(order[k:k + args.bs])
             xb = torch.from_numpy(gather(obs_list, sizes, idx)).to(device)
-            zb = torch.from_numpy(z[idx]).to(device)
+            zb = torch.from_numpy(y[idx]).to(device)  # cibles λ si --lam, z sinon
             loss = F.mse_loss(model(xb), zb)
             opt.zero_grad(set_to_none=True)
             loss.backward()
@@ -190,6 +253,7 @@ def main():
         "arch": "value-v1", "featureVersion": FEATURE_VERSION, "obsDim": OBS_DIM,
         "planes": {"n": N_PLANES, "h": H, "w": W}, "ch": model.ch, "gdim": model.gdim,
         "layers": layers, "params": int(n_params),
+        "lam": args.lam, "bootstrap": args.bootstrap, "svAlpha": args.sv_alpha,  # provenance des cibles
     }))
     # Lot de parité pour le port JS: 8 obs de validation + sorties attendues.
     pk = val_idx[rng.permutation(len(val_idx))[:8]]

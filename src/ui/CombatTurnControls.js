@@ -2,7 +2,7 @@ import React from 'react';
 import { Check, Footprints, Heart, MapPin, SkipForward, Zap } from 'lucide-react';
 import { TURN_SECONDS } from '../game/liveMatch';
 
-export default function CombatTurnControls({ player, resources = player, turn, placing, over, humanTurn, timeLeft, onReady, onEndTurn, onRematch, onPlayerFocus }) {
+export default function CombatTurnControls({ player, resources = player, turn, placing, over, humanTurn, timeLeft, onReady, onEndTurn, onRematch, onPlayerFocus, readyDisabled = false, readyLabel = 'Prêt', rematchLabel = 'Revanche' }) {
   const remaining = Math.max(0, Math.ceil(timeLeft));
   return <div className={`play-controls combat-turn-controls${humanTurn ? ' your-turn' : ''}`} data-controlled-fighter={player.id} aria-label="Vos commandes de combat" onFocus={onPlayerFocus}>
     <div className="player-resources" data-points-mode={resources.preview ? 'next-turn' : 'current'}
@@ -18,8 +18,8 @@ export default function CombatTurnControls({ player, resources = player, turn, p
         <span>{placing ? 'Placement' : over ? 'Terminé' : humanTurn ? `${remaining} s` : 'En cours'}</span>
       </div>
     </div>
-    {placing ? <button type="button" className="btn primary placement-ready" onClick={onReady}><Check size={14} aria-hidden="true" />Prêt</button>
-      : over ? <button type="button" className="btn primary" onClick={onRematch}>Revanche</button>
+    {placing ? <button type="button" className="btn primary placement-ready" disabled={readyDisabled} onClick={onReady}><Check size={14} aria-hidden="true" />{readyLabel}</button>
+      : over ? <button type="button" className="btn primary" onClick={onRematch}>{rematchLabel}</button>
         : <button type="button" className="btn primary end-turn" disabled={!humanTurn} onClick={onEndTurn}><SkipForward size={14} aria-hidden="true" />Fin de tour</button>}
   </div>;
 }

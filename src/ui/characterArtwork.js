@@ -8,6 +8,14 @@ export const MAX_ARTWORK_FILE_BYTES = 2 * 1024 * 1024;
 const MAX_PACK_BYTES = 12 * 1024 * 1024;
 const signature = [137, 80, 78, 71, 13, 10, 26, 10];
 let database;
+const sessionArtwork = new Map();
+
+// Peer artwork is validated before installation and only lives for the room.
+// It must never silently populate or replace the player's saved creations.
+export function installSessionArtwork(records) {
+  records.forEach(record => sessionArtwork.set(record.id, record));
+  return () => records.forEach(record => { if (sessionArtwork.get(record.id) === record) sessionArtwork.delete(record.id); });
+}
 
 export function validateArtworkFiles(files) {
   const names = files.map(file => file.name);
@@ -88,6 +96,7 @@ export async function importCharacterArtwork(inputFiles, name) {
 }
 
 export async function readCharacterArtwork(id) {
+  if (sessionArtwork.has(id)) return sessionArtwork.get(id);
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
     const request = db.transaction('artwork', 'readonly').objectStore('artwork').get(id);

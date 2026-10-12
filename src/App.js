@@ -126,6 +126,7 @@ export default function App() {
       </div>
       <div className="play-route" style={{ display: tab === 'play' ? 'block' : 'none' }}>
         <PlayScreen allBots={allBots} active={tab === 'play'} onFightChange={setFighting}
+          onOpenPeer={() => setTab('play')}
           onAutomaticLaunch={request => { setAutomaticReturn('play'); setMatchLaunch(request); setTab('arena'); window.scrollTo(0, 0); }}
           onResumeAutomatic={automaticSession ? () => { setTab('arena'); window.scrollTo(0, 0); } : undefined}
           selectionRequest={selectionRequest?.returnTo === 'play' ? selectionRequest : null}

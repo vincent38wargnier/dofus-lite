@@ -28,14 +28,18 @@ import { readAllyTeam, persistAllyTeam } from './allyTeamStore';
 import { allyFighterId, teamFighterId, isAutomaticTeam } from '../engine/allyTeam';
 import { compileAllyBots, compileCompleteTeamBots } from './allyBots';
 import { compileOpponentBots } from './opponentBots';
+import { PeerRoom } from '../net/peerRoom';
+import { takeInvitation } from '../net/p2p';
+import PeerLobby, { PeerFightBar } from './PeerLobby';
 
 const BOT_STEP_MS = 620;
 
-export default function PlayScreen({ allBots, active = true, onFightChange, customLaunch, onCustomConsumed, onCustomExit, onOpenCreator, selectionRequest, onAutomaticLaunch, onResumeAutomatic }) {
+export default function PlayScreen({ allBots, active = true, onFightChange, customLaunch, onCustomConsumed, onCustomExit, onOpenCreator, selectionRequest, onAutomaticLaunch, onResumeAutomatic, onOpenPeer }) {
   const assets = useRetroAssets();
   const { appearances, setAppearance } = useAppearances();
   const [initial] = useState(() => readPlayerSetup({ getItem: key => localStorage.getItem(key) }));
   const animationUntil = useRef(0);
+  const lastEventsRef = useRef(null); // derniers events botStep (détection « réfléchit »)
   const [standardPlayerClass, setStandardPlayerClass] = useState(initial.playerClass);
   const [customCharacterId, setCustomCharacterId] = useState(initial.customCharacterId);
   const creations = useCreations();
@@ -166,6 +170,32 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const showLog = compactScreen ? compactLog : wideLog;
   const setShowLog = compactScreen ? setCompactLog : setWideLog;
   const matchRef = useRef(null);
+  const [peerInput, setPeerInput] = useState(() => new URLSearchParams(window.location.hash.slice(1)).get('p2p') || '');
+  const [peerOpen, setPeerOpen] = useState(!!peerInput);
+  const [peerRoom, setPeerRoom] = useState(null);
+  const peerRef = useRef(null), peerEvents = useRef(null);
+  const openPeerRef = useRef(onOpenPeer); openPeerRef.current = onOpenPeer;
+  const closePeer = () => { peerRef.current?.close(); peerRef.current = null; setPeerRoom(null); };
+  useEffect(() => {
+    const incoming = () => {
+      const code = takeInvitation();
+      if (!code) return;
+      openPeerRef.current?.();
+      setPeerInput(code);
+      const match = matchRef.current;
+      if (match?.network && !match.over && !match.room.fault) {
+        setError('Nouvelle invitation reçue. Quittez ce combat pour la rejoindre.'); return;
+      }
+      if (match) {
+        peerRef.current?.close(); peerRef.current = null; setPeerRoom(null);
+        matchRef.current = null; setPhase('setup'); setExternalSession(null);
+      }
+      setPeerOpen(true);
+    };
+    incoming();
+    window.addEventListener('hashchange', incoming);
+    return () => { window.removeEventListener('hashchange', incoming); peerRef.current?.close(); };
+  }, []);
   useEffect(() => {
     if (!selectionRequest || handledSelection.current === selectionRequest.id) return;
     handledSelection.current = selectionRequest.id;
@@ -187,6 +217,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const inspection = useFighterInspection(`${phase}:${seed}`, active && phase === 'fight', matchRef.current?.state.fighters);
 
   const pushEvents = (events) => {
+    if (!events) return; // Peer actions arrive through acknowledged commits.
     // Pace automatic opponents only. Human actions are validated immediately
     // by LiveMatch; decorative effects can finish alongside the next action.
     const duration = combatAnimationMs(events, matchRef.current?.state.fighters || {}, assets, appearances);
@@ -194,6 +225,22 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
     setLastEvents(events);
     if (events.length) setLog((l) => [...l, ...events]);
     setStep((s) => s + 1);
+  };
+  peerEvents.current = pushEvents;
+  const createPeerRoom = ({ role, character }) => {
+    closePeer();
+    const room = new PeerRoom({ role, character,
+      settings: { mode: mode === 'boss' && customDungeon ? 'custom' : mode, mapId, seed: (Number(seed) || 1) >>> 0, bossId, bossGrade, monsterGrade }, dungeon: customDungeon,
+      onChange: () => { if (peerRef.current === room) setStep(value => value + 1); },
+      onEvents: events => { if (peerRef.current === room) peerEvents.current(events); },
+      onStart: match => {
+        if (peerRef.current !== room) return;
+        matchRef.current = match; animationUntil.current = 0;
+        setSeed(match.seed); setPlacementId(match.localId); setBotName(match.state.fighters.B.name);
+        setLog(match.initialEvents); setLastEvents(match.initialEvents); setSelectedSpell(null); setHoverCell(null); setHoveredSpell(null);
+        setExternalSession(null); setCompactLog(false); setPeerOpen(false); setPeerInput(''); setError(null); setPhase('fight'); setStep(value => value + 1);
+      } });
+    peerRef.current = room; setPeerRoom(room); return room;
   };
   const start = (newSeed) => {
     animationUntil.current = 0;
@@ -272,6 +319,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const placing = !!m?.placing;
   const humanTurn = !!(m && m.isHumanTurn());
   const controlled = placing ? m.state.fighters[placementId] || m.state.fighters.A : m?.controlledFighter();
+  const viewerTeam = m?.network && placing ? controlled.team : m?.viewerTeam || 'A';
   const controlledId = controlled?.id;
   useEffect(() => { setSelectedSpell(null); setHoverCell(null); setTimelineHoverId(null); setHoveredSpell(null); inspection.dismiss(); }, [controlledId]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -284,7 +332,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const weaponTargets = useMemo(() => weaponTargetPlans(selectedInfo, view, api), [selectedInfo, view, api]);
   const hoveredSelfInfo = view?.you.spells.find(spell => spell.key === hoveredSpell && spell.targetMode === 'self');
   const timelineHoverFighter = m?.state.fighters[timelineHoverId];
-  const aimCell = timelineHoverId ? (timelineFighterVisible(timelineHoverFighter, 'A') && !timelineHoverFighter.carriedBy
+  const aimCell = timelineHoverId ? (timelineFighterVisible(timelineHoverFighter, viewerTeam) && !timelineHoverFighter.carriedBy
     ? key(timelineHoverFighter.pos.x, timelineHoverFighter.pos.y) : null) : hoverCell;
   const targetPreview = useMemo(() => {
     if (!active || !view || !api) return null;
@@ -345,9 +393,19 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   };
 
   // Le bot (et toutes les invocations) jouent automatiquement, un coup à la fois.
+  // Les ticks « réfléchit » du Stratège (SAY d'attente pendant que son worker
+  // calcule) re-sondent VITE: rien ne s'anime, chaque 620 ms d'attente serait
+  // du temps de tour perdu. Les vraies actions gardent la cadence d'animation.
   useEffect(() => {
-    if (!m || m.placing || m.over || m.isHumanTurn()) return undefined;
-    const t = setTimeout(() => pushEvents(m.botStep().events), Math.max(BOT_STEP_MS, animationUntil.current - Date.now()));
+    if (!m || m.placing || m.over || m.isHumanTurn() || (m.network && !m.canBotStep())) return undefined;
+    const thinking = lastEventsRef.current?.length === 1 && lastEventsRef.current[0]?.t === 'say'
+      && String(lastEventsRef.current[0]?.text || '').includes('calcule');
+    const delay = thinking ? 150 : Math.max(BOT_STEP_MS, animationUntil.current - Date.now());
+    const t = setTimeout(() => {
+      const r = m.botStep();
+      lastEventsRef.current = r.events;
+      pushEvents(r.events);
+    }, delay);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, phase]);
@@ -355,6 +413,11 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   // Chrono de tour (30 s, comme en 1.29) — uniquement pour l'humain.
   const humanTurnKey = humanTurn ? `${m.current().id}:${m.state.turn}` : 'none';
   useEffect(() => {
+    if (m?.network) {
+      const update = () => setTimeLeft(m.room.timeLeft());
+      update(); const interval = setInterval(update, 200);
+      return () => clearInterval(interval);
+    }
     if (humanTurnKey === 'none') return undefined;
     setTimeLeft(TURN_SECONDS);
     const started = Date.now();
@@ -372,15 +435,16 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
     }, 200);
     return () => clearInterval(iv);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [humanTurnKey]);
+  }, [humanTurnKey, phase]);
 
   const onCellClick = (x, y) => {
     const mm = matchRef.current;
     if (mm?.placing) {
-      const ally = Object.values(mm.state.fighters).find(f => f.team === 'A' && f.pos.x === x && f.pos.y === y);
+      if (mm.network && !mm.canPlace(placementId)) return;
+      const ally = Object.values(mm.state.fighters).find(f => (mm.network ? mm.canPlace(f.id) : f.team === 'A') && f.pos.x === x && f.pos.y === y);
       if (ally) { setPlacementId(ally.id); return; }
       const result = mm.placeHuman({ x, y }, placementId);
-      if (result.ok) {
+      if (result.ok && !result.pending) {
         setLastEvents(result.events);
         setLog(l => [...l, ...result.events]);
         setStep(s => s + 1);
@@ -403,7 +467,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   };
 
   const canTargetPortrait = fighter => active && humanTurn && !!selectedInfo
-    && timelineFighterVisible(fighter, 'A') && !fighter.carriedBy
+    && timelineFighterVisible(fighter, viewerTeam) && !fighter.carriedBy
     && (highlights?.[key(fighter.pos.x, fighter.pos.y)] === 'target' || weaponTargets.has(key(fighter.pos.x, fighter.pos.y)));
   const onPortraitTarget = id => {
     // Read the current fighter, not the position saved when its card rendered.
@@ -438,6 +502,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const reorderSpells = order => {
     const mm = matchRef.current;
     if (!active || !mm || mm.over) return;
+    if (mm.network) { mm.reorder(order); return; }
     const fighter = mm.controlledFighter();
     if (!fighter.loadout) return;
     const withOrder = loadout => ({ ...loadout, spells: { ...loadout.spells,
@@ -482,10 +547,12 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const tackle = humanTurn && api ? api.tackleInfo() : null;
   const spellInfo = view ? Object.fromEntries(view.you.spells.map((s) => [s.key, s])) : {};
   const hoveredFighter = m?.state.fighters[inspection.inspection?.id];
-  const inspectedFighter = hoveredFighter && (hoveredFighter.team === 'A' || !isInvisible(hoveredFighter)) ? hoveredFighter : null;
+  const inspectedFighter = hoveredFighter && (hoveredFighter.team === viewerTeam || !isInvisible(hoveredFighter)) ? hoveredFighter : null;
   const statsFighter = inspectedFighter || controlled;
   const leaveFight = () => {
+    if (matchRef.current?.network) closePeer();
     matchRef.current = null; setPhase('setup'); setHoverCell(null);
+    if (peerInput) setPeerOpen(true);
     if (externalSession) { setExternalSession(null); onCustomExit?.(); }
   };
   const selectionLabel = selectedInfo?.isWeapon
@@ -501,6 +568,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
           onAlliesChange={setAllies} onSelectAlly={index => { setEditingTeam('allies'); setEditingOpponentIndex(index); }}
           onOpponentsChange={setOpponentDraft} onSelectOpponent={index => { setEditingTeam('opponents'); setEditingOpponentIndex(index); }}
           onAutomaticStart={onAutomaticLaunch ? startAutomatic : undefined} onResumeAutomatic={onResumeAutomatic}
+          onFriends={() => { setPeerInput(''); setPeerOpen(true); }}
           customDungeons={creations?.dungeons} customCharacters={creations?.characters} onStart={() => start()} />
       ) : (
         <div className={`fight-workspace${showLog ? ' log-open' : ''}`}>
@@ -509,19 +577,20 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
             <LogPanel events={log} namesById={namesById} state={m.state} />
           </section>}
           <div className="fight-main">
-          <div className="fight-heading"><div><h1>{MAPS[m.state.mapId].name.replace(/^🗺\s*/, '')}</h1><p>{placing ? 'Placement' : m.over ? 'Combat terminé' : `Tour ${m.state.turn} / ${m.state.maxTurns}`} · {m.state.fighters.A.name}</p></div>
+          <div className="fight-heading"><div><h1>{MAPS[m.state.mapId].name.replace(/^🗺\s*/, '')}</h1><p>{placing ? 'Placement' : m.over ? 'Combat terminé' : `Tour ${m.state.turn} / ${m.state.maxTurns}`} · {controlled.name}</p></div>
             <div className="fight-heading-actions"><button className="btn" aria-expanded={showLog} aria-controls="fight-log" onClick={() => setShowLog(open => !open)}>Journal</button>
               <button className="btn" onClick={leaveFight}>{m.over || placing ? externalSession ? 'Retour à l’atelier' : 'Préparation' : 'Abandonner'}</button></div></div>
           {error ? <p className="loadout-errors" role="alert">{error}</p> : null}
-          {placing && Object.values(m.state.fighters).filter(f => f.team === 'A').length > 1 && <div className="team-placement" role="group" aria-label="Placer votre équipe">
-            <span>À placer :</span>{Object.values(m.state.fighters).filter(f => f.team === 'A').map(f => <button type="button" key={f.id} className="btn" aria-pressed={placementId === f.id} onClick={() => setPlacementId(f.id)}>{f.name}</button>)}
+          {m.network && <PeerFightBar room={m.room} />}
+          {placing && Object.values(m.state.fighters).filter(f => m.network ? m.humanIds.has(f.id) : f.team === 'A').length > 1 && <div className="team-placement" role="group" aria-label="Placer votre équipe">
+            <span>À placer :</span>{Object.values(m.state.fighters).filter(f => m.network ? m.humanIds.has(f.id) : f.team === 'A').map(f => <button type="button" key={f.id} className="btn" aria-pressed={placementId === f.id} onClick={() => setPlacementId(f.id)}>{f.name}</button>)}
           </div>}
           <div className="fight-map">
               <BoardView
                 fitToContainer
                 inspectionController={inspection}
                 inspectionPanelId="combat-stats"
-                viewerTeam="A"
+                viewerTeam={viewerTeam}
                 placementFighterId={placementId}
                 state={m.state}
                 frameEvents={lastEvents}
@@ -537,15 +606,15 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
               />
           </div>
           <div className="combat-dock">
-              {!placing && <CombatTimeline state={m.state} controller={inspection} panelId="combat-stats"
+              {!placing && <CombatTimeline state={m.state} controller={inspection} panelId="combat-stats" viewerTeam={viewerTeam}
                 casting={!!selectedInfo} canTarget={canTargetPortrait} onTarget={onPortraitTarget} onTargetHover={onPortraitHover} />}
               <CombatSpellBar key={controlled.id} spells={Object.values(spellsOf(controlled))} spellInfo={spellInfo}
                 pa={view?.you.pa || 0} humanTurn={humanTurn} active={active && !placing && !m.over} selectedSpell={selectedSpell}
                 onSelect={onSpellClick} onSelfCast={onSpellSelfCast} onHover={onSpellHover}
                 onCancel={() => setSelectedSpell(null)} onReorder={controlled.loadout ? reorderSpells : undefined} saveError={equipment.saveError || !!allySaveError}
                 status={<div className={`turn-status${humanTurn ? ' yours' : ''}`} role="status"
-                  title={selectedInfo ? `${selectionLabel}. Glissez les sorts pour réorganiser la barre.` : 'Glissez les sorts pour les réorganiser ; leur ordre est sauvegardé.'}>
-                  {placing ? (m.state.placement.cells.A.length > 1 ? 'Choisissez une case bleue, puis cliquez sur Prêt' : 'Position de départ fixée · Cliquez sur Prêt') : m.over ? 'Combat terminé'
+                  title={selectedInfo ? `${selectionLabel}. Glissez les sorts pour réorganiser la barre.` : m.network ? 'Glissez les sorts pour les réorganiser dans ce combat.' : 'Glissez les sorts pour les réorganiser ; leur ordre est sauvegardé.'}>
+                  {placing ? (m.network && m.isReady() ? 'Positions confirmées · En attente des autres joueurs' : m.state.placement.cells[controlled.id].length > 1 ? 'Choisissez une case de départ, puis cliquez sur Prêt' : 'Position de départ fixée · Cliquez sur Prêt') : m.over ? 'Combat terminé'
                     : humanTurn ? (selectedInfo ? selectionLabel : `${m.humanIds.size > 1 ? `${controlled.name} · ` : ''}À vous de jouer`)
                       : `${namesById[m.current().id] || m.current().name} joue…`}
                   {tackle?.inContact && <span className="tackle-chance" title="Probabilité de réussir un déplacement au contact"> · Fuite {tackle.escapeChance}%</span>}
@@ -555,12 +624,19 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
               isActive={!placing && !m.over && m.current().id === statsFighter.id}
               controller={inspection} inspecting={statsFighter.id !== controlled.id}
               controls={<CombatTurnControls player={controlled} resources={combatResources(controlled, m.state)} turn={m.state.turn} {...{ placing, humanTurn, timeLeft }}
-                over={m.over} onReady={confirmPlacement} onEndTurn={endTurn} onRematch={() => start(Math.floor(Math.random() * 1e9))}
+                over={m.over} onReady={confirmPlacement} onEndTurn={endTurn} onRematch={m.network ? leaveFight : () => start(Math.floor(Math.random() * 1e9))}
+                readyDisabled={m.network && (!m.available || m.isReady())} readyLabel={m.network && m.isReady() ? 'En attente…' : 'Prêt'} rematchLabel={m.network ? 'Préparation' : 'Revanche'}
                 onPlayerFocus={() => inspection.dismiss()} />} />
           </div>
           </div>
         </div>
       )}
+      {peerOpen && phase === 'setup' && <PeerLobby profiles={profiles?.profiles} customCharacters={creations?.characters} customDungeons={creations?.dungeons}
+        character={profile || { id: 'current', name: customCharacter?.name || CLASSES[playerClass].name, classId: playerClass, loadout: equipment.loadouts.A }}
+        settings={{ mode: mode === 'boss' && customDungeon ? 'custom' : mode }}
+        encounterName={mode === 'boss' ? customDungeon?.name || 'Le donjon sélectionné dans Combat' : mode === 'kanojedo' ? 'Kanojedo · Poutchs' : MAPS[mapId]?.name}
+        initialCode={peerInput} room={peerRoom} createRoom={createPeerRoom} onReset={closePeer}
+        onClose={() => { closePeer(); setPeerOpen(false); setPeerInput(''); }} />}
     </div>
   );
 }

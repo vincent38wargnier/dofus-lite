@@ -213,6 +213,98 @@ Vincent authorized large compute with explicit control. Declared before any C1 r
 - **Stop rule**: if the main gate fails, run one diagnostic pass (per-source calibration,
   candidate-ranking probe vs expensive reference) and stop — no blind round 2.
 
+### C1 outcome and C1-b (declared before C1-b results)
+
+- C1 data: **passed** all tripwires (3,080 games, 163,181 positions, 0 aborts, teacher
+  98.7–100% per shard, self-play seat-balanced). Training: V3, 645,153 params, val
+  sign-acc 73.2% (61.7/76.6/81.8 by phase). Parity 6.7e-7 ✅.
+- Maison smoke: **29–3 = FAIL** (bar ≥30). Matched-seed hand-judge attribution on the
+  same block: in progress at time of writing. Diagnostic (val accuracy by source):
+  teacher-games 81–90%, **balanced maison games 67–69% with early phase ≈ 56%** —
+  early positions of balanced games are the hole; all 3 smoke losses were 8-turn games.
+- **C1-b treatment (single knob, justified by the diagnostic)**: offline λ-returns
+  (TD-Gammon seat) — per-player trajectory targets `G_t = (1−λ)·V(s_{t+1}) + λ·G_{t+1}`,
+  final target z, λ=0.85, bootstrap = V3, same shards, fresh init, validation still
+  graded against true z. Gates unchanged: parity → smoke ≥30/32 on the SAME block 8000
+  (direct comparison with V3's 29–3) → 64-game duel vs hand.
+- Vincent's standing order (2026-10-11): iterate until gates pass, then advance. Control
+  retained: each round needs a diagnostic-justified treatment; two consecutive rounds with
+  no gate progress ⇒ pause and report.
+
+### C1-b outcome, duel, divergence probe, and C2 (declared before C2 results — 2026-10-12)
+
+- Matched-seed attribution, block 8000 vs maison: **hand 31–1, V3 29–3, V3-TD 29–3 with
+  the identical three losses** (games 15/19/26; game 15 lost by all three — hard seed).
+  λ-returns (C1-b): no gate progress — val metrics moved (early acc 61.7→62.6), play
+  unchanged. One treatment, no improvement (counts toward the two-strike pause rule).
+- **Main-gate duel** (V3 blend vs hand, same calculator both sides, 64 games, 4 fresh
+  blocks): net **30–34 (46.9%)**, seat-balanced (14/32 as A, 16/32 as B). Gate failed;
+  the learned judge is slightly behind the hand judge, consistent across V2 and V3.
+- **Decision-divergence probe** on the two judge-attributable losses: both diverge at
+  decision #1 of turn 1 — hand opens move-to-mid + `tir_eloigne` + `maitrise_de_l_arc`
+  + `oeil_de_taupe` chip (4-action tempo turn); net opens **retreat-to-edge +
+  `tir_puissant` + PASS with PA left** (turtle). Root cause named: outcome-only labels
+  from ~50 decisions away do not teach tempo; the net's early value surface is flat and
+  passive. This is the audit's predicted failure mode of pure Monte Carlo value learning.
+- **C2 treatment (single variable)**: dense teacher-verdict targets, Stockfish-NNUE style.
+  The generator now logs the search's root value (best-plan 3-sample mean, ∈[−1,1]) per
+  calculator decision (`.sv.f32` sidecar, sentinel 2.0 elsewhere; smoke-verified: 54.5%
+  coverage in search mode, sane range). New data: 6×150 teacher + 3×60 self games, fresh
+  seeds, same teacher/budget. Training target: `y = 0.5·sv + 0.5·z` where sv exists,
+  z elsewhere (C1 shards remain as outcome-only anchors). Gates unchanged: parity →
+  matched smoke on block 8000 (reference: hand 31–1) → 64-game duel vs hand (>32/64).
+
+### C2 outcome (2026-10-12) — prediction improved, duel unchanged; strike 2 declared
+
+- C2 data: 1,080 games / 56,694 records, 0 aborts, teacher 98–100%, sv coverage 51%
+  (teacher games) / 94% (self-play) — all tripwires green.
+- V4 (sv-blend targets, same arch): same-testset accuracy **80.5% vs V3's 76.2%**
+  (n=13,781; early 65.4→70.2, late 83.0→88.3). Parity 4.5e-7 ✅.
+- Matched smoke block 8000: **V4 30–2 — gate passed** (ladder on identical seeds:
+  V3 29–3 → V4 30–2 → hand 31–1; V4 recovered judge-attributable loss #26).
+- **Main-gate duel: V4 30–34 (46.9%) — identical to V3's 30–34.** Paired across the two
+  duels on the same seeds: 12 flips each way (18 WW / 12 WL / 12 LW / 22 LL) — variance
+  churn, no signal. Seat-balanced (15/32 both seats).
+- **Interpretation**: the leaf-judge channel appears saturated at this scope — the blend
+  already contains the hand heuristic, the search + rollouts dominate decisions, and a
+  measurably better outcome predictor (+4.3pp) buys zero duel wins. Two treatments, two
+  prediction improvements, zero main-gate progress ⇒ **strike 2, pause rule active**.
+- **Confirmation duel (256 games, 8 fresh blocks): net 127–129 = 49.6% ± 6.1pp (95%).**
+  Per-block 12/32–20/32, seat split 69/128 vs 58/128. Verdict: **statistical parity** —
+  the earlier 46.9% readings were small-sample noise; there is no judge deficit, and no
+  judge surplus. The leaf-judge channel is saturated at this scope: a +4.3pp-better
+  outcome predictor plays exactly as well as the hand heuristic inside an equal search.
+- **Round C conclusion**: the learned judge reached hand-judge strength from data alone
+  (useful property for scope changes, where hand heuristics need manual retuning), but
+  cannot beat it in the leaf seat at CRA-mirror l100. Strike-2 pause honored: no further
+  leaf-seat training rounds. The fork (net as nomination prior = phase D; scope-up to
+  l200/gear/pool; ship the calculator in-game; or stop ML) is Vincent's strategic call —
+  recommendation recorded: phase D and/or scope-up, where the saturated channel opens.
+
+### Scope-up baselines — level 200 geared (2026-10-12, offset 10000, budget 4000)
+
+- Sanity (maison in bot seat, same block): exactly 8–8 ✅.
+- **Hand judge: 30–2 (93.8%)**; **V4 (trained on l100 data only): 29–3 (90.6%)** — the
+  search and both judges transfer to Vincent's real conditions (Synapse's score here: ~0).
+- Paired losses on identical seeds: hand loses {20, 22}, V4 loses {0, 11, 18},
+  **no overlap** — V4 wins both hand-lost games and vice versa. Unlike l100 (strict
+  hand ≥ net nesting), the judges' failure modes at the new scope are *complementary*:
+  the first observed precondition for the learned judge to add real value (ensemble,
+  blend tuning, or l200-mixed retraining are now justified experiments for the next round).
+- In-game port (« Stratège » builtin, searchBrain.js, loyal view-only): strength at
+  budget 300 = 16–0 (l100) and 16–0 (l200gear) on fresh seeds; port↔bench parity 25/25
+  decisions; guard tests 7/7.
+- **UI latency saga (2026-10-12)**: Vincent's "crash" = synchronous main-thread search
+  (LiveMatch-measured 1.9s avg / 5.1s max per action at l200gear under bench contention).
+  Micro-profile: 1 simulated maison action = 15.4 ms (full utility scan), 1 castTargets =
+  2.5 ms — rollouts dominate at l200, enumeration at l100. Speed-profile attempts, all
+  strength-gated: greedy rollout alone **3–5/8 = banned** (weak opponent model corrupts
+  judgment); fastCasts alone 8–0; shape cuts alone 7–1; naive combination at budget 150
+  **7–9/16 = knobs interact, rejected**. Shipped: bench semantics + fastCasts + budget 300
+  → **16–0 l100 (0.53s avg) and 16–0 l200gear (1.8s avg, 6s max)**. The l200 latency is
+  structural for on-thread execution; the queued fix is a Web Worker running the
+  full-strength search off-thread (no strength compromise, no freeze).
+
 ## 6. Learning plan (revised per audit §§4–7)
 
 Phases, each with exit conditions — no large training run before its predecessors hold:

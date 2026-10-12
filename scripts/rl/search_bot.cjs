@@ -505,6 +505,11 @@ function searchDecide(realState, counters, judge) {
     }
   }
   counters.planActs = best?.acts || [];
+  // Valeur de recherche de la RACINE (meilleur plan, moyenne 3 échantillons,
+  // échelle V ∈ [−1,1]): cible dense « façon Stockfish-NNUE » pour le
+  // générateur — l'issue finale n'enseigne pas le tempo, le verdict de la
+  // recherche si (diagnostic C1-b: ouverture tortue coin + PASS).
+  counters.lastSearchValue = best ? Math.max(-1, Math.min(1, best.score / 1000)) : 0;
   counters.ms += performance.now() - t0;
   counters.decisions++;
   counters.endsSum += ends.length;

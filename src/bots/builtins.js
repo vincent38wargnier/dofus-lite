@@ -288,6 +288,42 @@ function decide(view, api) {
   },
 
   {
+    id: 'stratege',
+    name: 'Stratège',
+    emoji: '♟️',
+    recommendedClass: null,
+    description: 'Calculateur façon moteur d’échecs : à chaque action il simule des milliers de suites possibles dans le vrai moteur (plans multi-sorts, tir-recul, létales calculées) et joue la meilleure ligne. Champion des bancs : ~100 % contre l’IA Maison et 32-0 contre Synapse au niveau 100. Réfléchit une fraction de seconde par action.',
+    code: `// Stratège — le calculateur (recherche + simulation moteur, zéro réseau).
+// À chaque décision: énumère ses tours possibles (déplacements, sorts,
+// enchaînements tir-puis-repli), simule la riposte adverse avec des dés
+// SIMULÉS (jamais les vrais jets du match — anti-triche), moyenne trois
+// tirages par plan finaliste et joue la première action du meilleur plan.
+// Il replanifie après chaque action. Déterministe à position identique.
+
+function decide(view, api) {
+  return api.stratege();
+}`,
+  },
+
+  {
+    id: 'stratege-v4',
+    name: 'Stratège V4',
+    emoji: '🤖',
+    recommendedClass: null,
+    description: 'Le Stratège avec le RÉSEAU DE VALEUR entraîné (V4, 645 000 paramètres) comme juge des positions, à la place des règles écrites à la main. Même recherche, jugement appris sur ~220 000 positions étiquetées par le calculateur-professeur. Au banc : parité exacte avec le juge main au niveau 100 (49,6 % sur 256 duels), erreurs complémentaires au niveau 200. Les poids (2,6 Mo) se chargent à la première décision.',
+    code: `// Stratège V4 — la même recherche que le Stratège, mais chaque position
+// future est JUGÉE PAR LE RÉSEAU DE NEURONES entraîné (value network V4,
+// cibles « verdict du professeur »), mélangé à une légère régularisation
+// heuristique — exactement la configuration du banc d'entraînement.
+// C'est le modèle RL du projet, jouable: ce que tu affrontes ici est ce que
+// l'entraînement a réellement produit.
+
+function decide(view, api) {
+  return api.strategeNet();
+}`,
+  },
+
+  {
     id: 'cortex',
     name: 'Cortex',
     emoji: '🧠',

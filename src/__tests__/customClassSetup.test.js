@@ -115,14 +115,15 @@ test('a saved profile remains playable after deleting its original class definit
   expect(saved().characters).toEqual([second]);
 });
 
-test('the Workshop current-character shortcut uses the custom class selected in Jouer', () => {
+test('testing a dungeon returns its snapshot to the shared combat menu and preserves the selected custom character', () => {
   localStorage.setItem(SETUP_STORAGE, JSON.stringify({ playerClass: 'IOP', customCharacterId: first.id }));
-  const onLaunch = jest.fn();
-  mount(<WorkshopScreen allBots={BUILTIN_BOTS} onLaunch={onLaunch} />);
+  const onLaunch = jest.fn(), onTestDungeon = jest.fn();
+  mount(<WorkshopScreen allBots={BUILTIN_BOTS} onLaunch={onLaunch} onTestDungeon={onTestDungeon} />);
   fireEvent.click(screen.getByRole('button', { name: 'Nouveau donjon' }));
   fireEvent.click(screen.getByRole('button', { name: 'Ajouter Poutch Ingball' }));
   fireEvent.click(screen.getByRole('button', { name: 'Tester', exact: true }));
-  expect(screen.getByRole('option', { name: `Personnage de Jouer · ${first.name}` })).toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button', { name: 'Jouer cette création' }));
-  expect(onLaunch).toHaveBeenCalledWith(expect.objectContaining({ character: active() }));
+  expect(onTestDungeon).toHaveBeenCalledWith(saved().dungeons[0]);
+  expect(onLaunch).not.toHaveBeenCalled();
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(active().name).toBe(first.name);
 });

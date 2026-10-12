@@ -9,6 +9,7 @@ import {
 import { utilityDecide } from './utilityBrain';
 import { maisonDecide, maisonWeightsFor } from './maison';
 import { neuralDecide } from './neural';
+import { makeSearchBrain, UI_PROFILE, stateKeyOf as strategeKeyOf } from './searchBrain';
 import { casterAfterSpell } from './tactics';
 import { key, dist, cellsInRange, hasLineOfSight } from '../engine/geometry';
 import { bfs, reachableCells, reconstructPath } from '../engine/pathfinding';
@@ -19,8 +20,10 @@ import { bfs, reachableCells, reconstructPath } from '../engine/pathfinding';
 const decisionMemory = new WeakMap();
 const actionKey = action => JSON.stringify(action);
 
-// Rebuild a minimal engine state from a bot view (enough for validateAction).
-function stateFromView(view) {
+// Rebuild a minimal engine state from a bot view (enough for validateAction,
+// and complete enough for full forward simulation — the search builtin plans
+// on this reconstruction only, never on the real hidden state).
+export function stateFromView(view) {
   const toFighter = (v) => ({
     id: v.id,
     team: v.team,
@@ -71,6 +74,59 @@ function stateFromView(view) {
     fighters,
     hazards: view.hazards || [],
   };
+}
+
+// Cerveau du Stratège, construit une fois (makeBotApi lui est injecté —
+// pas de cycle: searchBrain n'importe jamais api.js).
+const searchBrain = makeSearchBrain({ makeBotApi });
+
+// ---- Stratège hors-thread (Web Worker) --------------------------------
+// La recherche pleine force gèle le thread UI (~0,5 s/action l100, ~2 s
+// l200 mesurés sur LiveMatch — vécu comme un crash). En navigateur, elle
+// tourne donc dans un Worker: pendant le calcul, decide() répond une action
+// SAY « réfléchit » (légale, zéro effet moteur, consommée par le référent à
+// 620 ms/tick) et joue le coup dès qu'il est prêt. Déterminisme conservé
+// (même vue ⇒ même coup — seul le NOMBRE de bulles varie avec la machine).
+// Repli synchrone automatique: tests, Node, worker indisponible ou en panne.
+const WORKER_PROFILE = { budget: 600, fastCasts: true };
+let strategeWorker = null;
+let strategeWorkerBroken = false;
+let strategeWorkerFactory = null;
+const strategeCache = new Map(); // key -> 'pending' | { action, ms, ticks }
+const strategePendingMeta = new Map(); // key -> { t0, ticks }
+// Chargement DYNAMIQUE de la fabrique (strategeClient contient import.meta,
+// intranspilable côté Node — voir ce fichier). En Node/tests, l'import échoue
+// ou n'est jamais tenté → repli synchrone permanent, le banc reste intact.
+if (typeof Worker !== 'undefined' && process.env.NODE_ENV !== 'test') {
+  import('./strategeClient')
+    .then((m) => { strategeWorkerFactory = m.createStrategeWorker; })
+    .catch(() => { strategeWorkerBroken = true; });
+}
+function ensureStrategeWorker() {
+  if (strategeWorker || strategeWorkerBroken || !strategeWorkerFactory) return strategeWorker;
+  try {
+    strategeWorker = strategeWorkerFactory();
+    strategeWorker.onmessage = (e) => {
+      const { key, action, judge, error } = e.data || {};
+      if (!key) return;
+      const meta = strategePendingMeta.get(key) || { t0: performance.now(), ticks: 0 };
+      strategePendingMeta.delete(key);
+      strategeCache.set(key, {
+        action: action || { type: 'PASS' }, ms: performance.now() - meta.t0,
+        ticks: meta.ticks, judge: judge || 'hand', error: error || null,
+      });
+    };
+    strategeWorker.onerror = () => {
+      strategeWorkerBroken = true;
+      try { strategeWorker.terminate(); } catch { /* rien */ }
+      strategeWorker = null;
+      strategeCache.clear();
+    };
+  } catch {
+    strategeWorkerBroken = true;
+    strategeWorker = null;
+  }
+  return strategeWorker;
 }
 
 export function makeBotApi(view, rng) {
@@ -275,6 +331,59 @@ export function makeBotApi(view, rng) {
   // Synapse: la politique neuronale (self-play PPO). Repli api.maison()
   // tant que les poids (public/models/synapse) ne sont pas chargés.
   api.neural = () => neuralDecide(view, api);
+
+  // Stratège: le calculateur (recherche + simulation moteur). Planifie sur
+  // l'état reconstruit depuis la vue — loyal, déterministe, zéro poids.
+  // Chemin navigateur: Worker hors-thread + SAY d'attente (voir plus haut).
+  // Chemin synchrone (opts explicites, tests, Node, worker en panne): profil
+  // UI léger sur le thread courant.
+  const strategeViaWorker = (label, profile, sayText) => {
+    if (!ensureStrategeWorker()) return null; // fabrique pas (encore) prête
+    const key = `${profile.judge || 'hand'}:${strategeKeyOf(state)}`;
+    const cached = strategeCache.get(key);
+    if (cached && cached !== 'pending' && typeof cached === 'object' && cached.action) {
+      strategeCache.delete(key);
+      // Diagnostic visible: le VRAI coût de la décision sur CETTE machine
+      // (les « lenteurs » doivent se lire dans la console, pas se deviner).
+      if (cached.error) {
+        // eslint-disable-next-line no-console
+        console.error(`[${label}] réseau indisponible (${cached.error}) — juge main utilisé`);
+      }
+      // eslint-disable-next-line no-console
+      console.info(`[${label}] décision en ${Math.round(cached.ms)} ms (${cached.ticks} tick${cached.ticks > 1 ? 's' : ''} d'attente, juge ${cached.judge})`);
+      return cached.action;
+    }
+    if (!cached) {
+      if (strategeCache.size > 50) strategeCache.clear(); // états abandonnés
+      strategeCache.set(key, 'pending');
+      strategePendingMeta.set(key, { t0: performance.now(), ticks: 0 });
+      strategeWorker.postMessage({ key, view, profile });
+    }
+    const meta = strategePendingMeta.get(key);
+    if (meta) meta.ticks++;
+    return { type: 'SAY', text: sayText };
+  };
+
+  api.stratege = (opts) => {
+    const workerOk = opts === undefined && typeof Worker !== 'undefined'
+      && process.env.NODE_ENV !== 'test' && !strategeWorkerBroken;
+    if (!workerOk) return searchBrain.searchDecide(state, opts ?? UI_PROFILE);
+    return strategeViaWorker('Stratège', WORKER_PROFILE, '♟️ (calcule…)')
+      || searchBrain.searchDecide(state, UI_PROFILE);
+  };
+
+  // Stratège V4: MÊME recherche, mais le juge aux feuilles est le RÉSEAU DE
+  // VALEUR entraîné (modèle V4, cibles « verdict du prof », mélange du banc).
+  // Navigateur seulement: les poids se fetchent dans le Worker. Pas de repli
+  // synchrone silencieux — sans Worker, on le dit (bot_error), on ne fait pas
+  // semblant que le réseau joue.
+  api.strategeNet = () => {
+    const workerOk = typeof Worker !== 'undefined'
+      && process.env.NODE_ENV !== 'test' && !strategeWorkerBroken;
+    if (!workerOk) throw new Error('Stratège V4: nécessite le Worker navigateur (poids du réseau)');
+    return strategeViaWorker('Stratège V4', { ...WORKER_PROFILE, judge: 'v4' }, '🧠 (calcule…)')
+      || { type: 'SAY', text: '🧠 (calcule…)' };
+  };
 
   return api;
 }
