@@ -1,0 +1,39 @@
+{
+  "checks": [
+    "Fresh import restores 6 supplied heroes, 32 enemies, original 32×32 geometry and commander rules.",
+    "Zoom buttons and wheel enlarge the actual board; dragging pans without a placement click; reset and buttons still work after a drag.",
+    "Two-finger touch pinch zooms the actual board on a phone-sized viewport.",
+    "Manual original spell casts at zoom ×1.56 on the correctly centered hero and spends the expected AP.",
+    "A zoomed map cell click moves the active hero and spends PM.",
+    "After reload the imported adventure runs to completion in the real browser AI mode.",
+    "UI re-export preserves all 51 images, both teams, equipment, 32×32 map and army objective."
+  ],
+  "errors": [],
+  "layouts": [
+    {
+      "width": 1366,
+      "height": 768,
+      "overflow": false,
+      "fighters": 38,
+      "rows": 1
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "fighters": 38,
+      "rows": 1
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "fighters": 38,
+      "rows": 1
+    }
+  ],
+  "result": {
+    "outcome": "victory",
+    "text": "Victoire · Salle vaincue32 / 32 combattants vaincus · 14 tours · 10111 / 15747 PV restants"
+  }
+}

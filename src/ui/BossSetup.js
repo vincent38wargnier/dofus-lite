@@ -3,6 +3,7 @@ import { Search, Check, Plus } from 'lucide-react';
 import { UNAVAILABLE_BOSSES, getMonster, monsterGrades } from '../engine/monsters';
 import { DUNGEONS, DUNGEON_BOSSES, UNAVAILABLE_DUNGEONS, dungeonForBoss, dungeonRoster, unavailableDungeonForBoss } from '../engine/dungeons';
 import { MAPS } from '../engine/maps';
+import { dungeonMap } from '../engine/customMaps';
 import { RetroPortrait, RetroSpellIcon, useRetroAssets } from './RetroAssets';
 import { MapPreview } from './MapPicker';
 import { customDungeonErrors, customDungeonMemberPreview } from '../engine/customDungeons';
@@ -57,7 +58,7 @@ export default function BossSetup({ bossId, grade, onBossChange, onGradeChange, 
         return <button type="button" key={`custom:${entry.id}`} className="boss-card" data-dungeon-id={entry.id} aria-pressed={selected} onClick={() => onCustomChange?.(entry.id)}>
           {member ? <RetroPortrait classId={member.character?.classId} monsterId={member.customMonster?.reference.monsterId || member.monsterId} artworkId={member.character?.loadout.artworkId || member.customMonster?.artworkId}
             appearance={member.character?.loadout.profile?.sex === 1 ? 'female' : 'male'} fallback="🐾" /> : <Plus size={25} />}
-          <span><strong>{entry.name || 'Donjon sans nom'}</strong><small>Personnalisé · {count} combattant{count !== 1 ? 's' : ''}</small><small>{incomplete ? 'À compléter' : MAPS[entry.mapId]?.name.replace(/^🗺\s*/, '')}</small></span>
+          <span><strong>{entry.name || 'Donjon sans nom'}</strong><small>{entry.adventure ? 'Prêt à jouer' : 'Personnalisé'} · {entry.rooms?.length > 1 ? `${entry.rooms.length} salles` : `${count} combattant${count !== 1 ? 's' : ''}`}</small><small>{incomplete ? 'À compléter' : dungeonMap(entry)?.name.replace(/^🗺\s*/, '')}</small></span>
           {selected && <Check size={15} />}
         </button>;
       })}
@@ -93,7 +94,7 @@ export default function BossSetup({ bossId, grade, onBossChange, onGradeChange, 
       <div className="match-options"><table><thead><tr><th>Combattant</th><th>Nombre</th><th>Niveau</th></tr></thead><tbody>{customDungeon.members.map((member, index) => {
         const preview = customDungeonMemberPreview(member), summary = opponentSummary(preview);
         return <tr key={index}><td>{preview.name || summary.name}</td><td>×{member.count}</td><td>{summary.level}</td></tr>;
-      })}</tbody></table><div className="setup-map" data-custom-dungeon-map={customDungeon.mapId}><h3>{MAPS[customDungeon.mapId].name.replace(/^🗺\s*/, '')}</h3><MapPreview map={MAPS[customDungeon.mapId]} artwork={assets?.imagesReady && assets.maps[customDungeon.mapId]} /></div></div>
+      })}</tbody></table><div className="setup-map" data-custom-dungeon-map={customDungeon.mapId}><h3>{dungeonMap(customDungeon)?.name.replace(/^🗺\s*/, '')}</h3><MapPreview map={dungeonMap(customDungeon)} artwork={assets?.imagesReady && assets.maps[customDungeon.mapId]} /></div></div>
     </section>}
     {room && !customDungeon ? <section className="dungeon-roster" aria-label="Monstres de la dernière salle">
       <div className="dungeon-roster-heading"><div><h3>{room.name}</h3><p>Tous ces monstres seront présents dès le début du combat.</p></div><span className="count-badge">{roster.length} monstre{roster.length > 1 ? 's' : ''}</span></div>

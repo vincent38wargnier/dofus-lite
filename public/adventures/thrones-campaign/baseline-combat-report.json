@@ -1,0 +1,3685 @@
+{
+  "scope": "Real engine and supplied six-hero team; Maison for heroes, normal monster AI for enemies. One round means a complete initiative cycle, not one fighter. Casts include weapons and failed casts; moves are commands, not cells. Static and AI checks do not certify human enjoyment.",
+  "seeds": [
+    26101,
+    26102,
+    26103,
+    26104
+  ],
+  "matches": [
+    {
+      "seed": 26101,
+      "room": 1,
+      "name": "Saison 1 · Le prix de l’honneur",
+      "ms": 1811,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 6,
+      "firstDamageRound": 1,
+      "heroTurns": 35,
+      "enemyTurns": 25,
+      "heroCommands": 131,
+      "enemyCommands": 61,
+      "casts": {
+        "heroes": 79,
+        "enemies": 39
+      },
+      "moves": {
+        "heroes": 52,
+        "enemies": 22
+      },
+      "damageToHeroes": 1261,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 92.3,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 13,
+          "enemyCasts": 8,
+          "heroDamage": 0,
+          "enemyDamage": 74,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 12,
+          "enemyCasts": 12,
+          "heroDamage": 1323,
+          "enemyDamage": 435,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 14,
+          "enemyCasts": 7,
+          "heroDamage": 1751,
+          "enemyDamage": 260,
+          "kills": 2
+        },
+        "4": {
+          "heroCasts": 13,
+          "enemyCasts": 8,
+          "heroDamage": 1462,
+          "enemyDamage": 343,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 15,
+          "enemyCasts": 4,
+          "heroDamage": 1250,
+          "enemyDamage": 149,
+          "kills": 2
+        },
+        "6": {
+          "heroCasts": 12,
+          "enemyCasts": 0,
+          "heroDamage": 874,
+          "enemyDamage": 0,
+          "kills": 2
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26101,
+      "room": 2,
+      "name": "Saison 2 · Le fleuve vert",
+      "ms": 1927,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 10,
+      "firstDamageRound": 1,
+      "heroTurns": 58,
+      "enemyTurns": 55,
+      "heroCommands": 184,
+      "enemyCommands": 137,
+      "casts": {
+        "heroes": 110,
+        "enemies": 84
+      },
+      "moves": {
+        "heroes": 74,
+        "enemies": 53
+      },
+      "damageToHeroes": 2923,
+      "healingToHeroes": 319,
+      "heroHpRemainingPercent": 84,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 7,
+          "heroDamage": 0,
+          "enemyDamage": 38,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 5,
+          "enemyCasts": 15,
+          "heroDamage": 585,
+          "enemyDamage": 569,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 9,
+          "enemyCasts": 16,
+          "heroDamage": 1079,
+          "enemyDamage": 553,
+          "kills": 0
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 16,
+          "heroDamage": 1343,
+          "enemyDamage": 665,
+          "kills": 2
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 12,
+          "heroDamage": 1591,
+          "enemyDamage": 419,
+          "kills": 2
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 8,
+          "heroDamage": 1610,
+          "enemyDamage": 355,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 15,
+          "enemyCasts": 4,
+          "heroDamage": 1418,
+          "enemyDamage": 102,
+          "kills": 1
+        },
+        "8": {
+          "heroCasts": 12,
+          "enemyCasts": 4,
+          "heroDamage": 657,
+          "enemyDamage": 75,
+          "kills": 2
+        },
+        "9": {
+          "heroCasts": 9,
+          "enemyCasts": 2,
+          "heroDamage": 353,
+          "enemyDamage": 35,
+          "kills": 0
+        },
+        "10": {
+          "heroCasts": 6,
+          "enemyCasts": 0,
+          "heroDamage": 308,
+          "enemyDamage": 0,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26101,
+      "room": 3,
+      "name": "Saison 3 · La porte des Jumeaux",
+      "ms": 1913,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 9,
+      "firstDamageRound": 1,
+      "heroTurns": 54,
+      "enemyTurns": 57,
+      "heroCommands": 179,
+      "enemyCommands": 134,
+      "casts": {
+        "heroes": 108,
+        "enemies": 84
+      },
+      "moves": {
+        "heroes": 71,
+        "enemies": 50
+      },
+      "damageToHeroes": 1885,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 88.4,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 8,
+          "heroDamage": 0,
+          "enemyDamage": 113,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 8,
+          "enemyCasts": 8,
+          "heroDamage": 889,
+          "enemyDamage": 179,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 14,
+          "enemyCasts": 19,
+          "heroDamage": 1467,
+          "enemyDamage": 592,
+          "kills": 2
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 16,
+          "heroDamage": 1635,
+          "enemyDamage": 433,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 12,
+          "heroDamage": 1016,
+          "enemyDamage": 235,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 11,
+          "enemyCasts": 9,
+          "heroDamage": 887,
+          "enemyDamage": 105,
+          "kills": 1
+        },
+        "7": {
+          "heroCasts": 12,
+          "enemyCasts": 6,
+          "heroDamage": 1427,
+          "enemyDamage": 104,
+          "kills": 1
+        },
+        "8": {
+          "heroCasts": 12,
+          "enemyCasts": 6,
+          "heroDamage": 787,
+          "enemyDamage": 114,
+          "kills": 1
+        },
+        "9": {
+          "heroCasts": 11,
+          "enemyCasts": 0,
+          "heroDamage": 630,
+          "enemyDamage": 0,
+          "kills": 3
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26101,
+      "room": 4,
+      "name": "Saison 4 · Ceux qui veillent",
+      "ms": 1654,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 8,
+      "firstDamageRound": 1,
+      "heroTurns": 46,
+      "enemyTurns": 54,
+      "heroCommands": 155,
+      "enemyCommands": 124,
+      "casts": {
+        "heroes": 99,
+        "enemies": 60
+      },
+      "moves": {
+        "heroes": 56,
+        "enemies": 64
+      },
+      "damageToHeroes": 1930,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 88.2,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 12,
+          "heroDamage": 0,
+          "enemyDamage": 74,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 7,
+          "enemyCasts": 7,
+          "heroDamage": 688,
+          "enemyDamage": 182,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 14,
+          "enemyCasts": 9,
+          "heroDamage": 1937,
+          "enemyDamage": 341,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 13,
+          "enemyCasts": 11,
+          "heroDamage": 1480,
+          "enemyDamage": 230,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 8,
+          "heroDamage": 1649,
+          "enemyDamage": 337,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 5,
+          "heroDamage": 1492,
+          "enemyDamage": 200,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 15,
+          "enemyCasts": 6,
+          "heroDamage": 1357,
+          "enemyDamage": 143,
+          "kills": 2
+        },
+        "8": {
+          "heroCasts": 10,
+          "enemyCasts": 2,
+          "heroDamage": 905,
+          "enemyDamage": 40,
+          "kills": 3
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26101,
+      "room": 5,
+      "name": "Saison 5 · Le rivage des morts",
+      "ms": 2116,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 12,
+      "firstDamageRound": 2,
+      "heroTurns": 67,
+      "enemyTurns": 87,
+      "heroCommands": 222,
+      "enemyCommands": 129,
+      "casts": {
+        "heroes": 134,
+        "enemies": 58
+      },
+      "moves": {
+        "heroes": 88,
+        "enemies": 71
+      },
+      "damageToHeroes": 2419,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 85.2,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 0,
+          "heroDamage": 0,
+          "enemyDamage": 0,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 3,
+          "enemyCasts": 1,
+          "heroDamage": 134,
+          "enemyDamage": 22,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 10,
+          "enemyCasts": 9,
+          "heroDamage": 1234,
+          "enemyDamage": 273,
+          "kills": 0
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 9,
+          "heroDamage": 1487,
+          "enemyDamage": 350,
+          "kills": 3
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 9,
+          "heroDamage": 1713,
+          "enemyDamage": 331,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 9,
+          "heroDamage": 1555,
+          "enemyDamage": 346,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 14,
+          "enemyCasts": 7,
+          "heroDamage": 1678,
+          "enemyDamage": 280,
+          "kills": 2
+        },
+        "8": {
+          "heroCasts": 14,
+          "enemyCasts": 5,
+          "heroDamage": 1507,
+          "enemyDamage": 225,
+          "kills": 2
+        },
+        "9": {
+          "heroCasts": 14,
+          "enemyCasts": 3,
+          "heroDamage": 1014,
+          "enemyDamage": 176,
+          "kills": 2
+        },
+        "10": {
+          "heroCasts": 13,
+          "enemyCasts": 3,
+          "heroDamage": 924,
+          "enemyDamage": 171,
+          "kills": 0
+        },
+        "11": {
+          "heroCasts": 11,
+          "enemyCasts": 3,
+          "heroDamage": 495,
+          "enemyDamage": 144,
+          "kills": 1
+        },
+        "12": {
+          "heroCasts": 1,
+          "enemyCasts": 0,
+          "heroDamage": 99,
+          "enemyDamage": 0,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26101,
+      "room": 6,
+      "name": "Saison 6 · Le Nord se souvient",
+      "ms": 2204,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 10,
+      "firstDamageRound": 1,
+      "heroTurns": 58,
+      "enemyTurns": 71,
+      "heroCommands": 199,
+      "enemyCommands": 178,
+      "casts": {
+        "heroes": 123,
+        "enemies": 110
+      },
+      "moves": {
+        "heroes": 76,
+        "enemies": 68
+      },
+      "damageToHeroes": 3834,
+      "healingToHeroes": 110,
+      "heroHpRemainingPercent": 77.1,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 7,
+          "heroDamage": 0,
+          "enemyDamage": 113,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 10,
+          "enemyCasts": 18,
+          "heroDamage": 1270,
+          "enemyDamage": 598,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 14,
+          "enemyCasts": 18,
+          "heroDamage": 1615,
+          "enemyDamage": 612,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 20,
+          "heroDamage": 1697,
+          "enemyDamage": 738,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 15,
+          "heroDamage": 1581,
+          "enemyDamage": 433,
+          "kills": 2
+        },
+        "6": {
+          "heroCasts": 15,
+          "enemyCasts": 10,
+          "heroDamage": 1437,
+          "enemyDamage": 310,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 13,
+          "enemyCasts": 10,
+          "heroDamage": 1264,
+          "enemyDamage": 315,
+          "kills": 1
+        },
+        "8": {
+          "heroCasts": 12,
+          "enemyCasts": 6,
+          "heroDamage": 897,
+          "enemyDamage": 119,
+          "kills": 2
+        },
+        "9": {
+          "heroCasts": 11,
+          "enemyCasts": 6,
+          "heroDamage": 1018,
+          "enemyDamage": 117,
+          "kills": 1
+        },
+        "10": {
+          "heroCasts": 8,
+          "enemyCasts": 0,
+          "heroDamage": 905,
+          "enemyDamage": 0,
+          "kills": 2
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26101,
+      "room": 7,
+      "name": "Saison 7 · Le prix d’une preuve",
+      "ms": 2904,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 13,
+      "firstDamageRound": 2,
+      "heroTurns": 74,
+      "enemyTurns": 136,
+      "heroCommands": 258,
+      "enemyCommands": 198,
+      "casts": {
+        "heroes": 157,
+        "enemies": 83
+      },
+      "moves": {
+        "heroes": 101,
+        "enemies": 115
+      },
+      "damageToHeroes": 3151,
+      "healingToHeroes": 110,
+      "heroHpRemainingPercent": 81.3,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 0,
+          "heroDamage": 0,
+          "enemyDamage": 0,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 3,
+          "enemyCasts": 1,
+          "heroDamage": 156,
+          "enemyDamage": 22,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 9,
+          "enemyCasts": 9,
+          "heroDamage": 1181,
+          "enemyDamage": 265,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 13,
+          "enemyCasts": 11,
+          "heroDamage": 1860,
+          "enemyDamage": 435,
+          "kills": 2
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 11,
+          "heroDamage": 2177,
+          "enemyDamage": 364,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 9,
+          "heroDamage": 1750,
+          "enemyDamage": 340,
+          "kills": 1
+        },
+        "7": {
+          "heroCasts": 15,
+          "enemyCasts": 13,
+          "heroDamage": 1477,
+          "enemyDamage": 526,
+          "kills": 3
+        },
+        "8": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1112,
+          "enemyDamage": 364,
+          "kills": 0
+        },
+        "9": {
+          "heroCasts": 14,
+          "enemyCasts": 8,
+          "heroDamage": 1652,
+          "enemyDamage": 297,
+          "kills": 2
+        },
+        "10": {
+          "heroCasts": 15,
+          "enemyCasts": 5,
+          "heroDamage": 1598,
+          "enemyDamage": 223,
+          "kills": 2
+        },
+        "11": {
+          "heroCasts": 15,
+          "enemyCasts": 5,
+          "heroDamage": 1644,
+          "enemyDamage": 209,
+          "kills": 3
+        },
+        "12": {
+          "heroCasts": 14,
+          "enemyCasts": 1,
+          "heroDamage": 1304,
+          "enemyDamage": 31,
+          "kills": 2
+        },
+        "13": {
+          "heroCasts": 5,
+          "enemyCasts": 0,
+          "heroDamage": 473,
+          "enemyDamage": 0,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26101,
+      "room": 8,
+      "name": "Saison 8 · Ce qui reste après l’hiver",
+      "ms": 5360,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 13,
+      "firstDamageRound": 2,
+      "heroTurns": 76,
+      "enemyTurns": 286,
+      "heroCommands": 251,
+      "enemyCommands": 435,
+      "casts": {
+        "heroes": 155,
+        "enemies": 168
+      },
+      "moves": {
+        "heroes": 96,
+        "enemies": 267
+      },
+      "damageToHeroes": 6501,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 60.1,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 1,
+          "heroDamage": 0,
+          "enemyDamage": 0,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 4,
+          "enemyCasts": 5,
+          "heroDamage": 485,
+          "enemyDamage": 85,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 8,
+          "enemyCasts": 10,
+          "heroDamage": 1240,
+          "enemyDamage": 197,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 15,
+          "enemyCasts": 14,
+          "heroDamage": 1266,
+          "enemyDamage": 456,
+          "kills": 3
+        },
+        "5": {
+          "heroCasts": 12,
+          "enemyCasts": 19,
+          "heroDamage": 1433,
+          "enemyDamage": 689,
+          "kills": 2
+        },
+        "6": {
+          "heroCasts": 12,
+          "enemyCasts": 19,
+          "heroDamage": 1373,
+          "enemyDamage": 686,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 14,
+          "enemyCasts": 15,
+          "heroDamage": 1603,
+          "enemyDamage": 635,
+          "kills": 1
+        },
+        "8": {
+          "heroCasts": 14,
+          "enemyCasts": 16,
+          "heroDamage": 1761,
+          "enemyDamage": 680,
+          "kills": 3
+        },
+        "9": {
+          "heroCasts": 14,
+          "enemyCasts": 16,
+          "heroDamage": 1404,
+          "enemyDamage": 672,
+          "kills": 2
+        },
+        "10": {
+          "heroCasts": 14,
+          "enemyCasts": 14,
+          "heroDamage": 1726,
+          "enemyDamage": 666,
+          "kills": 0
+        },
+        "11": {
+          "heroCasts": 14,
+          "enemyCasts": 17,
+          "heroDamage": 1440,
+          "enemyDamage": 690,
+          "kills": 2
+        },
+        "12": {
+          "heroCasts": 14,
+          "enemyCasts": 16,
+          "heroDamage": 1524,
+          "enemyDamage": 649,
+          "kills": 1
+        },
+        "13": {
+          "heroCasts": 8,
+          "enemyCasts": 6,
+          "heroDamage": 908,
+          "enemyDamage": 396,
+          "kills": 15
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26102,
+      "room": 1,
+      "name": "Saison 1 · Le prix de l’honneur",
+      "ms": 1340,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 8,
+      "firstDamageRound": 1,
+      "heroTurns": 44,
+      "enemyTurns": 29,
+      "heroCommands": 149,
+      "enemyCommands": 67,
+      "casts": {
+        "heroes": 92,
+        "enemies": 45
+      },
+      "moves": {
+        "heroes": 57,
+        "enemies": 22
+      },
+      "damageToHeroes": 1336,
+      "healingToHeroes": 99,
+      "heroHpRemainingPercent": 92.4,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 8,
+          "heroDamage": 0,
+          "enemyDamage": 74,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1601,
+          "enemyDamage": 344,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1475,
+          "enemyDamage": 365,
+          "kills": 3
+        },
+        "4": {
+          "heroCasts": 13,
+          "enemyCasts": 8,
+          "heroDamage": 1367,
+          "enemyDamage": 298,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 16,
+          "enemyCasts": 4,
+          "heroDamage": 816,
+          "enemyDamage": 78,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 10,
+          "enemyCasts": 3,
+          "heroDamage": 627,
+          "enemyDamage": 50,
+          "kills": 0
+        },
+        "7": {
+          "heroCasts": 7,
+          "enemyCasts": 2,
+          "heroDamage": 466,
+          "enemyDamage": 34,
+          "kills": 1
+        },
+        "8": {
+          "heroCasts": 6,
+          "enemyCasts": 0,
+          "heroDamage": 328,
+          "enemyDamage": 0,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26102,
+      "room": 2,
+      "name": "Saison 2 · Le fleuve vert",
+      "ms": 1915,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 9,
+      "firstDamageRound": 1,
+      "heroTurns": 51,
+      "enemyTurns": 55,
+      "heroCommands": 161,
+      "enemyCommands": 127,
+      "casts": {
+        "heroes": 103,
+        "enemies": 80
+      },
+      "moves": {
+        "heroes": 58,
+        "enemies": 47
+      },
+      "damageToHeroes": 3013,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 81.5,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 8,
+          "heroDamage": 0,
+          "enemyDamage": 74,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 8,
+          "enemyCasts": 16,
+          "heroDamage": 713,
+          "enemyDamage": 646,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 10,
+          "enemyCasts": 14,
+          "heroDamage": 1057,
+          "enemyDamage": 479,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 15,
+          "enemyCasts": 18,
+          "heroDamage": 1692,
+          "enemyDamage": 859,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 12,
+          "heroDamage": 1574,
+          "enemyDamage": 473,
+          "kills": 2
+        },
+        "6": {
+          "heroCasts": 15,
+          "enemyCasts": 8,
+          "heroDamage": 1482,
+          "enemyDamage": 332,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 13,
+          "enemyCasts": 2,
+          "heroDamage": 1030,
+          "enemyDamage": 39,
+          "kills": 1
+        },
+        "8": {
+          "heroCasts": 12,
+          "enemyCasts": 2,
+          "heroDamage": 1097,
+          "enemyDamage": 4,
+          "kills": 1
+        },
+        "9": {
+          "heroCasts": 4,
+          "enemyCasts": 0,
+          "heroDamage": 227,
+          "enemyDamage": 0,
+          "kills": 2
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26102,
+      "room": 3,
+      "name": "Saison 3 · La porte des Jumeaux",
+      "ms": 1790,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 8,
+      "firstDamageRound": 1,
+      "heroTurns": 48,
+      "enemyTurns": 50,
+      "heroCommands": 166,
+      "enemyCommands": 108,
+      "casts": {
+        "heroes": 103,
+        "enemies": 66
+      },
+      "moves": {
+        "heroes": 63,
+        "enemies": 42
+      },
+      "damageToHeroes": 1926,
+      "healingToHeroes": 208,
+      "heroHpRemainingPercent": 89.5,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 8,
+          "heroDamage": 0,
+          "enemyDamage": 111,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 10,
+          "enemyCasts": 8,
+          "heroDamage": 1189,
+          "enemyDamage": 245,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1644,
+          "enemyDamage": 306,
+          "kills": 2
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 12,
+          "heroDamage": 1200,
+          "enemyDamage": 352,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 14,
+          "heroDamage": 1765,
+          "enemyDamage": 377,
+          "kills": 0
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 8,
+          "heroDamage": 1448,
+          "enemyDamage": 156,
+          "kills": 3
+        },
+        "7": {
+          "heroCasts": 15,
+          "enemyCasts": 4,
+          "heroDamage": 866,
+          "enemyDamage": 75,
+          "kills": 3
+        },
+        "8": {
+          "heroCasts": 10,
+          "enemyCasts": 2,
+          "heroDamage": 568,
+          "enemyDamage": 39,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26102,
+      "room": 4,
+      "name": "Saison 4 · Ceux qui veillent",
+      "ms": 2193,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 12,
+      "firstDamageRound": 1,
+      "heroTurns": 71,
+      "enemyTurns": 62,
+      "heroCommands": 218,
+      "enemyCommands": 146,
+      "casts": {
+        "heroes": 122,
+        "enemies": 76
+      },
+      "moves": {
+        "heroes": 96,
+        "enemies": 70
+      },
+      "damageToHeroes": 2337,
+      "healingToHeroes": 312,
+      "heroHpRemainingPercent": 87.6,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 12,
+          "heroDamage": 0,
+          "enemyDamage": 6,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 8,
+          "enemyCasts": 5,
+          "heroDamage": 736,
+          "enemyDamage": 113,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 12,
+          "enemyCasts": 10,
+          "heroDamage": 1598,
+          "enemyDamage": 352,
+          "kills": 0
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 15,
+          "heroDamage": 1387,
+          "enemyDamage": 373,
+          "kills": 2
+        },
+        "5": {
+          "heroCasts": 12,
+          "enemyCasts": 10,
+          "heroDamage": 1573,
+          "enemyDamage": 398,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 13,
+          "enemyCasts": 7,
+          "heroDamage": 1318,
+          "enemyDamage": 230,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 14,
+          "enemyCasts": 8,
+          "heroDamage": 1293,
+          "enemyDamage": 188,
+          "kills": 1
+        },
+        "8": {
+          "heroCasts": 11,
+          "enemyCasts": 5,
+          "heroDamage": 878,
+          "enemyDamage": 130,
+          "kills": 2
+        },
+        "9": {
+          "heroCasts": 9,
+          "enemyCasts": 0,
+          "heroDamage": 461,
+          "enemyDamage": 0,
+          "kills": 1
+        },
+        "10": {
+          "heroCasts": 7,
+          "enemyCasts": 2,
+          "heroDamage": 0,
+          "enemyDamage": 37,
+          "kills": 0
+        },
+        "11": {
+          "heroCasts": 4,
+          "enemyCasts": 2,
+          "heroDamage": 167,
+          "enemyDamage": 40,
+          "kills": 0
+        },
+        "12": {
+          "heroCasts": 6,
+          "enemyCasts": 0,
+          "heroDamage": 89,
+          "enemyDamage": 0,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26102,
+      "room": 5,
+      "name": "Saison 5 · Le rivage des morts",
+      "ms": 2545,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 14,
+      "firstDamageRound": 2,
+      "heroTurns": 81,
+      "enemyTurns": 106,
+      "heroCommands": 245,
+      "enemyCommands": 178,
+      "casts": {
+        "heroes": 147,
+        "enemies": 77
+      },
+      "moves": {
+        "heroes": 98,
+        "enemies": 101
+      },
+      "damageToHeroes": 2357,
+      "healingToHeroes": 318,
+      "heroHpRemainingPercent": 87.5,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 0,
+          "heroDamage": 0,
+          "enemyDamage": 0,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 1,
+          "enemyCasts": 3,
+          "heroDamage": 0,
+          "enemyDamage": 68,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 9,
+          "enemyCasts": 10,
+          "heroDamage": 1001,
+          "enemyDamage": 279,
+          "kills": 0
+        },
+        "4": {
+          "heroCasts": 15,
+          "enemyCasts": 12,
+          "heroDamage": 1492,
+          "enemyDamage": 396,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 12,
+          "heroDamage": 1963,
+          "enemyDamage": 407,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 14,
+          "heroDamage": 1493,
+          "enemyDamage": 437,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 15,
+          "enemyCasts": 8,
+          "heroDamage": 1635,
+          "enemyDamage": 212,
+          "kills": 3
+        },
+        "8": {
+          "heroCasts": 14,
+          "enemyCasts": 7,
+          "heroDamage": 1842,
+          "enemyDamage": 196,
+          "kills": 0
+        },
+        "9": {
+          "heroCasts": 13,
+          "enemyCasts": 5,
+          "heroDamage": 1173,
+          "enemyDamage": 125,
+          "kills": 3
+        },
+        "10": {
+          "heroCasts": 14,
+          "enemyCasts": 2,
+          "heroDamage": 340,
+          "enemyDamage": 47,
+          "kills": 2
+        },
+        "11": {
+          "heroCasts": 7,
+          "enemyCasts": 2,
+          "heroDamage": 296,
+          "enemyDamage": 48,
+          "kills": 0
+        },
+        "12": {
+          "heroCasts": 5,
+          "enemyCasts": 1,
+          "heroDamage": 239,
+          "enemyDamage": 27,
+          "kills": 1
+        },
+        "13": {
+          "heroCasts": 9,
+          "enemyCasts": 1,
+          "heroDamage": 326,
+          "enemyDamage": 22,
+          "kills": 0
+        },
+        "14": {
+          "heroCasts": 5,
+          "enemyCasts": 0,
+          "heroDamage": 26,
+          "enemyDamage": 0,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26102,
+      "room": 6,
+      "name": "Saison 6 · Le Nord se souvient",
+      "ms": 2348,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 9,
+      "firstDamageRound": 1,
+      "heroTurns": 54,
+      "enemyTurns": 70,
+      "heroCommands": 199,
+      "enemyCommands": 164,
+      "casts": {
+        "heroes": 121,
+        "enemies": 106
+      },
+      "moves": {
+        "heroes": 78,
+        "enemies": 58
+      },
+      "damageToHeroes": 3608,
+      "healingToHeroes": 110,
+      "heroHpRemainingPercent": 78.5,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 7,
+          "heroDamage": 0,
+          "enemyDamage": 79,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 10,
+          "enemyCasts": 13,
+          "heroDamage": 1137,
+          "enemyDamage": 233,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 14,
+          "enemyCasts": 18,
+          "heroDamage": 1692,
+          "enemyDamage": 662,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 15,
+          "enemyCasts": 20,
+          "heroDamage": 1814,
+          "enemyDamage": 781,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 16,
+          "heroDamage": 1740,
+          "enemyDamage": 584,
+          "kills": 2
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 16,
+          "heroDamage": 1663,
+          "enemyDamage": 608,
+          "kills": 1
+        },
+        "7": {
+          "heroCasts": 15,
+          "enemyCasts": 10,
+          "heroDamage": 1216,
+          "enemyDamage": 317,
+          "kills": 3
+        },
+        "8": {
+          "heroCasts": 14,
+          "enemyCasts": 4,
+          "heroDamage": 1301,
+          "enemyDamage": 74,
+          "kills": 1
+        },
+        "9": {
+          "heroCasts": 13,
+          "enemyCasts": 2,
+          "heroDamage": 1177,
+          "enemyDamage": 39,
+          "kills": 3
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26102,
+      "room": 7,
+      "name": "Saison 7 · Le prix d’une preuve",
+      "ms": 2898,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 13,
+      "firstDamageRound": 2,
+      "heroTurns": 75,
+      "enemyTurns": 129,
+      "heroCommands": 256,
+      "enemyCommands": 210,
+      "casts": {
+        "heroes": 160,
+        "enemies": 98
+      },
+      "moves": {
+        "heroes": 96,
+        "enemies": 112
+      },
+      "damageToHeroes": 3988,
+      "healingToHeroes": 110,
+      "heroHpRemainingPercent": 76.2,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 0,
+          "heroDamage": 0,
+          "enemyDamage": 0,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 4,
+          "enemyCasts": 6,
+          "heroDamage": 301,
+          "enemyDamage": 105,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 9,
+          "enemyCasts": 10,
+          "heroDamage": 1471,
+          "enemyDamage": 318,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 15,
+          "enemyCasts": 13,
+          "heroDamage": 1528,
+          "enemyDamage": 495,
+          "kills": 2
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 12,
+          "heroDamage": 2103,
+          "enemyDamage": 495,
+          "kills": 2
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 13,
+          "heroDamage": 1788,
+          "enemyDamage": 512,
+          "kills": 1
+        },
+        "7": {
+          "heroCasts": 15,
+          "enemyCasts": 11,
+          "heroDamage": 1819,
+          "enemyDamage": 490,
+          "kills": 2
+        },
+        "8": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1556,
+          "enemyDamage": 465,
+          "kills": 2
+        },
+        "9": {
+          "heroCasts": 14,
+          "enemyCasts": 9,
+          "heroDamage": 1670,
+          "enemyDamage": 443,
+          "kills": 1
+        },
+        "10": {
+          "heroCasts": 15,
+          "enemyCasts": 8,
+          "heroDamage": 1431,
+          "enemyDamage": 400,
+          "kills": 2
+        },
+        "11": {
+          "heroCasts": 15,
+          "enemyCasts": 4,
+          "heroDamage": 1321,
+          "enemyDamage": 212,
+          "kills": 3
+        },
+        "12": {
+          "heroCasts": 13,
+          "enemyCasts": 1,
+          "heroDamage": 717,
+          "enemyDamage": 27,
+          "kills": 1
+        },
+        "13": {
+          "heroCasts": 6,
+          "enemyCasts": 1,
+          "heroDamage": 703,
+          "enemyDamage": 26,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26102,
+      "room": 8,
+      "name": "Saison 8 · Ce qui reste après l’hiver",
+      "ms": 4172,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 10,
+      "firstDamageRound": 2,
+      "heroTurns": 56,
+      "enemyTurns": 246,
+      "heroCommands": 184,
+      "enemyCommands": 358,
+      "casts": {
+        "heroes": 111,
+        "enemies": 130
+      },
+      "moves": {
+        "heroes": 73,
+        "enemies": 228
+      },
+      "damageToHeroes": 4901,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 69.9,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 1,
+          "heroDamage": 0,
+          "enemyDamage": 0,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 1,
+          "enemyCasts": 3,
+          "heroDamage": 0,
+          "enemyDamage": 100,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 11,
+          "enemyCasts": 11,
+          "heroDamage": 1313,
+          "enemyDamage": 337,
+          "kills": 0
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 20,
+          "heroDamage": 1338,
+          "enemyDamage": 591,
+          "kills": 3
+        },
+        "5": {
+          "heroCasts": 13,
+          "enemyCasts": 20,
+          "heroDamage": 1432,
+          "enemyDamage": 738,
+          "kills": 2
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 18,
+          "heroDamage": 1657,
+          "enemyDamage": 690,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 14,
+          "enemyCasts": 17,
+          "heroDamage": 1785,
+          "enemyDamage": 714,
+          "kills": 1
+        },
+        "8": {
+          "heroCasts": 14,
+          "enemyCasts": 18,
+          "heroDamage": 1465,
+          "enemyDamage": 707,
+          "kills": 2
+        },
+        "9": {
+          "heroCasts": 14,
+          "enemyCasts": 18,
+          "heroDamage": 1618,
+          "enemyDamage": 690,
+          "kills": 1
+        },
+        "10": {
+          "heroCasts": 4,
+          "enemyCasts": 4,
+          "heroDamage": 421,
+          "enemyDamage": 259,
+          "kills": 21
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26103,
+      "room": 1,
+      "name": "Saison 1 · Le prix de l’honneur",
+      "ms": 1321,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 7,
+      "firstDamageRound": 1,
+      "heroTurns": 42,
+      "enemyTurns": 32,
+      "heroCommands": 138,
+      "enemyCommands": 78,
+      "casts": {
+        "heroes": 84,
+        "enemies": 50
+      },
+      "moves": {
+        "heroes": 54,
+        "enemies": 28
+      },
+      "damageToHeroes": 1467,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 91,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 11,
+          "heroDamage": 0,
+          "enemyDamage": 223,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 11,
+          "enemyCasts": 9,
+          "heroDamage": 1197,
+          "enemyDamage": 246,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 12,
+          "enemyCasts": 8,
+          "heroDamage": 1445,
+          "enemyDamage": 309,
+          "kills": 2
+        },
+        "4": {
+          "heroCasts": 13,
+          "enemyCasts": 10,
+          "heroDamage": 1321,
+          "enemyDamage": 340,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 6,
+          "heroDamage": 740,
+          "enemyDamage": 109,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 12,
+          "enemyCasts": 4,
+          "heroDamage": 1166,
+          "enemyDamage": 77,
+          "kills": 0
+        },
+        "7": {
+          "heroCasts": 10,
+          "enemyCasts": 2,
+          "heroDamage": 811,
+          "enemyDamage": 37,
+          "kills": 3
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26103,
+      "room": 2,
+      "name": "Saison 2 · Le fleuve vert",
+      "ms": 1612,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 9,
+      "firstDamageRound": 1,
+      "heroTurns": 50,
+      "enemyTurns": 48,
+      "heroCommands": 166,
+      "enemyCommands": 120,
+      "casts": {
+        "heroes": 104,
+        "enemies": 75
+      },
+      "moves": {
+        "heroes": 62,
+        "enemies": 45
+      },
+      "damageToHeroes": 2887,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 82.3,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 9,
+          "heroDamage": 0,
+          "enemyDamage": 114,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 10,
+          "enemyCasts": 14,
+          "heroDamage": 1095,
+          "enemyDamage": 573,
+          "kills": 1
+        },
+        "3": {
+          "heroCasts": 14,
+          "enemyCasts": 16,
+          "heroDamage": 1844,
+          "enemyDamage": 650,
+          "kills": 0
+        },
+        "4": {
+          "heroCasts": 13,
+          "enemyCasts": 14,
+          "heroDamage": 1383,
+          "enemyDamage": 606,
+          "kills": 3
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1292,
+          "enemyDamage": 487,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 6,
+          "heroDamage": 1559,
+          "enemyDamage": 220,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 13,
+          "enemyCasts": 4,
+          "heroDamage": 945,
+          "enemyDamage": 199,
+          "kills": 1
+        },
+        "8": {
+          "heroCasts": 10,
+          "enemyCasts": 2,
+          "heroDamage": 629,
+          "enemyDamage": 38,
+          "kills": 1
+        },
+        "9": {
+          "heroCasts": 4,
+          "enemyCasts": 0,
+          "heroDamage": 118,
+          "enemyDamage": 0,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26103,
+      "room": 3,
+      "name": "Saison 3 · La porte des Jumeaux",
+      "ms": 1723,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 9,
+      "firstDamageRound": 1,
+      "heroTurns": 49,
+      "enemyTurns": 55,
+      "heroCommands": 155,
+      "enemyCommands": 130,
+      "casts": {
+        "heroes": 100,
+        "enemies": 79
+      },
+      "moves": {
+        "heroes": 55,
+        "enemies": 51
+      },
+      "damageToHeroes": 2141,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 86.9,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 8,
+          "heroDamage": 0,
+          "enemyDamage": 174,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 12,
+          "enemyCasts": 11,
+          "heroDamage": 1562,
+          "enemyDamage": 256,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 10,
+          "enemyCasts": 12,
+          "heroDamage": 1159,
+          "enemyDamage": 336,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 14,
+          "heroDamage": 1254,
+          "enemyDamage": 410,
+          "kills": 2
+        },
+        "5": {
+          "heroCasts": 12,
+          "enemyCasts": 14,
+          "heroDamage": 1319,
+          "enemyDamage": 397,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 13,
+          "enemyCasts": 8,
+          "heroDamage": 900,
+          "enemyDamage": 154,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 13,
+          "enemyCasts": 6,
+          "heroDamage": 1047,
+          "enemyDamage": 78,
+          "kills": 0
+        },
+        "8": {
+          "heroCasts": 12,
+          "enemyCasts": 6,
+          "heroDamage": 1267,
+          "enemyDamage": 79,
+          "kills": 3
+        },
+        "9": {
+          "heroCasts": 2,
+          "enemyCasts": 0,
+          "heroDamage": 216,
+          "enemyDamage": 0,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26103,
+      "room": 4,
+      "name": "Saison 4 · Ceux qui veillent",
+      "ms": 1800,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 10,
+      "firstDamageRound": 1,
+      "heroTurns": 55,
+      "enemyTurns": 51,
+      "heroCommands": 183,
+      "enemyCommands": 127,
+      "casts": {
+        "heroes": 112,
+        "enemies": 66
+      },
+      "moves": {
+        "heroes": 71,
+        "enemies": 61
+      },
+      "damageToHeroes": 2106,
+      "healingToHeroes": 307,
+      "heroHpRemainingPercent": 89,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 10,
+          "heroDamage": 0,
+          "enemyDamage": 42,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 10,
+          "enemyCasts": 10,
+          "heroDamage": 1139,
+          "enemyDamage": 410,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1874,
+          "enemyDamage": 412,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 14,
+          "heroDamage": 1598,
+          "enemyDamage": 339,
+          "kills": 2
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 8,
+          "heroDamage": 1526,
+          "enemyDamage": 225,
+          "kills": 2
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 5,
+          "heroDamage": 1541,
+          "enemyDamage": 123,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 14,
+          "enemyCasts": 5,
+          "heroDamage": 645,
+          "enemyDamage": 113,
+          "kills": 1
+        },
+        "8": {
+          "heroCasts": 10,
+          "enemyCasts": 2,
+          "heroDamage": 468,
+          "enemyDamage": 39,
+          "kills": 1
+        },
+        "9": {
+          "heroCasts": 8,
+          "enemyCasts": 2,
+          "heroDamage": 466,
+          "enemyDamage": 38,
+          "kills": 0
+        },
+        "10": {
+          "heroCasts": 2,
+          "enemyCasts": 0,
+          "heroDamage": 183,
+          "enemyDamage": 0,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26103,
+      "room": 5,
+      "name": "Saison 5 · Le rivage des morts",
+      "ms": 2540,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 10,
+      "firstDamageRound": 2,
+      "heroTurns": 59,
+      "enemyTurns": 91,
+      "heroCommands": 205,
+      "enemyCommands": 148,
+      "casts": {
+        "heroes": 123,
+        "enemies": 63
+      },
+      "moves": {
+        "heroes": 82,
+        "enemies": 85
+      },
+      "damageToHeroes": 2209,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 86.4,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 0,
+          "heroDamage": 0,
+          "enemyDamage": 0,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 3,
+          "enemyCasts": 3,
+          "heroDamage": 190,
+          "enemyDamage": 69,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 12,
+          "enemyCasts": 10,
+          "heroDamage": 1512,
+          "enemyDamage": 258,
+          "kills": 0
+        },
+        "4": {
+          "heroCasts": 13,
+          "enemyCasts": 15,
+          "heroDamage": 1519,
+          "enemyDamage": 433,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1776,
+          "enemyDamage": 362,
+          "kills": 3
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1866,
+          "enemyDamage": 359,
+          "kills": 0
+        },
+        "7": {
+          "heroCasts": 16,
+          "enemyCasts": 8,
+          "heroDamage": 1414,
+          "enemyDamage": 316,
+          "kills": 3
+        },
+        "8": {
+          "heroCasts": 15,
+          "enemyCasts": 5,
+          "heroDamage": 1496,
+          "enemyDamage": 221,
+          "kills": 3
+        },
+        "9": {
+          "heroCasts": 13,
+          "enemyCasts": 1,
+          "heroDamage": 1275,
+          "enemyDamage": 29,
+          "kills": 3
+        },
+        "10": {
+          "heroCasts": 11,
+          "enemyCasts": 1,
+          "heroDamage": 800,
+          "enemyDamage": 29,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26103,
+      "room": 6,
+      "name": "Saison 6 · Le Nord se souvient",
+      "ms": 2590,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 11,
+      "firstDamageRound": 1,
+      "heroTurns": 61,
+      "enemyTurns": 67,
+      "heroCommands": 210,
+      "enemyCommands": 158,
+      "casts": {
+        "heroes": 127,
+        "enemies": 103
+      },
+      "moves": {
+        "heroes": 83,
+        "enemies": 55
+      },
+      "damageToHeroes": 3713,
+      "healingToHeroes": 110,
+      "heroHpRemainingPercent": 77.9,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 13,
+          "enemyCasts": 7,
+          "heroDamage": 86,
+          "enemyDamage": 76,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 10,
+          "enemyCasts": 14,
+          "heroDamage": 1186,
+          "enemyDamage": 427,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 14,
+          "enemyCasts": 22,
+          "heroDamage": 1763,
+          "enemyDamage": 842,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 20,
+          "heroDamage": 1592,
+          "enemyDamage": 821,
+          "kills": 2
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 14,
+          "heroDamage": 1645,
+          "enemyDamage": 558,
+          "kills": 2
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 12,
+          "heroDamage": 1548,
+          "enemyDamage": 436,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 14,
+          "enemyCasts": 8,
+          "heroDamage": 1292,
+          "enemyDamage": 254,
+          "kills": 1
+        },
+        "8": {
+          "heroCasts": 12,
+          "enemyCasts": 4,
+          "heroDamage": 1105,
+          "enemyDamage": 136,
+          "kills": 2
+        },
+        "9": {
+          "heroCasts": 10,
+          "enemyCasts": 0,
+          "heroDamage": 963,
+          "enemyDamage": 0,
+          "kills": 1
+        },
+        "10": {
+          "heroCasts": 11,
+          "enemyCasts": 2,
+          "heroDamage": 517,
+          "enemyDamage": 34,
+          "kills": 0
+        },
+        "11": {
+          "heroCasts": 1,
+          "enemyCasts": 0,
+          "heroDamage": 11,
+          "enemyDamage": 0,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26103,
+      "room": 7,
+      "name": "Saison 7 · Le prix d’une preuve",
+      "ms": 2911,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 12,
+      "firstDamageRound": 2,
+      "heroTurns": 71,
+      "enemyTurns": 115,
+      "heroCommands": 243,
+      "enemyCommands": 195,
+      "casts": {
+        "heroes": 151,
+        "enemies": 85
+      },
+      "moves": {
+        "heroes": 92,
+        "enemies": 110
+      },
+      "damageToHeroes": 3867,
+      "healingToHeroes": 93,
+      "heroHpRemainingPercent": 76.8,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 0,
+          "heroDamage": 0,
+          "enemyDamage": 0,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 2,
+          "enemyCasts": 7,
+          "heroDamage": 418,
+          "enemyDamage": 232,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 10,
+          "enemyCasts": 10,
+          "heroDamage": 1363,
+          "enemyDamage": 331,
+          "kills": 2
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1848,
+          "enemyDamage": 441,
+          "kills": 2
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 13,
+          "heroDamage": 2024,
+          "enemyDamage": 537,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 11,
+          "heroDamage": 1358,
+          "enemyDamage": 476,
+          "kills": 3
+        },
+        "7": {
+          "heroCasts": 14,
+          "enemyCasts": 9,
+          "heroDamage": 1601,
+          "enemyDamage": 439,
+          "kills": 2
+        },
+        "8": {
+          "heroCasts": 16,
+          "enemyCasts": 8,
+          "heroDamage": 1506,
+          "enemyDamage": 392,
+          "kills": 2
+        },
+        "9": {
+          "heroCasts": 14,
+          "enemyCasts": 7,
+          "heroDamage": 1920,
+          "enemyDamage": 369,
+          "kills": 1
+        },
+        "10": {
+          "heroCasts": 14,
+          "enemyCasts": 5,
+          "heroDamage": 1621,
+          "enemyDamage": 324,
+          "kills": 3
+        },
+        "11": {
+          "heroCasts": 14,
+          "enemyCasts": 3,
+          "heroDamage": 1521,
+          "enemyDamage": 177,
+          "kills": 0
+        },
+        "12": {
+          "heroCasts": 13,
+          "enemyCasts": 2,
+          "heroDamage": 1212,
+          "enemyDamage": 149,
+          "kills": 2
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26103,
+      "room": 8,
+      "name": "Saison 8 · Ce qui reste après l’hiver",
+      "ms": 4868,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 13,
+      "firstDamageRound": 2,
+      "heroTurns": 78,
+      "enemyTurns": 232,
+      "heroCommands": 286,
+      "enemyCommands": 359,
+      "casts": {
+        "heroes": 176,
+        "enemies": 153
+      },
+      "moves": {
+        "heroes": 110,
+        "enemies": 206
+      },
+      "damageToHeroes": 6119,
+      "healingToHeroes": 99,
+      "heroHpRemainingPercent": 63,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 1,
+          "heroDamage": 0,
+          "enemyDamage": 0,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 8,
+          "enemyCasts": 6,
+          "heroDamage": 960,
+          "enemyDamage": 102,
+          "kills": 2
+        },
+        "3": {
+          "heroCasts": 13,
+          "enemyCasts": 14,
+          "heroDamage": 1575,
+          "enemyDamage": 282,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 13,
+          "enemyCasts": 13,
+          "heroDamage": 1502,
+          "enemyDamage": 374,
+          "kills": 4
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 16,
+          "heroDamage": 1667,
+          "enemyDamage": 484,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 18,
+          "heroDamage": 1943,
+          "enemyDamage": 612,
+          "kills": 3
+        },
+        "7": {
+          "heroCasts": 15,
+          "enemyCasts": 18,
+          "heroDamage": 2007,
+          "enemyDamage": 696,
+          "kills": 3
+        },
+        "8": {
+          "heroCasts": 14,
+          "enemyCasts": 16,
+          "heroDamage": 1553,
+          "enemyDamage": 656,
+          "kills": 5
+        },
+        "9": {
+          "heroCasts": 14,
+          "enemyCasts": 12,
+          "heroDamage": 1793,
+          "enemyDamage": 564,
+          "kills": 2
+        },
+        "10": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1499,
+          "enemyDamage": 479,
+          "kills": 2
+        },
+        "11": {
+          "heroCasts": 14,
+          "enemyCasts": 12,
+          "heroDamage": 1283,
+          "enemyDamage": 590,
+          "kills": 1
+        },
+        "12": {
+          "heroCasts": 15,
+          "enemyCasts": 11,
+          "heroDamage": 1314,
+          "enemyDamage": 565,
+          "kills": 0
+        },
+        "13": {
+          "heroCasts": 16,
+          "enemyCasts": 6,
+          "heroDamage": 1400,
+          "enemyDamage": 320,
+          "kills": 8
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26104,
+      "room": 1,
+      "name": "Saison 1 · Le prix de l’honneur",
+      "ms": 1359,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 7,
+      "firstDamageRound": 1,
+      "heroTurns": 40,
+      "enemyTurns": 30,
+      "heroCommands": 137,
+      "enemyCommands": 65,
+      "casts": {
+        "heroes": 83,
+        "enemies": 43
+      },
+      "moves": {
+        "heroes": 54,
+        "enemies": 22
+      },
+      "damageToHeroes": 1239,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 92.4,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 8,
+          "heroDamage": 0,
+          "enemyDamage": 73,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 12,
+          "enemyCasts": 8,
+          "heroDamage": 1367,
+          "enemyDamage": 216,
+          "kills": 1
+        },
+        "3": {
+          "heroCasts": 13,
+          "enemyCasts": 12,
+          "heroDamage": 1532,
+          "enemyDamage": 442,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 13,
+          "enemyCasts": 10,
+          "heroDamage": 1402,
+          "enemyDamage": 325,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 4,
+          "heroDamage": 1007,
+          "enemyDamage": 82,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 13,
+          "enemyCasts": 1,
+          "heroDamage": 899,
+          "enemyDamage": 0,
+          "kills": 1
+        },
+        "7": {
+          "heroCasts": 6,
+          "enemyCasts": 0,
+          "heroDamage": 437,
+          "enemyDamage": 0,
+          "kills": 2
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26104,
+      "room": 2,
+      "name": "Saison 2 · Le fleuve vert",
+      "ms": 2003,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 9,
+      "firstDamageRound": 1,
+      "heroTurns": 53,
+      "enemyTurns": 54,
+      "heroCommands": 180,
+      "enemyCommands": 134,
+      "casts": {
+        "heroes": 107,
+        "enemies": 83
+      },
+      "moves": {
+        "heroes": 73,
+        "enemies": 51
+      },
+      "damageToHeroes": 2707,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 83.4,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 13,
+          "enemyCasts": 8,
+          "heroDamage": 151,
+          "enemyDamage": 72,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 9,
+          "enemyCasts": 15,
+          "heroDamage": 1093,
+          "enemyDamage": 438,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 9,
+          "enemyCasts": 14,
+          "heroDamage": 1111,
+          "enemyDamage": 527,
+          "kills": 0
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 18,
+          "heroDamage": 1460,
+          "enemyDamage": 719,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 12,
+          "heroDamage": 1387,
+          "enemyDamage": 366,
+          "kills": 4
+        },
+        "6": {
+          "heroCasts": 15,
+          "enemyCasts": 10,
+          "heroDamage": 1492,
+          "enemyDamage": 450,
+          "kills": 1
+        },
+        "7": {
+          "heroCasts": 15,
+          "enemyCasts": 4,
+          "heroDamage": 1165,
+          "enemyDamage": 96,
+          "kills": 2
+        },
+        "8": {
+          "heroCasts": 14,
+          "enemyCasts": 2,
+          "heroDamage": 562,
+          "enemyDamage": 39,
+          "kills": 1
+        },
+        "9": {
+          "heroCasts": 4,
+          "enemyCasts": 0,
+          "heroDamage": 432,
+          "enemyDamage": 0,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26104,
+      "room": 3,
+      "name": "Saison 3 · La porte des Jumeaux",
+      "ms": 1779,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 8,
+      "firstDamageRound": 1,
+      "heroTurns": 48,
+      "enemyTurns": 49,
+      "heroCommands": 160,
+      "enemyCommands": 101,
+      "casts": {
+        "heroes": 100,
+        "enemies": 59
+      },
+      "moves": {
+        "heroes": 60,
+        "enemies": 42
+      },
+      "damageToHeroes": 1573,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 90.3,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 4,
+          "heroDamage": 0,
+          "enemyDamage": 37,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 7,
+          "enemyCasts": 12,
+          "heroDamage": 760,
+          "enemyDamage": 351,
+          "kills": 1
+        },
+        "3": {
+          "heroCasts": 14,
+          "enemyCasts": 9,
+          "heroDamage": 1586,
+          "enemyDamage": 341,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 8,
+          "heroDamage": 1737,
+          "enemyDamage": 294,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1060,
+          "enemyDamage": 269,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 6,
+          "heroDamage": 1562,
+          "enemyDamage": 70,
+          "kills": 3
+        },
+        "7": {
+          "heroCasts": 14,
+          "enemyCasts": 6,
+          "heroDamage": 1109,
+          "enemyDamage": 117,
+          "kills": 0
+        },
+        "8": {
+          "heroCasts": 11,
+          "enemyCasts": 4,
+          "heroDamage": 890,
+          "enemyDamage": 80,
+          "kills": 3
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26104,
+      "room": 4,
+      "name": "Saison 4 · Ceux qui veillent",
+      "ms": 2379,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 10,
+      "firstDamageRound": 1,
+      "heroTurns": 58,
+      "enemyTurns": 56,
+      "heroCommands": 184,
+      "enemyCommands": 133,
+      "casts": {
+        "heroes": 107,
+        "enemies": 65
+      },
+      "moves": {
+        "heroes": 77,
+        "enemies": 68
+      },
+      "damageToHeroes": 1794,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 89,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 13,
+          "enemyCasts": 12,
+          "heroDamage": 81,
+          "enemyDamage": 72,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 7,
+          "enemyCasts": 6,
+          "heroDamage": 857,
+          "enemyDamage": 187,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 13,
+          "enemyCasts": 7,
+          "heroDamage": 1512,
+          "enemyDamage": 250,
+          "kills": 2
+        },
+        "4": {
+          "heroCasts": 12,
+          "enemyCasts": 14,
+          "heroDamage": 1092,
+          "enemyDamage": 283,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 12,
+          "enemyCasts": 9,
+          "heroDamage": 1556,
+          "enemyDamage": 362,
+          "kills": 0
+        },
+        "6": {
+          "heroCasts": 12,
+          "enemyCasts": 5,
+          "heroDamage": 1375,
+          "enemyDamage": 193,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 14,
+          "enemyCasts": 6,
+          "heroDamage": 1679,
+          "enemyDamage": 130,
+          "kills": 2
+        },
+        "8": {
+          "heroCasts": 13,
+          "enemyCasts": 3,
+          "heroDamage": 693,
+          "enemyDamage": 91,
+          "kills": 1
+        },
+        "9": {
+          "heroCasts": 8,
+          "enemyCasts": 2,
+          "heroDamage": 371,
+          "enemyDamage": 34,
+          "kills": 1
+        },
+        "10": {
+          "heroCasts": 3,
+          "enemyCasts": 1,
+          "heroDamage": 256,
+          "enemyDamage": 13,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26104,
+      "room": 5,
+      "name": "Saison 5 · Le rivage des morts",
+      "ms": 2947,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 14,
+      "firstDamageRound": 2,
+      "heroTurns": 83,
+      "enemyTurns": 97,
+      "heroCommands": 249,
+      "enemyCommands": 148,
+      "casts": {
+        "heroes": 137,
+        "enemies": 57
+      },
+      "moves": {
+        "heroes": 112,
+        "enemies": 91
+      },
+      "damageToHeroes": 1936,
+      "healingToHeroes": 504,
+      "heroHpRemainingPercent": 91.2,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 0,
+          "heroDamage": 0,
+          "enemyDamage": 0,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 1,
+          "enemyCasts": 3,
+          "heroDamage": 0,
+          "enemyDamage": 68,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 9,
+          "enemyCasts": 9,
+          "heroDamage": 1053,
+          "enemyDamage": 278,
+          "kills": 0
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1945,
+          "enemyDamage": 343,
+          "kills": 2
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 8,
+          "heroDamage": 2070,
+          "enemyDamage": 311,
+          "kills": 1
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 8,
+          "heroDamage": 1903,
+          "enemyDamage": 304,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 14,
+          "enemyCasts": 7,
+          "heroDamage": 1653,
+          "enemyDamage": 176,
+          "kills": 2
+        },
+        "8": {
+          "heroCasts": 14,
+          "enemyCasts": 5,
+          "heroDamage": 1337,
+          "enemyDamage": 122,
+          "kills": 3
+        },
+        "9": {
+          "heroCasts": 13,
+          "enemyCasts": 3,
+          "heroDamage": 858,
+          "enemyDamage": 77,
+          "kills": 1
+        },
+        "10": {
+          "heroCasts": 9,
+          "enemyCasts": 2,
+          "heroDamage": 209,
+          "enemyDamage": 40,
+          "kills": 1
+        },
+        "11": {
+          "heroCasts": 5,
+          "enemyCasts": 1,
+          "heroDamage": 178,
+          "enemyDamage": 27,
+          "kills": 1
+        },
+        "12": {
+          "heroCasts": 8,
+          "enemyCasts": 1,
+          "heroDamage": 124,
+          "enemyDamage": 8,
+          "kills": 0
+        },
+        "13": {
+          "heroCasts": 6,
+          "enemyCasts": 0,
+          "heroDamage": 326,
+          "enemyDamage": 0,
+          "kills": 0
+        },
+        "14": {
+          "heroCasts": 4,
+          "enemyCasts": 0,
+          "heroDamage": 180,
+          "enemyDamage": 0,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26104,
+      "room": 6,
+      "name": "Saison 6 · Le Nord se souvient",
+      "ms": 2735,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 11,
+      "firstDamageRound": 1,
+      "heroTurns": 65,
+      "enemyTurns": 71,
+      "heroCommands": 219,
+      "enemyCommands": 163,
+      "casts": {
+        "heroes": 134,
+        "enemies": 106
+      },
+      "moves": {
+        "heroes": 85,
+        "enemies": 57
+      },
+      "damageToHeroes": 3525,
+      "healingToHeroes": 428,
+      "heroHpRemainingPercent": 81,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 13,
+          "enemyCasts": 5,
+          "heroDamage": 151,
+          "enemyDamage": 72,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 9,
+          "enemyCasts": 10,
+          "heroDamage": 867,
+          "enemyDamage": 248,
+          "kills": 1
+        },
+        "3": {
+          "heroCasts": 14,
+          "enemyCasts": 22,
+          "heroDamage": 2117,
+          "enemyDamage": 819,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 14,
+          "enemyCasts": 20,
+          "heroDamage": 1653,
+          "enemyDamage": 767,
+          "kills": 0
+        },
+        "5": {
+          "heroCasts": 14,
+          "enemyCasts": 16,
+          "heroDamage": 1515,
+          "enemyDamage": 525,
+          "kills": 2
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1686,
+          "enemyDamage": 277,
+          "kills": 3
+        },
+        "7": {
+          "heroCasts": 15,
+          "enemyCasts": 8,
+          "heroDamage": 1391,
+          "enemyDamage": 209,
+          "kills": 1
+        },
+        "8": {
+          "heroCasts": 13,
+          "enemyCasts": 4,
+          "heroDamage": 421,
+          "enemyDamage": 70,
+          "kills": 1
+        },
+        "9": {
+          "heroCasts": 10,
+          "enemyCasts": 6,
+          "heroDamage": 438,
+          "enemyDamage": 117,
+          "kills": 0
+        },
+        "10": {
+          "heroCasts": 8,
+          "enemyCasts": 5,
+          "heroDamage": 740,
+          "enemyDamage": 91,
+          "kills": 1
+        },
+        "11": {
+          "heroCasts": 10,
+          "enemyCasts": 0,
+          "heroDamage": 705,
+          "enemyDamage": 0,
+          "kills": 2
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26104,
+      "room": 7,
+      "name": "Saison 7 · Le prix d’une preuve",
+      "ms": 3550,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 13,
+      "firstDamageRound": 2,
+      "heroTurns": 73,
+      "enemyTurns": 132,
+      "heroCommands": 252,
+      "enemyCommands": 228,
+      "casts": {
+        "heroes": 153,
+        "enemies": 107
+      },
+      "moves": {
+        "heroes": 99,
+        "enemies": 121
+      },
+      "damageToHeroes": 4418,
+      "healingToHeroes": 0,
+      "heroHpRemainingPercent": 72.9,
+      "survivors": 6,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 0,
+          "heroDamage": 0,
+          "enemyDamage": 0,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 4,
+          "enemyCasts": 7,
+          "heroDamage": 161,
+          "enemyDamage": 139,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 9,
+          "enemyCasts": 13,
+          "heroDamage": 1256,
+          "enemyDamage": 253,
+          "kills": 0
+        },
+        "4": {
+          "heroCasts": 13,
+          "enemyCasts": 15,
+          "heroDamage": 1697,
+          "enemyDamage": 437,
+          "kills": 1
+        },
+        "5": {
+          "heroCasts": 15,
+          "enemyCasts": 15,
+          "heroDamage": 1728,
+          "enemyDamage": 592,
+          "kills": 3
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 13,
+          "heroDamage": 1913,
+          "enemyDamage": 537,
+          "kills": 2
+        },
+        "7": {
+          "heroCasts": 14,
+          "enemyCasts": 11,
+          "heroDamage": 1654,
+          "enemyDamage": 482,
+          "kills": 2
+        },
+        "8": {
+          "heroCasts": 14,
+          "enemyCasts": 10,
+          "heroDamage": 1736,
+          "enemyDamage": 446,
+          "kills": 2
+        },
+        "9": {
+          "heroCasts": 15,
+          "enemyCasts": 9,
+          "heroDamage": 1597,
+          "enemyDamage": 444,
+          "kills": 2
+        },
+        "10": {
+          "heroCasts": 13,
+          "enemyCasts": 6,
+          "heroDamage": 1665,
+          "enemyDamage": 344,
+          "kills": 2
+        },
+        "11": {
+          "heroCasts": 15,
+          "enemyCasts": 5,
+          "heroDamage": 1341,
+          "enemyDamage": 308,
+          "kills": 2
+        },
+        "12": {
+          "heroCasts": 14,
+          "enemyCasts": 3,
+          "heroDamage": 1570,
+          "enemyDamage": 175,
+          "kills": 1
+        },
+        "13": {
+          "heroCasts": 1,
+          "enemyCasts": 0,
+          "heroDamage": 46,
+          "enemyDamage": 0,
+          "kills": 1
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 26104,
+      "room": 8,
+      "name": "Saison 8 · Ce qui reste après l’hiver",
+      "ms": 6761,
+      "victory": true,
+      "reason": "ko",
+      "rounds": 19,
+      "firstDamageRound": 2,
+      "heroTurns": 107,
+      "enemyTurns": 282,
+      "heroCommands": 378,
+      "enemyCommands": 477,
+      "casts": {
+        "heroes": 229,
+        "enemies": 204
+      },
+      "moves": {
+        "heroes": 149,
+        "enemies": 273
+      },
+      "damageToHeroes": 7496,
+      "healingToHeroes": 411,
+      "heroHpRemainingPercent": 56.5,
+      "survivors": 5,
+      "collapse": null,
+      "byRound": {
+        "1": {
+          "heroCasts": 12,
+          "enemyCasts": 1,
+          "heroDamage": 0,
+          "enemyDamage": 0,
+          "kills": 0
+        },
+        "2": {
+          "heroCasts": 4,
+          "enemyCasts": 8,
+          "heroDamage": 640,
+          "enemyDamage": 153,
+          "kills": 0
+        },
+        "3": {
+          "heroCasts": 7,
+          "enemyCasts": 12,
+          "heroDamage": 773,
+          "enemyDamage": 336,
+          "kills": 1
+        },
+        "4": {
+          "heroCasts": 15,
+          "enemyCasts": 15,
+          "heroDamage": 1408,
+          "enemyDamage": 454,
+          "kills": 3
+        },
+        "5": {
+          "heroCasts": 13,
+          "enemyCasts": 21,
+          "heroDamage": 1590,
+          "enemyDamage": 637,
+          "kills": 3
+        },
+        "6": {
+          "heroCasts": 14,
+          "enemyCasts": 23,
+          "heroDamage": 1688,
+          "enemyDamage": 802,
+          "kills": 1
+        },
+        "7": {
+          "heroCasts": 15,
+          "enemyCasts": 18,
+          "heroDamage": 1752,
+          "enemyDamage": 643,
+          "kills": 2
+        },
+        "8": {
+          "heroCasts": 16,
+          "enemyCasts": 18,
+          "heroDamage": 1645,
+          "enemyDamage": 628,
+          "kills": 2
+        },
+        "9": {
+          "heroCasts": 14,
+          "enemyCasts": 18,
+          "heroDamage": 1849,
+          "enemyDamage": 554,
+          "kills": 3
+        },
+        "10": {
+          "heroCasts": 14,
+          "enemyCasts": 15,
+          "heroDamage": 1580,
+          "enemyDamage": 608,
+          "kills": 5
+        },
+        "11": {
+          "heroCasts": 14,
+          "enemyCasts": 12,
+          "heroDamage": 1612,
+          "enemyDamage": 548,
+          "kills": 2
+        },
+        "12": {
+          "heroCasts": 14,
+          "enemyCasts": 11,
+          "heroDamage": 1186,
+          "enemyDamage": 455,
+          "kills": 2
+        },
+        "13": {
+          "heroCasts": 14,
+          "enemyCasts": 9,
+          "heroDamage": 1632,
+          "enemyDamage": 428,
+          "kills": 3
+        },
+        "14": {
+          "heroCasts": 13,
+          "enemyCasts": 6,
+          "heroDamage": 938,
+          "enemyDamage": 266,
+          "kills": 1
+        },
+        "15": {
+          "heroCasts": 12,
+          "enemyCasts": 6,
+          "heroDamage": 618,
+          "enemyDamage": 275,
+          "kills": 1
+        },
+        "16": {
+          "heroCasts": 11,
+          "enemyCasts": 3,
+          "heroDamage": 592,
+          "enemyDamage": 181,
+          "kills": 1
+        },
+        "17": {
+          "heroCasts": 10,
+          "enemyCasts": 3,
+          "heroDamage": 849,
+          "enemyDamage": 145,
+          "kills": 0
+        },
+        "18": {
+          "heroCasts": 11,
+          "enemyCasts": 3,
+          "heroDamage": 681,
+          "enemyDamage": 132,
+          "kills": 0
+        },
+        "19": {
+          "heroCasts": 6,
+          "enemyCasts": 2,
+          "heroDamage": 403,
+          "enemyDamage": 158,
+          "kills": 2
+        }
+      },
+      "invalid": 0,
+      "errors": 0
+    }
+  ],
+  "summary": [
+    {
+      "room": 1,
+      "name": "Saison 1 · Le prix de l’honneur",
+      "samples": 4,
+      "wins": 4,
+      "rounds": {
+        "min": 6,
+        "median": 7,
+        "max": 8
+      },
+      "heroCommands": {
+        "min": 131,
+        "median": 137.5,
+        "max": 149
+      },
+      "heroTurns": {
+        "min": 35,
+        "median": 41,
+        "max": 44
+      },
+      "enemyCommands": {
+        "min": 61,
+        "median": 66,
+        "max": 78
+      },
+      "firstDamageRound": {
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "heroHpRemainingPercent": {
+        "min": 91,
+        "median": 92.4,
+        "max": 92.4
+      },
+      "survivors": {
+        "min": 6,
+        "median": 6,
+        "max": 6
+      }
+    },
+    {
+      "room": 2,
+      "name": "Saison 2 · Le fleuve vert",
+      "samples": 4,
+      "wins": 4,
+      "rounds": {
+        "min": 9,
+        "median": 9,
+        "max": 10
+      },
+      "heroCommands": {
+        "min": 161,
+        "median": 173,
+        "max": 184
+      },
+      "heroTurns": {
+        "min": 50,
+        "median": 52,
+        "max": 58
+      },
+      "enemyCommands": {
+        "min": 120,
+        "median": 130.5,
+        "max": 137
+      },
+      "firstDamageRound": {
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "heroHpRemainingPercent": {
+        "min": 81.5,
+        "median": 82.9,
+        "max": 84
+      },
+      "survivors": {
+        "min": 6,
+        "median": 6,
+        "max": 6
+      }
+    },
+    {
+      "room": 3,
+      "name": "Saison 3 · La porte des Jumeaux",
+      "samples": 4,
+      "wins": 4,
+      "rounds": {
+        "min": 8,
+        "median": 8.5,
+        "max": 9
+      },
+      "heroCommands": {
+        "min": 155,
+        "median": 163,
+        "max": 179
+      },
+      "heroTurns": {
+        "min": 48,
+        "median": 48.5,
+        "max": 54
+      },
+      "enemyCommands": {
+        "min": 101,
+        "median": 119,
+        "max": 134
+      },
+      "firstDamageRound": {
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "heroHpRemainingPercent": {
+        "min": 86.9,
+        "median": 89,
+        "max": 90.3
+      },
+      "survivors": {
+        "min": 6,
+        "median": 6,
+        "max": 6
+      }
+    },
+    {
+      "room": 4,
+      "name": "Saison 4 · Ceux qui veillent",
+      "samples": 4,
+      "wins": 4,
+      "rounds": {
+        "min": 8,
+        "median": 10,
+        "max": 12
+      },
+      "heroCommands": {
+        "min": 155,
+        "median": 183.5,
+        "max": 218
+      },
+      "heroTurns": {
+        "min": 46,
+        "median": 56.5,
+        "max": 71
+      },
+      "enemyCommands": {
+        "min": 124,
+        "median": 130,
+        "max": 146
+      },
+      "firstDamageRound": {
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "heroHpRemainingPercent": {
+        "min": 87.6,
+        "median": 88.6,
+        "max": 89
+      },
+      "survivors": {
+        "min": 6,
+        "median": 6,
+        "max": 6
+      }
+    },
+    {
+      "room": 5,
+      "name": "Saison 5 · Le rivage des morts",
+      "samples": 4,
+      "wins": 4,
+      "rounds": {
+        "min": 10,
+        "median": 13,
+        "max": 14
+      },
+      "heroCommands": {
+        "min": 205,
+        "median": 233.5,
+        "max": 249
+      },
+      "heroTurns": {
+        "min": 59,
+        "median": 74,
+        "max": 83
+      },
+      "enemyCommands": {
+        "min": 129,
+        "median": 148,
+        "max": 178
+      },
+      "firstDamageRound": {
+        "min": 2,
+        "median": 2,
+        "max": 2
+      },
+      "heroHpRemainingPercent": {
+        "min": 85.2,
+        "median": 87,
+        "max": 91.2
+      },
+      "survivors": {
+        "min": 6,
+        "median": 6,
+        "max": 6
+      }
+    },
+    {
+      "room": 6,
+      "name": "Saison 6 · Le Nord se souvient",
+      "samples": 4,
+      "wins": 4,
+      "rounds": {
+        "min": 9,
+        "median": 10.5,
+        "max": 11
+      },
+      "heroCommands": {
+        "min": 199,
+        "median": 204.5,
+        "max": 219
+      },
+      "heroTurns": {
+        "min": 54,
+        "median": 59.5,
+        "max": 65
+      },
+      "enemyCommands": {
+        "min": 158,
+        "median": 163.5,
+        "max": 178
+      },
+      "firstDamageRound": {
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "heroHpRemainingPercent": {
+        "min": 77.1,
+        "median": 78.2,
+        "max": 81
+      },
+      "survivors": {
+        "min": 6,
+        "median": 6,
+        "max": 6
+      }
+    },
+    {
+      "room": 7,
+      "name": "Saison 7 · Le prix d’une preuve",
+      "samples": 4,
+      "wins": 4,
+      "rounds": {
+        "min": 12,
+        "median": 13,
+        "max": 13
+      },
+      "heroCommands": {
+        "min": 243,
+        "median": 254,
+        "max": 258
+      },
+      "heroTurns": {
+        "min": 71,
+        "median": 73.5,
+        "max": 75
+      },
+      "enemyCommands": {
+        "min": 195,
+        "median": 204,
+        "max": 228
+      },
+      "firstDamageRound": {
+        "min": 2,
+        "median": 2,
+        "max": 2
+      },
+      "heroHpRemainingPercent": {
+        "min": 72.9,
+        "median": 76.5,
+        "max": 81.3
+      },
+      "survivors": {
+        "min": 6,
+        "median": 6,
+        "max": 6
+      }
+    },
+    {
+      "room": 8,
+      "name": "Saison 8 · Ce qui reste après l’hiver",
+      "samples": 4,
+      "wins": 4,
+      "rounds": {
+        "min": 10,
+        "median": 13,
+        "max": 19
+      },
+      "heroCommands": {
+        "min": 184,
+        "median": 268.5,
+        "max": 378
+      },
+      "heroTurns": {
+        "min": 56,
+        "median": 77,
+        "max": 107
+      },
+      "enemyCommands": {
+        "min": 358,
+        "median": 397,
+        "max": 477
+      },
+      "firstDamageRound": {
+        "min": 2,
+        "median": 2,
+        "max": 2
+      },
+      "heroHpRemainingPercent": {
+        "min": 56.5,
+        "median": 61.6,
+        "max": 69.9
+      },
+      "survivors": {
+        "min": 5,
+        "median": 6,
+        "max": 6
+      }
+    }
+  ]
+}

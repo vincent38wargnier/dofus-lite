@@ -1,3 +1,6 @@
+import fs from 'fs';
+import { installSessionArtwork } from '../ui/characterArtwork';
+import { newAdventure, addAdventureHero } from '../engine/adventures';
 import { TextEncoder, TextDecoder } from 'util';
 import { encode, readCode, invitationLink, takeInvitation, base64, unbase64 } from '../net/p2p';
 import { JsonChannel } from '../net/jsonChannel';
@@ -13,6 +16,8 @@ import { spellsOf } from '../engine/engine';
 import { makeBotApi } from '../bots/api';
 import { packPeerUnit, unpackPeerUnit } from '../net/content';
 import { LiveMatch } from '../game/liveMatch';
+import { withDungeonRooms } from '../engine/dungeonCampaign';
+import { POUTCH_ID } from '../engine/monsters';
 import { compileContentManifest, packageExample } from '../content/contentPackage';
 
 global.TextEncoder = TextEncoder; global.TextDecoder = TextDecoder;
@@ -21,6 +26,31 @@ const sdp = (setup = 'actpass', addresses = ['1 1 udp 123 192.0.2.5 5000 typ srf
   `a=setup:${setup}`, ...addresses.map(a => `a=candidate:${a}`), ''].join('\r\n');
 const character = (name = 'Iop ami', classId = 'IOP') => ({ id: name, name, classId, loadout: { ...emptyLoadout(classId), level: 200 } });
 const config = { mode: 'duel', seed: 42, mapId: 'arene' };
+
+test('campaign guests keep hero assignments across rooms, with victory and readiness required again', async () => {
+  const dungeon = withDungeonRooms({ id: 'peer-campaign', name: 'Deux salles' }, [
+    { id: 'first', name: 'Première', mapId: 'arene', members: [{ monsterId: POUTCH_ID, grade: 1, count: 1 }], intro: 'Entrer', outro: 'Bravo' },
+    { id: 'second', name: 'Seconde', mapId: 'arene', members: [{ monsterId: POUTCH_ID, grade: 1, count: 2 }, { monsterId: POUTCH_ID, grade: 2, count: 1 }], encounter: { version: 1, mode: 'army', commander: 1 }, intro: 'Continuer', outro: 'Fin' },
+  ]);
+  const { host, guests } = await salon({ ...config, mode: 'custom' }, 1, dungeon);
+  const guest = guests[0];
+  const allied = host.units.filter(u => u.team === 'A').map(u => ({ ...u }));
+  await start(host, guests);
+  await expect(host.nextCampaignRoom()).rejects.toThrow();
+  await expect(guest.nextCampaignRoom()).rejects.toThrow();
+  // Commit an end-state fixture through the actual transport and acknowledgement path.
+  const state = JSON.parse(JSON.stringify(host.match.state)); state.over = true; state.endReason = 'ko'; state.winner = 'A';
+  Object.values(state.fighters).filter(f => f.team === 'B').forEach(f => { f.hp = 0; });
+  host.commit({ state, events: [] }, 'host'); await settled(host, guests);
+  await host.nextCampaignRoom(); await until(() => guest.status === 'lobby' && host.links.get(guest.selfId).loaded === host.revision);
+  expect(host.canStart).toBe(false); expect(guest.match).toBeNull(); expect(guest.settings.campaign).toMatchObject({ roomIndex: 1, name: 'Seconde', count: 2 });
+  expect(host.units.filter(u => u.team === 'A')).toEqual(allied);
+  await start(host, guests);
+  expect(host.sequence).toBe(0); expect(guest.match.state).toEqual(host.match.state);
+  expect(Object.values(host.match.state.fighters).filter(f => f.team === 'B')).toHaveLength(3);
+  expect(host.match.state.encounter.commanderId).toBe('B3');
+  expect(host.match.state.over).toBe(false);
+});
 
 test('versioned offer/reply codes round-trip public v4/v6 and exact credentials', () => {
   for (const setup of ['actpass', 'active', 'passive']) {
@@ -92,12 +122,12 @@ test('a congested channel waits for backpressure and cancels a pending transfer 
 
 const rooms = [];
 afterEach(() => { rooms.splice(0).forEach(room => room.close()); });
-async function salon(settings = config, count = 2, dungeon = null) {
-  const events = [], host = new PeerRoom({ role: 'host', character: character('Hôte'), settings, dungeon, build: 'test', onEvents: e => events.push(...e) });
+async function salon(settings = config, count = 2, dungeon = null, contentDependencies = {}) {
+  const events = [], host = new PeerRoom({ role: 'host', character: character('Hôte'), settings, dungeon, contentDependencies, build: 'test', onEvents: e => events.push(...e) });
   rooms.push(host); await host.prepare();
   const guests = [];
   for (let i = 0; i < count; i++) {
-    const guest = new PeerRoom({ role: 'guest', character: character('Invité ' + (i + 1), 'CRA'), build: 'test' });
+    const guest = new PeerRoom({ role: 'guest', character: character('Invité ' + (i + 1), 'CRA'), contentDependencies, build: 'test' });
     guest.events = []; guest.onEvents = e => guest.events.push(...e); rooms.push(guest); guests.push(guest); await guest.prepare();
     const [a, b] = channels(), hostLink = host.newLink('guest-' + (i + 1)), guestLink = guest.newLink('host');
     host.attach(hostLink, a); guest.attach(guestLink, b);
@@ -279,4 +309,72 @@ test('version mismatch and connection loss never silently substitute AI or decla
   host.lost(host.links.get(guests[0].selfId));
   expect(host.status).toBe('failed'); expect(host.available).toBe(false); expect(host.match.over).toBe(false); expect(host.match.canBotStep()).toBe(false);
   expect(host.submit({ kind: 'ready' }).ok).toBe(false);
+});
+
+
+test('a shared adventure distributes supplied heroes without adding guest profiles or allowing roster overrides', async () => {
+  let rules = addAdventureHero(newAdventure(), character('Gardien fourni'), 'h1');
+  rules = addAdventureHero(rules, character('Mage fourni', 'CRA'), 'h2'); rules.allowAI = false;
+  const dungeon = { id: 'ready', name: 'Défi partagé', mapId: 'arene', adventure: rules, members: [{ monsterId: 494, grade: 1, count: 1 }] };
+  const { host, guests } = await salon({ ...config, mode: 'custom' }, 2, dungeon);
+  expect(host.units).toHaveLength(3); guests.forEach(g => expect(g.units).toHaveLength(3));
+  expect(guests[0].settings.adventure).toEqual({ name: dungeon.name, allowAI: false });
+  const hero = host.units.find(u => u.team === 'A'), enemy = host.units.find(u => u.team === 'B');
+  await host.edit({ kind: 'configure', id: hero.id, team: 'A', controller: 'player', owner: guests[0].selfId });
+  await expect(host.edit({ kind: 'remove', id: hero.id })).rejects.toThrow(/impose/);
+  await expect(host.edit({ kind: 'configure', id: enemy.id, team: 'A', controller: 'player', owner: 'host' })).rejects.toThrow(/impose/);
+  await expect(host.edit({ kind: 'configure', id: hero.id, team: 'A', controller: 'ai', owner: 'host' })).rejects.toThrow(/manuellement/);
+  await guests[0].addUnit(character('Personnage extérieur'), 'A'); await until(() => !guests[0].pending);
+  expect(guests[0].error).toContain('impose'); expect(host.units).toHaveLength(3);
+  await start(host, guests);
+  expect(guests[0].match.humanIds).toEqual(new Set(['A']));
+  expect(host.match.state.fighters.A.name).toBe('Gardien fourni');
+  expect(host.match.state.fighters.A2.name).toBe('Mage fourni');
+  await settled(host, guests);
+});
+
+test('removing a guest from an adventure gives the supplied hero back to the host', async () => {
+  const rules = addAdventureHero(newAdventure(), character('Héros conservé'), 'h1');
+  const dungeon = { id: 'ready', name: 'Défi', mapId: 'arene', adventure: rules, members: [{ monsterId: 494, grade: 1, count: 1 }] };
+  const { host, guests } = await salon({ ...config, mode: 'custom' }, 2, dungeon);
+  const hero = host.units[0];
+  await host.edit({ kind: 'configure', id: hero.id, team: 'A', controller: 'player', owner: guests[1].selfId });
+  await host.removeParticipant(guests[1].selfId);
+  expect(host.units).toHaveLength(2); expect(host.units[0].owner).toBe('host');
+  await start(host, [guests[0]]);
+  expect(host.match.humanIds).toEqual(new Set(['A']));
+});
+
+test('a shared original battlefield carries its image independently of removable combatants', async () => {
+  const battlefield = JSON.parse(JSON.stringify(require('../../examples/winterfell/battlefield.cjs')));
+  battlefield.background = { artworkId: 'shared-courtyard', file: 'courtyard.png', width: 256, height: 256, hw: 8, top: 20, originX: 13 };
+  const bytes = new Uint8Array(fs.readFileSync('public/templates/character-artwork/example/portrait.png'));
+  const cleanup = installSessionArtwork([{ id: 'shared-courtyard', name: 'Terrain', images: { 'courtyard.png': { arrayBuffer: async () => bytes.buffer } } }]);
+  try {
+    const dungeon = { id: 'map-test', name: 'Terrain partagé', mapId: battlefield.id, battlefield, members: [{ monsterId: 494, grade: 1, count: 1 }] };
+    const { host, guests } = await salon({ mode: 'custom', seed: 44, mapId: battlefield.id, battlefield }, 1, dungeon, { verifyPixels: async () => {} });
+    expect(host.mapAsset.records).toHaveLength(1);
+    expect(guests[0].settings.battlefield).toEqual(host.settings.battlefield);
+    expect(guests[0].mapAsset.records[0].images['courtyard.png'].size).toBe(bytes.length);
+    const leader = host.units.find(u => u.owner === 'host' && u.team === 'A');
+    await host.edit({ kind: 'remove', id: leader.id });
+    await until(() => guests[0].units.length === host.units.length);
+    expect(host.mapAsset.records).toHaveLength(1);
+    await start(host, guests);
+    expect(host.match.state.board.background).toEqual(guests[0].match.state.board.background);
+    expect(host.match.state.board.name).toBe(battlefield.name);
+  } finally { cleanup(); }
+});
+
+test('army lobby shares 32 distinct enemies and its commander with two guests, without raising the ally cap', async () => {
+  const dungeon = { id: 'army-lobby', name: 'Armée', mapId: 'arene', encounter: { version: 1, mode: 'army', commander: 0 },
+    members: [{ monsterId: 494, grade: 1, count: 1 }, { monsterId: 494, grade: 2, count: 31 }] };
+  const { host, guests } = await salon({ mode: 'custom', seed: 44, mapId: 'arene' }, 2, dungeon);
+  expect(host.units.filter(u => u.team === 'B')).toHaveLength(32);
+  expect(host.settings.encounter.commanderId).toBe('B');
+  guests.forEach(g => { expect(g.units).toEqual(host.units); expect(g.settings.encounter).toEqual(host.settings.encounter); });
+  await start(host, guests);
+  expect(Object.values(host.match.state.fighters).filter(f => f.team === 'B')).toHaveLength(32);
+  expect(host.match.state.fighters.B32.defeatWith).toBe('B');
+  guests.forEach(g => expect(g.match.state).toEqual(host.match.state));
 });

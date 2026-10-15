@@ -1,6 +1,7 @@
 import DATA from './equipmentData.json';
 import { equipmentBalance, equipmentFamily, EQUIPMENT_STAT_RULES, WEAPON_TYPES } from './equipmentBalance';
 import { defaultEquipmentAppearance, validEquipmentAppearance } from '../visuals/customShapes';
+import { validSpellVisual } from '../visuals/spellVisuals';
 
 export const CUSTOM_ITEM_MIN_ID = 1000000000;
 const record = value => !!value && typeof value === 'object' && !Array.isArray(value);
@@ -17,7 +18,8 @@ export function customEquipmentShape(value) {
     && (value.appearance == null || validEquipmentAppearance(value.appearance))
     && record(value.stats) && Object.keys(value.stats).length <= 50
     && Object.entries(value.stats).every(([stat, n]) => own(EQUIPMENT_STAT_RULES, stat) && Number.isInteger(n) && Math.abs(n) <= 10000)
-    && (value.weapon == null || (record(value.weapon) && Object.keys(value.weapon).every(key => ['pa', 'range', 'critRate', 'critBonus', 'lines'].includes(key))
+    && (value.weapon == null || (record(value.weapon) && Object.keys(value.weapon).every(key => ['pa', 'range', 'critRate', 'critBonus', 'lines', 'visualEffect'].includes(key))
+      && (value.weapon.visualEffect == null || validSpellVisual(value.weapon.visualEffect))
       && ['pa', 'critRate', 'critBonus'].every(key => Number.isInteger(value.weapon[key]))
       && Array.isArray(value.weapon.range) && value.weapon.range.length === 2 && value.weapon.range.every(Number.isInteger)
       && Array.isArray(value.weapon.lines) && value.weapon.lines.length <= 4
@@ -42,7 +44,8 @@ export function customEquipmentItem(definition) {
   if (base.type === 97) item.mount = clone(base.mount || { level: 100 });
   if (WEAPON_TYPES.includes(base.type) && base.weapon && definition.weapon) {
     const w = definition.weapon;
-    item.weapon = { ...base.weapon, pa: w.pa, range: [...w.range], critRate: w.critRate, critBonus: w.critBonus };
+    item.weapon = { ...base.weapon, pa: w.pa, range: [...w.range], critRate: w.critRate, critBonus: w.critBonus,
+      ...(w.visualEffect ? { visualEffect: clone(w.visualEffect) } : {}) };
     item.effects.unshift(...w.lines.map(row => [row.id, row.min, row.max, `1d${row.max - row.min + 1}+${row.min - 1}`]));
   }
   return item;

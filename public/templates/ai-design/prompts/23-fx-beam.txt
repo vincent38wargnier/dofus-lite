@@ -1,0 +1,9 @@
+THEME / VISUAL DIRECTION: [theme, palette, materials, light and approved references].
+SPELL: [name, element, action, visual motif; mechanics are already defined separately].
+Produce ORIGINAL spell-effect art for a tactical RPG, consistent with the approved reference. Effects contain no character, map, ground tile, UI, text, numbers, labels or watermark. Generate each file separately. True alpha transparency, never a painted checkerboard. PNG RGBA 8-bit, non-interlaced, no APNG, no more than 2 MiB per image and 12 MiB per effect folder.
+Each default strip is EXACTLY 2048x256: eight 256x256 frames in ONE horizontal row, left to right, no gutters. 24 fps. No part may clip the frame. Use a stable origin and equal scale across frames. If generating separate frames, preserve 256x256 and assemble them without stretching. Guides are technical references to remove before export.
+This is a DESIGN package only: put it in design-sources/spell-fx/<spell-key>/, outside the playable ZIP. Neither game importer accepts effect.json or these PNGs. Keep visualSpellId pointing to an existing effect for the playable version. A generic character cast-front/cast-back strip is a different asset. Do not generate executable SWF/JavaScript or change damage, targeting or duration of a combat buff to match the picture.
+
+OUTPUT: beam.png (2048x256, eight frames at 24 fps).
+A horizontal beam from the LEFT edge midpoint (0,128) towards (256,128), eight-frame energy loop. It is stretched only along X and rotated by the viewer to join caster and target. Keep width/thickness stable, no circles or complex symbols that become distorted. No baked endpoint explosion; use impact.png separately. Unlike other parts, its anchor is (0,128).
+Attach spell-fx/guides/beam.png. Export the unlabelled strip; include it in effect.json with role=beam. Inspect every frame on both dark and light backgrounds.

@@ -1,8 +1,12 @@
+import { dungeonEncounter, encounterCapacity } from '../engine/encounters';
+import { adventureEnabled, adventureTeam } from '../engine/adventures';
+import { customDungeonErrors } from '../engine/customDungeons';
+import { dungeonRoom, roomVictory } from '../engine/dungeonCampaign';
 import { COMBAT_RULES_VERSION } from '../engine/engine';
 import { dungeonMapId, dungeonRoster } from '../engine/dungeons';
 import { KANOJEDO_MAP_ID, POUTCH_ID } from '../engine/monsters';
 import { TURN_SECONDS } from '../game/liveMatch';
-import { PeerMatch, peerSettings, stateHash } from '../game/peerMatch';
+import { PeerMatch, peerSettings, stateHash, canonical } from '../game/peerMatch';
 import { acceptInvite, createInvite, completeInvite, check, selectedPath } from './p2p';
 import { JsonChannel, MAX_MESSAGE_CHARS } from './jsonChannel';
 import { MAX_ROOM_ARCHIVE_CHARS, packPeerUnit, unpackPeerUnit, stagePeerContent } from './content';
@@ -19,14 +23,23 @@ const control = value => check(['player', 'ai'].includes(value), 'Contrôle inco
 // Star topology: guests have ONE link to the host. Only that host mutates the
 // combat. Each connection is bound to a participant, never a claimed actor ID.
 export class PeerRoom {
-  constructor({ role, character, settings, dungeon, build = peerBuildId(), onChange = () => {}, onStart = () => {}, onEvents = () => {}, contentDependencies = {} }) {
+  constructor({ role, character, settings, dungeon, roomIndex = 0, adventureChoice, build = peerBuildId(), onChange = () => {}, onStart = () => {}, onEvents = () => {}, contentDependencies = {} }) {
     this.role = role; this.selfId = role === 'host' ? 'host' : null; this.character = character;
-    this.settings = role === 'host' ? peerSettings(settings) : null; this.dungeon = dungeon; this.build = build;
+    if (role === 'host' && dungeon?.rooms) { const errors = customDungeonErrors(dungeon); check(!errors.length, errors.join(' ')); }
+    this.campaign = role === 'host' && dungeon?.rooms ? { dungeon: JSON.parse(JSON.stringify(dungeon)), roomIndex } : null;
+    if (this.campaign) dungeon = dungeonRoom(dungeon, roomIndex);
+    this.settings = role === 'host' ? peerSettings(dungeon && settings?.mode === 'custom'
+      ? { ...settings, mapId: dungeon.mapId, battlefield: dungeon.battlefield, encounter: dungeonEncounter(dungeon) } : settings) : null; this.dungeon = dungeon; this.adventureChoice = adventureChoice; this.build = build;
     this.onChange = onChange; this.onStart = onStart; this.onEvents = onEvents; this.contentDependencies = contentDependencies;
     this.status = 'preparing'; this.error = ''; this.fault = ''; this.closed = false;
     this.links = new Map(); this.units = []; this.participants = []; this.assets = new Map(); this.chat = [];
     this.inbox = Promise.resolve(); this.sequence = 0; this.revision = 0; this.unitCounter = 0; this.guestCounter = 0;
     this.requestId = 0; this.pending = null; this.inFlight = false; this.awaiting = new Set(); this.updating = false;
+    if (this.campaign) this.settings.campaign = this.campaignInfo();
+  }
+  campaignInfo() {
+    const { dungeon, roomIndex } = this.campaign, room = dungeonRoom(dungeon, roomIndex);
+    return { title: dungeon.name, name: room.name, intro: room.intro || '', outro: room.outro || '', roomIndex, count: dungeon.rooms.length };
   }
   changed() { if (!this.closed) this.onChange(this); }
   get confirmed() { return this.status === 'lobby' || this.status === 'playing'; }
@@ -52,12 +65,29 @@ export class PeerRoom {
     if (mode === 'boss') this.settings.mapId = dungeonMapId(this.settings.bossId);
     if (mode === 'kanojedo') this.settings.mapId = KANOJEDO_MAP_ID;
     if (mode === 'custom') this.settings.mapId = this.dungeon?.mapId;
+    if (mode === 'custom' && this.dungeon?.battlefield) {
+      const archive = await packPeerUnit({ monsterId: POUTCH_ID, grade: 1 }, this.dungeon.battlefield);
+      const content = await unpackPeerUnit(archive, 'u0', this.contentDependencies);
+      check(!this.closed, 'Salon fermé.');
+      this.mapAsset = { ...content, archive, cleanup: stagePeerContent(content) };
+      this.settings.battlefield = content.battlefield;
+    }
     this.settings = peerSettings(this.settings);
-    await this.addArchive(await packPeerUnit(this.character), 'host', 'A', 'player');
+    if (mode === 'custom' && adventureEnabled(this.dungeon)) {
+      const errors = customDungeonErrors(this.dungeon); check(!errors.length, errors.join(' '));
+      const team = adventureTeam(this.dungeon, this.adventureChoice);
+      this.settings.adventure = { name: this.dungeon.name, allowAI: this.dungeon.adventure.allowAI };
+      for (const hero of team) await this.addArchive(await packPeerUnit(hero), 'host', 'A', hero.controller);
+    } else await this.addArchive(await packPeerUnit(this.character), 'host', 'A', 'player');
     const enemies = mode === 'custom' ? this.dungeon.members.flatMap(m => Array.from({ length: m.count }, () => ({ ...m, count: 1 })))
       : mode === 'boss' ? dungeonRoster(this.settings.bossId, this.settings.bossGrade, this.settings.seed)
         : mode === 'kanojedo' ? [{ monsterId: POUTCH_ID, grade: this.settings.monsterGrade }] : [];
     for (const entry of enemies) await this.addArchive(await packPeerUnit(entry), 'host', 'B', 'ai');
+    if (this.settings.encounter?.commanderId) {
+      const index = this.settings.encounter.commanderId === 'B' ? 0 : Number(this.settings.encounter.commanderId.slice(1)) - 1;
+      this.commanderUnit = this.units.filter(u => u.team === 'B')[index]?.id;
+    }
+    if (this.settings.adventure) this.adventureRoster = canonical(this.units.map(({ id, team, member }) => ({ id, team, member })));
     this.status = 'lobby'; this.revision = 1; this.startTick(); this.changed();
   }
   newLink(id) {
@@ -132,8 +162,8 @@ export class PeerRoom {
   broadcast(message) { return Promise.all([...this.links.values()].filter(l => l.hello && !l.disposed).map(l => this.send(l, message))); }
   async addArchive(archive, owner, team, controller) {
     side(team); control(controller);
-    check(this.units.filter(u => u.team === team).length < 8, 'Ce camp contient déjà 8 combattants.');
-    check(typeof archive === 'string' && this.units.reduce((n, u) => n + this.assets.get(u.id).archive.length, archive.length) <= MAX_ROOM_ARCHIVE_CHARS,
+    check(this.units.filter(u => u.team === team).length < encounterCapacity(this.settings.encounter, team), `Ce camp contient déjà ${encounterCapacity(this.settings.encounter, team)} combattants.`);
+    check(typeof archive === 'string' && this.units.reduce((n, u) => n + this.assets.get(u.id).archive.length, archive.length + (this.mapAsset?.archive.length || 0)) <= MAX_ROOM_ARCHIVE_CHARS,
       'Le salon dépasse 32 Mio de créations. Réduisez les images ou le nombre de combattants.');
     const id = `u${++this.unitCounter}`;
     const content = await unpackPeerUnit(archive, id, this.contentDependencies); check(!this.closed, 'Salon fermé.');
@@ -141,10 +171,16 @@ export class PeerRoom {
     const unit = { id, owner, team, controller, member: content.member }; this.units.push(unit); return unit;
   }
   async publishRoster() {
+    if (this.settings.encounter) {
+      const index = this.units.filter(u => u.team === 'B').findIndex(u => u.id === this.commanderUnit);
+      this.settings.encounter = { version: 1, mode: 'army', ...(index < 0 ? {} : { commanderId: index ? `B${index + 1}` : 'B' }) };
+    }
     this.revision++; this.participants.forEach(p => { p.ready = false; });
     await Promise.all([...this.links.values()].filter(l => l.hello && !l.disposed).map(async link => {
       const units = this.units.map(({ member, ...meta }) => ({ ...meta, ...(!link.known.has(meta.id) ? { archive: this.assets.get(meta.id).archive } : {}) }));
-      await this.send(link, { t: 'lobby', revision: this.revision, settings: this.settings, participants: this.participants, units });
+      await this.send(link, { t: 'lobby', revision: this.revision, settings: this.settings, participants: this.participants, units,
+        ...(this.mapAsset && !link.mapKnown ? { battlefieldArchive: this.mapAsset.archive } : {}) });
+      link.mapKnown = !!this.mapAsset;
       this.units.forEach(u => link.known.add(u.id));
     }));
     this.changed();
@@ -163,7 +199,7 @@ export class PeerRoom {
       const content = await unpackPeerUnit(message.archive, `u${this.unitCounter + 1}`, this.contentDependencies);
       check(!link.disposed && !this.closed, 'Connexion annulée.');
       const name = content.member.character?.name; check(name, 'Choisissez un personnage pour rejoindre.');
-      if (this.units.filter(u => u.team === team).length < 8) await this.addArchive(message.archive, link.id, team, 'player');
+      if (!this.settings.adventure && this.units.filter(u => u.team === team).length < 8) await this.addArchive(message.archive, link.id, team, 'player');
       this.participants.push({ id: link.id, name, connected: true, ready: false }); link.hello = true;
       clearTimeout(link.expiry); if (this.invitation === link) this.invitation = null;
       await this.publishRoster(); return;
@@ -174,13 +210,23 @@ export class PeerRoom {
     if (message.t === 'ping') { await this.send(link, { t: 'pong' }); return; }
     if (message.t === 'pong') return;
     if (message.t === 'lobby') {
-      check(this.role === 'guest' && !this.match && Number.isInteger(message.revision) && message.revision > this.revision, 'Révision du salon invalide.');
+      const nextChapter = this.match?.over && this.settings.campaign && message.settings?.campaign
+        && (message.settings.campaign.roomIndex === this.settings.campaign.roomIndex
+          || roomVictory(this.match.state) && message.settings.campaign.roomIndex === this.settings.campaign.roomIndex + 1);
+      check(this.role === 'guest' && (!this.match || nextChapter) && Number.isInteger(message.revision) && message.revision > this.revision, 'Révision du salon invalide.');
       const settings = peerSettings(message.settings), participants = message.participants;
+      if (nextChapter) { this.match = null; this.pending = null; clearTimeout(this.actionTimeout); this.mapAsset?.cleanup(); this.mapAsset = null; }
+      if (settings.battlefield && !this.mapAsset) {
+        const content = await unpackPeerUnit(message.battlefieldArchive, 'u0', this.contentDependencies);
+        check(!this.closed && canonical(content.battlefield) === canonical(settings.battlefield), 'Décor partagé incompatible avec le terrain.');
+        this.mapAsset = { ...content, archive: message.battlefieldArchive, cleanup: stagePeerContent(content) };
+      }
+      check(!settings.battlefield || canonical(this.mapAsset?.battlefield) === canonical(settings.battlefield), 'Terrain partagé incohérent.');
       check(Array.isArray(participants) && participants.length <= MAX_PARTICIPANTS && participants.some(p => p.id === this.selfId)
         && participants.every(p => typeof p.id === 'string' && typeof p.name === 'string' && p.name.length <= 80)
         && new Set(participants.map(p => p.id)).size === participants.length, 'Participants invalides.');
-      check(Array.isArray(message.units) && message.units.length <= 16 && new Set(message.units.map(u => u.id)).size === message.units.length, 'Groupe invalide.');
-      const next = []; let bytes = 0;
+      check(Array.isArray(message.units) && message.units.length <= 8 + encounterCapacity(settings.encounter) && new Set(message.units.map(u => u.id)).size === message.units.length, 'Groupe invalide.');
+      const next = []; let bytes = this.mapAsset?.archive.length || 0;
       for (const meta of message.units) {
         side(meta.team); control(meta.controller); check(participants.some(p => p.id === meta.owner), 'Propriétaire inconnu.');
         let asset = this.assets.get(meta.id);
@@ -189,7 +235,7 @@ export class PeerRoom {
           check(!this.closed, 'Salon fermé.'); asset = { ...content, archive: meta.archive, cleanup: stagePeerContent(content) }; this.assets.set(meta.id, asset); }
         next.push({ id: meta.id, team: meta.team, owner: meta.owner, controller: meta.controller, member: asset.member });
       }
-      check(['A', 'B'].every(team => next.filter(u => u.team === team).length <= 8), 'Maximum 8 combattants par camp.');
+      check(['A', 'B'].every(team => next.filter(u => u.team === team).length <= encounterCapacity(settings.encounter, team)), 'Camp trop grand.');
       this.units = next; this.pruneAssets(); this.settings = settings; this.participants = participants; this.revision = message.revision;
       this.status = 'lobby'; this.invitation = null; clearTimeout(link.expiry); clearTimeout(link.handshake);
       await this.send(link, { t: 'loaded', revision: this.revision }); this.changed(); return;
@@ -275,13 +321,18 @@ export class PeerRoom {
   }
   async mutate(change, actor) {
     check(this.status === 'lobby' && change && typeof change === 'object', 'Préparation terminée.');
+    if (this.settings.adventure) {
+      const unit = this.units.find(u => u.id === change.id);
+      check(change.kind === 'configure' && unit?.team === 'A' && change.team === 'A', 'Cette aventure impose ses héros, ses ennemis et leur équipement.');
+      check(change.controller !== 'ai' || this.settings.adventure.allowAI, 'Cette aventure se joue manuellement.');
+    }
     if (change.kind === 'add') await this.addArchive(change.archive, actor, change.team, change.controller);
     else {
       const unit = this.units.find(u => u.id === change.id); check(unit && (actor === 'host' || unit.owner === actor), 'Vous ne pouvez modifier que vos combattants.');
       if (change.kind === 'remove') this.units = this.units.filter(u => u !== unit);
       else if (change.kind === 'configure') {
         side(change.team); control(change.controller);
-        check(this.units.filter(u => u !== unit && u.team === change.team).length < 8, 'Ce camp contient déjà 8 combattants.');
+        check(this.units.filter(u => u !== unit && u.team === change.team).length < encounterCapacity(this.settings.encounter, change.team), `Ce camp contient déjà ${encounterCapacity(this.settings.encounter, change.team)} combattants.`);
         const owner = change.owner || unit.owner;
         check(owner === unit.owner || actor === 'host', 'Seul l’hôte peut changer le propriétaire.');
         check(this.participants.some(p => p.id === owner && p.connected), 'Participant déconnecté.');
@@ -305,8 +356,40 @@ export class PeerRoom {
     if (this.role !== 'guest' || this.status !== 'lobby' || this.pending) return;
     this.send(this.links.get('host'), { t: 'ready', revision: this.revision, ready: !this.localReady });
   }
+  async nextCampaignRoom(retry = false) {
+    check(this.role === 'host' && this.campaign && this.match?.over && !this.inFlight && !this.updating && !this.fault, 'Attendez la fin du combat et ses confirmations.');
+    check(retry || roomVictory(this.match.state), 'Battez la salle pour continuer.');
+    const next = this.campaign.roomIndex + (retry ? 0 : 1);
+    check(next < this.campaign.dungeon.rooms.length, 'Le donjon est terminé.');
+    this.updating = true; this.changed();
+    try {
+      this.campaign.roomIndex = next; this.dungeon = dungeonRoom(this.campaign.dungeon, next);
+      this.units = this.units.filter(u => u.team === 'A'); this.pruneAssets(); this.mapAsset?.cleanup(); this.mapAsset = null;
+      this.settings = peerSettings({ mode: 'custom', mapId: this.dungeon.mapId, battlefield: this.dungeon.battlefield,
+        encounter: dungeonEncounter(this.dungeon), seed: (this.settings.seed + 1) >>> 0, campaign: this.campaignInfo(),
+        ...(this.dungeon.adventure ? { adventure: { name: this.campaign.dungeon.name, allowAI: this.dungeon.adventure.allowAI } } : {}) });
+      if (this.dungeon.battlefield) {
+        const archive = await packPeerUnit({ monsterId: POUTCH_ID, grade: 1 }, this.dungeon.battlefield);
+        const content = await unpackPeerUnit(archive, 'u0', this.contentDependencies);
+        check(!this.closed, 'Salon fermé.'); this.mapAsset = { ...content, archive, cleanup: stagePeerContent(content) }; this.settings.battlefield = content.battlefield;
+      }
+      for (const member of this.dungeon.members) for (let i = 0; i < member.count; i++) await this.addArchive(await packPeerUnit({ ...member, count: 1 }), 'host', 'B', 'ai');
+      const commanderId = this.settings.encounter?.commanderId;
+      const commander = commanderId === 'B' ? 0 : commanderId ? Number(commanderId.slice(1)) - 1 : -1;
+      this.commanderUnit = this.units.filter(u => u.team === 'B')[commander]?.id || null;
+      if (this.settings.adventure) this.adventureRoster = canonical(this.units.map(({ id, team, member }) => ({ id, team, member })));
+      this.match = null; this.pending = null; this.sequence = 0; this.awaiting.clear(); clearTimeout(this.actionTimeout); this.status = 'lobby';
+      for (const link of this.links.values()) { link.mapKnown = false; link.loaded = 0; link.deferred = null; }
+      await this.publishRoster();
+    } catch (e) { this.error = e.message; throw e; }
+    finally { this.updating = false; this.changed(); }
+  }
   start() {
     check(this.canStart, 'Deux camps et tous les invités prêts sont nécessaires.');
+    if (this.settings.adventure) {
+      check(this.settings.mapId === this.dungeon.mapId && this.adventureRoster === canonical(this.units.map(({ id, team, member }) => ({ id, team, member }))), 'Le groupe ne correspond plus à l’aventure.');
+      check(this.settings.adventure.allowAI || this.units.filter(u => u.team === 'A').every(u => u.controller === 'player'), 'Cette aventure se joue manuellement.');
+    }
     this.match = new PeerMatch(this.settings, this.units, 'host'); this.match.room = this; this.hash = stateHash(this.match.state);
     this.awaiting = new Set(this.participants.filter(p => p.id !== 'host').map(p => p.id)); this.inFlight = this.awaiting.size > 0;
     this.broadcast({ t: 'start', revision: this.revision, state: this.match.state, events: this.match.initialEvents, hash: this.hash });
@@ -361,7 +444,7 @@ export class PeerRoom {
     check(this.role === 'host' && this.status === 'lobby' && id !== 'host', 'Retrait impossible.');
     await this.queue(async () => {
       const link = this.links.get(id); if (link) { this.send(link, { t: 'fault', reason: 'L’hôte vous a retiré du salon.' }); this.dispose(link); this.links.delete(id); }
-      this.participants = this.participants.filter(p => p.id !== id); this.units = this.units.filter(u => u.owner !== id); this.pruneAssets(); await this.publishRoster();
+      this.participants = this.participants.filter(p => p.id !== id); this.units = this.settings.adventure ? this.units.map(u => u.owner === id ? { ...u, owner: 'host' } : u) : this.units.filter(u => u.owner !== id); this.pruneAssets(); await this.publishRoster();
     });
   }
   lost(link) {
@@ -391,5 +474,6 @@ export class PeerRoom {
       const timer = setTimeout(() => this.dispose(link), 100); sent.finally(() => { clearTimeout(timer); this.dispose(link); });
     }
     for (const asset of this.assets.values()) asset.cleanup(); this.assets.clear();
+    this.mapAsset?.cleanup(); this.mapAsset = null;
   }
 }

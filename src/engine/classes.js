@@ -122,6 +122,7 @@ export function buildSpell(raw) {
     grade: raw.grade,
     requiredLevel: raw.requiredLevel,
     ...(isAuthoredSpell(raw) ? { authoringVersion: raw.authoringVersion, description: raw.description, visualSpellId: raw.visualSpellId,
+      ...(raw.visualEffect ? { visualEffect: { ...raw.visualEffect } } : {}),
       ...(raw.iconArtworkId ? { iconArtworkId: raw.iconArtworkId, iconFile: raw.iconFile } : {}) } : {}),
     element: main ? main.element : null,
     pa: raw.pa,

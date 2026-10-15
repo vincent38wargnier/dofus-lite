@@ -1,0 +1,9 @@
+THEME / VISUAL DIRECTION: [theme, palette, materials, light and approved references].
+SPELL: [name, element, action, visual motif; mechanics are already defined separately].
+Produce ORIGINAL spell-effect art for a tactical RPG, consistent with the approved reference. Effects contain no character, map, ground tile, UI, text, numbers, labels or watermark. Generate each file separately. True alpha transparency, never a painted checkerboard. PNG RGBA 8-bit, non-interlaced, no APNG, no more than 2 MiB per image and 12 MiB per effect folder.
+Each default strip is EXACTLY 2048x256: eight 256x256 frames in ONE horizontal row, left to right, no gutters. 24 fps. No part may clip the frame. Use a stable origin and equal scale across frames. If generating separate frames, preserve 256x256 and assemble them without stretching. Guides are technical references to remove before export.
+This is a DESIGN package only: put it in design-sources/spell-fx/<spell-key>/, outside the playable ZIP. Neither game importer accepts effect.json or these PNGs. Keep visualSpellId pointing to an existing effect for the playable version. A generic character cast-front/cast-back strip is a different asset. Do not generate executable SWF/JavaScript or change damage, targeting or duration of a combat buff to match the picture.
+
+OUTPUT: cast.png (2048x256, eight frames at 24 fps).
+Build-up light/magic attached to the caster, not the caster itself. Anchor (128,128). Eight frames: emerging spark, gathering energy, concentration, anticipation peak, release flash, follow-through, dissipation, faint residual glow. One shot, at least 334 ms; almost transparent final frame but still nonempty. Do not loop.
+Attach spell-fx/guides/cast.png. Export the unlabelled strip; include it in effect.json with role=cast. Inspect every frame on both dark and light backgrounds.

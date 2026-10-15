@@ -1,0 +1,5 @@
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+OUTPUT: design-sources/cover.png, recommended 1600x900 composition. Create a hero image for the adventure using the approved heroes, enemies and environment. One clear focal point; legible silhouettes and palette continuity. Keep the central 80% readable on smaller crops. No text or fake game interface. This is a promotional/reference illustration, not a map, sprite sheet or an importable cover field. Keep it outside the playable ZIP.

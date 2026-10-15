@@ -1,4 +1,5 @@
 import { EFFECT_TYPES, EFFECT_ZONES, ELEMENTS, EFFECT_STATS, SPELL_TARGETS } from '../engine/authoredSpells';
+import { ORIGINAL_EFFECTS } from '../visuals/spellVisuals';
 
 export const PACKAGE_LIMITS = { zipBytes: 32 * 1024 * 1024, expandedBytes: 48 * 1024 * 1024,
   jsonBytes: 512 * 1024, pngBytes: 2 * 1024 * 1024, files: 180, spells: 10, monsters: 8 };
@@ -18,10 +19,13 @@ const spell = object({ key, name: text(80), description: text(), counterplay: te
   needsLos: boolean, lineOnly: boolean, adjustableRange: boolean,
   maxPerTurn: integer(1, 3), maxPerTarget: integer(1, 3), cooldown: integer(0, 10),
   critRate: integer(0, 100), failRate: integer(0, 1000), endsTurnOnFailure: boolean,
-  visualSpellId: integer(1, 1000000), icon: { ...text(100), pattern: '^icons/[a-z][a-z0-9_-]*\\.png$' },
+  visualSpellId: integer(1, 1000000),
+  visualEffect: object({ version: { const: 1 }, kind: choice(ORIGINAL_EFFECTS),
+    color: { type: 'string', pattern: '^#[0-9a-fA-F]{6}$' }, accent: { type: 'string', pattern: '^#[0-9a-fA-F]{6}$' }, durationMs: integer(250, 1500) }),
+  icon: { ...text(100), pattern: '^icons/[a-z][a-z0-9_-]*\\.png$' },
   effects: array(effect, 1, 4), critEffects: array(effect, 0, 4),
 }, ['key', 'name', 'description', 'counterplay', 'pa', 'rangeMin', 'rangeMax', 'targetMode', 'needsLos', 'lineOnly',
-  'adjustableRange', 'maxPerTurn', 'maxPerTarget', 'cooldown', 'critRate', 'failRate', 'endsTurnOnFailure', 'visualSpellId', 'effects', 'critEffects']);
+  'adjustableRange', 'maxPerTurn', 'maxPerTarget', 'cooldown', 'critRate', 'failRate', 'endsTurnOnFailure', 'effects', 'critEffects']);
 const design = object({ role: text(100), strengths: array(text(200), 1, 3), weaknesses: array(text(200), 2, 4), turnLoop: text(), counterplay: text() });
 const artwork = { ...text(100), pattern: '^artwork/[a-z][a-z0-9_-]*$' };
 const creature = object({ key, name: text(80), description: text(), role: text(100), counterplay: text(),

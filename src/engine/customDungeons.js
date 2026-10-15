@@ -1,8 +1,12 @@
+import { adventureErrors } from './adventures';
 import { MAPS } from './maps';
+import { customMapErrors } from './customMaps';
 import { getMonster, monsterGrades } from './monsters';
 import { validCustomMonster, resolveCustomMonster } from './customMonsters';
 import { CLASSES } from './classes';
 import { resolveLoadout } from './equipment';
+import { dungeonCapacity, validDungeonEncounter } from './encounters';
+import { dungeonRoom, validCampaignShape } from './dungeonCampaign';
 
 export const MAX_DUNGEON_MONSTERS = 8;
 export const dungeonMemberKind = member => {
@@ -15,10 +19,10 @@ export const isDungeonCharacter = character => !!character && typeof character.n
 
 // A room owns the snapshot. It never resolves a profile ID from another library.
 export function addCustomDungeonCharacter(dungeon, profile) {
-  if (!isDungeonCharacter(profile) || dungeon.members.reduce((sum, member) => sum + member.count, 0) >= MAX_DUNGEON_MONSTERS) return dungeon;
+  if (!isDungeonCharacter(profile) || dungeon.members.reduce((sum, member) => sum + member.count, 0) >= dungeonCapacity(dungeon)) return dungeon;
   const character = JSON.parse(JSON.stringify({ name: profile.name, classId: profile.classId,
     className: profile.className || (profile.loadout.spells?.custom ? profile.name : CLASSES[profile.classId].name), loadout: profile.loadout }));
-  const index = dungeon.members.findIndex(member => member.character && JSON.stringify(member.character) === JSON.stringify(character));
+  const index = dungeon.members.findIndex((member, i) => i !== dungeon.encounter?.commander && member.character && JSON.stringify(member.character) === JSON.stringify(character));
   return { ...dungeon, members: index < 0 ? [...dungeon.members, { character, count: 1 }]
     : dungeon.members.map((member, i) => i === index ? { ...member, count: member.count + 1 } : member) };
 }
@@ -32,16 +36,22 @@ export function customDungeonMemberPreview(member) {
 // The catalogue's button and drag-and-drop share the same addition rules.
 export function addCustomDungeonMonster(dungeon, { monsterId, grade } = {}) {
   if (!Number.isInteger(monsterId) || !monsterGrades(monsterId).some(value => value.grade === grade)
-    || dungeon.members.reduce((sum, member) => sum + member.count, 0) >= MAX_DUNGEON_MONSTERS) return dungeon;
-  const index = dungeon.members.findIndex(member => dungeonMemberKind(member) === 'monster' && member.monsterId === monsterId && member.grade === grade);
+    || dungeon.members.reduce((sum, member) => sum + member.count, 0) >= dungeonCapacity(dungeon)) return dungeon;
+  const index = dungeon.members.findIndex((member, i) => i !== dungeon.encounter?.commander && dungeonMemberKind(member) === 'monster' && member.monsterId === monsterId && member.grade === grade);
   return { ...dungeon, members: index < 0 ? [...dungeon.members, { monsterId, grade, count: 1 }]
     : dungeon.members.map((member, i) => i === index ? { ...member, count: member.count + 1 } : member) };
 }
 
 export function customDungeonErrors(dungeon) {
-  const errors = [];
+  if (!validCampaignShape(dungeon)) return ['Un donjon doit contenir de 1 à 20 salles avec des identifiants uniques.'];
+  if (dungeon?.rooms) return dungeon.rooms.flatMap((room, index) => customDungeonErrors(dungeonRoom(dungeon, index)).map(error => `Salle ${index + 1} : ${error}`));
+  const errors = adventureErrors(dungeon);
+  if (!validDungeonEncounter(dungeon)) errors.push('Le commandant doit être un combattant unique du groupe.');
   if (!dungeon || typeof dungeon.name !== 'string' || !dungeon.name.trim()) errors.push('Donnez un nom à la salle.');
-  if (!Object.prototype.hasOwnProperty.call(MAPS, dungeon?.mapId)) errors.push('Choisissez une carte disponible.');
+  if (dungeon?.battlefield) {
+    errors.push(...customMapErrors(dungeon.battlefield));
+    if (dungeon.mapId !== dungeon.battlefield.id) errors.push('Le terrain doit correspondre à la carte du donjon.');
+  } else if (!Object.prototype.hasOwnProperty.call(MAPS, dungeon?.mapId)) errors.push('Choisissez une carte disponible.');
   const members = dungeon?.members;
   if (!Array.isArray(members) || !members.length) errors.push('Ajoutez au moins un combattant.');
   else {
@@ -55,14 +65,15 @@ export function customDungeonErrors(dungeon) {
       } else if (kind === 'customMonster' ? !validCustomMonster(member.customMonster)
         : !Number.isInteger(member.monsterId) || !monsterGrades(member.monsterId).some(grade => grade.grade === member.grade)) errors.push('Monstre ou niveau invalide.');
     }
-    if (members.reduce((sum, member) => sum + (member?.count || 0), 0) > MAX_DUNGEON_MONSTERS) errors.push('Une salle accueille au maximum 8 combattants.');
+    if (members.reduce((sum, member) => sum + (member?.count || 0), 0) > dungeonCapacity(dungeon)) errors.push(`Une salle accueille au maximum ${dungeonCapacity(dungeon)} combattants.`);
   }
   return errors;
 }
 
-export function customDungeonRoster(dungeon) {
+export function customDungeonRoster(dungeon, roomIndex = 0) {
   const errors = customDungeonErrors(dungeon);
   if (errors.length) throw new Error(errors.join(' '));
+  dungeon = dungeonRoom(dungeon, roomIndex);
   const members = dungeon.members.flatMap(member => Array.from({ length: member.count }, () => member));
   const occurrences = {};
   const identityOf = member => member.character ? `character:${JSON.stringify(member.character)}`
@@ -73,7 +84,7 @@ export function customDungeonRoster(dungeon) {
     occurrences[identity] = (occurrences[identity] || 0) + 1;
     const repeated = members.filter(other => identityOf(other) === identity).length > 1;
     return { id: index ? `B${index + 1}` : 'B', team: 'B',
-      ...(member.character ? { classId: member.character.classId, loadout: JSON.parse(JSON.stringify(member.character.loadout)) }
+      ...(member.character ? { classId: member.character.classId, className: member.character.className, loadout: JSON.parse(JSON.stringify(member.character.loadout)) }
         : member.customMonster ? { customMonster: JSON.parse(JSON.stringify(member.customMonster)) } : { monsterId: member.monsterId, monsterGrade: member.grade }),
       name: monster.name + (repeated ? ` ${occurrences[identity]}` : '') };
   });

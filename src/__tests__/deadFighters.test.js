@@ -123,7 +123,7 @@ test('killing two dungeon monsters clears the shared stats dock and lets the pla
   const victim = container.querySelector('.token[data-fighter-id="B"] .figure');
   fireEvent.focus(victim);
   expect(screen.getByRole('complementary')).toHaveAttribute('data-inspected-fighter', 'B');
-  fireEvent.click(screen.getByRole('button', { name: /Marteau du Bouftou/ }));
+  fireEvent.click(screen.getByRole('button', { name: /^Marteau du Bouftou —/ }));
   fireEvent.click(victim);
   expect(match.state.fighters.B.hp).toBe(0);
   expect(match.state.fighters.B2.hp).toBe(0);

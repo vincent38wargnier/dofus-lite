@@ -8,6 +8,7 @@ import {
 } from '../engine/engine';
 import { utilityDecide } from './utilityBrain';
 import { maisonDecide, maisonWeightsFor } from './maison';
+import { visualPlan, maisonPipeline } from './visualPlanner';
 import { neuralDecide } from './neural';
 import { makeSearchBrain, UI_PROFILE, stateKeyOf as strategeKeyOf } from './searchBrain';
 import { casterAfterSpell } from './tactics';
@@ -35,6 +36,7 @@ export function stateFromView(view) {
     hidden: v.hidden, carriedBy: v.carriedBy, carrying: v.carrying,
     monsterId: v.monsterId,
     ownerId: v.ownerId,
+    defeatWith: v.defeatWith,
     classId: v.classId,
     level: v.level,
     pos: { ...v.pos },
@@ -318,6 +320,11 @@ export function makeBotApi(view, rng) {
   // Le cerveau utilitaire intégré: retourne la meilleure action pondérée.
   // Passez vos propres poids pour changer sa personnalité (voir Règles & API).
   api.suggest = (weights) => utilityDecide(view, api, weights);
+
+  // Visual blocks and JavaScript use the same planner. Optional diagnostics
+  // are collected during this very decision, without a second simulation.
+  api.plan = (config, inspect) => visualPlan(view, api, config, inspect);
+  api.maisonPipeline = (config, inspect) => maisonPipeline(view, api, config, inspect);
 
   // L'IA Maison: le même cerveau avec les poids réglés par auto-jeu pour
   // le matchup (votre classe vs la classe adverse). La référence à battre.

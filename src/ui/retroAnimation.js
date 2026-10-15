@@ -28,6 +28,7 @@ export function resolveAnimation(actor, requested, direction = 'R') {
 }
 
 export function castAnimation(event, assets) {
+  if (event.visualEffect) return 'anim0';
   if (event.itemId || event.spellId === 0 || event.weaponAnimation != null) {
     return `anim${event.weaponAnimation ?? 0}`;
   }

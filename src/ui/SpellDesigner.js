@@ -2,13 +2,16 @@ import React, { useMemo, useState } from 'react';
 import { buildSpell } from '../engine/classes';
 import { spellZoneCells } from '../engine/geometry';
 import { AUTHORED_LEVEL, EFFECT_TYPES, ELEMENTS, EFFECT_STATS, EFFECT_ZONES, EFFECT_RECIPIENTS, SPELL_TARGETS,
-  newAuthoredSpell, newAuthoredEffect, normalizeAuthoredSpell, authoredSpellErrors, authoredSpellWarnings,
+  newAuthoredEffect, normalizeAuthoredSpell, authoredSpellErrors, authoredSpellWarnings,
   alignAuthoredCriticals, rebalanceAuthoredSpell } from '../engine/authoredSpells';
 import { spellBalance, spellbookBalance } from '../engine/spellBalance';
 import SpellBudget from './SpellBudget';
 import { CREATION_SPELLS } from './creationCatalogue';
 import { RetroSpellIcon } from './RetroAssets';
 import '../styles/spellDesigner.css';
+import WorkshopHelp, { artworkStepPrompt } from './WorkshopHelp';
+import { importSpellIcon } from './characterArtwork';
+import { starterSpell } from './workshopStarters';
 
 const clone = value => JSON.parse(JSON.stringify(value));
 const visuals = CREATION_SPELLS.filter(entry => entry.sources.some(source => source.type === 'class'));
@@ -80,6 +83,7 @@ export default function SpellDesigner({ initialSpell, existingSpells = [], editi
   const [criticalTab, setCriticalTab] = useState(false);
   const [visualQuery, setVisualQuery] = useState('');
   const [repairNotice, setRepairNotice] = useState('');
+  const [imageBusy, setImageBusy] = useState(false), [imageError, setImageError] = useState('');
   const raw = normalizeAuthoredSpell(draft);
   const errors = authoredSpellErrors(raw);
   const balance = spellBalance(raw);
@@ -105,16 +109,15 @@ export default function SpellDesigner({ initialSpell, existingSpells = [], editi
       : { rangeMin: targetMode === 'enemy' || targetMode === 'freeCell' ? Math.max(1, draft.rangeMin) : draft.rangeMin, rangeMax: Math.max(1, draft.rangeMax) }) });
   const visualOptions = visuals.filter(entry => entry.id === draft.visualSpellId || entry.name.toLocaleLowerCase('fr').includes(visualQuery.toLocaleLowerCase('fr')));
   const preview = buildSpell(raw);
-  return <form className="spell-designer" aria-label="Créateur de sort" noValidate onSubmit={event => { event.preventDefault(); if (!errors.length) onSave(raw); }}>
+  return <form className="spell-designer" aria-label="Créateur de sort" noValidate onSubmit={event => { event.preventDefault(); if (!errors.length && !imageBusy) onSave(raw); }}>
     <div className="creator-section-heading"><div><h4>{editing ? 'Modifier votre sort' : 'Créer un sort'}</h4>
       <p>Combinez les effets dans l’ordre. Votre brouillon sera ajouté à la classe quand vous l’enregistrerez.</p></div>
       <button type="button" className="btn" onClick={onCancel}>Annuler</button></div>
     <div className="spell-designer-layout"><div className="spell-designer-form">
-      {!editing && <SelectField label="Partir d’un modèle" value="" onChange={preset => {
-        if (!preset) return;
-        const next = newAuthoredSpell([], preset);
+      {!editing && <div className="workshop-spell-presets" role="group" aria-label="Partir d’un modèle">{Object.entries({ attack: 'Attaque', heal: 'Soin', boost: 'Boost', debuff: 'Ralentissement', teleport: 'Téléportation' }).map(([preset,label]) => <button type="button" className="btn" key={preset} onClick={() => {
+        const next = starterSpell(preset);
         setDraft({ ...next, id: draft.id, key: draft.key, name: draft.name, description: draft.description }); setCriticalTab(false);
-      }}><option value="">Choisir un point de départ…</option>{options({ attack: 'Attaque à distance', heal: 'Soin', boost: 'Boost sur soi', debuff: 'Retrait de PM', teleport: 'Téléportation' })}</SelectField>}
+      }}>{label}</button>)}</div>}
       <label className="field">Nom du sort<input value={draft.name} maxLength={80} onChange={event => patch({ name: event.target.value })} /></label>
       <label className="field">Description<textarea rows={2} maxLength={800} value={draft.description} placeholder="Rôle, synergies et limites du sort…" onChange={event => patch({ description: event.target.value })} /></label>
       <fieldset className="spell-designer-rules"><legend>Lancer et ciblage</legend>
@@ -145,9 +148,24 @@ export default function SpellDesigner({ initialSpell, existingSpells = [], editi
           onChange={value => changeEffects(effects.map((e, i) => i === index ? value : e))} onMove={offset => moveEffect(index, offset)} onRemove={() => changeEffects(effects.filter((_, i) => i !== index))} />)}</div>
         <button type="button" className="btn" disabled={effects.length >= 4} onClick={() => changeEffects([...effects, newAuthoredEffect()])}>+ Ajouter un effet</button>
       </section>
-      <details className="spell-designer-visual"><summary>Icône, animation et son</summary><p className="muted small">Reprenez le visuel d’un sort existant. Ses effets restent ceux que vous avez définis ci-dessus.</p>
+      <details className="spell-designer-visual"><summary>Icône, animation et son</summary><p className="muted small">L’animation ne modifie ni les dégâts, ni les règles du sort.</p>
+        <WorkshopHelp title="Dessiner ou générer l’icône" manual="L’icône automatique suffit pour jouer. Pour votre propre dessin, exportez un PNG de 64 × 64 pixels. Ce prompt reprend le nom, le rôle et les effets actuels du sort." prompt={artworkStepPrompt({ name: draft.name, spell: raw })} filename="prompt-icone-sort.txt" />
+        <label className="btn workshop-file-button">{imageBusy ? 'Vérification…' : 'Importer l’icône · 64 × 64'}<input type="file" accept="image/png,.png" aria-label="Importer l’icône du sort" disabled={imageBusy} onChange={async e => {
+          const file=e.target.files[0];e.target.value='';if(!file)return;setImageBusy(true);setImageError('');try { patch(await importSpellIcon(file,draft.name)); } catch(problem) { setImageError(problem.message); } finally { setImageBusy(false); }
+        }} /></label>{imageError && <p className="creator-warning" role="alert">{imageError}</p>}
+        <SelectField label="Source de l’animation" value={draft.visualEffect ? 'original' : 'client'} onChange={value => patch(value === 'original'
+          ? { visualSpellId: undefined, visualEffect: { version: 1, kind: 'fireball', color: '#ed672d', accent: '#ffe3a0', durationMs: 1000 } }
+          : { visualEffect: undefined, visualSpellId: 161 })}><option value="original">Animation originale</option><option value="client">Catalogue Dofus</option></SelectField>
+        {draft.visualEffect ? <div className="spell-designer-fields">
+          <SelectField label="Effet visuel" value={draft.visualEffect.kind} onChange={kind => patch({ visualEffect: { ...draft.visualEffect, kind } })}>
+            {Object.entries({ slash: 'Lame', thrust: 'Estoc', arrow: 'Flèche', 'ice-lance': 'Lance de glace', shatter: 'Éclats', fireball: 'Projectile de feu', 'fire-wave': 'Vague de feu', shield: 'Bouclier', embers: 'Braises', 'raven-step': 'Envol de corbeaux', fang: 'Morsure', rally: 'Ralliement', bell: 'Glas' }).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+          </SelectField>
+          <label className="field">Couleur<input type="color" value={draft.visualEffect.color} onChange={e => patch({ visualEffect: { ...draft.visualEffect, color: e.target.value } })} /></label>
+          <label className="field">Lumière<input type="color" value={draft.visualEffect.accent} onChange={e => patch({ visualEffect: { ...draft.visualEffect, accent: e.target.value } })} /></label>
+        </div> : <>
         <label className="field">Rechercher un visuel<input type="search" value={visualQuery} onChange={event => setVisualQuery(event.target.value)} placeholder="Flèche, Puissance, Bond…" /></label>
         <SelectField label="Visuel du sort" value={draft.visualSpellId} onChange={value => patch({ visualSpellId: Number(value) })}>{visualOptions.map(entry => <option key={entry.id} value={entry.id}>{entry.name} · {entry.sources[0].name}</option>)}</SelectField>
+        </>}
       </details>
       <details><summary>Échec critique</summary><p className="muted small">0 désactive les échecs. Sinon, indiquez le dénominateur de la probabilité (1 sur N).</p>
         <NumberField label="Échec : 1 chance sur" value={draft.failRate} max={1000} onChange={failRate => patch({ failRate })} />
@@ -180,6 +198,6 @@ export default function SpellDesigner({ initialSpell, existingSpells = [], editi
       </div>
     </aside></div>
     {!!errors.length && <div className="spell-designer-errors" role="alert"><strong>À corriger avant d’enregistrer</strong><ul>{errors.map(error => <li key={error}>{error}</li>)}</ul></div>}
-    <div className="spell-designer-save"><span>{errors.length ? `${errors.length} point(s) à corriger` : improvingLegacy ? 'Correction enregistrable · classe à rééquilibrer' : 'Budgets respectés · équilibre à tester'}</span><button type="submit" className="btn primary" disabled={!!errors.length}>{editing ? 'Enregistrer les modifications' : 'Ajouter à ma classe'}</button></div>
+    <div className="spell-designer-save"><span>{errors.length ? `${errors.length} point(s) à corriger` : improvingLegacy ? 'Correction enregistrable · classe à rééquilibrer' : 'Budgets respectés · équilibre à tester'}</span><button type="submit" className="btn primary" disabled={!!errors.length || imageBusy}>{editing ? 'Enregistrer les modifications' : 'Ajouter à ma classe'}</button></div>
   </form>;
 }

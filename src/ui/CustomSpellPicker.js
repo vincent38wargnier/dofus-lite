@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { buildSpell } from '../engine/classes';
 import { MAX_CUSTOM_SPELLS } from '../engine/customSpells';
-import { isAuthoredSpell, newAuthoredSpell, duplicateAuthoredSpell, authoredSpellErrors, AUTHORED_LEVEL } from '../engine/authoredSpells';
+import { isAuthoredSpell, duplicateAuthoredSpell, authoredSpellErrors, AUTHORED_LEVEL } from '../engine/authoredSpells';
+import { starterSpell } from './workshopStarters';
 import SpellDesigner from './SpellDesigner';
 import SpellBudget from './SpellBudget';
 import { spellBalance, spellbookBalance, spellbookBudgetErrors } from '../engine/spellBalance';
@@ -18,6 +19,8 @@ export default function CustomSpellPicker({ loadout, change, ownerType = 'class'
   const [dragged, setDragged] = useState(null);
   const [designer, setDesigner] = useState(null);
   const [notice, setNotice] = useState('');
+  const [catalogueOpen, setCatalogueOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(60);
   const selected = loadout.spells?.custom || [];
   const balance = spellbookBalance(selected);
   const order = loadout.spells?.order || [];
@@ -27,7 +30,7 @@ export default function CustomSpellPicker({ loadout, change, ownerType = 'class'
   });
   const selectedIds = new Set(selected.map(spell => spell.id));
   const results = useMemo(() => filterCreationSpells(CREATION_SPELLS, filters), [filters]);
-  const filter = (key, value) => setFilters(previous => ({ ...previous, [key]: value }));
+  const filter = (key, value) => { setFilters(previous => ({ ...previous, [key]: value })); setVisibleCount(60); };
   const update = (custom, order = custom.map(spell => spell.id)) => change(current => ({ ...current,
     spells: { ...current.spells, custom, order } }));
   const rawFor = entry => entry.grades.find(raw => raw.grade === grades[entry.id]) || entry.grades.at(-1);
@@ -68,11 +71,11 @@ export default function CustomSpellPicker({ loadout, change, ownerType = 'class'
     <div className="creator-section-heading"><div><h3>Composez votre grimoire</h3><p>Créez un sort ou piochez dans le catalogue. {MAX_CUSTOM_SPELLS} sorts maximum{ownerType === 'class' ? ', plus votre arme' : ''}.</p></div>
       <div className="creator-new-spell"><span className="creator-count">{selected.length} / {MAX_CUSTOM_SPELLS} sorts</span>
         <button type="button" className="btn primary" disabled={selected.length >= MAX_CUSTOM_SPELLS || !!designer}
-          onClick={() => openDesigner(newAuthoredSpell([...selectedIds]))}>+ Créer un sort</button></div></div>
+          onClick={() => openDesigner(starterSpell('attack', selected))}>+ Créer un sort</button></div></div>
     {notice && <p className="creator-spell-save-notice" role="status">{notice}</p>}
     {loadout.level < AUTHORED_LEVEL && <p className="creator-warning">Les nouveaux sorts utilisent le grade 6, au niveau {AUTHORED_LEVEL}. Passez votre personnage au niveau {AUTHORED_LEVEL} pour les tester.</p>}
     {selected.length > MAX_CUSTOM_SPELLS && <p className="creator-warning" role="alert">Cette ancienne création contient {selected.length} sorts. Retirez-en {selected.length - MAX_CUSTOM_SPELLS} pour pouvoir jouer. Vos choix restent enregistrés pendant la modification.</p>}
-    <div className="creator-spell-columns">
+    <div className={`creator-spell-columns${!designer && !catalogueOpen ? ' workshop-spells-focused' : ''}`}>
       <aside className="creator-spell-selection">
         <div className="creator-section-heading"><h4>Vos sorts</h4><button type="button" className="btn" disabled={selected.length < 2}
           onClick={() => update(selected, sortSpellsByType(selected.map(buildSpell)))}>Trier par type</button></div>
@@ -98,8 +101,8 @@ export default function CustomSpellPicker({ loadout, change, ownerType = 'class'
         </li>)}</ol>
       </aside>
       {designer ? <SpellDesigner key={designer.raw.id} initialSpell={designer.raw} editing={designer.editing} existingSpells={selected}
-        onSave={saveSpell} onCancel={() => setDesigner(null)} /> : <div className="creator-spell-catalogue">
-        <div className="creator-section-heading"><h4>Catalogue des sorts</h4><span>{results.length} / {CREATION_SPELLS.length} sorts</span></div>
+        onSave={saveSpell} onCancel={() => setDesigner(null)} /> : !catalogueOpen ? <button type="button" className="btn workshop-open-catalogue" onClick={() => setCatalogueOpen(true)}>Ajouter un sort du catalogue · {CREATION_SPELLS.length} sorts</button> : <div className="creator-spell-catalogue">
+        <div className="creator-section-heading"><h4>Catalogue des sorts</h4><button type="button" className="btn" onClick={() => setCatalogueOpen(false)}>Fermer le catalogue</button></div>
         <label className="field creator-search">Rechercher<input type="search" placeholder="Furie, Iop, Bouftou Royal, soin…" aria-label="Rechercher dans tous les sorts" value={filters.query || ''} onChange={event => filter('query', event.target.value)} /></label>
         <div className="studio-quick-filters" role="group" aria-label="Types de sorts">{[['', 'Tous'], ['damage', 'Attaque'], ['boost', 'Boost'], ['heal', 'Soin'], ['placement', 'Placement'], ['summon', 'Invocation'], ['debuff', 'Retrait']].map(([id, label]) =>
           <button type="button" key={id} aria-pressed={(filters.role || '') === id} onClick={() => filter('role', id)}>{label}</button>)}</div>
@@ -135,7 +138,7 @@ export default function CustomSpellPicker({ loadout, change, ownerType = 'class'
             <td>{ACTION_LABELS[effect.kind] || 'Effet non simulé'} {effect.element || effect.stat || ''}</td><td>{effect.min ?? '—'}{effect.max !== effect.min ? `–${effect.max ?? '—'}` : ''}</td><td>{effect.zone}</td><td>{effect.duration ? `${effect.duration} tours` : 'Immédiat'}</td>
           </tr>)}</tbody></table></div>
         </section>}
-        <div className="creator-spell-results" aria-label="Résultats du catalogue de sorts">{results.map(result => {
+        <div className="creator-spell-results" aria-label="Résultats du catalogue de sorts">{results.slice(0,visibleCount).map(result => {
           const grade = rawFor(result);
           const warnings = spellLimitations(grade);
           return <article key={result.id} className={`creator-spell-card${selectedIds.has(result.id) ? ' selected' : ''}`}>
@@ -149,6 +152,7 @@ export default function CustomSpellPicker({ loadout, change, ownerType = 'class'
             {warnings.length > 0 && <small className="creator-warning">Conditions ou limites · voir le détail</small>}
           </article>;
         })}</div>
+        {visibleCount < results.length && <button type="button" className="btn" onClick={() => setVisibleCount(n=>n+60)}>Afficher la suite · {visibleCount}/{results.length}</button>}
         {!results.length && <p className="creator-empty">Aucun sort ne correspond. Essayez un autre nom ou réinitialisez les filtres.</p>}
       </div>}
     </div>

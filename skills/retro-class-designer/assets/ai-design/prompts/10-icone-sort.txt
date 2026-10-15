@@ -1,0 +1,7 @@
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+SPELL: [name, action, role and real element(s)].
+OUTPUT: icons/<spell-key>.png, exactly 64x64 pixels. One strong central symbol, readable at 32–40 pixels, useful contrast and a clear silhouette; keep a 5-pixel safe margin. Distinguish damage, heal, boost and control by motif, not by tiny text. Respect the spell's real element; the game applies its own slot colour. No painted slot border, AP cost, cooldown, number, tooltip or letter. Transparent background recommended. Export 8-bit RGBA, non-interlaced PNG, no APNG, maximum 2 MiB per file. Transparency must be actual alpha, not a drawn checkerboard or a solid colour.
+A larger working master is fine; deliver the exact 64x64 export. This PNG is imported through the spell's icon field. It does not create a new in-combat animation or change mechanics.

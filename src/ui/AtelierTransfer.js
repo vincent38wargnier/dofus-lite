@@ -1,10 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { Download, Upload, Check, PackageOpen, Search, UserRound, Castle, Hammer } from 'lucide-react';
+import { Download, Upload, Check, PackageOpen, Play, Search, UserRound, Castle, Hammer } from 'lucide-react';
 import { CharacterDialog } from './CharacterDialog';
 import { RetroPortrait, useRetroAssets } from './RetroAssets';
 import EquipmentIcon from './EquipmentIcon';
 import { MapPreview } from './MapPicker';
-import { MAPS } from '../engine/maps';
+import { dungeonMap } from '../engine/customMaps';
 import { customEquipmentItem } from '../engine/customEquipment';
 import { useCreations } from './CreationsContext';
 import { useCustomEquipment } from './CustomEquipmentContext';
@@ -40,11 +40,11 @@ export function AtelierExportButton({ selection, name, label = 'Exporter', iconO
 function Thumbnail({ type, entry }) {
   const assets = useRetroAssets();
   if (type === 'characters') return <RetroPortrait classId={entry.classId} artworkId={entry.loadout.artworkId} appearance={entry.loadout.profile?.sex === 1 ? 'female' : 'male'} />;
-  if (type === 'dungeons') return <MapPreview map={MAPS[entry.mapId]} artwork={assets?.imagesReady && assets.maps[entry.mapId]} />;
+  if (type === 'dungeons') return <MapPreview map={dungeonMap(entry)} artwork={assets?.imagesReady && assets.maps[entry.mapId]} />;
   return <EquipmentIcon item={customEquipmentItem(entry)} />;
 }
 const detail = (type, entry) => type === 'characters' ? `${entry.loadout.spells?.custom?.length || 0} sorts · niveau ${entry.loadout.level || 200}`
-  : type === 'dungeons' ? `${entry.members.reduce((n, m) => n + m.count, 0)} combattants` : `Niveau ${entry.level}`;
+  : type === 'dungeons' ? entry.rooms?.length > 1 ? `${entry.rooms.length} salles · Progression` : `${entry.members.reduce((n, m) => n + m.count, 0)} combattants` : `Niveau ${entry.level}`;
 
 export function AtelierExportDialog({ onClose }) {
   const creations = useCreations(), library = useCustomEquipment();
@@ -72,7 +72,7 @@ export function AtelierExportDialog({ onClose }) {
     <div className="character-dialog-body">
       <div className="atelier-transfer-toolbar"><label className="studio-library-search"><Search size={17} /><input type="search" aria-label="Rechercher les créations à exporter" placeholder="Retrouver une création…" value={query} onChange={e => setQuery(e.target.value)} /></label>
         <button type="button" className="btn subtle" disabled={busy || !all.length} onClick={() => toggle(all)}>{all.every(key => selected.has(key)) ? 'Tout désélectionner' : 'Tout sélectionner'}</button></div>
-      <div className="atelier-transfer-included"><PackageOpen size={21} /><span><strong>Tout voyage ensemble</strong><small>Personnages des donjons, sorts, images, équipements et forgemagie inclus automatiquement.</small></span></div>
+      <div className="atelier-transfer-included"><PackageOpen size={21} /><span><strong>Tout voyage ensemble</strong><small>Héros des aventures, personnages des donjons, règles, sorts, images, équipements et forgemagie inclus automatiquement.</small></span></div>
       {GROUPS.map(({ key, name, icon: Icon }) => {
         const entries = collections[key].filter(entry => fold(entry.name).includes(fold(query)));
         if (!entries.length) return null;
@@ -100,7 +100,7 @@ export function AtelierExportDialog({ onClose }) {
   </CharacterDialog>;
 }
 
-export function AtelierImportDialog({ onClose, onImported }) {
+export function AtelierImportDialog({ onClose, onImported, onPlay }) {
   const creations = useCreations(), library = useCustomEquipment(), input = useRef(null);
   const [busy, setBusy] = useState(false), [error, setError] = useState(''), [result, setResult] = useState(null), [over, setOver] = useState(false);
   const run = async file => {
@@ -120,6 +120,7 @@ export function AtelierImportDialog({ onClose, onImported }) {
       <p className="atelier-import-note">Les créations sont ajoutées comme des copies. Vos éléments actuels restent en place.</p>
       {error && <p className="creator-warning" role="alert">{error}</p>}
       {result && <section className="atelier-import-result" aria-label="Créations importées"><p className="atelier-transfer-success" role="status"><Check size={20} />Import terminé · {atelierCounts(result)}</p>
+        {onPlay && result.dungeons.filter(d => d.adventure).map(dungeon => <div className="adventure-import-play" key={dungeon.id}><span><strong>{dungeon.name}</strong><small>Héros équipés, règles et terrain inclus. Tout est prêt.</small></span><button type="button" className="btn primary" onClick={() => onPlay(dungeon)}><Play size={17} />Jouer l’aventure</button></div>)}
         {GROUPS.map(({ key, name, icon: Icon }) => result[key].length > 0 && <button type="button" key={key} className="btn" onClick={() => onImported(key, result[key][0])}><Icon size={18} />Ouvrir {name.toLocaleLowerCase('fr')} ({result[key].length})</button>)}
         {result.warnings.length > 0 && <details><summary>{result.warnings.length} remarque{result.warnings.length > 1 ? 's' : ''} avant de jouer</summary><ul>{result.warnings.map((warning, index) => <li key={index}>{warning}</li>)}</ul></details>}
       </section>}

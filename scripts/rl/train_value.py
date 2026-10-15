@@ -24,15 +24,22 @@ REST = None  # calculé dans load_shards une fois obsDim connu
 
 
 class ValueNet(nn.Module):
-    def __init__(self, ch=32, gdim=96):
+    # value-v1 = depth 3 + readout "mean" (défauts: mêmes couches, même ordre d'init).
+    # value-v2 (audit de base B1, docs/selfplay-loop1.md): couches résiduelles en plus
+    # (depth 8 → chaque feature voit 17×17 = tout le plateau) et lecture "fighters":
+    # moyenne, max, features à la case du joueur au trait (plan 6) et moyenne aux
+    # cases ennemies (plan 3), au lieu de la seule moyenne qui efface le « où ».
+    def __init__(self, ch=32, gdim=96, depth=3, readout="mean"):
         super().__init__()
-        self.ch, self.gdim = ch, gdim
+        assert depth >= 3 and readout in ("mean", "fighters"), (depth, readout)
+        self.ch, self.gdim, self.depth, self.readout = ch, gdim, depth, readout
         self.conv1 = nn.Conv2d(N_PLANES, ch, 3, padding=1)
         self.conv2 = nn.Conv2d(ch, ch, 3, padding=1)
         self.conv3 = nn.Conv2d(ch, ch, 3, padding=1)
+        self.extra = nn.ModuleList(nn.Conv2d(ch, ch, 3, padding=1) for _ in range(depth - 3))
         self.g1 = nn.Linear(globals()['REST'], 128)
         self.g2 = nn.Linear(128, gdim)
-        self.h1 = nn.Linear(ch + gdim, 128)
+        self.h1 = nn.Linear(ch * (1 if readout == "mean" else 4) + gdim, 128)
         self.h2 = nn.Linear(128, 1)
 
     def forward(self, x):
@@ -41,7 +48,14 @@ class ValueNet(nn.Module):
         h = F.gelu(self.conv1(p))
         h = F.gelu(self.conv2(h))
         h = F.gelu(self.conv3(h))
+        for conv in self.extra:
+            h = h + F.gelu(conv(h))
         pooled = h.mean(dim=(2, 3))
+        if self.readout == "fighters":
+            you, foe = p[:, 6:7], p[:, 3:4]
+            at_you = (h * you).sum(dim=(2, 3))
+            at_foe = (h * foe).sum(dim=(2, 3)) / foe.sum(dim=(2, 3)).clamp(min=1)
+            pooled = torch.cat([pooled, h.amax(dim=(2, 3)), at_you, at_foe], 1)
         g = F.gelu(self.g2(F.gelu(self.g1(r))))
         v = F.gelu(self.h1(torch.cat([pooled, g], 1)))
         return torch.tanh(self.h2(v)).squeeze(-1)

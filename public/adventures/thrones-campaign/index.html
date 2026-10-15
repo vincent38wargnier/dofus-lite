@@ -1,0 +1,36 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Les Huit Mémoires — Game of Thrones</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#10171d;color:#eee8dc;font:16px/1.65 Georgia,serif}main{max-width:1180px;margin:auto;padding:50px 24px}a{color:#e5bf77}header{max-width:850px;margin:0 auto 36px;text-align:center}.eyebrow{text-transform:uppercase;font:12px/1.8 system-ui;letter-spacing:.25em;color:#b89965}h1{font-size:clamp(34px,6vw,66px);line-height:1.1;margin:20px 0}h2{line-height:1.3}p{white-space:pre-line}.intro{color:#bcc8ce;text-align:left}.download{display:inline-block;background:#c39f61;color:#111b23;border-radius:6px;padding:12px 24px;font:700 15px system-ui;text-decoration:none;margin:8px}.note{font:13px/1.6 system-ui;color:#a1b0ba}.party{display:flex;justify-content:center;gap:15px;flex-wrap:wrap;margin:30px 0}.party img{width:92px;height:92px;object-fit:contain;border-bottom:2px solid #a68957}.chapters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}article{border:1px solid #34424c;background:#17212a;border-radius:12px;overflow:hidden}article>div{padding:24px}article h2{margin:5px 0 16px;font-size:24px}article p{font-size:15px;color:#d0d7d8}article .objective{color:#e5bf77;font:600 14px/1.5 system-ui}summary{cursor:pointer;color:#e5bf77}details p{border-left:2px solid #826c46;padding-left:15px}.source{font:12px system-ui}footer{margin:40px auto;font:13px/1.7 system-ui;color:#9baab4}.map{height:220px;width:100%;object-fit:cover;object-position:center 40%;background:#111820}.tag{font:12px system-ui;color:#afc3ca}@media(max-width:720px){.chapters{grid-template-columns:1fr}main{padding:25px 15px}.party{gap:4px}.party img{width:48px;height:62px}.map{height:170px}}
+.pacing{max-width:850px;margin:0 auto 36px;padding:24px;border:1px solid #34424c;border-radius:12px;background:#17212a}.pacing h2{margin-top:0}.pacing table{width:100%;border-collapse:collapse;font:14px/1.6 system-ui}.pacing th,.pacing td{padding:9px 12px;text-align:left;border-bottom:1px solid #34424c}.pacing th{color:#e5bf77}.pacing .note{margin-bottom:0}@media(max-width:520px){.pacing{padding:16px}.pacing th,.pacing td{padding:7px 4px;font-size:12px}}
+</style><main><header><span class="eyebrow">Une campagne tactique · Huit saisons</span><h1>Les Huit Mémoires</h1><p>Le trône a une fin.<br>Les histoires des vivants en ont huit.</p><div class="party">
+<img src="../winterfell/assets/jon/portrait.png" alt="Jon Snow"><img src="../winterfell/assets/arya/portrait.png" alt="Arya Stark"><img src="../winterfell/assets/melisandre/portrait.png" alt="Melisandre"><img src="../winterfell-last-stand/assets/brienne/portrait.png" alt="Brienne"><img src="../winterfell-last-stand/assets/jaime/portrait.png" alt="Jaime"><img src="../winterfell-last-stand/assets/tormund/portrait.png" alt="Tormund"></div>
+<a class="download" href="../thrones-eight-memories.zip" download>Télécharger la campagne ZIP</a><a class="download" href="/">Ouvrir le jeu</a>
+<p class="note">Atelier → Importer un ZIP → Jouer l’aventure.<br>Six héros équipés. Huit terrains originaux. Progression sauvegardée dans votre navigateur.</p>
+<p class="intro" id="intro"></p></header>
+<section class="pacing" id="pacing" hidden aria-label="Rythme des batailles"><h2>Le rythme des batailles</h2>
+<p>Une ouverture courte pour découvrir vos héros, puis davantage d’ennemis et de menaces. Les six héros retrouvent leurs forces après chaque victoire.</p>
+<table><thead><tr><th>Saison</th><th>Ennemis</th><th>Tours médians</th><th>Intervalle observé</th></tr></thead><tbody id="pacing-rows"></tbody></table>
+<p class="note" id="pacing-scope"></p><p class="note">La finale se gagne en abattant le Roi de la Nuit. Elle est plus dangereuse, mais viser le commandant peut l’écourter. <a href="pacing-report.json">Voir les mesures</a>.</p>
+</section><section class="chapters" id="chapters" aria-label="Les huit saisons"></section>
+<footer>Adaptation de fan, indépendante de HBO. Révélations sur l’ensemble de la série. Les événements sont résumés à partir des références de chaque saison ; les batailles et le voyage des six échos sont une création ludique. Les graphismes, cartes et effets visuels de cette campagne sont originaux ; les règles et les étalons statistiques proviennent du moteur du jeu.<br><a href="balance-report.json">Rapport des budgets</a> · <a href="combat-report.json">Combats de validation</a> · <a href="story.json">Histoire et sources</a></footer></main>
+<script>
+fetch('pacing-report.json').then(r=>{if(!r.ok)throw Error();return r.json()}).then(data=>{
+ for(const room of data.rooms){const row=document.createElement('tr');for(const value of [room.season,room.enemies,room.rounds.median,`${room.rounds.min}–${room.rounds.max}`]){const cell=document.createElement('td');cell.textContent=value;row.append(cell)}document.getElementById('pacing-rows').append(row)}
+ document.getElementById('pacing-scope').textContent=`${data.samples} combats simulés, dont ${data.independentSamples} sur des tirages réservés à la validation. Un tour correspond au passage de tous les combattants ; vos décisions peuvent changer cette durée.`;
+ document.getElementById('pacing').hidden=false;
+}).catch(()=>{});
+fetch('story.json').then(r=>r.json()).then(data=>{
+ document.getElementById('intro').textContent=data.introduction;
+ for(const chapter of data.chapters){const article=document.createElement('article');
+ const img=document.createElement('img');img.className='map';img.src=chapter.season===8?'../winterfell-last-stand/assets/battlefield.png':`assets/${chapter.key}/battlefield.png`;img.alt=chapter.map;img.loading='lazy';article.append(img);
+ const body=document.createElement('div');article.append(body);
+ const tag=document.createElement('span');tag.className='tag';tag.textContent=chapter.map;body.append(tag);
+ const title=document.createElement('h2');title.textContent=chapter.name;body.append(title);
+ const objective=document.createElement('p');objective.className='objective';objective.textContent=chapter.objective;body.append(objective);
+ const p=document.createElement('p');p.textContent=chapter.intro;body.append(p);
+ const details=document.createElement('details');const summary=document.createElement('summary');summary.textContent='Après la victoire · révélations';details.append(summary);
+ const outro=document.createElement('p');outro.textContent=chapter.outro;details.append(outro);body.append(details);
+ const link=document.createElement('a');link.className='source';link.href=chapter.source;link.textContent=`Source historique du récit — saison ${chapter.season}`;body.append(link);document.getElementById('chapters').append(article);
+ }
+}).catch(()=>{document.getElementById('intro').textContent='Le récit n’a pas pu être chargé. Rechargez la page.'});
+</script></html>

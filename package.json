@@ -15,8 +15,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "node scripts/prepare_ruffle.cjs && react-scripts start",
-    "build": "node scripts/prepare_ruffle.cjs && react-scripts build",
+    "start": "node scripts/build_maison_source.cjs && node scripts/build_ai_coding_kit.cjs && node scripts/prepare_ruffle.cjs && react-scripts start",
+    "build": "node scripts/build_maison_source.cjs && node scripts/build_ai_coding_kit.cjs && node scripts/prepare_ruffle.cjs && react-scripts build",
     "import:client": "node scripts/prepare_ruffle.cjs && python3 scripts/import_dungeon_maps.py && python3 scripts/import_retro_client.py && python3 scripts/import_client_spells.py && python3 scripts/import_client_monsters.py && node scripts/render_retro_assets.cjs --force",
     "render:client": "node scripts/prepare_ruffle.cjs && node scripts/render_retro_assets.cjs --force",
     "test:client": "python3 -m unittest discover -s scripts -p 'test_retro_swf.py'",
@@ -59,6 +59,8 @@
     "templates:characters": "node scripts/generate_character_templates.cjs",
     "proof:character-artwork": "node scripts/proof_character_artwork.cjs",
     "ai:audit-logs": "node scripts/audit_ai_logs.cjs",
+    "ai:kit": "node scripts/build_ai_coding_kit.cjs",
+    "ai:test": "node public/templates/ai-coding/test.cjs",
     "ai:audit-catalogue": "node scripts/audit_ai_catalogue.cjs",
     "ai:benchmark": "node scripts/benchmark_ai.cjs",
     "ai:calibrate": "node scripts/calibrate_ai_profiles.cjs",

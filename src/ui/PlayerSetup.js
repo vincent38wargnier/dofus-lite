@@ -11,6 +11,7 @@ import LoadoutLibrary from './LoadoutLibrary';
 import { AppearanceSelect } from './RetroAssets';
 import CharacterSwitcher from './CharacterSwitcher';
 import { NewCharacterDialog } from './CharacterDialog';
+import { adventureEnabled, adventureSelectionErrors } from '../engine/adventures';
 import { customDungeonErrors } from '../engine/customDungeons';
 import { opponentTeamErrors, opponentSummary } from '../engine/opponentTeam';
 import { allyTeamErrors, isAutomaticTeam } from '../engine/allyTeam';
@@ -33,6 +34,7 @@ export default function PlayerSetup({ playerClass, setPlayerClass, botClass, bot
   opponents = [], onOpponentsChange, onSelectOpponent, opponentSaveError, editingOpponentIndex,
   allies = [], onAlliesChange, onSelectAlly, allySaveError, editingTeam = 'opponents', includePlayer = true, setIncludePlayer,
   customCharacters = [], customCharacter, selectCustomCharacter,
+  adventureChoice, setAdventureChoice, adventureSaveError,
   profiles, onOpenCreator, selectionRequest, customDungeons = [], customDungeonId, setCustomDungeonId,
   mapId, setMapId, mode = 'duel', setMode, monsterGrade = 5, setMonsterGrade,
   bossId = DEFAULT_BOSS_ID, setBossId, bossGrade = defaultMonsterGrade(bossId), setBossGrade,
@@ -65,12 +67,14 @@ export default function PlayerSetup({ playerClass, setPlayerClass, botClass, bot
   const dungeon = customDungeon || dungeonForBoss(bossId);
   const monsterCount = dungeon?.members.reduce((sum, member) => sum + member.count, 0);
   const missingGroup = dungeonMode && (!dungeon || (customDungeon && customDungeonErrors(customDungeon).length > 0));
+  const preparedAdventure = dungeonMode && adventureEnabled(customDungeon);
+  const adventureErrors = preparedAdventure ? [...customDungeonErrors(customDungeon), ...adventureSelectionErrors(customDungeon, adventureChoice)] : [];
   const missingName = includePlayer && customCharacter && !customCharacter.name.trim();
   const opponentErrors = fightingMonster ? [] : opponentTeamErrors(opponents);
   const allyErrors = allyTeamErrors(allies, includePlayer);
   const opponentLabel = opponents.length === 1 ? opponentSummary(opponents[0]).name : `${opponents.length} adversaires`;
-  const canPlay = (!includePlayer || summary.valid) && !missingName && !missingGroup && !opponentErrors.length && !allyErrors.length;
-  const validation = missingName ? 'Donnez un nom à votre classe dans l’Atelier.'
+  const canPlay = preparedAdventure ? !adventureErrors.length : (!includePlayer || summary.valid) && !missingName && !missingGroup && !opponentErrors.length && !allyErrors.length;
+  const validation = preparedAdventure ? adventureErrors.join(' ') : missingName ? 'Donnez un nom à votre classe dans l’Atelier.'
     : includePlayer && !summary.valid ? 'Vérifiez l’équipement, les caractéristiques et les sorts de votre personnage.'
     : missingGroup ? 'Choisissez une salle disponible ou terminez votre donjon dans l’Atelier.'
     : [...allyErrors, ...opponentErrors].join(' ');
@@ -89,7 +93,7 @@ export default function PlayerSetup({ playerClass, setPlayerClass, botClass, bot
   const switchCharacter = () => setEditingSide('A');
   const preparationSection = ['equipment', 'stats', 'spells'].includes(section) ? section : 'equipment';
   const combatProps = { playerClass, playerName, botId, allBots,
-    controller, setController, playerBotId, setPlayerBotId, customDungeons, customDungeonId, setCustomDungeonId,
+    controller, setController, playerBotId, setPlayerBotId, adventureChoice, setAdventureChoice, adventureSaveError, customDungeons, customDungeonId, setCustomDungeonId,
     onOpenCreator, mapId, setMapId, mode, setMode, monsterGrade, setMonsterGrade, bossId, setBossId, bossGrade, setBossGrade,
     seed, setSeed, equipment, canPlay, validation, selectionLabel, error, settingsError, onStart,
     opponents, onOpponentsChange, onSelectOpponent, opponentSaveError, customCharacters,
@@ -123,7 +127,7 @@ export default function PlayerSetup({ playerClass, setPlayerClass, botClass, bot
         </React.Fragment>)}</dl>
         <button className="summary-link" onClick={() => editStuff('A', 'stats')}>Toutes les caractéristiques <ChevronRight size={14} /></button>
         <div className="summary-match">
-          <button onClick={() => navigate('match')}><MapPin size={15} /><span>{mapName(training ? KANOJEDO_MAP_ID : dungeonMode ? customDungeon?.mapId || dungeon?.combatMapId : mapId)}</span><ChevronRight size={14} /></button>
+          <button onClick={() => navigate('match')}><MapPin size={15} /><span>{(dungeonMode && customDungeon?.battlefield?.name) || mapName(training ? KANOJEDO_MAP_ID : dungeonMode ? customDungeon?.mapId || dungeon?.combatMapId : mapId)}</span><ChevronRight size={14} /></button>
           <button onClick={() => navigate('match')}><Swords size={15} /><span>Contre {dungeonMode && customDungeon ? customDungeon.name : fightingMonster ? monster.name : opponentLabel}{fightingMonster ? ` · ${dungeonMode && monsterCount ? `${monsterCount} ${customDungeon ? 'combattants' : 'monstres'}` : `niv. ${monster.level}`}` : ''}</span><ChevronRight size={14} /></button>
         </div>
 

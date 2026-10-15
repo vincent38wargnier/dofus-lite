@@ -1,0 +1,7 @@
+{
+  "format": "koliseum-ai-code-kit",
+  "version": 1,
+  "nodeMinimum": 20,
+  "sourceSha256": "a7ec1ff76193d7e39a069bcd09f1923c05c7c4074349744cf66a3cc81d5e1d52",
+  "runtimeSha256": "ddb7fafe57f5e089eb61dbf4d40becb380f89d50de179f5677734e0de4347518"
+}

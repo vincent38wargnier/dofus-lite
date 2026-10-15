@@ -1,0 +1,87 @@
+{
+  "checks": [
+    "Fresh browser imports one dungeon, all three equipped heroes, all six enemies, 29 spells and all 39 images; no pre-existing creations.",
+    "Creature mode keeps original portraits at a smaller scale; tactical mode preserves the same original geometry.",
+    "Original courtyard, five painted props and one compact spell row fit four screen sizes with no page scrolling.",
+    "Manual battle uses 3 heroes and 6 enemy sprites on its original Winterfell courtyard; Le pas de la louve casts from the real spell bar and consumes 2 AP.",
+    "The imported adventure survives a reload and completes an automatic fight; personal profiles remain unchanged.",
+    "Replay shows 11 original effect styles; synthesized audio has a real signal and no native sound calls.",
+    "The UI exports the adventure again as one self-contained dungeon ZIP; all hero and monster assets remain attached."
+  ],
+  "browserErrors": [],
+  "layouts": [
+    {
+      "width": 1536,
+      "height": 1060,
+      "rows": 1,
+      "slots": 7,
+      "overflow": false,
+      "mapHeight": 781,
+      "dockHeight": 188
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "rows": 1,
+      "slots": 7,
+      "overflow": false,
+      "mapHeight": 489,
+      "dockHeight": 188
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "rows": 1,
+      "slots": 7,
+      "overflow": false,
+      "mapHeight": 501,
+      "dockHeight": 176
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "rows": 1,
+      "slots": 7,
+      "overflow": false,
+      "mapHeight": 533,
+      "dockHeight": 229
+    }
+  ],
+  "result": {
+    "outcome": "victory",
+    "text": "Victoire · Salle vaincue6 / 6 combattants vaincus · 15 tours · 1799 / 7551 PV restants"
+  },
+  "effects": [
+    "rally",
+    "raven-step",
+    "shield",
+    "fireball",
+    "thrust",
+    "fang",
+    "arrow",
+    "ice-lance",
+    "slash",
+    "shatter",
+    "bell"
+  ],
+  "audio": {
+    "oscillators": 25,
+    "buffers": 9,
+    "peak": 0.06876765936613083,
+    "native": 0
+  },
+  "regression": {
+    "fullRunPassed": 1524,
+    "fullRunTotal": 1527,
+    "rerunPassed": [
+      "duelComposer: automatic launcher (initial 5s timeout)",
+      "spellPacing: explicit cast-button selector",
+      "deadFighters: explicit cast-button selector"
+    ],
+    "portableTestsPassed": 27,
+    "build": "passed",
+    "servedAdventureMatchesSource": true,
+    "servedKitMatchesSource": true,
+    "targetedTestsPassed": 255
+  }
+}

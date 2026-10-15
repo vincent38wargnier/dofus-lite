@@ -1,0 +1,882 @@
+{
+  "version": 1,
+  "support": {
+    "character": "importable",
+    "spellIcon": "importable",
+    "map": "design-only",
+    "equipment": "design-only",
+    "cover": "design-only",
+    "effects": "design-only"
+  },
+  "character": {
+    "version": 1,
+    "frameSize": 256,
+    "anchor": {
+      "x": 128,
+      "y": 224
+    },
+    "files": [
+      {
+        "name": "portrait.png",
+        "label": "Portrait",
+        "required": true,
+        "frames": 1,
+        "fps": 1,
+        "pose": "portrait"
+      },
+      {
+        "name": "idle-front.png",
+        "label": "Repos · face ↘",
+        "required": true,
+        "frames": 1,
+        "fps": 1,
+        "pose": "static",
+        "direction": "R"
+      },
+      {
+        "name": "idle-back.png",
+        "label": "Repos · dos ↖",
+        "required": true,
+        "frames": 1,
+        "fps": 1,
+        "pose": "static",
+        "direction": "L"
+      },
+      {
+        "name": "walk-front.png",
+        "label": "Marche · face ↘",
+        "required": false,
+        "frames": 6,
+        "fps": 12,
+        "pose": "walk",
+        "direction": "R"
+      },
+      {
+        "name": "walk-back.png",
+        "label": "Marche · dos ↖",
+        "required": false,
+        "frames": 6,
+        "fps": 12,
+        "pose": "walk",
+        "direction": "L"
+      },
+      {
+        "name": "cast-front.png",
+        "label": "Sort ou arme · face ↘",
+        "required": false,
+        "frames": 6,
+        "fps": 10,
+        "pose": "cast",
+        "direction": "R"
+      },
+      {
+        "name": "cast-back.png",
+        "label": "Sort ou arme · dos ↖",
+        "required": false,
+        "frames": 6,
+        "fps": 10,
+        "pose": "cast",
+        "direction": "L"
+      },
+      {
+        "name": "hit-front.png",
+        "label": "Impact reçu · face ↘",
+        "required": false,
+        "frames": 3,
+        "fps": 10,
+        "pose": "hit",
+        "direction": "R"
+      },
+      {
+        "name": "hit-back.png",
+        "label": "Impact reçu · dos ↖",
+        "required": false,
+        "frames": 3,
+        "fps": 10,
+        "pose": "hit",
+        "direction": "L"
+      }
+    ]
+  },
+  "prompts": [
+    {
+      "id": "00-direction-artistique",
+      "title": "Direction artistique commune",
+      "category": "planning",
+      "support": "reference",
+      "output": "design-sources/art-direction.md"
+    },
+    {
+      "id": "01-portrait",
+      "title": "Portrait",
+      "category": "character",
+      "support": "importable",
+      "output": "artwork/<owner-key>/portrait.png",
+      "width": 256,
+      "height": 256,
+      "frames": 1,
+      "required": true
+    },
+    {
+      "id": "02-idle-front",
+      "title": "Repos · face ↘",
+      "category": "character",
+      "support": "importable",
+      "output": "artwork/<owner-key>/idle-front.png",
+      "width": 256,
+      "height": 256,
+      "frames": 1,
+      "required": true
+    },
+    {
+      "id": "03-idle-back",
+      "title": "Repos · dos ↖",
+      "category": "character",
+      "support": "importable",
+      "output": "artwork/<owner-key>/idle-back.png",
+      "width": 256,
+      "height": 256,
+      "frames": 1,
+      "required": true
+    },
+    {
+      "id": "04-walk-front",
+      "title": "Marche · face ↘",
+      "category": "character",
+      "support": "importable",
+      "output": "artwork/<owner-key>/walk-front.png",
+      "width": 1536,
+      "height": 256,
+      "frames": 6,
+      "required": false
+    },
+    {
+      "id": "05-walk-back",
+      "title": "Marche · dos ↖",
+      "category": "character",
+      "support": "importable",
+      "output": "artwork/<owner-key>/walk-back.png",
+      "width": 1536,
+      "height": 256,
+      "frames": 6,
+      "required": false
+    },
+    {
+      "id": "06-cast-front",
+      "title": "Sort ou arme · face ↘",
+      "category": "character",
+      "support": "importable",
+      "output": "artwork/<owner-key>/cast-front.png",
+      "width": 1536,
+      "height": 256,
+      "frames": 6,
+      "required": false
+    },
+    {
+      "id": "07-cast-back",
+      "title": "Sort ou arme · dos ↖",
+      "category": "character",
+      "support": "importable",
+      "output": "artwork/<owner-key>/cast-back.png",
+      "width": 1536,
+      "height": 256,
+      "frames": 6,
+      "required": false
+    },
+    {
+      "id": "08-hit-front",
+      "title": "Impact reçu · face ↘",
+      "category": "character",
+      "support": "importable",
+      "output": "artwork/<owner-key>/hit-front.png",
+      "width": 768,
+      "height": 256,
+      "frames": 3,
+      "required": false
+    },
+    {
+      "id": "09-hit-back",
+      "title": "Impact reçu · dos ↖",
+      "category": "character",
+      "support": "importable",
+      "output": "artwork/<owner-key>/hit-back.png",
+      "width": 768,
+      "height": 256,
+      "frames": 3,
+      "required": false
+    },
+    {
+      "id": "10-icone-sort",
+      "title": "Icône de sort",
+      "category": "spellIcon",
+      "support": "importable",
+      "output": "icons/<spell-key>.png",
+      "width": 64,
+      "height": 64,
+      "frames": 1
+    },
+    {
+      "id": "11-equipement",
+      "title": "Design d’équipement",
+      "category": "equipment",
+      "support": "design-only",
+      "output": "design-sources/equipment/<item-key>.png",
+      "width": 256,
+      "height": 256,
+      "frames": 1
+    },
+    {
+      "id": "12-carte-complete",
+      "title": "Carte complète",
+      "category": "map",
+      "support": "design-only",
+      "output": "design-sources/maps/<mapId>/map-preview.png"
+    },
+    {
+      "id": "13-carte-couches",
+      "title": "Fond, sol et décors séparés",
+      "category": "map",
+      "support": "design-only",
+      "output": "design-sources/maps/<mapId>/{background,ground,scenery}.png"
+    },
+    {
+      "id": "14-decor-objet",
+      "title": "Élément de décor isolé",
+      "category": "map",
+      "support": "design-only",
+      "output": "design-sources/maps/<mapId>/props/<prop-key>.png"
+    },
+    {
+      "id": "15-couverture",
+      "title": "Illustration de l’aventure",
+      "category": "cover",
+      "support": "design-only",
+      "output": "design-sources/cover.png",
+      "width": 1600,
+      "height": 900,
+      "frames": 1
+    },
+    {
+      "id": "16-effets-et-sons",
+      "title": "Brief d’effets et de sons",
+      "category": "effects",
+      "support": "design-only",
+      "output": "design-sources/effects.md"
+    },
+    {
+      "id": "17-animation-sort-complete",
+      "title": "Animation de sort complète",
+      "category": "effects",
+      "support": "design-only",
+      "output": "design-sources/spell-fx/<spell-key>/effect.json + PNGs"
+    },
+    {
+      "id": "18-fx-cast",
+      "title": "Effet · Lancement",
+      "category": "effects",
+      "support": "design-only",
+      "output": "design-sources/spell-fx/<spell-key>/cast.png",
+      "width": 2048,
+      "height": 256,
+      "frames": 8
+    },
+    {
+      "id": "19-fx-projectile",
+      "title": "Effet · Projectile",
+      "category": "effects",
+      "support": "design-only",
+      "output": "design-sources/spell-fx/<spell-key>/projectile.png",
+      "width": 2048,
+      "height": 256,
+      "frames": 8
+    },
+    {
+      "id": "20-fx-trail",
+      "title": "Effet · Traînée",
+      "category": "effects",
+      "support": "design-only",
+      "output": "design-sources/spell-fx/<spell-key>/trail.png",
+      "width": 2048,
+      "height": 256,
+      "frames": 8
+    },
+    {
+      "id": "21-fx-impact",
+      "title": "Effet · Impact",
+      "category": "effects",
+      "support": "design-only",
+      "output": "design-sources/spell-fx/<spell-key>/impact.png",
+      "width": 2048,
+      "height": 256,
+      "frames": 8
+    },
+    {
+      "id": "22-fx-aura",
+      "title": "Effet · Aura / soin / protection",
+      "category": "effects",
+      "support": "design-only",
+      "output": "design-sources/spell-fx/<spell-key>/aura.png",
+      "width": 2048,
+      "height": 256,
+      "frames": 8
+    },
+    {
+      "id": "23-fx-beam",
+      "title": "Effet · Rayon",
+      "category": "effects",
+      "support": "design-only",
+      "output": "design-sources/spell-fx/<spell-key>/beam.png",
+      "width": 2048,
+      "height": 256,
+      "frames": 8
+    }
+  ],
+  "maps": [
+    {
+      "id": "arene",
+      "name": "Arène du Koliséum",
+      "width": 728,
+      "height": 458,
+      "walkable": 162
+    },
+    {
+      "id": "muraille",
+      "name": "La Muraille",
+      "width": 728,
+      "height": 458,
+      "walkable": 157
+    },
+    {
+      "id": "canyon",
+      "name": "Le Canyon",
+      "width": 728,
+      "height": 458,
+      "walkable": 158
+    },
+    {
+      "id": "territoire_des_dopeuls_5383",
+      "name": "Territoire des Dopeuls [-32,-8]",
+      "width": 776,
+      "height": 538,
+      "walkable": 163
+    },
+    {
+      "id": "amakna_1571",
+      "name": "Amakna [5,19]",
+      "width": 670,
+      "height": 485,
+      "walkable": 112
+    },
+    {
+      "id": "brakmar_6170",
+      "name": "Brâkmar [-23,38]",
+      "width": 901,
+      "height": 552,
+      "walkable": 170
+    },
+    {
+      "id": "bonta_6173",
+      "name": "Bonta [-31,-59]",
+      "width": 776,
+      "height": 538,
+      "walkable": 111
+    },
+    {
+      "id": "l_ile_des_wabbits_1735",
+      "name": "L'île des Wabbits [23,-8]",
+      "width": 776,
+      "height": 538,
+      "walkable": 124
+    },
+    {
+      "id": "amakna_2095",
+      "name": "Amakna [14,20]",
+      "width": 1070,
+      "height": 685,
+      "walkable": 211
+    },
+    {
+      "id": "astrub_2195",
+      "name": "Astrub [1,-9]",
+      "width": 723,
+      "height": 643,
+      "walkable": 118
+    },
+    {
+      "id": "bonta_6158",
+      "name": "Bonta [-33,-57]",
+      "width": 963,
+      "height": 632,
+      "walkable": 209
+    },
+    {
+      "id": "brakmar_6167",
+      "name": "Brâkmar [-23,38]",
+      "width": 883,
+      "height": 592,
+      "walkable": 186
+    },
+    {
+      "id": "donjon_des_bworks_9750",
+      "name": "Donjon des Bworks [-5,10]",
+      "width": 1044,
+      "height": 786,
+      "walkable": 173
+    },
+    {
+      "id": "foret_des_abraknydes_4",
+      "name": "Forêt des Abraknydes [-9,-12]",
+      "width": 1044,
+      "height": 731,
+      "walkable": 208
+    },
+    {
+      "id": "l_ile_des_wabbits_1720",
+      "name": "L'île des Wabbits [25,-7]",
+      "width": 883,
+      "height": 592,
+      "walkable": 132
+    },
+    {
+      "id": "pandala_donjon_8313",
+      "name": "Pandala Donjon [32,-38]",
+      "width": 1391,
+      "height": 925,
+      "walkable": 255
+    },
+    {
+      "id": "prison_999",
+      "name": "Prison [12,-7]",
+      "width": 856,
+      "height": 578,
+      "walkable": 104
+    },
+    {
+      "id": "sufokia_1907",
+      "name": "Sufokia [12,24]",
+      "width": 696,
+      "height": 498,
+      "walkable": 103
+    },
+    {
+      "id": "tainela_2073",
+      "name": "Tainéla [2,-34]",
+      "width": 1124,
+      "height": 712,
+      "walkable": 205
+    },
+    {
+      "id": "astrub_7423",
+      "name": "Astrub PvP [5,-23]",
+      "width": 1011,
+      "height": 717,
+      "walkable": 404
+    },
+    {
+      "id": "amakna_952",
+      "name": "Amakna PvP [-1,0]",
+      "width": 1031,
+      "height": 717,
+      "walkable": 387
+    },
+    {
+      "id": "amakna_534",
+      "name": "Kanojedo [0,0]",
+      "width": 856,
+      "height": 578,
+      "walkable": 110
+    },
+    {
+      "id": "dungeon_2083",
+      "name": "Donjon des Bouftous [2;-34]",
+      "width": 776,
+      "height": 592,
+      "walkable": 195
+    },
+    {
+      "id": "dungeon_10164",
+      "name": "Donjon Ensablé [13;-28]",
+      "width": 1198,
+      "height": 1064,
+      "walkable": 247
+    },
+    {
+      "id": "dungeon_10363",
+      "name": "Donjon d’Incarnam [6;5]",
+      "width": 1083,
+      "height": 636,
+      "walkable": 176
+    },
+    {
+      "id": "dungeon_9774",
+      "name": "Donjon des Champs [7;-25]",
+      "width": 1049,
+      "height": 823,
+      "walkable": 324
+    },
+    {
+      "id": "dungeon_9784",
+      "name": "Donjon des Scarafeuilles [1;26]",
+      "width": 859,
+      "height": 745,
+      "walkable": 225
+    },
+    {
+      "id": "dungeon_11887",
+      "name": "Donjon des Blops · Blop Coco Royal [-25;-17]",
+      "width": 1029,
+      "height": 717,
+      "walkable": 265
+    },
+    {
+      "id": "dungeon_11888",
+      "name": "Donjon des Blops · Blop Griotte Royal [-25;-17]",
+      "width": 1029,
+      "height": 717,
+      "walkable": 265
+    },
+    {
+      "id": "dungeon_11889",
+      "name": "Donjon des Blops · Blop Indigo Royal [-25;-17]",
+      "width": 1029,
+      "height": 717,
+      "walkable": 265
+    },
+    {
+      "id": "dungeon_11890",
+      "name": "Donjon des Blops · Blop Reinette Royal [-25;-17]",
+      "width": 1029,
+      "height": 717,
+      "walkable": 266
+    },
+    {
+      "id": "dungeon_11892",
+      "name": "Antre du Blop Multicolore [-25;-17]",
+      "width": 1029,
+      "height": 717,
+      "walkable": 260
+    },
+    {
+      "id": "dungeon_9760",
+      "name": "Donjon des Bworks [-5;10]",
+      "width": 883,
+      "height": 661,
+      "walkable": 165
+    },
+    {
+      "id": "dungeon_325",
+      "name": "Labyrinthe du Dark Vlad [-7;16]",
+      "width": 852,
+      "height": 766,
+      "walkable": 388
+    },
+    {
+      "id": "dungeon_10234",
+      "name": "Donjon des Abraknydes [-9;-14]",
+      "width": 1041,
+      "height": 633,
+      "walkable": 373
+    },
+    {
+      "id": "dungeon_1836",
+      "name": "Arbre de Moon [32;12]",
+      "width": 963,
+      "height": 779,
+      "walkable": 342
+    },
+    {
+      "id": "dungeon_9126",
+      "name": "Donjon du Chêne Mou [-9;-14]",
+      "width": 1121,
+      "height": 622,
+      "walkable": 354
+    },
+    {
+      "id": "dungeon_8965",
+      "name": "Donjon du Koulosse [-17;8]",
+      "width": 956,
+      "height": 605,
+      "walkable": 231
+    },
+    {
+      "id": "dungeon_6836",
+      "name": "La Gelaxième Dimension [11;28]",
+      "width": 1119,
+      "height": 717,
+      "walkable": 246
+    },
+    {
+      "id": "dungeon_1837",
+      "name": "Bateau du Chouque [30;11]",
+      "width": 803,
+      "height": 605,
+      "walkable": 54
+    },
+    {
+      "id": "dungeon_9766",
+      "name": "Donjon des Tofus [5;6]",
+      "width": 920,
+      "height": 605,
+      "walkable": 247
+    },
+    {
+      "id": "dungeon_9648",
+      "name": "Donjon des Canidés [-24;1]",
+      "width": 1040,
+      "height": 636,
+      "walkable": 288
+    },
+    {
+      "id": "dungeon_9580",
+      "name": "Donjon des Craqueleurs [-3;-7]",
+      "width": 803,
+      "height": 792,
+      "walkable": 107
+    },
+    {
+      "id": "dungeon_8314",
+      "name": "Donjon des Kitsounes [32;-38]",
+      "width": 888,
+      "height": 605,
+      "walkable": 198
+    },
+    {
+      "id": "dungeon_7526",
+      "name": "Donjon du Bworker [-21;12]",
+      "width": 750,
+      "height": 701,
+      "walkable": 159
+    },
+    {
+      "id": "dungeon_10212",
+      "name": "Donjon des Rats de Bonta [-35;-59]",
+      "width": 929,
+      "height": 642,
+      "walkable": 171
+    },
+    {
+      "id": "dungeon_10198",
+      "name": "Donjon des Rats de Brâkmar [-26;31]",
+      "width": 1266,
+      "height": 894,
+      "walkable": 171
+    },
+    {
+      "id": "dungeon_10149",
+      "name": "Donjon des Rats du Château d’Amakna [6;-9]",
+      "width": 940,
+      "height": 661,
+      "walkable": 287
+    },
+    {
+      "id": "dungeon_8331",
+      "name": "Repaire des Pandikazes [18;-36]",
+      "width": 937,
+      "height": 833,
+      "walkable": 96
+    },
+    {
+      "id": "dungeon_9535",
+      "name": "Donjon du Tofu Royal [5;6]",
+      "width": 920,
+      "height": 605,
+      "walkable": 239
+    },
+    {
+      "id": "dungeon_8203",
+      "name": "Donjon des Larves [-2;-14]",
+      "width": 830,
+      "height": 612,
+      "walkable": 243
+    },
+    {
+      "id": "dungeon_10025",
+      "name": "Donjon de Nowel [-63;-100]",
+      "width": 859,
+      "height": 912,
+      "walkable": 191
+    },
+    {
+      "id": "dungeon_11961",
+      "name": "Caverne de Nowel [-63;-100]",
+      "width": 859,
+      "height": 912,
+      "walkable": 191
+    },
+    {
+      "id": "dungeon_11951",
+      "name": "Maison du Papa Nowel [-63;-100]",
+      "width": 859,
+      "height": 912,
+      "walkable": 191
+    },
+    {
+      "id": "dungeon_11079",
+      "name": "Donjon Grotte Hesque [-59;15]",
+      "width": 1184,
+      "height": 838,
+      "walkable": 249
+    },
+    {
+      "id": "dungeon_11073",
+      "name": "Arche Otomaï [-55;-4]",
+      "width": 1050,
+      "height": 685,
+      "walkable": 124
+    },
+    {
+      "id": "dungeon_11267",
+      "name": "Goulet du Rasboul [-51;9]",
+      "width": 1153,
+      "height": 749,
+      "walkable": 278
+    },
+    {
+      "id": "dungeon_10812",
+      "name": "Laboratoire du Tynril [-53;20]",
+      "width": 1077,
+      "height": 635,
+      "walkable": 234
+    },
+    {
+      "id": "dungeon_9880",
+      "name": "Labyrinthe du Minotoror [-42;-17]",
+      "width": 987,
+      "height": 605,
+      "walkable": 209
+    },
+    {
+      "id": "dungeon_8549",
+      "name": "Antre du Dragon cochon [-1;33]",
+      "width": 829,
+      "height": 720,
+      "walkable": 120
+    },
+    {
+      "id": "dungeon_10109",
+      "name": "Donjon des Dragoeufs [-3;24]",
+      "width": 837,
+      "height": 632,
+      "walkable": 157
+    },
+    {
+      "id": "dungeon_11941",
+      "name": "Donjon Fungus [-18;28]",
+      "width": 888,
+      "height": 961,
+      "walkable": 185
+    },
+    {
+      "id": "dungeon_8977",
+      "name": "Repaire du Skeunk [-20;10]",
+      "width": 1160,
+      "height": 776,
+      "walkable": 345
+    },
+    {
+      "id": "dungeon_1774",
+      "name": "Château du Wa Wabbit [24;-13]",
+      "width": 803,
+      "height": 538,
+      "walkable": 174
+    },
+    {
+      "id": "dungeon_8357",
+      "name": "Donjon des Firefoux [28;-52]",
+      "width": 1050,
+      "height": 768,
+      "walkable": 228
+    },
+    {
+      "id": "dungeon_11133",
+      "name": "Canopée du Kimbo [-51;16]",
+      "width": 1443,
+      "height": 1149,
+      "walkable": 161
+    },
+    {
+      "id": "dungeon_9879",
+      "name": "Salle du Minotot [-42;-17]",
+      "width": 977,
+      "height": 632,
+      "walkable": 229
+    },
+    {
+      "id": "dungeon_11976",
+      "name": "Belvédère d’Ilyzaelle [-21;-29]",
+      "width": 1121,
+      "height": 717,
+      "walkable": 339
+    },
+    {
+      "id": "dungeon_11975",
+      "name": "Sanctuaire de Qu’Tan [-14;16]",
+      "width": 1103,
+      "height": 741,
+      "walkable": 175
+    },
+    {
+      "id": "dungeon_9594",
+      "name": "Bibliothèque du Maître Corbac [-19;-61]",
+      "width": 1159,
+      "height": 688,
+      "walkable": 325
+    },
+    {
+      "id": "dungeon_11095",
+      "name": "Antre du Kralamoure Géant [-61;-9]",
+      "width": 1318,
+      "height": 898,
+      "walkable": 194
+    },
+    {
+      "id": "dungeon_12233",
+      "name": "Antre de l’Infortuné [11;15]",
+      "width": 1044,
+      "height": 676,
+      "walkable": 136
+    },
+    {
+      "id": "dungeon_12266",
+      "name": "Mine de Krtek [-20;-34]",
+      "width": 1121,
+      "height": 609,
+      "walkable": 154
+    },
+    {
+      "id": "dungeon_12263",
+      "name": "Crypte du Vampire Dupyr [10;14]",
+      "width": 1121,
+      "height": 682,
+      "walkable": 252
+    },
+    {
+      "id": "dungeon_9853",
+      "name": "Sanctuaire des Dragoeufs · ancien repaire [-5;32]",
+      "width": 982,
+      "height": 605,
+      "walkable": 144
+    },
+    {
+      "id": "dungeon_1776",
+      "name": "Laboratoire du Wabbit Gm [25;-8]",
+      "width": 725,
+      "height": 605,
+      "walkable": 186
+    },
+    {
+      "id": "dungeon_12307",
+      "name": "Sanctuaire de Pandala [29;-60]",
+      "width": 1000,
+      "height": 616,
+      "walkable": 230
+    }
+  ],
+  "spellFx": {
+    "guide": "spell-fx/index.html",
+    "schema": "spell-fx/fx.schema.json",
+    "templates": "spell-fx/templates.json",
+    "runtimeImportable": false
+  },
+  "note": "Authoring assets only. Do not place this inventory or templates in a playable ZIP."
+}

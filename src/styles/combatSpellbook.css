@@ -1,0 +1,117 @@
+.combat-spellbook-button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap; }
+.character-dialog.combat-spellbook-dialog { width: min(1140px, calc(100vw - 32px)); max-width: none; height: min(820px, calc(100dvh - 32px)); max-height: calc(100dvh - 32px); padding: 0; border: 1px solid #bbc4a8; border-radius: 18px; background: #f8f8f1; color: #303a29; box-shadow: 0 24px 90px #0f170e66; overflow: hidden; }
+.combat-spellbook-dialog[open] { display: flex; flex-direction: column; }
+.combat-spellbook-dialog::backdrop { background: #162213aa; backdrop-filter: blur(4px); }
+.combat-spellbook-dialog > header { flex: 0 0 auto; padding: 20px 24px; background: #263821; color: #f7f9ef; border: 0; }
+.character-dialog.combat-spellbook-dialog > header h2 { font-size: 22px; letter-spacing: -.5px; margin: 0 0 5px; color: #f7f9ef; }
+.character-dialog.combat-spellbook-dialog > header p { font-size: 12px; color: #c5d1b6; margin: 0; }
+.combat-spellbook-dialog .character-dialog-close { color: #eaf1e1; border-color: #657758; background: #35472e; }
+.combat-spellbook-search { flex: 0 0 auto; display: flex; align-items: center; gap: 10px; margin: 14px 20px; padding: 0 13px; border: 1px solid #cbd2bf; border-radius: 10px; background: white; color: #677b54; }
+.combat-spellbook-search input { flex: 1; width: 0; padding: 11px 0; background: transparent; border: 0; border-radius: 0; font-size: 13px; outline-offset: 1px; }
+.combat-spellbook-search > span { font-size: 11px; white-space: nowrap; color: #73806b; }
+.combat-spellbook-body { flex: 1 1 0; display: grid; grid-template-columns: 215px 235px minmax(0, 1fr); min-height: 0; min-width: 0; border-top: 1px solid #e0e4d7; }
+.combat-spellbook-roster, .combat-spellbook-spells, .combat-spellbook-detail { min-height: 0; min-width: 0; overflow: auto; overscroll-behavior: contain; }
+.combat-spellbook-roster { padding: 15px 10px; background: #eef1e6; border-right: 1px solid #dbe0d1; }
+.combat-spellbook-roster section + section { margin-top: 22px; }
+.combat-spellbook-roster h3 { margin: 0 8px 10px; text-transform: uppercase; letter-spacing: 1.1px; font-size: 10px; color: #6b765e; }
+.combat-spellbook-fighter { width: 100%; display: flex; align-items: center; text-align: left; gap: 9px; padding: 9px 7px; margin: 3px 0; border: 1px solid transparent; background: transparent; color: inherit; border-radius: 10px; cursor: pointer; }
+.combat-spellbook-fighter:hover { background: #e0e7d3; }
+.combat-spellbook-fighter.selected { background: #fff; border-color: #8fa56d; box-shadow: 0 2px 6px #3648290c; }
+.spellbook-fighter-portrait { width: 40px; height: 45px; flex: 0 0 40px; display: grid; place-items: center; background: #e3e9d7; border-radius: 8px; overflow: hidden; }
+.spellbook-fighter-portrait img { width: 100%; height: 100%; object-fit: contain; }
+.combat-spellbook-fighter > span:last-child { min-width: 0; }
+.combat-spellbook-fighter strong { display: block; font-size: 12px; line-height: 1.35; overflow-wrap: anywhere; }
+.combat-spellbook-fighter small { display: block; margin-top: 5px; font-size: 10px; color: #758068; }
+.combat-spellbook-spells { padding: 18px 12px; border-right: 1px solid #e0e4d7; background: #f6f7ef; }
+.combat-spellbook-spells > h3 { font-size: 14px; margin: 0 4px 4px; line-height: 1.35; }
+.combat-spellbook-spells > p { font-size: 11px; color: #7e8872; margin: 0 4px 16px; }
+.combat-spellbook-spell { width: 100%; display: flex; align-items: center; gap: 10px; text-align: left; background: #fff; color: inherit; border: 1px solid #e0e4d5; border-left: 3px solid var(--spell-detail-color); border-radius: 9px; padding: 10px 8px; margin: 0 0 7px; cursor: pointer; }
+.combat-spellbook-spell:hover { background: #eef2e4; }
+.combat-spellbook-spell.selected { background: #e6edda; border-color: #7c9560; }
+.combat-spellbook-spell .retro-spell-icon { flex: 0 0 34px; width: 34px; height: 34px; object-fit: contain; }
+.combat-spellbook-spell > span { min-width: 0; }
+.combat-spellbook-spell strong { display: block; font-size: 12px; line-height: 1.3; overflow-wrap: anywhere; }
+.combat-spellbook-spell small { display: block; font-size: 10px; color: #6c765d; margin-top: 5px; }
+.combat-spellbook-detail { padding: 23px; background: #fffefa; }
+.combat-spellbook-dialog > footer { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 20px; background: #f2f4e9; border-top: 1px solid #d8decc; }
+.combat-spellbook-dialog > footer p { margin: 0; font-size: 11px; color: #738068; }
+.combat-spellbook-dialog > footer .btn { margin: 0; }
+.spellbook-no-result { padding: 24px; color: #7c856f; font-size: 13px; }
+
+.spell-details { font-size: 13px; line-height: 1.45; min-width: 0; }
+.spell-detail-heading { display: flex; align-items: center; gap: 14px; margin: 0 0 16px; }
+.spell-detail-heading > div:last-child { min-width: 0; }
+.spell-detail-icon { width: 60px; height: 60px; flex: 0 0 60px; display: grid; place-items: center; border-radius: 13px; background: #e8e9df; border: 1px solid #c9cebb; border-bottom: 3px solid var(--spell-detail-color); }
+.spell-detail-icon .retro-spell-icon { width: 48px; height: 48px; object-fit: contain; font-size: 32px; }
+.spell-detail-eyebrow { display: block; font-size: 10px; color: #77816d; line-height: 1.4; }
+.spell-detail-heading h3 { margin: 3px 0 2px; font-size: 23px; letter-spacing: -.5px; line-height: 1.14; overflow-wrap: anywhere; color: #273323; }
+.spell-detail-grade { font-size: 10px; color: #7c846f; }
+.spell-detail-description { color: #58624d; margin: 0 0 18px; line-height: 1.55; }
+.spell-detail-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin: 0 0 16px; }
+.spell-detail-facts > div { padding: 9px 11px; background: #f0f3e7; border: 1px solid #e1e7d3; border-radius: 8px; }
+.spell-detail-facts dt { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #737d66; }
+.spell-detail-facts dd { margin: 3px 0 0; color: #344b2b; font-size: 15px; font-weight: 800; }
+.spell-variant-tabs { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.spell-variant-tabs button { display: inline-flex; align-items: center; justify-content: center; gap: 4px; border: 1px solid #d5ddc6; padding: 6px 12px; background: transparent; color: #79816b; font-size: 11px; font-weight: 700; border-radius: 6px; cursor: pointer; }
+.spell-variant-tabs button[aria-pressed=true] { background: #344a2c; border-color: #344a2c; color: #f5f8ee; }
+.spell-variant-tabs > span { font-size: 10px; color: #808875; }
+.spell-detail-base-note { margin: 8px 0 11px; font-size: 10px; color: #828a78; }
+.spell-detail-effects { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.spell-detail-effect { padding: 11px 13px; border: 1px solid #e0e5d4; border-left: 3px solid #9aab7c; border-radius: 8px; background: #f8f9f2; }
+.spell-detail-effect > strong { display: block; font-size: 14px; line-height: 1.4; color: #35492c; }
+.spell-detail-effect.element-feu { border-left-color: #c46b51; background: #fff5ee; }.spell-detail-effect.element-feu > strong { color: #a34932; }
+.spell-detail-effect.element-eau { border-left-color: #6496b8; background: #f0f7fb; }.spell-detail-effect.element-eau > strong { color: #3e7196; }
+.spell-detail-effect.element-air { border-left-color: #80a35f; background: #f2f7e9; }.spell-detail-effect.element-air > strong { color: #5d7f3b; }
+.spell-detail-effect.element-terre { border-left-color: #b79469; background: #f9f4ec; }.spell-detail-effect.element-terre > strong { color: #87623f; }
+.spell-detail-effect.element-neutre { border-left-color: #979385; background: #f4f3f0; }
+.spell-effect-tags { display: flex; flex-wrap: wrap; gap: 3px 10px; margin-top: 5px; font-size: 10px; color: #7b8373; }
+.spell-detail-effect p { color: #737c68; font-size: 11px; line-height: 1.5; margin: 7px 0 0; }
+.spell-detail-effect .spell-detail-effects { margin-top: 8px; }
+.spell-detail-hint, .spell-detail-warning, .spell-detail-availability { margin: 10px 0; font-size: 11px; padding: 8px 10px; background: #edf3e2; color: #536944; border-radius: 6px; }
+.spell-detail-warning { display: flex; align-items: flex-start; gap: 6px; color: #987042; background: #faf0df; }.spell-detail-warning svg { flex: 0 0 14px; }
+.spell-detail-availability { color: #98533b; background: #f9ecdf; }
+.spell-detail-rules { margin: 15px 0 0; padding-top: 12px; border-top: 1px solid #e1e5d7; font-size: 11px; color: #6c785f; }
+.spell-detail-rules h4 { font-size: 11px; color: #435039; margin: 0 0 8px; }
+.spell-detail-rules p { margin: 6px 0; line-height: 1.5; }
+.spell-detail-rules p svg { vertical-align: -2px; margin-right: 5px; }
+.spell-detail-rules summary { cursor: pointer; font-size: 10px; }
+.spell-detail-failure { font-size: 10px; color: #998069; }
+
+.combat-spellbar .spell-slot-tools, .in-combat .combat-spellbar .spell-slot-tools { right: 26px; }
+.spell-info-button { position: absolute; z-index: 2; top: 1px; right: 1px; width: 24px; height: 24px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 5px; background: transparent; color: #6c7b53; cursor: help; touch-action: manipulation; }
+.spell-info-button svg { pointer-events: none; }
+.spell-info-button:hover, .spell-info-button[aria-expanded=true] { color: #344a2c; background: #e0e8ce; }
+.spell-info-button:focus-visible { outline: 2px solid #657f37; outline-offset: -2px; background: #e0e8ce; }
+
+.spell-hover-card { position: fixed; z-index: 15000; display: flex; flex-direction: column; width: min(380px, calc(100vw - 16px)); border: 1px solid #bcc8a6; border-radius: 13px; background: #fffef9; color: #303d29; box-shadow: 0 12px 45px #1b271844; overflow: hidden; }
+.spell-hover-toolbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 12px; background: #edf2e2; color: #738064; font-size: 10px; }
+.spell-hover-toolbar button { display: grid; place-items: center; border: 0; border-radius: 4px; background: transparent; color: #657656; padding: 2px; cursor: pointer; }
+.spell-hover-content { padding: 14px; overflow: auto; min-height: 0; overscroll-behavior: contain; }
+.spell-hover-open { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px; background: #344a2c; color: #f7f9ef; border: 0; font-size: 12px; font-weight: 700; cursor: pointer; }
+.spell-details.compact .spell-detail-heading { gap: 10px; margin-bottom: 10px; }.spell-details.compact .spell-detail-heading h3 { font-size: 19px; }
+.spell-details.compact .spell-detail-icon { width: 46px; height: 46px; flex-basis: 46px; }.spell-details.compact .spell-detail-icon .retro-spell-icon { width: 36px; height: 36px; }
+.spell-details.compact .spell-detail-description { margin-bottom: 12px; font-size: 11px; }
+.spell-details.compact .spell-detail-facts { margin-bottom: 10px; }.spell-details.compact .spell-detail-facts > div { padding: 7px 9px; }
+.spell-details.compact .spell-detail-effect { padding: 8px 10px; }.spell-details.compact .spell-detail-effect > strong { font-size: 13px; }
+
+@media (max-width: 800px) {
+  .spell-info-button { width: 18px; height: 18px; }
+  .character-dialog.combat-spellbook-dialog { width: calc(100vw - 16px); height: calc(100dvh - 16px); max-height: calc(100dvh - 16px); border-radius: 12px; }
+  .combat-spellbook-dialog > header { padding: 14px 16px; }.combat-spellbook-dialog > header h2 { font-size: 19px; }
+  .combat-spellbook-search { margin: 10px 12px; }.combat-spellbook-search > span { display: none; }
+  .combat-spellbook-body { display: flex; flex-direction: column; }
+  .combat-spellbook-roster { display: flex; flex: 0 0 85px; overflow-x: auto; overflow-y: hidden; gap: 14px; padding: 8px; border: 0; border-bottom: 1px solid #dde3d2; }
+  .combat-spellbook-roster section { display: flex; gap: 4px; position: relative; padding-top: 15px; }.combat-spellbook-roster section + section { margin: 0; }
+  .combat-spellbook-roster h3 { position: absolute; top: 0; margin: 0 4px; font-size: 8px; }
+  .combat-spellbook-fighter { width: 165px; flex: 0 0 165px; gap: 6px; margin: 0; padding: 3px; border-radius: 6px; }
+  .spellbook-fighter-portrait { width: 30px; height: 34px; flex-basis: 30px; }.combat-spellbook-fighter strong { font-size: 10px; }.combat-spellbook-fighter small { font-size: 9px; margin-top: 2px; }
+  .combat-spellbook-spells { flex: 0 0 auto; overflow: hidden; padding: 8px 10px; border: 0; border-bottom: 1px solid #dde3d2; }
+  .combat-spellbook-spells > h3 { font-size: 11px; margin-bottom: 6px; }.combat-spellbook-spells > p { display: none; }
+  .combat-spellbook-spells > div { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+  .combat-spellbook-spell { width: 164px; flex: 0 0 164px; margin: 0; padding: 6px; gap: 6px; border-radius: 6px; }
+  .combat-spellbook-spell strong { font-size: 11px; }.combat-spellbook-spell small { font-size: 9px; margin-top: 3px; }.combat-spellbook-spell .retro-spell-icon { width: 27px; height: 27px; flex-basis: 27px; }
+  .combat-spellbook-detail { flex: 1 1 0; padding: 15px; }.combat-spellbook-dialog > footer { padding: 9px 12px; }
+  .combat-spellbook-dialog > footer p { font-size: 9px; max-width: 120px; }.combat-spellbook-dialog > footer .btn { font-size: 11px; padding: 8px 10px; }
+  .spell-detail-heading h3 { font-size: 20px; }
+}
+@media (max-width: 420px) { .in-combat .fight-heading .combat-spellbook-button { padding: 4px; }.combat-spellbook-button svg { display: none; } }

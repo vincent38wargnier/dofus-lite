@@ -1,0 +1,9 @@
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+
+OUTPUT: artwork/<owner-key>/portrait.png, exactly 256x256 pixels.
+Draw a recognisable bust portrait of this character/creature, centred with breathing room around the face, on a transparent background. Preserve the same face and accessories as the approved front idle. This is only the menu portrait; it does not replace the full-body combat frames.
+Export 8-bit RGBA, non-interlaced PNG, no APNG, maximum 2 MiB per file. Transparency must be actual alpha, not a drawn checkerboard or a solid colour.
+The complete 3–9-file set must total at most 12 MiB. Use character/guides/portrait.svg to check alignment; hide all guides in the final export. These same requirements apply to humanoids, animals, monsters and bosses. This file is importable when declared by its owner's artwork folder.

@@ -1,0 +1,124 @@
+THEME / VISUAL DIRECTION: [theme, palette, materials, light and approved references].
+SPELL: [name, element, action, visual motif; mechanics are already defined separately].
+Produce ORIGINAL spell-effect art for a tactical RPG, consistent with the approved reference. Effects contain no character, map, ground tile, UI, text, numbers, labels or watermark. Generate each file separately. True alpha transparency, never a painted checkerboard. PNG RGBA 8-bit, non-interlaced, no APNG, no more than 2 MiB per image and 12 MiB per effect folder.
+Each default strip is EXACTLY 2048x256: eight 256x256 frames in ONE horizontal row, left to right, no gutters. 24 fps. No part may clip the frame. Use a stable origin and equal scale across frames. If generating separate frames, preserve 256x256 and assemble them without stretching. Guides are technical references to remove before export.
+This is a DESIGN package only: put it in design-sources/spell-fx/<spell-key>/, outside the playable ZIP. Neither game importer accepts effect.json or these PNGs. Keep visualSpellId pointing to an existing effect for the playable version. A generic character cast-front/cast-back strip is a different asset. Do not generate executable SWF/JavaScript or change damage, targeting or duration of a combat buff to match the picture.
+
+Generate ONE complete effect folder, using only the layers this spell needs. Basic families: impact, aura, projectile with optional cast/trail/impact, or beam with optional cast/impact. Do not require six layers for every spell. Deliver effect.json and its declared PNGs; keep references, prompts and guides in a separate work folder.
+Use the exact schema below. Times are integer milliseconds; duration 100..2000 ms, normally 1500. Frames may be 1..16, fps 8..60, each frame 256x256, sheet width=frames*256. Scale is in percent. Anchors are pixels from the TOP LEFT of each frame. All fields are required; no unrecognised properties.
+Role/attachment: cast/caster; projectile/projectile; trail/path; impact/target; aura/caster or target; beam/path. One instance and one PNG per role. Only projectile and beam may use rotation=path. Cast, impact and trail particles cannot loop. Allow each non-looping sheet enough time: endMs-startMs >= frames/fps*1000. All windows fit durationMs. For travel none, startMs=endMs=arcHeightPercent=0. Line travel has arcHeightPercent=0; arc is screen-up quadratic curvature, height=distance*arcHeightPercent/100. Projectile times exactly match travel. Trail emits one stationary particle every 50 ms during travel; it starts with travel and endMs must be at least travel.endMs+frames/fps*1000 so the last particles can fade. Impact begins at or after arrival. A beam uses no travel, rotation=path, anchor (0,128).
+Use the per-part prompts and spell-fx/guides/<role>.svg. Read spell-fx/SPEC.md. Open spell-fx/index.html for local playback and checking direction, distance, anchors and timing. From the extracted retro-class-designer kit run: node scripts/check-spell-fx.cjs design-sources/spell-fx/<spell-key>. Fix errors and deliver the JSON report with the design-source ZIP. This checker proves source-format validity only; runtimeImportable MUST remain false. If you cannot run it, say so.
+## Drawing instructions for every part (use only the parts this spell needs)
+### Lancement — cast.png
+Build-up light/magic attached to the caster, not the caster itself. Anchor (128,128). Eight frames: emerging spark, gathering energy, concentration, anticipation peak, release flash, follow-through, dissipation, faint residual glow. One shot, at least 334 ms; almost transparent final frame but still nonempty. Do not loop.
+
+### Projectile — projectile.png
+Draw the moving object centred on anchor (128,128), facing RIGHT along +X. Animate energy/flicker IN PLACE in an eight-frame loop; do not move it across the sheet. The viewer applies rotation and line/arc travel. The silhouette and mass stay stable, and frame 8 joins frame 1. No baked arc, long trail or target explosion.
+
+### Traînée — trail.png
+One small dissipating particle/puff at anchor (128,128), not an entire path. Eight frames, from bright coherent particle to faint residual dust, final frame nonempty. It is stamped behind the moving projectile. No camera movement, floor shadow or long baked trajectory.
+
+### Impact — impact.png
+One readable impact/explosion, centred at (128,128). Eight successive frames: initial contact, compressed flash, expansion, peak silhouette, fragments, fading energy, residual particles, faint final residue. One shot, at least 334 ms. Final frame remains nonempty. The anchor never moves; intensity expands around it. No screen-wide flash or obscuring the whole battlefield.
+
+### Aura / soin / protection — aura.png
+A compact eight-frame seamless loop at anchor (128,128). For a ground ring, use a 2:1 isometric ellipse centred at that anchor; for a vertical glow, declare that in the motif. Keep a clear centre so the actor remains readable. This is a short visual cue, not the duration or hit area of a gameplay buff.
+
+### Rayon — beam.png
+A horizontal beam from the LEFT edge midpoint (0,128) towards (256,128), eight-frame energy loop. It is stretched only along X and rotated by the viewer to join caster and target. Keep width/thickness stable, no circles or complex symbols that become distorted. No baked endpoint explosion; use impact.png separately. Unlike other parts, its anchor is (0,128).
+## Exact design-source JSON Schema
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"Spell FX design v1 — NOT a game import format","type":"object","properties":{"format":{"const":"dofus-lite-spell-fx-design"},"version":{"const":1},"runtimeImportable":{"const":false},"id":{"type":"string","minLength":1,"maxLength":60,"pattern":"^[a-z][a-z0-9-]*$"},"name":{"type":"string","minLength":1,"maxLength":80},"durationMs":{"type":"integer","minimum":100,"maximum":2000},"travel":{"type":"object","properties":{"kind":{"enum":["none","line","arc"]},"startMs":{"type":"integer","minimum":0,"maximum":2000},"endMs":{"type":"integer","minimum":0,"maximum":2000},"arcHeightPercent":{"type":"integer","minimum":0,"maximum":60}},"required":["kind","startMs","endMs","arcHeightPercent"],"additionalProperties":false},"layers":{"type":"array","minItems":1,"maxItems":6,"items":{"type":"object","properties":{"role":{"enum":["cast","projectile","trail","impact","aura","beam"]},"file":{"type":"string","minLength":1,"maxLength":60,"pattern":"^[a-z][a-z0-9-]*\\.png$"},"frames":{"type":"integer","minimum":1,"maximum":16},"fps":{"type":"integer","minimum":8,"maximum":60},"frameSize":{"const":256},"anchor":{"type":"object","properties":{"x":{"type":"integer","minimum":0,"maximum":255},"y":{"type":"integer","minimum":0,"maximum":255}},"required":["x","y"],"additionalProperties":false},"startMs":{"type":"integer","minimum":0,"maximum":2000},"endMs":{"type":"integer","minimum":1,"maximum":2000},"loop":{"type":"boolean"},"attachment":{"enum":["caster","target","projectile","path"]},"depth":{"enum":["behind","front"]},"rotation":{"enum":["none","path"]},"scalePercent":{"type":"integer","minimum":25,"maximum":200},"blend":{"enum":["normal","add"]}},"required":["role","file","frames","fps","frameSize","anchor","startMs","endMs","loop","attachment","depth","rotation","scalePercent","blend"],"additionalProperties":false}}},"required":["format","version","runtimeImportable","id","name","durationMs","travel","layers"],"additionalProperties":false}
+## Complete example (replace the visual identity, keep a coherent timeline)
+{
+  "format": "dofus-lite-spell-fx-design",
+  "version": 1,
+  "runtimeImportable": false,
+  "id": "example-projectile",
+  "name": "Orbe des braises",
+  "durationMs": 1500,
+  "travel": {
+    "kind": "arc",
+    "startMs": 350,
+    "endMs": 950,
+    "arcHeightPercent": 20
+  },
+  "layers": [
+    {
+      "role": "cast",
+      "file": "cast.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      },
+      "startMs": 0,
+      "endMs": 350,
+      "loop": false,
+      "attachment": "caster",
+      "depth": "front",
+      "rotation": "none",
+      "scalePercent": 100,
+      "blend": "normal"
+    },
+    {
+      "role": "projectile",
+      "file": "projectile.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      },
+      "startMs": 350,
+      "endMs": 950,
+      "loop": true,
+      "attachment": "projectile",
+      "depth": "front",
+      "rotation": "path",
+      "scalePercent": 45,
+      "blend": "normal"
+    },
+    {
+      "role": "trail",
+      "file": "trail.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      },
+      "startMs": 350,
+      "endMs": 1300,
+      "loop": false,
+      "attachment": "path",
+      "depth": "front",
+      "rotation": "none",
+      "scalePercent": 25,
+      "blend": "normal"
+    },
+    {
+      "role": "impact",
+      "file": "impact.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      },
+      "startMs": 950,
+      "endMs": 1400,
+      "loop": false,
+      "attachment": "target",
+      "depth": "front",
+      "rotation": "none",
+      "scalePercent": 100,
+      "blend": "normal"
+    }
+  ]
+}
+If an image tool is unavailable, return the manifest and the individual production prompts, clearly marking PNG generation as not done. Do not pretend the technical example is finished artwork for the theme.

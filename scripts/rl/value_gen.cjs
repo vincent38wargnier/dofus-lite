@@ -20,6 +20,12 @@
 //
 //   node scripts/rl/value_gen.cjs --out shards/c1-m0 --matches 1000 \
 //     --mode maison --seed0 0 --eps 0.08 [--model DIR] [--budget 4000]
+//
+// DAgger (--actor DIR_CLONE [--beta 0.5]): côté calculateur, le PROF calcule
+// TOUJOURS son action (= label, src 'search') mais l'action JOUÉE est celle du
+// clone avec proba 1−β. Les positions suivent donc la distribution du clone
+// (là où il se trompe) et chacune reçoit le verdict du prof. Sidecar: a = label
+// du prof, p = action jouée quand elle diffère.
 require('../ai_runtime.cjs');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -41,6 +47,9 @@ const LK = args.lk || 'l100'; // clé LOADOUTS du banc (l100 | l200 | l200gear)
 if (!sb.LOADOUTS[LK]) { console.error(`--lk inconnu: ${LK}`); process.exit(1); }
 if (args.budget) process.env.SB_BUDGET = args.budget; // AVANT tout searchDecide
 const JUDGE = args.model ? (sb.useValueModel(args.model), args.model) : 'heuristic';
+const ACTOR = args.actor || null;
+const BETA = Number(args.beta ?? 0.5);
+const clone = ACTOR ? require('./policy_net.cjs').makePolicyBot(ACTOR) : null;
 if (!OUT) { console.error('--out requis'); process.exit(1); }
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 
@@ -56,6 +65,10 @@ const streams = {
   // sentinelle 2.0 quand le joueur n'est pas un calculateur (maison/ε) —
   // cible dense « verdict du prof » (C2), en plus de l'issue z.
   sv: fs.createWriteStream(`${OUT}.sv.f32`),
+  // Action CHOISIE à chaque décision + qui l'a choisie (search|maison|eps).
+  // Sidecar OPTIONNEL (absent des shards générés avant 2026-10-12): matière
+  // première de la DISTILLATION (clone politique du prof) — ligne N ↔ record N.
+  act: fs.createWriteStream(`${OUT}.act.jsonl`),
 };
 function writeChunk(stream, buf) {
   return stream.write(buf) ? Promise.resolve() : new Promise((res) => stream.once('drain', res));
@@ -86,6 +99,7 @@ async function main() {
     let { state } = createGame({ mapId: map, seed: uid, fighters: sb.makeFighters(LK, CLS, CLS) });
     const rngs = {};
     const noiseRng = createRng(hashSeed(`eps:${uid}`));
+    const betaRng = createRng(hashSeed(`beta:${uid}`));
     const counters = { applies: 0, ms: 0, decisions: 0, endsSum: 0, invalid: 0 };
     const match = []; // { obs: Buffer, team }
     let guard = 0;
@@ -97,18 +111,27 @@ async function main() {
       const rec = { obs: Buffer.from(Buffer.from(buf.buffer, 0, buf.byteLength)), team: actor.team, sv: 2.0 };
       match.push(rec);
       const isSearchSide = MODE === 'self' || (MODE === 'search' && actor.id === searchId);
-      let action;
+      let action; let src;
       if (EPS > 0 && noiseRng.next() < EPS && (MODE !== 'search' || !isSearchSide)) {
         // ε AVANT la recherche: l'exploration ne paie pas un plan complet.
         // En mode search, le côté calculateur reste PROPRE (qualité du prof).
-        action = randomLegal(view, api, noiseRng);
+        action = randomLegal(view, api, noiseRng); src = 'eps';
       } else if (isSearchSide) {
-        action = sb.searchDecide(state, counters);
+        counters.candidates = null;
+        action = sb.searchDecide(state, counters); src = 'search';
         rec.sv = counters.lastSearchValue ?? 2.0; // verdict du prof à CETTE décision
+        rec.cand = counters.candidates; // classement complet du prof (cibles souples)
+        if (clone && betaRng.next() >= BETA) {
+          let played = null;
+          try { played = clone(view, api); } catch { played = null; }
+          if (played) { rec.label = action; action = played; }
+        }
       } else {
         try { action = api.maison() || { type: 'PASS' }; } catch { action = { type: 'PASS' }; }
+        src = 'maison';
       }
       const r = applyAction(state, action);
+      rec.src = src; rec.act = action; rec.ok = r.ok;
       state = r.ok ? r.state : applyAction(state, { type: 'PASS' }).state;
     }
     const aborted = !state.over;
@@ -124,18 +147,26 @@ async function main() {
     const vBuf = Buffer.alloc(match.length, isVal ? 1 : 0);
     const svBuf = Buffer.alloc(4 * match.length);
     const obsBufs = [];
+    const actLines = [];
     match.forEach((rec, k) => {
       const z = winner == null ? 0 : winner === rec.team ? 1 : -1;
       zBuf.writeFloatLE(z, 4 * k);
       mBuf.writeUInt32LE(SEED0 + i, 4 * k);
       svBuf.writeFloatLE(rec.sv, 4 * k);
       obsBufs.push(rec.obs);
+      const line = rec.label
+        ? { src: rec.src, ok: rec.ok, a: rec.label, p: rec.act } // DAgger: a = label prof, p = joué
+        : { src: rec.src, ok: rec.ok, a: rec.act };
+      // c = [[1re action, s0, s3|null], ...] — tous les candidats évalués par le prof.
+      if (rec.cand) line.c = rec.cand.map((x) => [x.a, Math.round(x.s0), x.s3 == null ? null : Math.round(x.s3)]);
+      actLines.push(JSON.stringify(line));
     });
     await writeChunk(streams.obs, Buffer.concat(obsBufs));
     await writeChunk(streams.z, zBuf);
     await writeChunk(streams.m, mBuf);
     await writeChunk(streams.v, vBuf);
     await writeChunk(streams.sv, svBuf);
+    await writeChunk(streams.act, Buffer.from(actLines.join('\n') + '\n'));
     records += match.length;
     if ((i + 1) % 10 === 0 || i === MATCHES - 1) {
       console.log(JSON.stringify({ mode: MODE, done: i + 1, records, wins, aborts,
@@ -151,6 +182,8 @@ async function main() {
     mode: MODE, cls: CLS, lk: LK, eps: EPS, seed0: SEED0, maps: MAPS, wins, aborts,
     searchVersion: sb.SEARCH_VERSION, judge: JUDGE, budget: Number(process.env.SB_BUDGET || 8000),
     valSplit: 'uid%17==0 (flag .v.u8 écrit à la génération)',
+    actions: true, // sidecar .act.jsonl (ligne N ↔ record N) — distillation
+    ...(ACTOR ? { actor: ACTOR, beta: BETA } : {}),
   };
   fs.writeFileSync(`${OUT}.meta.json.tmp`, JSON.stringify(meta));
   fs.renameSync(`${OUT}.meta.json.tmp`, `${OUT}.meta.json`);

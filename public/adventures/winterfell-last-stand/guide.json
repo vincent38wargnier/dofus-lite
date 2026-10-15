@@ -1,0 +1,231 @@
+{
+  "title": "Winterfell — Le Dernier Rempart",
+  "introduction": "Les portes intérieures sont fermées. Derrière elles : les blessés, les enfants et la dernière chaleur de Winterfell. Devant : trente-deux silhouettes, et aucun souffle.\n\nJon plante Grand-Griffe dans la neige. Brienne et Jaime tiennent les deux brèches. Tormund rit une dernière fois : « Enfin, ils sont assez nombreux ! » Melisandre rallume les quatre brasiers. Arya regarde au-delà des morts : le Roi de la Nuit approche.\n\nOBJECTIF — Tuez le Roi de la Nuit : son armée entière s’effondre avec lui. Gardez un passage pour Arya ; utilisez les barricades pour limiter les fronts. Les archers ne peuvent pas tirer au contact. Le feu et l’air exploitent les faiblesses des Marcheurs.\n\nDéfi facultatif : ramener les six héros. Attention aux zones de Tormund et Melisandre : elles touchent aussi leurs alliés. Adaptation tactique libre de la bataille de Winterfell, dans l’univers de Game of Thrones.",
+  "heroes": [
+    {
+      "name": "Jon Snow",
+      "role": "Rempart du Nord",
+      "description": "Tenir le passage, repousser un mort et ouvrir une brèche. Fort au contact ; portée courte et aucune guérison.",
+      "portrait": "../winterfell/assets/jon/portrait.png",
+      "spells": [
+        {
+          "name": "Tranchant de Grand-Griffe",
+          "description": "Une frappe fiable, sans zone ni effet caché.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 4
+        },
+        {
+          "name": "Tenir la porte",
+          "description": "Réduit les prochaines frappes. Protéger maintenant coûte une attaque.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "Serment de la Garde",
+          "description": "Renforce immédiatement les attaques de Jon ; 2 tours, 4 tours de relance.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "Brise-glace",
+          "description": "Une frappe suivie d’une poussée d’une case. Libère le passage ou provoque une collision.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "Ouvrir la brèche",
+          "description": "Retire 12 % de résistance terre pendant un tour. Utile contre le Roi de la Nuit, sans annuler son armure.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 2
+        },
+        {
+          "name": "Par-delà le rempart",
+          "description": "Un bond court pour tenir un passage ou rejoindre une cible. Ne provoque aucun dégât.\nContre-jeu : La destination doit être libre ; la relance interdit les bonds successifs.",
+          "pa": 4
+        }
+      ]
+    },
+    {
+      "name": "Arya Stark",
+      "role": "Lame des sans-visage",
+      "description": "Atteindre les archers, ouvrir une faiblesse, frapper et repartir. Mobile, mais sans soin ni armure.",
+      "portrait": "../winterfell/assets/arya/portrait.png",
+      "spells": [
+        {
+          "name": "La pointe d’Aiguille",
+          "description": "Estoc rapide. Deux lancers par cible et par tour.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "Baiser de verredragon",
+          "description": "Une frappe lourde à courte portée ; sa relance laisse une fenêtre à l’ennemi.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 4
+        },
+        {
+          "name": "Couteau dans la neige",
+          "description": "Attaque à distance moins puissante ; impossible au contact.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "Pas aujourd’hui",
+          "description": "Rejoint une case libre à trois cases au plus. La téléportation ne rend pas invisible.\nContre-jeu : La destination doit être libre ; la relance interdit les bonds successifs.",
+          "pa": 3
+        },
+        {
+          "name": "Une faille dans la glace",
+          "description": "Retire 10 % de résistance air pendant un tour. À lancer avant Aiguille.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 2
+        },
+        {
+          "name": "Le pas de la louve",
+          "description": "Gagne immédiatement 1 PM. Ne rembourse pas son coût en PA.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 2
+        }
+      ]
+    },
+    {
+      "name": "Melisandre",
+      "role": "Gardienne de la braise",
+      "description": "Choisir entre dégâts, soutien et soins. Le feu traverse la faiblesse du Sonneur ; les grandes flammes touchent aussi les alliés.",
+      "portrait": "../winterfell/assets/melisandre/portrait.png",
+      "spells": [
+        {
+          "name": "Une braise dans la nuit",
+          "description": "Trait de feu précis. Deux lancers par cible et par tour.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "La nuit est sombre",
+          "description": "Cercle de feu de rayon 1 : touche AUSSI les alliés. Visez une case vide pour prendre plusieurs morts.\nContre-jeu : Écartez les héros ; la zone est montrée au survol avant le lancer.",
+          "pa": 4
+        },
+        {
+          "name": "La dernière chaleur",
+          "description": "Soigne un allié ou Melisandre. Un seul soin par tour : impossible de tout réparer.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "Le rubis veille",
+          "description": "Petite armure et +10 % de résistance eau pour un allié, durant deux tours.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "Rallumer les vivants",
+          "description": "+8 dommages immédiats pour un allié. Choisissez celui qui va attaquer.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "Recule, ombre",
+          "description": "Une flamme repousse d’une case. Utile pour dégager Melisandre ; coûte un soin ou une attaque.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3
+        }
+      ]
+    },
+    {
+      "name": "Brienne de Torth",
+      "role": "Le serment tient",
+      "description": "Protégez le héros exposé, repoussez un mort et conservez une brèche. Sa protection demande un choix de cible.",
+      "portrait": "assets/brienne/portrait.png",
+      "spells": [
+        {
+          "name": "Féale ne plie pas",
+          "description": "Féale ne plie pas\nContre-jeu : Jouez autour de la portée, de la ligne de vue et des tours de relance.",
+          "pa": 4
+        },
+        {
+          "name": "Sous ma garde",
+          "description": "Une armure sur un allié ou Brienne durant deux tours. Réduction calculée avec les caractéristiques du lanceur.\nContre-jeu : Jouez autour de la portée, de la ligne de vue et des tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "Un pas en arrière",
+          "description": "Frappe terre puis pousse d’une case. Les collisions peuvent infliger des dégâts.\nContre-jeu : Jouez autour de la portée, de la ligne de vue et des tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "Un serment est un serment",
+          "description": "+50 puissance immédiatement, pendant un tour.\nContre-jeu : Jouez autour de la portée, de la ligne de vue et des tours de relance.",
+          "pa": 2
+        }
+      ]
+    },
+    {
+      "name": "Jaime Lannister",
+      "role": "Pour les vivants",
+      "description": "Une lame précise pour exploiter les faiblesses ouvertes par Arya. Sa garde est brève, sa main gauche doit trouver le bon angle.",
+      "portrait": "assets/jaime/portrait.png",
+      "spells": [
+        {
+          "name": "La main qui reste",
+          "description": "La main qui reste\nContre-jeu : Jouez autour de la portée, de la ligne de vue et des tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "Parade du Régicide",
+          "description": "Armure et +5 dommages immédiats pendant deux tours.\nContre-jeu : Jouez autour de la portée, de la ligne de vue et des tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "Le défaut de l’armure",
+          "description": "Retire 10 % de résistance air pendant un tour.\nContre-jeu : Jouez autour de la portée, de la ligne de vue et des tours de relance.",
+          "pa": 2
+        },
+        {
+          "name": "Je combats pour les vivants",
+          "description": "Rejoint une case libre à trois cases au plus.\nContre-jeu : Jouez autour de la portée, de la ligne de vue et des tours de relance.",
+          "pa": 4
+        }
+      ]
+    },
+    {
+      "name": "Tormund Fléau-d’Ogres",
+      "role": "Briseur de rangs",
+      "description": "Son balayage ouvre les rangs des morts, mais frappe aussi les vivants. Laissez-lui de la place.",
+      "portrait": "assets/tormund/portrait.png",
+      "spells": [
+        {
+          "name": "Faites de la place !",
+          "description": "Frappe en croix de rayon 1. Touche AUSSI les alliés : vérifiez la zone avant de cliquer.\nContre-jeu : Jouez autour de la portée, de la ligne de vue et des tours de relance.",
+          "pa": 4
+        },
+        {
+          "name": "Plus dure sera la chute",
+          "description": "Un coup puissant puis une poussée d’une case ; deux tours de relance.\nContre-jeu : Jouez autour de la portée, de la ligne de vue et des tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "Le dernier rire",
+          "description": "+70 puissance immédiatement, pendant deux tours.\nContre-jeu : Jouez autour de la portée, de la ligne de vue et des tours de relance.",
+          "pa": 3
+        },
+        {
+          "name": "Par-dessus leurs os",
+          "description": "+2 PM pendant un tour. Ne permet pas de traverser un ennemi.\nContre-jeu : Jouez autour de la portée, de la ligne de vue et des tours de relance.",
+          "pa": 3
+        }
+      ]
+    }
+  ],
+  "enemies": [
+    {
+      "name": "Le Roi de la Nuit",
+      "count": 1,
+      "hp": 4500
+    },
+    {
+      "name": "Marcheur blanc",
+      "count": 3,
+      "hp": 1250
+    },
+    {
+      "name": "Archer du givre",
+      "count": 8,
+      "hp": 420
+    },
+    {
+      "name": "Garde enseveli",
+      "count": 16,
+      "hp": 500
+    },
+    {
+      "name": "Limier des neiges mortes",
+      "count": 4,
+      "hp": 480
+    }
+  ]
+}

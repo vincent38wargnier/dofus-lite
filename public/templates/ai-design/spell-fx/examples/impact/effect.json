@@ -1,0 +1,35 @@
+{
+  "format": "dofus-lite-spell-fx-design",
+  "version": 1,
+  "runtimeImportable": false,
+  "id": "example-impact",
+  "name": "Onde de choc",
+  "durationMs": 1500,
+  "travel": {
+    "kind": "none",
+    "startMs": 0,
+    "endMs": 0,
+    "arcHeightPercent": 0
+  },
+  "layers": [
+    {
+      "role": "impact",
+      "file": "impact.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      },
+      "startMs": 0,
+      "endMs": 450,
+      "loop": false,
+      "attachment": "target",
+      "depth": "front",
+      "rotation": "none",
+      "scalePercent": 100,
+      "blend": "normal"
+    }
+  ]
+}

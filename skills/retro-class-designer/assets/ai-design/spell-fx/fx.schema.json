@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Spell FX design v1 — NOT a game import format",
+  "type": "object",
+  "properties": {
+    "format": {
+      "const": "dofus-lite-spell-fx-design"
+    },
+    "version": {
+      "const": 1
+    },
+    "runtimeImportable": {
+      "const": false
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60,
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "durationMs": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 2000
+    },
+    "travel": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "none",
+            "line",
+            "arc"
+          ]
+        },
+        "startMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000
+        },
+        "endMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000
+        },
+        "arcHeightPercent": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 60
+        }
+      },
+      "required": [
+        "kind",
+        "startMs",
+        "endMs",
+        "arcHeightPercent"
+      ],
+      "additionalProperties": false
+    },
+    "layers": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "enum": [
+              "cast",
+              "projectile",
+              "trail",
+              "impact",
+              "aura",
+              "beam"
+            ]
+          },
+          "file": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "pattern": "^[a-z][a-z0-9-]*\\.png$"
+          },
+          "frames": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 16
+          },
+          "fps": {
+            "type": "integer",
+            "minimum": 8,
+            "maximum": 60
+          },
+          "frameSize": {
+            "const": 256
+          },
+          "anchor": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              },
+              "y": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              }
+            },
+            "required": [
+              "x",
+              "y"
+            ],
+            "additionalProperties": false
+          },
+          "startMs": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2000
+          },
+          "endMs": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2000
+          },
+          "loop": {
+            "type": "boolean"
+          },
+          "attachment": {
+            "enum": [
+              "caster",
+              "target",
+              "projectile",
+              "path"
+            ]
+          },
+          "depth": {
+            "enum": [
+              "behind",
+              "front"
+            ]
+          },
+          "rotation": {
+            "enum": [
+              "none",
+              "path"
+            ]
+          },
+          "scalePercent": {
+            "type": "integer",
+            "minimum": 25,
+            "maximum": 200
+          },
+          "blend": {
+            "enum": [
+              "normal",
+              "add"
+            ]
+          }
+        },
+        "required": [
+          "role",
+          "file",
+          "frames",
+          "fps",
+          "frameSize",
+          "anchor",
+          "startMs",
+          "endMs",
+          "loop",
+          "attachment",
+          "depth",
+          "rotation",
+          "scalePercent",
+          "blend"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "format",
+    "version",
+    "runtimeImportable",
+    "id",
+    "name",
+    "durationMs",
+    "travel",
+    "layers"
+  ],
+  "additionalProperties": false
+}

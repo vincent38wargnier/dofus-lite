@@ -50,10 +50,11 @@ export async function verifyArtworkPixels(file, definition) {
     const context = canvas.getContext('2d'); context.drawImage(img, 0, 0);
     const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
     const frameSize = definition.frameSize || SPEC.frameSize;
+    const frameWidth = definition.width ? definition.width / definition.frames : frameSize, frameHeight = definition.height || frameSize;
     for (let frame = 0; frame < definition.frames; frame++) {
       let visible = false, transparent = false;
-      for (let y = 0; y < frameSize; y++) for (let x = 0; x < frameSize; x++) {
-        const alpha = pixels[(y * canvas.width + frame * frameSize + x) * 4 + 3];
+      for (let y = 0; y < frameHeight; y++) for (let x = 0; x < frameWidth; x++) {
+        const alpha = pixels[(y * canvas.width + frame * frameWidth + x) * 4 + 3];
         if (alpha) visible = true;
         if (!alpha) transparent = true;
       }
@@ -93,6 +94,45 @@ export async function importCharacterArtwork(inputFiles, name) {
     tx.onabort = tx.onerror = () => reject(new Error('Sauvegarde des images impossible. Votre apparence précédente est conservée.'));
   });
   return id;
+}
+
+// Replace one sheet without losing the others. On the very first import,
+// rasterize the built-in idle poses as usable placeholders, so an artist can
+// work file by file. Every revision has a new ID for saved replays/copies.
+export async function importCharacterArtworkStep(currentId, file, filename, name) {
+  const definition = SPEC.files.find(entry => entry.name === filename);
+  if (!definition) throw new Error('Image de personnage inconnue.');
+  if (!file?.size || file.size > MAX_ARTWORK_FILE_BYTES) throw new Error(`${filename} : maximum 2 Mio par PNG.`);
+  const next = new File([file], filename, { type: 'image/png' });
+  await verifyArtworkPixels(next, validateArtworkPng(filename, await next.arrayBuffer()));
+  const builtin = builtInCharacterArtwork(currentId || '');
+  const source = currentId && !builtin ? await readCharacterArtwork(currentId) : null;
+  const images = { ...(source?.images || {}) };
+  if (!source) {
+    const defaults = builtin || { images: Object.fromEntries(SPEC.files.filter(f => f.required).map(f => [f.name,
+      characterShapeImage('wanderer', '#5b8ebf', { pose: f.pose, back: f.direction === 'L', frames: f.frames })])) };
+    for (const entry of SPEC.files.filter(f => f.required && f.name !== filename)) {
+      const image = new Image(); image.src = defaults.images[entry.name]; await image.decode();
+      const canvas = document.createElement('canvas'); canvas.width = 256; canvas.height = 256;
+      canvas.getContext('2d').drawImage(image, 0, 0, 256, 256);
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+      if (!blob) throw new Error('Impossible de préparer les images de départ.');
+      images[entry.name] = blob;
+    }
+  }
+  images[filename] = next;
+  return importCharacterArtwork(Object.entries(images).filter(([key]) => SPEC.files.some(f => f.name === key))
+    .map(([key, blob]) => new File([blob], key, { type: 'image/png' })), name);
+}
+
+export async function importSpellIcon(file, name) {
+  if (!file.size || file.size > MAX_ARTWORK_FILE_BYTES) throw new Error('Icône : maximum 2 Mio.');
+  const buffer = await file.arrayBuffer(), bytes = new Uint8Array(buffer), view = new DataView(buffer);
+  if (bytes.length < 24 || !signature.every((n, i) => bytes[i] === n) || view.getUint32(16) !== 64 || view.getUint32(20) !== 64) throw new Error('Icône : PNG de 64 × 64 pixels requis.');
+  await verifyArtworkPixels(file, { width: 64, height: 64, frames: 1, pose: 'portrait' });
+  const id = window.crypto?.randomUUID?.() || `icon-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  await writeArtworkRecords([{ id, version: 1, name, images: { 'icons/custom.png': file } }]);
+  return { iconArtworkId: id, iconFile: 'icons/custom.png' };
 }
 
 export async function readCharacterArtwork(id) {

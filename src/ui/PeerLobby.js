@@ -1,3 +1,4 @@
+import { encounterCapacity } from '../engine/encounters';
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, Check, Copy, Crown, Globe2, Link2, MessageCircle, Plus, Send, Shield, Swords, Users, X } from 'lucide-react';
 import { RetroPortrait } from './RetroAssets';
@@ -38,7 +39,7 @@ export function PeerFightBar({ room }) {
   </div>;
 }
 
-export default function PeerLobby({ profiles, customCharacters = [], customDungeons = [], character, settings, encounterName, initialCode, room, createRoom, onReset, onClose }) {
+export default function PeerLobby({ adventure, profiles, customCharacters = [], customDungeons = [], character, settings, encounterName, initialCode, room, createRoom, onReset, onClose }) {
   const ref = useRef(null), output = useRef(null), dragCandidate = useRef(null);
   const [direction, setDirection] = useState(initialCode ? 'guest' : 'host');
   const [selectedId, setSelectedId] = useState(character.id), [input, setInput] = useState(initialCode || '');
@@ -48,8 +49,10 @@ export default function PeerLobby({ profiles, customCharacters = [], customDunge
   const [gameUrl, setGameUrl] = useState(() => process.env.REACT_APP_PUBLIC_GAME_URL || `${window.location.origin}${window.location.pathname}`);
   const choices = profiles?.length ? profiles : [character], selected = choices.find(p => p.id === selectedId) || character;
   const summary = resolveLoadout(selected.classId, selected.loadout);
+  const restricted = !!room?.settings?.adventure;
+  const readyAdventure = direction === 'host' && !!adventure;
   const connected = room?.confirmed, host = room?.role === 'host';
-  const customMonsters = [...new Map(customDungeons.flatMap(d => d.members.filter(m => m.customMonster).map(m => [m.customMonster.key, m])).map(x => x)).values()];
+  const customMonsters = [...new Map(customDungeons.flatMap(d => (d.rooms || [d]).flatMap(r => r.members.filter(m => m.customMonster).map(m => [m.customMonster.key, m])))).values()];
   useEffect(() => {
     const dialog = ref.current, previous = document.activeElement, overflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden'; dialog.showModal();
@@ -84,8 +87,8 @@ export default function PeerLobby({ profiles, customCharacters = [], customDunge
     <div className="peer-lobby-body">
       {!room && <>
         <div className="peer-tabs" role="group" aria-label="Connexion avec des amis"><button type="button" aria-pressed={direction === 'host'} onClick={() => setDirection('host')}><Crown size={18} />Créer un salon</button><button type="button" aria-pressed={direction === 'guest'} onClick={() => setDirection('guest')}><ArrowRight size={18} />Rejoindre un salon</button></div>
-        <section><h3>Votre premier personnage</h3><div className="peer-characters">{choices.map(choice => <button type="button" key={choice.id || choice.name} aria-pressed={selected === choice} onClick={() => setSelectedId(choice.id)}><CharacterCard character={choice} />{selected === choice && <Check size={17} />}</button>)}</div></section>
-        {direction === 'host' ? <div className="peer-encounter"><Shield size={26} /><div><strong>{settings.mode === 'duel' ? 'Duel entre amis' : 'Aventure en équipe'}</strong><p>{encounterName}</p><small>Vous pourrez tous ajouter des personnages et des monstres, choisir leur camp et leur contrôle. 8 combattants maximum par équipe.</small></div></div>
+        {!readyAdventure && <section><h3>Votre premier personnage</h3><div className="peer-characters">{choices.map(choice => <button type="button" key={choice.id || choice.name} aria-pressed={selected === choice} onClick={() => setSelectedId(choice.id)}><CharacterCard character={choice} />{selected === choice && <Check size={17} />}</button>)}</div></section>}
+        {direction === 'host' ? <div className="peer-encounter"><Shield size={26} /><div><strong>{settings.mode === 'duel' ? 'Duel entre amis' : 'Aventure en équipe'}</strong><p>{encounterName}</p><small>{readyAdventure ? 'Les héros sont fournis. Invitez vos amis puis attribuez-leur un héros. Le groupe et les équipements restent ceux de l’auteur.' : 'Vous pourrez tous ajouter des personnages et des monstres, choisir leur camp et leur contrôle. 8 combattants maximum par équipe.'}</small></div></div>
           : <label className="field">Invitation de l’hôte<textarea autoFocus rows={3} aria-label="Invitation de votre ami" placeholder="Collez le lien ou le code RT1.…" value={input} onChange={event => setInput(event.target.value)} /></label>}
       </>}
       {room && <div className={`peer-status${room.fault ? ' failed' : ''}`} role="status" data-peer-status={room.status}><span className="peer-status-dot" /><strong>{labels[room.status]}</strong>{host && <small>Vous êtes l’hôte</small>}</div>}
@@ -95,7 +98,8 @@ export default function PeerLobby({ profiles, customCharacters = [], customDunge
           {p.id === 'host' ? <Crown size={16} /> : <Users size={16} />}<span><strong>{p.name}{p.id === room.selfId ? ' · Vous' : ''}</strong><small>{!p.connected ? 'Déconnecté' : p.id === 'host' ? 'Hôte' : p.ready ? 'Prêt' : 'Se prépare'}</small></span>
           {host && p.id !== 'host' && <button type="button" disabled={locked} aria-label={`Retirer le participant ${p.name}`} onClick={() => run(() => room.removeParticipant(p.id))}><X size={14} /></button>}
         </div>)}{host && !room.invitation && room.participants.length < 8 && <button type="button" className="btn" disabled={locked} onClick={() => run(() => room.invite({ stun, typedIp }))}><Link2 size={16} />Inviter un ami</button>}</div>
-        <p className="peer-map"><Globe2 size={15} />{MAPS[room.settings.mapId]?.name.replace(/^🗺\s*/, '')}<span>Le combat tourne chez l’hôte</span></p>
+        {restricted && <p className="peer-help"><strong>Aventure prête à jouer</strong> · L’hôte répartit les héros avec « Configurer → Joueur ». Les équipements, les camps et les ennemis sont imposés.</p>}
+        <p className="peer-map"><Globe2 size={15} />{(room.settings.battlefield?.name || MAPS[room.settings.mapId]?.name)?.replace(/^🗺\s*/, '')}<span>Le combat tourne chez l’hôte</span></p>
       </>}
       {room?.code && (host ? room.invitation : !connected) && <section className="peer-share">
         <div className="peer-section-heading"><h3>{host ? 'Invitez un ami · un lien par invité' : 'Renvoyez cette réponse à l’hôte'}</h3>{host && <button type="button" className="btn" onClick={() => room.cancelInvite()}>Annuler l’invitation</button>}</div>
@@ -108,23 +112,23 @@ export default function PeerLobby({ profiles, customCharacters = [], customDunge
       </section>}
       {connected && <>
         <div className="peer-teams">{['A', 'B'].map(target => <section key={target} className={`peer-team team-${target}`} aria-label={`Équipe ${target}`} data-peer-team={target}
-          onDragOver={e => { if (!locked && dragCandidate.current && Array.from(e.dataTransfer.types).includes(OPPONENT_DRAG_TYPE)) { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; } }}
-          onDrop={e => { e.preventDefault(); if (!locked && dragCandidate.current) add(dragCandidate.current, target); }}>
-          <div className="peer-section-heading"><h3>{target === 'A' ? <Shield size={19} /> : <Swords size={19} />}Équipe {target}<span>{room.units.filter(u => u.team === target).length}/8</span></h3><button type="button" className="btn" disabled={locked || room.units.filter(u => u.team === target).length >= 8} onClick={() => { setTeam(target); setCatalogue(true); }} aria-label={`Ajouter à l’équipe ${target}`}><Plus size={17} /></button></div>
+          onDragOver={e => { if (!locked && !restricted && dragCandidate.current && Array.from(e.dataTransfer.types).includes(OPPONENT_DRAG_TYPE)) { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; } }}
+          onDrop={e => { e.preventDefault(); if (!locked && !restricted && dragCandidate.current) add(dragCandidate.current, target); }}>
+          <div className="peer-section-heading"><h3>{target === 'A' ? <Shield size={19} /> : <Swords size={19} />}Équipe {target}<span>{room.units.filter(u => u.team === target).length}/{encounterCapacity(room.settings.encounter, target)}</span></h3>{!restricted && <button type="button" className="btn" disabled={locked || room.units.filter(u => u.team === target).length >= encounterCapacity(room.settings.encounter, target)} onClick={() => { setTeam(target); setCatalogue(true); }} aria-label={`Ajouter à l’équipe ${target}`}><Plus size={17} /></button>}</div>
           {room.units.filter(u => u.team === target).map(unit => {
-            const editable = host || unit.owner === room.selfId, name = unitName(unit.member), owner = room.participants.find(p => p.id === unit.owner);
+            const editable = (host || unit.owner === room.selfId) && (!restricted || unit.team === 'A'), name = unitName(unit.member), owner = room.participants.find(p => p.id === unit.owner);
             return <article className="peer-unit" key={unit.id} data-peer-unit={unit.id}><UnitPortrait member={unit.member} /><div><strong>{name}</strong><small>{owner?.name} · {unit.controller === 'ai' ? 'IA' : 'Manuel'}</small>
-              {editable && <details><summary>Configurer</summary><div className="peer-unit-settings"><label>Camp<select aria-label={`Camp de ${name}`} disabled={locked} value={unit.team} onChange={e => configure(unit, { team: e.target.value })}><option>A</option><option>B</option></select></label>
-                <label>Contrôle<select aria-label={`Contrôle de ${name}`} disabled={locked} value={unit.controller} onChange={e => configure(unit, { controller: e.target.value })}><option value="player">Manuel</option><option value="ai">IA</option></select></label>
+              {editable && <details><summary>Configurer</summary><div className="peer-unit-settings">{!restricted && <label>Camp<select aria-label={`Camp de ${name}`} disabled={locked} value={unit.team} onChange={e => configure(unit, { team: e.target.value })}><option>A</option><option>B</option></select></label>}
+                <label>Contrôle<select aria-label={`Contrôle de ${name}`} disabled={locked} value={unit.controller} onChange={e => configure(unit, { controller: e.target.value })}><option value="player">Manuel</option>{(!restricted || room.settings.adventure.allowAI) && <option value="ai">IA</option>}</select></label>
                 {host && <label>Joueur<select aria-label={`Joueur de ${name}`} disabled={locked} value={unit.owner} onChange={e => configure(unit, { owner: e.target.value })}>{room.participants.map(p => <option key={p.id} value={p.id} disabled={!p.connected}>{p.name}</option>)}</select></label>}
-              </div></details>}</div>{editable && <button type="button" className="peer-remove-unit" disabled={locked} aria-label={`Retirer ${name}`} onClick={() => run(() => room.edit({ kind: 'remove', id: unit.id }))}><X size={15} /></button>}</article>;
+              </div></details>}</div>{editable && !restricted && <button type="button" className="peer-remove-unit" disabled={locked} aria-label={`Retirer ${name}`} onClick={() => run(() => room.edit({ kind: 'remove', id: unit.id }))}><X size={15} /></button>}</article>;
           })}
           {!room.units.some(u => u.team === target) && <p className="peer-empty">Ajoutez un personnage ou un monstre.</p>}
         </section>)}</div>
-        {catalogue && <section className="peer-catalogue"><div className="peer-section-heading"><h3>Ajouter des combattants</h3><button type="button" className="btn" onClick={() => setCatalogue(false)} aria-label="Fermer le catalogue"><X size={17} /></button></div>
+        {catalogue && !restricted && <section className="peer-catalogue"><div className="peer-section-heading"><h3>Ajouter des combattants</h3><button type="button" className="btn" onClick={() => setCatalogue(false)} aria-label="Fermer le catalogue"><X size={17} /></button></div>
           <div className="peer-tabs" role="group" aria-label="Camp des nouveaux combattants">{['A', 'B'].map(t => <button type="button" key={t} aria-pressed={team === t} onClick={() => setTeam(t)}>Ajouter à l’équipe {t}</button>)}</div>
           <DuelComposer profiles={choices} customCharacters={customCharacters} opponents={[]} mapId={room.settings.mapId} hideTerrain allied allBots={[]}
-            onAddCandidate={entry => add(entry)} onCandidateDrag={entry => { dragCandidate.current = entry; }} catalogueFull={locked || room.units.length >= 16} />
+            onAddCandidate={entry => add(entry)} onCandidateDrag={entry => { dragCandidate.current = entry; }} catalogueFull={locked || room.units.filter(u => u.team === team).length >= encounterCapacity(room.settings.encounter, team)} />
           {!!customMonsters.length && <div className="peer-custom-monsters"><h3>Mes créatures personnalisées</h3>{customMonsters.map(m => <button className="btn" type="button" key={m.customMonster.key} disabled={locked} onClick={() => add(m)}><Plus size={15} />{m.customMonster.name}</button>)}</div>}
         </section>}
         <details className="peer-lobby-chat"><summary><MessageCircle size={16} />Discussion du salon{room.chat.length ? ` (${room.chat.length})` : ''}</summary><PeerChat room={room} /></details>

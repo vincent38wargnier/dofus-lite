@@ -6,6 +6,8 @@ Version 1 · 10 October 2026 · target: this repository's imported Retro data an
 
 **Delivery status:** the game has a graphical new-spell editor and a one-file class/dungeon ZIP importer, including optional character/creature artwork and spell icons. Importable packages use `content.json`; see [the runtime ZIP contract](runtime-zip.md). The older `class.json` schema and example described in this document remain a separate design-kit format, not directly browser-importable. Their design principles and frozen Retro comparison data still apply. Custom Flash effects/audio are not imported. Technical validation is not a certification of balance.
 
+**Executable checks:** the kit now bundles the actual game validators and reference data. With Node.js 20+, run `node scripts/validate.cjs package final.zip` from the extracted skill directory. It checks spell/class and equipment/outfit budgets, equipped snapshots, FM, supplied adventure heroes and assets without the repository or npm. See [validation.md](validation.md) for individual equipment/character commands and the JSON report.
+
 ## 1. Separate three questions
 
 | Gate | Question | Evidence |
@@ -217,6 +219,8 @@ For a later progression profile, require explicit rows for grades 1–6, unlock 
 
 ## 7. Art and presentation
 
+For the current runtime and AI image prompts, open [the visual production guide](../assets/ai-design/START-HERE.md) or its [offline gallery](../assets/ai-design/index.html). It includes one prompt per sprite/animation, spell icons, equipment design and exact map guides. Map scenery and arbitrary equipment PNGs remain design-only; the ZIP importers do not load them. The table below belongs to the legacy example; runtime artwork and icons are optional unless declared.
+
 All character PNGs use 256 × 256 frames. Ground anchor: **(128, 224)** in each frame. Frame order is left to right. Preserve scale, feet position, costume, and silhouette across poses.
 
 | File under `artwork/` | Size | Frames / rate | Required |
@@ -236,6 +240,8 @@ Use a distinct silhouette, readable poses at the real game scale, no clipped wea
 Custom artwork currently supplies the whole character appearance. Layered hats/capes/pets and custom animation attachments need a separate renderer contract; statistics from equipped items still apply. Do not promise automatic equipment overlays on arbitrary imported sprites.
 
 For v1, `presentation.animationSpellId` references an existing local client spell animation and its sound behavior. The proposed importer must verify the reference and bind it separately from the custom spell's logical ID. No arbitrary SWF, JavaScript, remote URL, executable asset, or custom sound file is accepted by this ZIP contract. New bespoke spell FX/audio require a future version with explicit duration, anchoring and sound limits.
+
+Original spell FX can now be **authored and previewed as design sources** using [spell-fx-design.md](spell-fx-design.md), prompts 17–23 and the [offline animation viewer](../assets/ai-design/spell-fx/index.html). The kit supplies six layer templates, four examples, a closed `effect.json` schema and `scripts/check-spell-fx.cjs`. This is a separate proposed visual format, not a game import feature; the current playable contract still uses `visualSpellId` and the legacy example uses `presentation.animationSpellId`.
 
 Keep an art rights/attribution statement in `credits`. The included example uses the repository's neutral demonstration character, not a newly generated finished themed character. Its repeated placeholder icon is deliberate; create distinct final icons before publication.
 

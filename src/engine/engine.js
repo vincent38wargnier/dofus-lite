@@ -22,6 +22,8 @@ import {
   CLASSES, SUMMONS, getSummon, resolveSpellLoadout, FIGHTER_LEVEL, DEFAULT_BUFF_TURNS,
 } from './classes';
 import { MAPS } from './maps';
+import { resolveCustomMap } from './customMaps';
+import { encounterCapacity, isArmy, validCombatEncounter } from './encounters';
 import { getMonster } from './monsters';
 import { resolveCustomMonster } from './customMonsters';
 import {
@@ -37,7 +39,7 @@ import {
 import { resolveLoadout, applySpellModifiers } from './equipment';
 
 export const MAX_TURNS = 40;
-export const COMBAT_RULES_VERSION = 10;
+export const COMBAT_RULES_VERSION = 11;
 export { FIGHTER_LEVEL };
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
@@ -221,12 +223,12 @@ function saveRng(state, rng) {
 
 // Keep archived zones intact. Arenas with only one departure gain adjacent,
 // reachable cells when a team needs more room, never taking the opposing zone.
-function teamStartingCells(map, counts) {
+function teamStartingCells(map, counts, army = false) {
   const zones = clone(map.startingCells);
   const reserved = new Set(zones.flat().map(p => key(p.x, p.y)));
   zones.forEach((cells, i) => {
     if (cells.length >= counts[i]) return;
-    if (map.placement.status === 'client') throw new Error('Ce groupe dépasse les cases de placement de la salle.');
+    if (map.placement.status === 'client' && !army) throw new Error('Ce groupe dépasse les cases de placement de la salle.');
     if (!cells.length) throw new Error(`Missing starting cells: ${map.id}`);
     const { costs } = bfs(cells[0], map.width * map.height, map.width, map.height,
       (x, y) => !!map.obstacles[key(x, y)]?.blocksMove);
@@ -242,15 +244,19 @@ function teamStartingCells(map, counts) {
   return zones;
 }
 
-export function createGame({ mapId = 'arene', seed = 1, fighters, placement = false }) {
-  const map = MAPS[mapId];
+export function createGame({ mapId = 'arene', battlefield, encounter, seed = 1, fighters, placement = false }) {
+  if (!validCombatEncounter(encounter)) throw new Error('Règles de rencontre invalides.');
+  const map = battlefield ? resolveCustomMap(battlefield) : MAPS[mapId];
   if (!map) throw new Error(`Unknown map: ${mapId}`);
+  if (map.id !== mapId) throw new Error('Map identity mismatch');
   if (!fighters || fighters.length < 2) throw new Error('Need at least 2 fighters');
   const configs = fighters.map((cfg, i) => ({ ...cfg, id: cfg.id || `F${i + 1}`, team: cfg.team || cfg.id || `F${i + 1}` }));
   const teams = [...new Set(configs.map(f => f.team))];
-  if (teams.length !== 2 || teams.some(team => configs.filter(f => f.team === team).length > 8)) {
-    throw new Error('Need two teams of at most 8 fighters');
+  if (isArmy(encounter) && teams.includes('A') && teams.includes('B')) teams.sort();
+  if (teams.length !== 2 || teams.some((team, index) => configs.filter(f => f.team === team).length > encounterCapacity(encounter, index ? 'B' : 'A'))) {
+    throw new Error(isArmy(encounter) ? 'Armée : 8 alliés et 32 ennemis maximum.' : 'Need two teams of at most 8 fighters');
   }
+  if (encounter?.commanderId && !configs.some(f => f.id === encounter.commanderId && f.team === teams[1])) throw new Error('Commandant adverse introuvable.');
   if (new Set(configs.map(f => f.id)).size !== configs.length) throw new Error('Duplicate fighter id');
 
   const rng = createRng(seed);
@@ -260,14 +266,16 @@ export function createGame({ mapId = 'arene', seed = 1, fighters, placement = fa
   const zoneIndex = team => swapZones ? 1 - teams.indexOf(team) : teams.indexOf(team);
   const counts = [0, 0];
   configs.forEach(f => { counts[zoneIndex(f.team)]++; });
-  const zones = teamStartingCells(map, counts);
+  const zones = teamStartingCells(map, counts, isArmy(encounter));
   const occupiedStarts = new Set();
   const state = {
     rulesVersion: COMBAT_RULES_VERSION,
     seed,
     rngState: 0,
     mapId,
-    board: { width: map.width, height: map.height, obstacles: clone(map.obstacles) },
+    ...(encounter ? { encounter: clone(encounter) } : {}),
+    board: { width: map.width, height: map.height, obstacles: clone(map.obstacles),
+      ...(battlefield ? { name: map.name, originalVisuals: true, background: clone(map.background) } : {}) },
     phase: placement ? 'placement' : 'combat',
     placement: { cells: {}, ready: {}, source: { ...clone(map.placement),
       ...(zones.some((cells, i) => cells.length > map.startingCells[i].length) ? { expanded: true } : {}) } },
@@ -293,7 +301,8 @@ export function createGame({ mapId = 'arene', seed = 1, fighters, placement = fa
     if (!cells?.length) throw new Error(`Missing starting cells: ${mapId}`);
     state.placement.cells[id] = clone(cells);
     state.placement.ready[id] = !placement;
-    const cell = placementRng.pick(cells.filter(p => !occupiedStarts.has(key(p.x, p.y))));
+    const availableCells = cells.filter(p => !occupiedStarts.has(key(p.x, p.y)));
+    const cell = isArmy(encounter) && cfg.team === teams[1] ? availableCells[0] : placementRng.pick(availableCells);
     occupiedStarts.add(key(cell.x, cell.y));
     const pos = { x: cell.x, y: cell.y };
     const equipment = !monster && cfg.loadout ? resolveLoadout(cfg.classId, cfg.loadout) : null;
@@ -303,10 +312,12 @@ export function createGame({ mapId = 'arene', seed = 1, fighters, placement = fa
       team: cfg.team,
       leader: true,
       isSummon: false,
+      ...(encounter?.commanderId && cfg.team === teams[1] && cfg.id !== encounter.commanderId ? { defeatWith: encounter.commanderId } : {}),
       isMonster: !!monster,
       name: cfg.name || cls.name,
       botName: cfg.botName || null,
       classId: monster ? null : cls.id,
+      ...(typeof cfg.className === 'string' && cfg.className.trim() ? { className: cfg.className.trim().slice(0, 100) } : {}),
       level: monster ? monster.level : FIGHTER_LEVEL,
       pos: { ...pos },
       startPos: { ...pos },
@@ -620,9 +631,9 @@ function applyDamage(state, events, sourceId, targetId, amount, label, opts = {}
     events.push({ t: 'death', fighter: targetId });
     removeCasterEffects(state, events, targetId);
     for (const dependent of fighterList(state)) if (dependent.hp > 0
-      && (dependent.revivedBy === targetId || dependent.ownerId === targetId)) {
+      && (dependent.revivedBy === targetId || dependent.ownerId === targetId || dependent.defeatWith === targetId)) {
       applyDamage(state, events, targetId, dependent.id, dependent.hp,
-        dependent.ownerId === targetId ? 'Mort de l’invocateur' : 'Fin de Laisse Spirituelle', { erosion: false });
+        dependent.defeatWith === targetId ? 'Chute du commandant' : dependent.ownerId === targetId ? 'Mort de l’invocateur' : 'Fin de Laisse Spirituelle', { erosion: false });
     }
     if (!state.over && !fighterList(state).some(f => f.leader && f.team === target.team && f.hp > 0)) {
       state.over = true;
@@ -994,6 +1005,7 @@ function doCast(state, events, spell, target, trigger = null) {
   events.push({
     t: trigger ? 'hazard_effect' : 'cast', fighter: f.id, spell: spell.key, spellId: trigger?.visualSpellId || spell.id, grade: spell.grade,
     ...(spell.visualSpellId ? { visualSpellId: spell.visualSpellId } : {}),
+    ...(spell.visualEffect ? { visualEffect: clone(spell.visualEffect) } : {}),
     spellName: spell.name,
     itemId: spell.itemId || null, weaponAnimation: spell.isWeapon ? spell.animation : null,
     emoji: spell.emoji, element: spell.element, from: casterPos,
@@ -1577,9 +1589,10 @@ export function getView(state, fighterId) {
     hidden: f.team !== me.team && isInvisible(f),
     monsterId: f.monsterId || null,
     ownerId: f.ownerId || null,
+    defeatWith: f.defeatWith || null,
     name: f.name,
     classId: f.classId,
-    className: f.isMonster ? f.customMonster?.name || getMonster(f.monsterId, f.monsterGrade)?.name : CLASSES[f.classId]?.name || f.name,
+    className: f.isMonster ? f.customMonster?.name || getMonster(f.monsterId, f.monsterGrade)?.name : f.className || CLASSES[f.classId]?.name || f.name,
     level: f.level,
     pos: { ...(isInvisible(f) && f.team !== me.team ? f.lastVisiblePos || f.startPos || f.pos : f.pos) },
     hp: f.hp,
@@ -1603,6 +1616,7 @@ export function getView(state, fighterId) {
       id: s.id,
       grade: s.grade,
       ...(s.visualSpellId ? { visualSpellId: s.visualSpellId, description: s.description } : {}),
+      ...(s.visualEffect ? { visualEffect: clone(s.visualEffect), description: s.description } : {}),
       ...(s.iconArtworkId ? { iconArtworkId: s.iconArtworkId, iconFile: s.iconFile } : {}),
       unsupportedEffects: s.unsupportedEffects || [],
       usesPerTarget: s.usesPerTarget || 0,

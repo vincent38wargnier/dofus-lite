@@ -70,7 +70,7 @@ test('a self-targeted spell can follow a targeted spell immediately', () => {
   const spellbar = within(container.querySelector('.spellbar'));
   fireEvent.click(spellbar.getByText('Puissance'));
   fireEvent.click(container.querySelector('.token.side-A.targetable .figure'));
-  const guide = spellbar.getByRole('button', { name: /Guide de Bravoure/ });
+  const guide = spellbar.getByRole('button', { name: /^Guide de Bravoure —/ });
   expect(guide).toBeEnabled();
   fireEvent.click(guide);
   expect(actions.mock.results.at(-1).value.events).toEqual(expect.arrayContaining([

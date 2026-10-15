@@ -1,7 +1,9 @@
 require('./ai_runtime.cjs');
 const fs = require('node:fs');
 const path = require('node:path');
-const { packageExample } = require('../src/content/contentPackage');
+const { packageExample, compileContentManifest } = require('../src/content/contentPackage');
+const { newCustomEquipment, equipCustomItem } = require('../src/engine/customEquipment');
+const { replaceEquipment } = require('../src/engine/forgedItems');
 const { buildContentPrompt, packageSpecDocument, PACKAGE_RULES } = require('../src/content/packagePrompt');
 const { EQUIPMENT_CREATION_RULES } = require('../src/content/equipmentRules');
 const { writeContentZip } = require('../src/content/zip');
@@ -18,6 +20,12 @@ const { validateFiles } = require('./content-pack.cjs');
     + 'Each family has contiguous inclusive level bands; omitted stat limits are zero. '
     + 'These are design references, not additional content.json fields.\n');
   fs.writeFileSync(path.join(root, 'equipment-limits.json'), JSON.stringify(spec.equipment, null, 2) + '\n');
+  const equipment = { ...newCustomEquipment(7143), id: 1000000001, name: 'Coiffe des braises', level: 200,
+    stats: { vitalite: 200, force: 40, damage: 5 } };
+  const character = compileContentManifest(packageExample('class'), { newId: () => 'validation-example' }).entry;
+  character.loadout = replaceEquipment(equipCustomItem(character.loadout, 'hat', equipment), 'hat', equipment.id);
+  fs.writeFileSync(path.join(root, 'example-equipment.json'), JSON.stringify(equipment, null, 2) + '\n');
+  fs.writeFileSync(path.join(root, 'example-character.json'), JSON.stringify(character, null, 2) + '\n');
   for (const type of ['class', 'dungeon']) {
     const manifest = packageExample(type);
     const files = new Map([['content.json', new Uint8Array(Buffer.from(JSON.stringify(manifest, null, 2)))]]);

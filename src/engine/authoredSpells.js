@@ -1,5 +1,6 @@
 /* global globalThis */
 import LIBRARY from './spellLibrary.json';
+import { validSpellVisual } from '../visuals/spellVisuals';
 import { spellBalance, spellBudgetErrors, MAX_SPELL_SCORE } from './spellBalance';
 
 // Version one deliberately uses declarative effects already handled by combat
@@ -98,7 +99,8 @@ export function authoredSpellErrors(raw, { forStorage = false } = {}) {
   check(typeof raw.name === 'string' && raw.name.trim().length >= 1 && raw.name.length <= 80, 'Donnez un nom au sort (80 caractères maximum).');
   check(typeof raw.description === 'string' && raw.description.length <= 800, 'Description : 800 caractères maximum.');
   check(raw.grade === 6 && raw.requiredLevel === AUTHORED_LEVEL, 'Les nouveaux sorts utilisent le grade 6 au niveau 200.');
-  check(integer(raw.visualSpellId, 1, 1000000) && !!LIBRARY.spells[raw.visualSpellId], 'Choisissez un visuel dans le catalogue des sorts de classe.');
+  check(raw.visualEffect != null ? validSpellVisual(raw.visualEffect)
+    : integer(raw.visualSpellId, 1, 1000000) && !!LIBRARY.spells[raw.visualSpellId], 'Choisissez un visuel valide (animation originale ou catalogue).');
   check(integer(raw.pa, 1, 8), 'Coût : de 1 à 8 PA.');
   check(integer(raw.rangeMin, 0, 12) && integer(raw.rangeMax, 0, 12) && raw.rangeMin <= raw.rangeMax, 'Portée : de 0 à 12, avec minimum ≤ maximum.');
   check(has(SPELL_TARGETS, raw.targetMode), 'Choisissez une cible valide.');

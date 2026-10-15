@@ -1,0 +1,226 @@
+[
+  {
+    "key": "brienne",
+    "frames": [
+      {
+        "name": "portrait.png",
+        "source": [
+          2172,
+          724
+        ],
+        "crop": [
+          0,
+          9,
+          691,
+          715
+        ],
+        "scale": 0.34685314685314683,
+        "anchor": null
+      },
+      {
+        "name": "idle-front.png",
+        "source": [
+          2172,
+          724
+        ],
+        "crop": [
+          140,
+          5,
+          436,
+          714
+        ],
+        "scale": 0.2857142857142857,
+        "anchor": [
+          128,
+          224
+        ]
+      },
+      {
+        "name": "idle-back.png",
+        "source": [
+          2172,
+          724
+        ],
+        "crop": [
+          106,
+          6,
+          548,
+          710
+        ],
+        "scale": 0.2857142857142857,
+        "anchor": [
+          128,
+          224
+        ]
+      }
+    ]
+  },
+  {
+    "key": "jaime",
+    "frames": [
+      {
+        "name": "portrait.png",
+        "source": [
+          2172,
+          724
+        ],
+        "crop": [
+          0,
+          10,
+          698,
+          714
+        ],
+        "scale": 0.3473389355742297,
+        "anchor": null
+      },
+      {
+        "name": "idle-front.png",
+        "source": [
+          2172,
+          724
+        ],
+        "crop": [
+          96,
+          0,
+          546,
+          717
+        ],
+        "scale": 0.28451882845188287,
+        "anchor": [
+          128,
+          224
+        ]
+      },
+      {
+        "name": "idle-back.png",
+        "source": [
+          2172,
+          724
+        ],
+        "crop": [
+          59,
+          0,
+          614,
+          711
+        ],
+        "scale": 0.28451882845188287,
+        "anchor": [
+          128,
+          224
+        ]
+      }
+    ]
+  },
+  {
+    "key": "tormund",
+    "frames": [
+      {
+        "name": "portrait.png",
+        "source": [
+          2172,
+          724
+        ],
+        "crop": [
+          3,
+          5,
+          720,
+          718
+        ],
+        "scale": 0.34444444444444444,
+        "anchor": null
+      },
+      {
+        "name": "idle-front.png",
+        "source": [
+          2172,
+          724
+        ],
+        "crop": [
+          124,
+          3,
+          464,
+          714
+        ],
+        "scale": 0.2857142857142857,
+        "anchor": [
+          128,
+          224
+        ]
+      },
+      {
+        "name": "idle-back.png",
+        "source": [
+          2172,
+          724
+        ],
+        "crop": [
+          107,
+          4,
+          526,
+          710
+        ],
+        "scale": 0.2857142857142857,
+        "anchor": [
+          128,
+          224
+        ]
+      }
+    ]
+  },
+  {
+    "key": "night-king",
+    "frames": [
+      {
+        "name": "portrait.png",
+        "source": [
+          2172,
+          724
+        ],
+        "crop": [
+          11,
+          5,
+          713,
+          716
+        ],
+        "scale": 0.3463687150837989,
+        "anchor": null
+      },
+      {
+        "name": "idle-front.png",
+        "source": [
+          2172,
+          724
+        ],
+        "crop": [
+          189,
+          8,
+          439,
+          708
+        ],
+        "scale": 0.288135593220339,
+        "anchor": [
+          128,
+          224
+        ]
+      },
+      {
+        "name": "idle-back.png",
+        "source": [
+          2172,
+          724
+        ],
+        "crop": [
+          237,
+          7,
+          389,
+          704
+        ],
+        "scale": 0.288135593220339,
+        "anchor": [
+          128,
+          224
+        ]
+      }
+    ]
+  }
+]

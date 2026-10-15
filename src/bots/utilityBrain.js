@@ -13,6 +13,8 @@ import { bfs } from '../engine/pathfinding';
 import { critDivisor, pointRemovalScores, pointRemovalChance, statBuffTotal, healAmount } from '../engine/formulas';
 import { effectAcceptsTarget } from '../engine/engine';
 import { DAMAGE_KINDS, expectedHit, spellDamage, castsRemaining, bestBudget, areaAimCells, casterAfterSpell } from './tactics';
+import { matchesPlanKind } from './visualGraph';
+import { MAISON_STAGES, MAISON_DEFAULTS } from './maisonStages';
 
 export const DEFAULT_WEIGHTS = {
   // valeur des effets
@@ -90,8 +92,15 @@ function kitInfo(f, target = null) {
 }
 
 // Une décision: le meilleur (sort | déplacement | fin de tour) pour l'état vu.
-export function utilityDecide(view, api, weights) {
+function* utilitySteps(view, api, weights, options = {}) {
+  // @maison-stage:profile
+  const settings = { ...MAISON_DEFAULTS, ...options.pipeline };
   const W = { ...DEFAULT_WEIGHTS, ...(TUNED || {}), ...(weights || {}) };
+  const report = options.diagnostics;
+  if (report) Object.assign(report, { weights: { ...W }, settings: { ...settings }, stages: [], candidates: [], selected: { type: 'PASS' } });
+  const stage = (id, data) => { const result = { stage: id, ...data }; if (report) report.stages.push(result); return result; };
+  yield stage('profile', report ? { summary: `${view.you.classId} · ${view.enemy?.classId || 'groupe'} · ${Object.keys(W).length} priorités`, weights: { ...W } } : null);
+  // @maison-stage:observe
   const you = view.you;
   const board = view.board;
   const enemies = (view.enemies || []).filter((e) => e.hp > 0);
@@ -119,6 +128,9 @@ export function utilityDecide(view, api, weights) {
     return occupied.has(key(x, y));
   };
 
+  yield stage('observe', report ? { summary: `${enemies.length} ennemis · ${allies.length} alliés · ${obstacles.size} obstacles`, enemies: enemies.length, allies: allies.length, obstacles: obstacles.size } : null);
+  // @maison-stage:target
+
   // Movement uses pathfinding; an attack uses range, alignment and LoS.
   // Flood-filling PM+range wrongly treats projectiles as walking actors and
   // excludes our occupied cell, making the CURRENT position look risk-free.
@@ -141,7 +153,7 @@ export function utilityDecide(view, api, weights) {
   const powerOf = v => threats.find(t => t.e.id === v.id)?.power || 0;
   const dependents = v => {
     const ids = new Set([v.id]); let changed;
-    do { changed = false; for (const enemy of enemies) if (!ids.has(enemy.id) && ids.has(enemy.ownerId)) { ids.add(enemy.id); changed = true; } } while (changed);
+    do { changed = false; for (const enemy of enemies) if (!ids.has(enemy.id) && (ids.has(enemy.ownerId) || ids.has(enemy.defeatWith))) { ids.add(enemy.id); changed = true; } } while (changed);
     return enemies.filter(e => e.id !== v.id && ids.has(e.id));
   };
   const groupPower = v => powerOf(v) + dependents(v).reduce((n, e) => n + powerOf(e), 0);
@@ -149,6 +161,11 @@ export function utilityDecide(view, api, weights) {
   leader = [...(roots.length ? roots : enemies)].sort((a, b) =>
     (groupPower(b) + 30) / Math.sqrt(Math.max(30, b.hp)) / (1 + dist(you.pos, b.pos) * .05)
     - (groupPower(a) + 30) / Math.sqrt(Math.max(30, a.hp)) / (1 + dist(you.pos, a.pos) * .05))[0];
+  if (settings.targetPolicy !== 'threat') {
+    const visible = enemies.filter(e => !e.hidden && !e.carriedBy);
+    if (visible.length) leader = [...visible].sort((a,b) => settings.targetPolicy === 'nearest'
+      ? dist(you.pos,a.pos) - dist(you.pos,b.pos) : a.hp - b.hp)[0];
+  }
   const myKit = kitInfo(you, leader);
   const maxPower = Math.max(40, ...roots.map(groupPower));
   const goalCosts = bfs(leader.pos, board.width * board.height, board.width, board.height,
@@ -237,6 +254,9 @@ export function utilityDecide(view, api, weights) {
     return Math.min(cur, points * p);
   };
 
+  yield stage('target', report ? { summary: `${leader.name} · ${dependents(leader).length} dépendant(s)`, target: { id: leader.id, name: leader.name, dependents: dependents(leader).length, threat: groupPower(leader) }, retreating } : null);
+  // @maison-stage:spells
+
   // ---- score d'un jeu de lignes d'effets sur une cible ----------------
   const scoreRows = (rows, spell, targetPos, fromPos) => {
     let score = 0;
@@ -283,7 +303,7 @@ export function utilityDecide(view, api, weights) {
             } else {
               // tir allié (ou sur soi): fortement pénalisé
               const self = v.id === you.id ? 1.2 : 1;
-              score -= 1.1 * self * W.damage * (Math.min(dmg, v.hp) / DMG_REF) * proba;
+              score -= settings.friendlyFire * self * W.damage * (Math.min(dmg, v.hp) / DMG_REF) * proba;
             }
             score -= hit.recoil / DMG_REF * (1 + 2 * (1 - hpRatio)) * proba;
             if (hit.recoil >= you.hp) score -= W.kill * 3;
@@ -370,7 +390,8 @@ export function utilityDecide(view, api, weights) {
               continue;
             }
             if (v.team !== you.team) { score -= W.buff * factor; continue; }
-            if (!hasBuffNamed(v, spell.name)) score += W.buff * factor * (engaged ? 1 : .35) * proba * (v.id === you.id ? 1 : .8);
+            if (!hasBuffNamed(v, spell.name)) score += W.buff * factor * (engaged ? 1 : .35) * proba
+              * (v.id === you.id ? 1 : (W.summonBoost && v.isSummon ? 1 + W.summonBoost : .8));
           }
           break;
         }
@@ -390,7 +411,13 @@ export function utilityDecide(view, api, weights) {
             if (v.team === you.team) continue;
             const exp = expectedRemoval(v, e.p1 || 1, 'pm');
             // priver de PM un kit de mêlée qui doit nous atteindre, c'est de l'or
-            const vsKit = kitInfo(v).ideal <= 2 ? 1.4 : 0.8;
+            const vKit = kitInfo(v);
+            let vsKit = vKit.ideal <= 2 ? 1.4 : 0.8;
+            // Verrou de kite (leçon du playtest: cinglante à répétition rend
+            // un 2-PM incapable d'atteindre un 4-PM): quand NOTRE portée
+            // surclasse la sienne, lui ôter des PM lui ôte le combat entier.
+            // Gardé par W.pmLock (défaut absent → inerte).
+            if (W.pmLock && myKit.ideal > 2 && vKit.maxReach + 1 < myKit.maxReach) vsKit *= 1 + W.pmLock;
             score += W.removePm * exp * vsKit * (v.leader ? 1 : 0.3)
               * (e.kind === 'stealPm' ? 1.3 : 1) * proba;
           }
@@ -468,7 +495,16 @@ export function utilityDecide(view, api, weights) {
           );
           if (!active) {
             const pressure = incomingAt(fromPos) > 0;
-            score += W.armor * (pressure ? 1.2 : 0.4) * (e.p1 === 108 ? 1.3 : 0.9) * proba;
+            let timing = pressure ? 1.2 : 0.4;
+            // Timing du châtiment (règle Sacrieur): à lancer quand l'ennemi VA
+            // frapper — plus la frappe attendue est lourde, plus il paie; s'il
+            // ne peut pas nous atteindre, on repousse (Furie/buffs d'attaque
+            // scorent via le cas buff). Gardé par W.punishTiming (inerte à 0).
+            if (W.punishTiming) {
+              const expected = incomingAt(fromPos) / Math.max(1, you.maxHp);
+              timing = pressure ? 1.2 + W.punishTiming * Math.min(1.5, expected * 4) : 0.15;
+            }
+            score += W.armor * timing * (e.p1 === 108 ? 1.3 : 0.9) * proba;
           }
           break;
         }
@@ -559,6 +595,26 @@ export function utilityDecide(view, api, weights) {
           for (const v of victims) if (v.hidden && v.team !== you.team) score += W.buff * victimValue(v) * proba;
           break;
         }
+        case 'spellBoost': {
+          // Booster un sort (ex: Tir Puissant du Cra) ne vaut que par les
+          // relances du sort boosté pendant la durée. Gardé par
+          // W.spellBoostValue (défaut absent → inerte: maison inchangée).
+          if (!W.spellBoostValue) break;
+          const boosted = (you.spells || []).find(s => s.id === e.p1);
+          if (!boosted) break;
+          const active = (you.effects || []).some(x => x.kind === 'spellBoost' && x.boostSpell === e.p1 && x.turnsLeft > 1);
+          if (active) break;
+          const paLeft = Math.max(0, you.pa - spell.pa);
+          const castsNow = (boosted.cooldownLeft || 0) > 0 || (boosted.usesLeft ?? 99) <= 0 ? 0
+            : Math.min(Math.floor(paLeft / Math.max(1, boosted.pa)), boosted.usesPerTurn || 99);
+          const castsPerTurn = Math.min(Math.floor(you.basePa / Math.max(1, boosted.pa)),
+            boosted.usesPerTurn || 99, boosted.cooldown > 0 ? 1 : 99);
+          const totalCasts = castsNow + castsPerTurn * Math.max(0, Math.min((e.duration || 1) - 1, 2));
+          const engagedNow = dist(you.pos, leader.pos) <= you.basePm + myKit.maxReach + 2;
+          score += W.spellBoostValue * W.damage * ((e.p3 || 0) * totalCasts / DMG_REF)
+            * (engagedNow ? 1 : 0.4) * proba;
+          break;
+        }
         default:
           break;
       }
@@ -578,6 +634,15 @@ export function utilityDecide(view, api, weights) {
       score = score * (1 - p) + scoreRows(s.critEffects, s, targetPos, fromPos) * p;
     }
     if (s.failRate > 0) score *= 1 - 1 / s.failRate;
+    // Discipline d'invisibilité (Sram): seuls une arme ou une ligne de dégâts
+    // directs révèlent (engine.js:988). Invisible, on préfère pièges/poison/
+    // poussée; un coup qui révèle doit VALOIR la révélation (il garde son
+    // bonus de kill). Gardé par W.stealth (défaut absent → inerte).
+    if (W.stealth && you.hidden) {
+      const reveals = s.isWeapon || (s.effects || []).some(
+        (e) => ['damage', 'lifeSteal', 'fixedLifeSteal', 'punitionDamage'].includes(e.kind));
+      score *= reveals ? Math.max(0.3, 1 - W.stealth) : 1 + W.stealth * 0.25;
+    }
     // valeur-par-PA (Nao divise l'influence par le coût en PA)
     score *= 1 + W.paEfficiency * (1 / Math.max(1, s.pa) - 0.15);
     // Multiplicateur par sort (appris par matchup: « ce sort-là compte »)
@@ -604,11 +669,11 @@ export function utilityDecide(view, api, weights) {
       if (isTeleport) {
         // téléportation = déplacement: viser les meilleures cases
         cells.sort((a, b) => positionScore(b) - positionScore(a));
-        targets.push(...cells.slice(0, 3));
+        targets.push(...cells.slice(0, settings.freeCellAims));
       } else {
         // invocation/piège: près de l'ennemi, plus une case défensive
         cells.sort((a, b) => dist(a, leader.pos) - dist(b, leader.pos));
-        targets.push(...cells.slice(0, 3));
+        targets.push(...cells.slice(0, settings.freeCellAims));
         const defensive = [...cells].sort((a, b) => dist(a, you.pos) - dist(b, you.pos))[0];
         if (defensive) targets.push(defensive);
       }
@@ -625,8 +690,11 @@ export function utilityDecide(view, api, weights) {
     }
   }
 
+  yield stage('spells', report ? { summary: `${candidates.length} couples sort / case évalués`, candidates: candidates.length, spells: new Set(candidates.map(c => c.spell.key)).size } : null);
+  // @maison-stage:combos
   const continuationCache = new Map();
   const continuation = (candidate, from = you.pos) => {
+    if (!settings.combosEnabled) return 0;
     const first = candidate.spell;
     const target = first.targetMode === 'self' ? from : candidate.target;
     const cacheKey = `${first.key}:${key(target.x, target.y)}:${key(from.x, from.y)}`;
@@ -639,7 +707,7 @@ export function utilityDecide(view, api, weights) {
       const rank = v => (v.pos.x === target.x && v.pos.y === target.y ? 4 : 0)
         + victimValue(v) / (1 + dist(from, v.pos) * .1);
       return rank(b) - rank(a);
-    }).slice(0, 3);
+    }).slice(0, settings.forecastTargets);
     if (boosted.pa > 0) for (const victim of forecastTargets) {
       const dealt = spellDamage(first, you, victim, fighters, target, from);
       const remaining = Math.max(0, victim.hp - dealt);
@@ -663,7 +731,7 @@ export function utilityDecide(view, api, weights) {
       }
       const damage = bestBudget(options, boosted.pa);
       let forecast = W.damage * Math.min(remaining, damage) / DMG_REF * victimValue(victim);
-      if (dealt > 0 && damage >= remaining) forecast += killValue(victim) * .7;
+      if (dealt > 0 && damage >= remaining) forecast += killValue(victim) * (W.lethalDrive || .7);
       value = Math.max(value, forecast);
     }
     continuationCache.set(cacheKey, value); return value;
@@ -673,7 +741,7 @@ export function utilityDecide(view, api, weights) {
   // Deux seuils distincts: les PA sont PERDUS en fin de tour, donc tout
   // lancer à valeur positive mérite d'être joué (seuil quasi nul); un
   // déplacement, lui, doit VALOIR le coup (anti-va-et-vient).
-  const CAST_FLOOR = 0.012;
+  const CAST_FLOOR = settings.castFloor;
   let bestCast = { score: CAST_FLOOR, action: null };
   let bestMove = { score: outOfPa ? W.endTurn * 0.5 : W.endTurn, action: null };
 
@@ -681,6 +749,7 @@ export function utilityDecide(view, api, weights) {
   // Otherwise a large zone repeats the same budget search on dozens of cells.
   const legalBySpell = new Map();
   for (const c of [...candidates].sort((a, b) => b.score - a.score)) {
+    if (!matchesPlanKind(c.spell, options.kind, options.spellKey)) continue;
     if (legalBySpell.has(c.spell.key)) continue;
     if (!api.canCast(c.spell.key, c.target).ok) continue;
     legalBySpell.set(c.spell.key, c);
@@ -689,19 +758,24 @@ export function utilityDecide(view, api, weights) {
     // A useless spell must never be selected just to inherit the value of an
     // attack that was already available (e.g. empty heals before a killing hit).
     if (c.score <= CAST_FLOOR) continue;
-    const sc = c.score + .85 * continuation(c);
+    const sc = c.score + settings.continuationWeight * continuation(c);
+    if (report) report.candidates.push({ action: api.cast(c.spell.key, c.target), name: c.spell.name,
+      score: sc, immediate: c.score, continuation: sc - c.score, cost: c.spell.pa });
     if (sc > bestCast.score) bestCast = { score: sc, action: api.cast(c.spell.key, c.target) };
   }
 
+  yield stage('combos', report ? { summary: `${legalBySpell.size} lancers légaux · ${settings.combosEnabled ? 'anticipation active' : 'effets immédiats seuls'}`, legalSpells: legalBySpell.size, bestCast: { ...bestCast }, enabled: settings.combosEnabled } : null);
+  // @maison-stage:movement
+
   // ---- déplacements: Δposition + meilleur sort débloqué ----------------
-  if (you.pm > 0) {
+  if (settings.movementEnabled && you.pm > 0 && (!options.kind || options.kind === 'auto')) {
     const here = positionScore(you.pos);
     const escape = api.tackleInfo();
     // candidats triés par score décroissant → premier légal = max
     const perSpell = new Map();
     const sorted = [...candidates].sort((a, b) => b.score - a.score).filter(candidate => {
       const count = perSpell.get(candidate.spell.key) || 0;
-      perSpell.set(candidate.spell.key, count + 1); return count < 4;
+      perSpell.set(candidate.spell.key, count + 1); return count < settings.moveAims;
     });
     const bestFrom = (c, exact = false) => {
       const options = [];
@@ -717,8 +791,8 @@ export function utilityDecide(view, api, weights) {
         if (immediate > CAST_FLOOR) options.push({ cand, immediate });
       }
       if (!exact) return Math.max(0, ...options.map(o => o.immediate));
-      return Math.max(0, ...options.sort((a, b) => b.immediate - a.immediate).slice(0, 3)
-        .map(o => o.immediate + .85 * continuation(o.cand, c)));
+      return Math.max(0, ...options.sort((a, b) => b.immediate - a.immediate).slice(0, settings.moveFollowups)
+        .map(o => o.immediate + settings.continuationWeight * continuation(o.cand, c)));
     };
 
     const moves = api.reachable().map(cell => {
@@ -730,7 +804,7 @@ export function utilityDecide(view, api, weights) {
         }
       }
       return { ...cell, position, estimate: position + W.lookahead * bestFrom(cell.pos) };
-    }).sort((a, b) => b.estimate - a.estimate).slice(0, 6);
+    }).sort((a, b) => b.estimate - a.estimate).slice(0, settings.moveCells);
     for (const cell of moves) {
       // Weight the GAIN from moving, not the whole spell again. In particular,
       // a monster's lookahead > 1 must not make a pointless move beat casting
@@ -741,15 +815,52 @@ export function utilityDecide(view, api, weights) {
       // With an invisible opponent, probe one step and re-plan. A failed move
       // then identifies only the attempted cell, not an entire unknown path.
       const destination = enemies.some(e => e.hidden) ? cell.path[1] || cell.pos : cell.pos;
+      if (report && api.canMove(destination).ok) report.candidates.push({ action: api.move(destination),
+        name: 'Déplacement', score: sc, position: cell.position, continuation: sc - cell.position, cost: cell.cost });
       if (sc > bestMove.score && api.canMove(destination).ok) bestMove = { score: sc, action: api.move(destination) };
     }
   }
 
+  yield stage('movement', report ? { summary: settings.movementEnabled ? `${report.candidates.filter(c => c.action.type === 'MOVE').length} déplacements comparés` : 'Déplacements désactivés', bestMove: { ...bestMove }, enabled: settings.movementEnabled } : null);
+  // @maison-stage:choose
+
   // Un sort qui vaut au moins autant que le déplacement passe d'abord
   // (après le sort, on re-décide: le déplacement reste possible).
-  const action = bestCast.action && bestCast.score >= bestMove.score ? bestCast.action
+  const action = bestCast.action && (settings.preferCast ? bestCast.score >= bestMove.score : bestCast.score > bestMove.score) ? bestCast.action
     : bestMove.action || bestCast.action || api.endTurn();
-  return api.rememberDecision ? api.rememberDecision(action) : action;
+  if (report) Object.assign(report, { selected: action, target: { id: leader.id, name: leader.name,
+    dependents: dependents(leader).length, threat: groupPower(leader) }, retreating,
+    candidates: report.candidates.sort((a,b)=>b.score-a.score).slice(0,12),
+    thresholds: { cast: CAST_FLOOR, move: outOfPa ? W.endTurn * .5 : W.endTurn },
+    explanation: 'Scores heuristiques, pas des dégâts : effets utiles + enchaînement estimé ; déplacement = gain de position + attaques débloquées. Les portées, PA et relances sont vérifiés par le moteur.' });
+  const chosen = api.rememberDecision ? api.rememberDecision(action) : action;
+  yield stage('choose', report ? { summary: `${chosen.type} · lancer ${bestCast.score.toFixed(3)} / déplacement ${bestMove.score.toFixed(3)}`, action: chosen, castScore: bestCast.score, moveScore: bestMove.score } : { action: chosen });
+  return chosen;
+  // @maison-stage:end
+}
+
+// Native Maison and the visual graph execute this exact same generator.
+export function utilityDecide(view, api, weights, options = {}) {
+  const steps = utilitySteps(view, api, weights, options);
+  let result = steps.next();
+  while (!result.done) result = steps.next();
+  return result.value;
+}
+
+export function createUtilitySession(view, api, weights, options = {}) {
+  const steps = utilitySteps(view, api, weights, options);
+  let index = 0, finished = null;
+  return { step(id) {
+    if (MAISON_STAGES[index]?.id !== id) throw new Error('Les étapes Maison doivent suivre leur ordre de calcul.');
+    index++;
+    const result = finished || steps.next();
+    if (result.done) {
+      finished = result;
+      return { stage: id, skipped: true, summary: 'Aucun ennemi vivant : calcul inutile.', ...(id === 'choose' ? { action: result.value } : {}) };
+    }
+    if (result.value.stage !== id) throw new Error('Étape Maison incohérente.');
+    return result.value;
+  } };
 }
 
 export default utilityDecide;

@@ -1,6 +1,8 @@
 import { applyAction, createGame, currentFighter, placeFighter, readyFighter, spellsOf, getView } from '../engine/engine';
 import { customDungeonRoster } from '../engine/customDungeons';
 import { MAPS } from '../engine/maps';
+import { validCombatEncounter } from '../engine/encounters';
+import { customMapErrors } from '../engine/customMaps';
 import { BOSSES, monsterGrades, POUTCH_ID, monsterDecide } from '../engine/monsters';
 import { createRng, hashSeed } from '../engine/rng';
 import { makeBotApi } from '../bots/api';
@@ -20,8 +22,12 @@ export const stateHash = state => crc32(new TextEncoder().encode(canonical(state
 export function peerSettings(input) {
   check(input && ['duel', 'boss', 'custom', 'kanojedo'].includes(input.mode), 'Mode de combat P2P inconnu.');
   check(Number.isSafeInteger(input.seed) && input.seed >= 0 && input.seed <= 0xffffffff, 'Graine P2P invalide.');
-  check(typeof input.mapId === 'string' && own(MAPS, input.mapId), 'Carte P2P inconnue.');
+  check(typeof input.mapId === 'string' && (input.battlefield
+    ? input.mode === 'custom' && input.mapId === input.battlefield.id && !customMapErrors(input.battlefield).length
+    : own(MAPS, input.mapId)), 'Carte P2P inconnue.');
   const value = { mode: input.mode, mapId: input.mapId, seed: input.seed };
+  if (input.encounter != null) { check(input.mode === 'custom' && validCombatEncounter(input.encounter), 'Mode armée invalide.'); value.encounter = JSON.parse(JSON.stringify(input.encounter)); }
+  if (input.battlefield) value.battlefield = JSON.parse(JSON.stringify(input.battlefield));
   if (input.mode === 'boss') {
     check(BOSSES.some(boss => boss.id === input.bossId) && monsterGrades(input.bossId).some(g => g.grade === input.bossGrade), 'Donjon ou niveau inconnu.');
     value.bossId = input.bossId; value.bossGrade = input.bossGrade;
@@ -29,6 +35,17 @@ export function peerSettings(input) {
   if (input.mode === 'kanojedo') {
     check(monsterGrades(POUTCH_ID).some(g => g.grade === input.monsterGrade), 'Niveau de Poutch inconnu.');
     value.monsterGrade = input.monsterGrade;
+  }
+  if (input.adventure != null) {
+    check(input.mode === 'custom' && typeof input.adventure.name === 'string' && input.adventure.name.length <= 200 && typeof input.adventure.allowAI === 'boolean', 'Règles d’aventure P2P invalides.');
+    value.adventure = { name: input.adventure.name, allowAI: input.adventure.allowAI };
+  }
+  if (input.campaign != null) {
+    const c = input.campaign;
+    check(input.mode === 'custom' && c && Number.isInteger(c.count) && c.count >= 1 && c.count <= 20
+      && Number.isInteger(c.roomIndex) && c.roomIndex >= 0 && c.roomIndex < c.count
+      && ['title', 'name', 'intro', 'outro'].every(key => typeof c[key] === 'string' && c[key].length <= (['intro', 'outro'].includes(key) ? 3000 : 200)), 'Progression P2P invalide.');
+    value.campaign = Object.fromEntries(['title', 'name', 'intro', 'outro', 'roomIndex', 'count'].map(key => [key, c[key]]));
   }
   return value;
 }
@@ -52,7 +69,7 @@ export class PeerMatch {
     const fighters = units.map(unit => {
       const n = ++counts[unit.team], id = `${unit.team}${n === 1 ? '' : n}`;
       this.owners[id] = unit.owner; this.controllers[id] = unit.controller;
-      return { ...customDungeonRoster({ name: 'Salon', mapId: settings.mapId, members: [unit.member] })[0], id, team: unit.team };
+      return { ...customDungeonRoster({ name: 'Salon', mapId: settings.mapId, battlefield: settings.battlefield, members: [unit.member] })[0], id, team: unit.team };
     });
     this.humanIds = new Set(Object.keys(this.owners).filter(id => this.owners[id] === localParticipant && this.controllers[id] === 'player'));
     this.localId = [...this.humanIds][0] || Object.keys(this.owners).find(id => this.owners[id] === localParticipant) || 'A';
@@ -60,7 +77,7 @@ export class PeerMatch {
     if (snapshot) { this.state = snapshot.state; this.initialEvents = snapshot.events; }
     else {
       check(localParticipant === 'host', 'Seul l’hôte crée le combat.');
-      const init = createGame({ mapId: settings.mapId, seed: settings.seed, placement: true, fighters });
+      const init = createGame({ mapId: settings.mapId, battlefield: settings.battlefield, encounter: settings.encounter, seed: settings.seed, placement: true, fighters });
       this.state = init.state; this.initialEvents = [...init.events];
       for (const fighter of fighters.filter(f => this.controllers[f.id] === 'ai')) {
         const result = readyFighter(this.state, fighter.id); this.state = result.state; this.initialEvents.push(...result.events);

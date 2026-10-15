@@ -32,7 +32,7 @@ test.each([false, true])('Tester forwards the current dungeon to the shared comb
   localStorage.setItem(CREATIONS_STORAGE, JSON.stringify({ ...emptyCreations(), dungeons: [dungeon] }));
   const launch = jest.fn(), prepare = jest.fn();
   render(app(launch, prepare));
-  fireEvent.change(screen.getByLabelText('Nom du donjon'), { target: { value: 'Dernière version de ma salle' } });
+  fireEvent.change(screen.getByRole('textbox', { name: 'Nom du donjon' }), { target: { value: 'Dernière version de ma salle' } });
   openTest();
   expect(prepare).toHaveBeenCalledWith(saved().dungeons[0]);
   expect(prepare.mock.calls[0][0]).not.toBe(dungeon);
@@ -47,29 +47,30 @@ test('name a new class, select ten spells, replace one, and keep the chosen name
   fireEvent.click(screen.getByRole('tab', { name: /Mes classes/ }));
   fireEvent.click(screen.getByRole('button', { name: 'Nouvelle classe' }));
   expect(saved().characters[0].loadout.spells.custom).toEqual([]);
-  fireEvent.change(screen.getByLabelText('Nom de la classe'), { target: { value: '   ' } });
+  fireEvent.change(screen.getByRole('textbox', { name: 'Nom de la classe' }), { target: { value: '   ' } });
   openTest();
   expect(screen.getByRole('button', { name: 'Jouer cette création' })).toBeDisabled();
   closeDialog();
-  fireEvent.change(screen.getByLabelText('Nom de la classe'), { target: { value: 'Gardien des flammes' } });
+  fireEvent.change(screen.getByRole('textbox', { name: 'Nom de la classe' }), { target: { value: 'Gardien des flammes' } });
   section('Apparence');
   fireEvent.click(screen.getByRole('button', { name: 'Forme Gardien' }));
   fireEvent.click(screen.getByRole('button', { name: 'Couleur Corail' }));
   expect(saved().characters[0].loadout.artworkId).toBe('shape-v1-warden-d87558');
   section('Sorts');
-  const results = within(screen.getByLabelText('Résultats du catalogue de sorts'));
-  const buttons = modestSpells.map(entry => results.getByRole('button', { name: `Ajouter ${entry.name} (${entry.id})` }));
-  for (const button of buttons.slice(0, 10)) fireEvent.click(button);
+  fireEvent.click(screen.getByRole('button', { name: /Ajouter un sort du catalogue/ }));
+  const results = within(view.container.querySelector('[aria-label="Résultats du catalogue de sorts"]'));
+  const find = entry => { fireEvent.change(screen.getByRole('searchbox', { name: 'Rechercher dans tous les sorts' }), { target: { value: entry.name } }); return results.getByRole('button', { name: `Ajouter ${entry.name} (${entry.id})` }); };
+  for (const entry of modestSpells.slice(0, 10)) fireEvent.click(find(entry));
   expect(saved().characters[0].loadout.spells.custom).toHaveLength(10);
-  expect(buttons[10]).toBeDisabled();
-  fireEvent.click(buttons[10]);
+  expect(find(modestSpells[10])).toBeDisabled();
+  fireEvent.click(find(modestSpells[10]));
   expect(saved().characters[0].loadout.spells.custom).toHaveLength(10);
   const before = saved().characters[0];
   fireEvent.click(screen.getByRole('button', { name: `Retirer ${before.loadout.spells.custom[0].name}` }));
-  expect(buttons[10]).toBeEnabled();
-  fireEvent.click(buttons[10]);
+  expect(find(modestSpells[10])).toBeEnabled();
+  fireEvent.click(find(modestSpells[10]));
   section('Caractéristiques');
-  fireEvent.change(screen.getByLabelText('Classe de référence'), { target: { value: 'CRA' } });
+  fireEvent.change(screen.getByRole('combobox', { name: 'Classe de référence' }), { target: { value: 'CRA' } });
   const character = saved().characters[0];
   expect(character.name).toBe('Gardien des flammes');
   expect(character.classId).toBe('CRA');
@@ -80,7 +81,7 @@ test('name a new class, select ten spells, replace one, and keep the chosen name
   view.unmount();
   render(app(onLaunch));
   fireEvent.click(screen.getByRole('tab', { name: /Mes classes/ }));
-  expect(screen.getByLabelText('Nom de la classe')).toHaveValue(character.name);
+  expect(screen.getByRole('textbox', { name: 'Nom de la classe' })).toHaveValue(character.name);
   section('Apparence');
   expect(screen.getByRole('button', { name: 'Forme Gardien' })).toHaveAttribute('aria-pressed', 'true');
   expect(screen.getByRole('button', { name: 'Couleur Corail' })).toHaveAttribute('aria-pressed', 'true');
@@ -108,8 +109,9 @@ test('an older oversized class can remove spells and save without losing the res
 test('drag monsters from different dungeons, keep their grades and duplicates, reject bad drops and a ninth monster', () => {
   const view = render(app(jest.fn()));
   fireEvent.click(screen.getByRole('button', { name: 'Nouveau donjon' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Changer de carte' }));
+  fireEvent.click(screen.getByText('Choisir dans les cartes du jeu'));
   fireEvent.click(view.container.querySelector('[data-map-id="dungeon_2083"]'));
+  fireEvent.click(screen.getByRole('button', { name: /Bestiaire du jeu/ }));
   const target = screen.getByRole('region', { name: 'Groupe du donjon' });
   const drag = (id, drop = true) => {
     const item = view.container.querySelector(`.creator-monster-card[data-monster-id="${id}"]`);
@@ -118,7 +120,7 @@ test('drag monsters from different dungeons, keep their grades and duplicates, r
     if (drop) { fireEvent.dragOver(target, { dataTransfer }); fireEvent.drop(target, { dataTransfer }); }
     fireEvent.dragEnd(item, { dataTransfer });
   };
-  fireEvent.change(screen.getByLabelText('Niveau proposé pour Poutch Ingball'), { target: { value: '1' } });
+  fireEvent.change(view.container.querySelector('[aria-label="Niveau proposé pour Poutch Ingball"]'), { target: { value: '1' } });
   drag(494);
   drag(147);
   drag(494);
@@ -145,7 +147,8 @@ test('drag monsters from different dungeons, keep their grades and duplicates, r
   render(app(jest.fn()));
   expect(saved()).toEqual(complete);
   fireEvent.click(screen.getByRole('button', { name: 'Changer de carte' }));
+  fireEvent.click(screen.getByText('Choisir dans les cartes du jeu'));
   expect(document.querySelector('[data-map-id="dungeon_2083"]')).toHaveAttribute('aria-pressed', 'true');
-  fireEvent.click(screen.getByRole('button', { name: /^Groupe/ }));
+  fireEvent.click(screen.getByRole('button', { name: /2. Créatures/ }));
   expect(screen.getByRole('region', { name: 'Groupe du donjon' })).toHaveTextContent('8 / 8');
 });

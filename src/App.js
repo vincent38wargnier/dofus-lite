@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { BookOpen, ChevronDown, Hammer, SlidersHorizontal, Swords, UserRound } from 'lucide-react';
+import { BookOpen, BrainCircuit, ChevronDown, Hammer, SlidersHorizontal, Swords, UserRound } from 'lucide-react';
 import ArenaScreen from './ui/ArenaScreen';
 import PlayScreen from './ui/PlayScreen';
 import EditorScreen from './ui/EditorScreen';
@@ -21,7 +21,6 @@ import './styles/profiles.css';
 
 const TABS = [
   { id: 'characters', label: 'Personnages' },
-  { id: 'editor', label: 'Éditeur de bot' },
   { id: 'tournament', label: 'Tournoi' },
   { id: 'docs', label: 'Règles & API' },
 ];
@@ -77,6 +76,7 @@ export default function App() {
         <nav className="tabs" aria-label="Navigation principale">
           <button className={`tab${playActive ? ' active' : ''}`} aria-current={playActive ? 'page' : undefined} onClick={openPlay}><UserRound size={17} /> Jouer</button>
           <button className={`tab${tab === 'workshop' ? ' active' : ''}`} aria-current={tab === 'workshop' ? 'page' : undefined} onClick={() => setTab('workshop')}><Hammer size={17} /> Atelier</button>
+          <button className={`tab${tab === 'editor' ? ' active' : ''}`} aria-current={tab === 'editor' ? 'page' : undefined} onClick={() => setTab('editor')}><BrainCircuit size={17} /> Studio IA</button>
           <button className={`tab${tab === 'spells' ? ' active' : ''}`} aria-current={tab === 'spells' ? 'page' : undefined} onClick={() => setTab('spells')}><BookOpen size={17} /> Grimoire</button>
           <details className="tools-menu" ref={toolsMenu} onKeyDown={e => { if (e.key === 'Escape') { toolsMenu.current.open = false; toolsMenu.current.querySelector('summary').focus(); } }}>
             <summary className={`tab${TABS.some(t => t.id === tab) ? ' active' : ''}`}><SlidersHorizontal size={16} />{TABS.find(t => t.id === tab)?.label || 'Outils'}<ChevronDown size={14} /></summary>
@@ -114,7 +114,7 @@ export default function App() {
           onFightChange={setArenaFighting}
           onSessionChange={setAutomaticSession}
           onExit={leaveAutomatic}
-          exitLabel={automaticReturn === 'tournament' ? 'Retour au tournoi' : automaticReturn === 'workshop' ? 'Retour à l’Atelier' : 'Retour à Combat'}
+          exitLabel={automaticReturn === 'editor' ? 'Retour au Studio IA' : automaticReturn === 'tournament' ? 'Retour au tournoi' : automaticReturn === 'workshop' ? 'Retour à l’Atelier' : 'Retour à Combat'}
           allBots={allBots}
           replay={replay}
           onReplayConsumed={() => setReplay(null)}
@@ -141,6 +141,8 @@ export default function App() {
           addBot={addBot}
           updateBot={updateBot}
           deleteBot={deleteBot}
+          onWatch={config => { setReplay(config); setAutomaticReturn('editor'); setTab('arena'); window.scrollTo(0, 0); }}
+          onTournament={() => { setTab('tournament'); window.scrollTo(0, 0); }}
         />
       </div>
       <div style={{ display: tab === 'tournament' ? 'block' : 'none' }}>

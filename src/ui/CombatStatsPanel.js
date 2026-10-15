@@ -73,7 +73,7 @@ function Resistances({ fighter }) {
 
 export default function CombatStatsPanel({ id, fighter, resources = fighter, fighters, isActive, controller, inspecting, controls }) {
   const cls = CLASSES[fighter.classId];
-  const kind = fighter.isSummon ? 'Invocation' : fighter.isMonster ? 'Monstre' : cls?.name;
+  const kind = fighter.isSummon ? 'Invocation' : fighter.isMonster ? 'Monstre' : fighter.className || cls?.name;
   return <aside id={id} ref={controller.dialogRef} className={`combat-stats${inspecting ? ' inspecting' : ''}`}
     aria-label={`Caractéristiques de ${fighter.name}`} data-inspected-fighter={fighter.id}
     onPointerEnter={controller.keepOpen} onPointerLeave={controller.closeSoon} onFocus={controller.keepOpen}

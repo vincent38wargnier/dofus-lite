@@ -10,12 +10,15 @@ import useFighterAnimation from './useFighterAnimation';
 import useCombatSounds from './useCombatSounds';
 import { fighterAccessories } from './retroEquipment';
 import useMapFrame from './useMapFrame';
+import OriginalSpellEffect, { OriginalMapProp } from './OriginalSpellEffect';
 import HealthChangeFloats from './HealthChangeFloats';
 import { healthChangeGroups } from './healthChanges';
 import FighterInspector from './FighterInspector';
 import useFighterInspection from './useFighterInspection';
 import { fighterUnderPointer, groundUnderPointer } from './fighterHitTesting';
-import { Grid2X2, Rabbit } from 'lucide-react';
+import { Grid2X2, Rabbit, ZoomIn, ZoomOut, Maximize, LocateFixed } from 'lucide-react';
+import useBoardCamera, { CAMERA_MIN, CAMERA_MAX } from './useBoardCamera';
+import '../styles/boardCamera.css';
 import TacticalTerrain, { tacticalCellKind, TACTICAL_LABELS } from './TacticalTerrain';
 import useTacticalMode from './useTacticalMode';
 import useCreatureMode from './useCreatureMode';
@@ -365,14 +368,14 @@ function Prop({ type, x, y, L }) {
 function FighterToken({
   f, L, activeId, frameIdx, frameEvents, bubble, targetable, onCellClick, onCellHover,
   inspectorId, isInspected, onInspect, onInspectLeave, placing, inlineInspection,
-  creatureMode, viewerTeam, turnPosition,
+  creatureMode, viewerTeam, turnPosition, originalVisuals,
 }) {
   const assets = useRetroAssets();
   const { appearances } = useAppearances();
   const originalActorId = getActorId(assets, f, appearances[f.team]);
-  const actorId = creatureMode ? creatureActorId(f, assets, viewerTeam) : originalActorId;
+  const actorId = creatureMode && !originalVisuals ? creatureActorId(f, assets, viewerTeam) : originalActorId;
   const { artwork } = useCharacterArtwork(f.artworkId || (!f.isMonster && (!f.isSummon || f.isDouble) ? f.loadout?.artworkId : null));
-  const showArtwork = !creatureMode && artwork;
+  const showArtwork = (!creatureMode || originalVisuals) && artwork;
   const actor = showArtwork ? CUSTOM_ARTWORK_ACTOR : assets?.actors[actorId];
   const { hat, cape, pet } = f.loadout?.slots || {};
   const accessories = useMemo(() => fighterAccessories({ isMonster: f.isMonster, isSummon: f.isSummon,
@@ -381,7 +384,8 @@ function FighterToken({
   // Toggling the display must not replay the last action or restart a walk.
   const animationActor = artwork ? CUSTOM_ARTWORK_ACTOR : assets?.actors[originalActorId];
   const { pose, direction, restart, position } = useFighterAnimation(f, frameEvents, frameIdx, animationActor, assets);
-  const useOriginal = !showArtwork && actor && failedActor !== actorId;
+  const useOriginal = !originalVisuals && !showArtwork && actor && failedActor !== actorId;
+  const originalCast = originalVisuals || frameEvents?.some(e => e.t === 'cast' && e.fighter === f.id && e.visualEffect);
   const midWalk = pose === 'walk' && position;
   const pos = position || f.pos;
   const animation = resolveAnimation(actor, creatureMode && pose?.startsWith('anim') ? 'anim1' : pose, direction.suffix);
@@ -430,7 +434,7 @@ function FighterToken({
         onMouseEnter={targetable && onCellHover ? () => onCellHover(f.pos.x, f.pos.y) : undefined}
       >
         {showArtwork ? <CustomCharacterSprite artwork={artwork} pose={pose} direction={direction} restart={restart}
-          castSound={customActorCastSound(assets?.actors[actorId], pose, direction.suffix, assets)} /> : useOriginal ? (
+          castSound={originalCast ? null : customActorCastSound(assets?.actors[actorId], pose, direction.suffix, assets)} /> : useOriginal ? (
           <RetroMovie
             url={actor.url} animation={animation} restart={restart}
             accessories={creatureMode ? NO_ACCESSORIES : accessories} mirrored={direction.mirror}
@@ -464,6 +468,8 @@ function SpellEffects({ state, frameEvents, frameIdx, assets, L }) {
   const previous = useRef(-1);
   useEffect(() => {
     const next = (frameEvents || []).filter(e => e.t === 'cast' || e.t === 'hazard_effect').map((e, i) => {
+      if (e.visualEffect) return { id: `${frameIdx}-${i}`, event: e, authored: true };
+      if (state.board.originalVisuals) return null;
       const info = assets?.spells[e.visualSpellId ?? e.spellId];
       return info?.effect ? { id: `${frameIdx}-${i}`, event: e, info } : null;
     }).filter(Boolean);
@@ -473,7 +479,8 @@ function SpellEffects({ state, frameEvents, frameIdx, assets, L }) {
     // One retained effect per combat action; later movement must not truncate it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [frameIdx, assets]);
-  return casts.map(c => <RetroSpellEffect key={c.id} url={c.info.effect}
+  return casts.map(c => c.authored ? <OriginalSpellEffect key={c.id} event={c.event} L={L}
+    onComplete={() => setCasts(current => current.filter(x => x.id !== c.id))} /> : <RetroSpellEffect key={c.id} url={c.info.effect}
     grade={c.event.grade || 5} duration={c.info.duration} fps={c.info.fps} maxDuration={1500}
     type={c.info.type} exportFrames={c.info.exportFrames}
     zIndex={10 + (c.event.target.x + c.event.target.y) * 4 + (c.info.front === false ? 2 : 4)}
@@ -499,8 +506,12 @@ export default function BoardView({
   const inspectorId = inspectionPanelId || `${uid}-fighter-inspector`;
   const assets = useRetroAssets();
   const { appearances } = useAppearances();
-  const retroMap = assets?.imagesReady ? assets.maps[state.mapId] : null;
-  const mapFrame = useMapFrame(retroMap, state.board, fitToContainer, tacticalMode);
+  const { artwork: mapArtwork } = useCharacterArtwork(state.board.background?.artworkId);
+  const customBackground = state.board.background;
+  const projectionKey = customBackground ? JSON.stringify(customBackground) : null;
+  const customProjection = useMemo(() => projectionKey ? { ...JSON.parse(projectionKey), layers: [], elevations: {} } : null, [projectionKey]);
+  const retroMap = customProjection || (assets?.imagesReady ? assets.maps[state.mapId] : null);
+  const mapFrame = useMapFrame(retroMap, state.board, fitToContainer && (tacticalMode || !customBackground), tacticalMode);
   const { width, height, obstacles } = state.board;
   const bottomInset = fitToContainer && tacticalMode ? TACTICAL_LEGEND_PX : 0;
   const fittedHeight = fitToContainer && avail.height !== null ? avail.height - bottomInset : null;
@@ -514,9 +525,13 @@ export default function BoardView({
   const inspectedFighter = livingFighters.find(f => f.id === inspection.inspection?.id);
   // Keep actual invisible positions out of movement/effect overlays.
   frameEvents = (frameEvents || []).filter(e => (!e.fighter || visible(state.fighters[e.fighter])) && (!e.target || typeof e.target !== 'string' || visible(state.fighters[e.target])));
-  const soundScope = useCombatSounds(frameIdx, frameEvents, state.fighters, assets, appearances, `${state.mapId}:${state.seed}`);
+  const soundScope = useCombatSounds(frameIdx, frameEvents, state.fighters, assets, appearances, `${state.mapId}:${state.seed}`, !!state.board.originalVisuals);
   const placing = state.phase === 'placement';
   const activeId = placing ? null : state.order[state.currentIndex];
+  const camera = useBoardCamera(wrapRef, { width: L.w, height: L.h,
+    viewportWidth: avail.width || L.w, viewportHeight: fittedHeight || L.h }, `${state.mapId}:${state.seed}`, () => {
+    inspection.dismiss(); onCellHover?.(null, null);
+  });
 
   // Les cartes importées (eau, bords vides) deviennent des prairies ; les
   // arènes du Koliséum restent en sable.
@@ -568,7 +583,7 @@ export default function BoardView({
       <div
         key={`f${frameIdx}-${i}-${cls}-${text}`}
         className={`float-text ${cls}`}
-        style={{ left: p.x, top: p.y - dy }}
+        style={{ left: p.x, top: p.y - dy / camera.zoom }}
       >
         {text}
       </div>,
@@ -593,7 +608,7 @@ export default function BoardView({
       const caster = state.fighters[e.fighter];
       const spell = caster ? spellsOf(caster)[e.spell] : null;
       const effectInfo = assets?.spells[e.visualSpellId ?? e.spellId ?? spell?.visualSpellId ?? spell?.id];
-      const originalEffect = effectInfo?.effect || effectInfo?.playEffect === false;
+      const originalEffect = e.visualEffect || state.board.originalVisuals || effectInfo?.effect || effectInfo?.playEffect === false;
       // Projectile du lanceur vers la cible + coût en PA
       const from = L.chest(e.from);
       const to = aim(e.target);
@@ -704,7 +719,8 @@ export default function BoardView({
     <div
       ref={wrapRef}
       id={`retro-sound-${soundScope}`}
-      className={`board-wrap${tacticalMode ? ' tactical-mode' : ''}${creatureMode ? ' creature-mode' : ''}${fitToContainer ? ' fitted-board' : ''}`}
+      className={`board-wrap${camera.dragging ? ' camera-dragging' : ''}${tacticalMode ? ' tactical-mode' : ''}${creatureMode ? ' creature-mode' : ''}${fitToContainer ? ' fitted-board' : ''}`}
+      {...camera.handlers}
       style={{ '--hw': `${L.hw}px`, '--hh': `${L.hh}px`, '--fig': `${L.fig}px`, '--lift': `${L.lift}px`, paddingBottom: bottomInset || undefined }}
     >
       <div className="board-tools">
@@ -714,11 +730,21 @@ export default function BoardView({
           <Grid2X2 size={15} aria-hidden="true" /><span>Mode tactique</span><i className="mode-indicator" aria-hidden="true" />
         </button>
         <button type="button" className="board-mode-toggle board-creature-toggle" aria-pressed={creatureMode}
-          title="Mode créatures : petites silhouettes du client pour viser les combattants qui se masquent. Les numéros correspondent à la barre des tours."
+          title="Mode créatures : petites silhouettes pour viser les combattants qui se masquent. Les numéros correspondent à la barre des tours."
           onClick={() => { inspection.dismiss(); onCellHover?.(null, null); toggleCreatureMode(); }}>
           <Rabbit size={15} aria-hidden="true" /><span>Mode créatures</span><i className="mode-indicator" aria-hidden="true" />
         </button>
       </div>
+      <div className="board-camera-tools" role="group" aria-label="Zoom de la carte">
+        <button type="button" aria-label="Dézoomer la carte" title="Dézoomer · molette ou pincement" disabled={camera.zoom <= CAMERA_MIN} onClick={() => camera.zoomBy(1 / 1.25)}><ZoomOut size={16} /></button>
+        <span className="camera-zoom" aria-label="Niveau de zoom">{Math.round(camera.zoom * 100)} %</span>
+        <button type="button" aria-label="Zoomer la carte" title="Zoomer · glissez le terrain pour déplacer la vue" disabled={camera.zoom >= CAMERA_MAX} onClick={() => camera.zoomBy(1.25)}><ZoomIn size={16} /></button>
+        <button type="button" aria-label="Centrer sur le personnage actif" title="Centrer sur le personnage actif" onClick={() => {
+          const fighter = state.fighters[placing ? placementFighterId : activeId]; if (fighter) camera.focus(L.ground(fighter.pos));
+        }}><LocateFixed size={16} /></button>
+        <button type="button" className="camera-reset" aria-label="Ajuster toute la carte" title="Afficher tout le terrain" onClick={camera.reset}><Maximize size={15} /><span>Ajuster</span></button>
+      </div>
+      <div className="board-camera-layer" style={{ width: L.w, height: L.h, ...camera.style }}>
       <div
         className={`board${shake ? ' shake' : ''}`}
         style={{ width: L.w, height: L.h }}
@@ -731,7 +757,10 @@ export default function BoardView({
         onClickCapture={pointerClick}
         onMouseLeave={onCellHover ? () => onCellHover(null, null) : undefined}
       >
-        {tacticalMode ? <TacticalTerrain L={L} board={state.board} uid={uid} /> : retroMap ? retroMap.layers.map(layer => (
+        {tacticalMode ? <TacticalTerrain L={L} board={state.board} uid={uid} /> : customBackground ? (
+          mapArtwork?.images[customBackground.file] && <img src={mapArtwork.images[customBackground.file]} alt="" data-custom-map={state.mapId}
+            className="retro-map-layer" style={{ ...L.mapLayerStyle, zIndex: 0 }} />
+        ) : retroMap ? retroMap.layers.map(layer => (
           <img key={layer.name} src={RETRO_BASE + layer.image} alt="" className="retro-map-layer"
             style={{ ...L.mapLayerStyle, zIndex: layer.name === 'ground' ? 0 : 10 + Number(layer.name) * 4 + 2 }} />
         )) : <TerrainLayer sig={sig} L={L} board={state.board} theme={theme} uid={uid} />}
@@ -792,14 +821,15 @@ export default function BoardView({
             ))}
             <div
               className="path-cost"
-              style={{ left: L.cx(pathPreview.dest.x, pathPreview.dest.y), top: L.cy(pathPreview.dest.x, pathPreview.dest.y) - L.hh - 24 }}
+              style={{ left: L.cx(pathPreview.dest.x, pathPreview.dest.y), top: L.cy(pathPreview.dest.x, pathPreview.dest.y) - L.hh - 24 / camera.zoom }}
             >
               {pathPreview.cost} PM
             </div>
           </>
         ) : null}
 
-        {!tacticalMode && !retroMap && obstacleList.filter((o) => PROP_ART[o.type]).map((o) => (
+        {!tacticalMode && customBackground && obstacleList.filter(o => o.prop).map(o => <OriginalMapProp key={`prop-${o.x}-${o.y}`} obstacle={o} L={L} artwork={mapArtwork} background={customBackground} />)}
+        {!tacticalMode && !retroMap && !customBackground && obstacleList.filter((o) => PROP_ART[o.type]).map((o) => (
           <Prop key={`o${o.x},${o.y}`} type={o.type} x={o.x} y={o.y} L={L} />
         ))}
 
@@ -820,15 +850,16 @@ export default function BoardView({
             inlineInspection={!!inspectionController}
             isInspected={f.id === inspectedFighter?.id}
             onInspect={inspection.open} onInspectLeave={inspection.closeSoon}
-            creatureMode={creatureMode} viewerTeam={viewerTeam} turnPosition={turnPositions[f.id]}
+            creatureMode={creatureMode} viewerTeam={viewerTeam} turnPosition={turnPositions[f.id]} originalVisuals={!!state.board.originalVisuals}
           />
         ))}
 
         {overlays}
         <HealthChangeFloats key={`health-${state.mapId}-${state.seed}`} frameEvents={frameEvents}
-          frameIdx={frameIdx} fighters={fighters} L={L} />
+          frameIdx={frameIdx} fighters={fighters} L={L} zoom={camera.zoom} />
         <SpellEffects key={`${state.mapId}-${state.seed}`} state={state} frameEvents={frameEvents} frameIdx={frameIdx} assets={assets} L={L} />
-
+      </div>
+      </div>
         {showWinner ? (
           <div className="winner-banner">
             <div className="crown">{winnerName ? '👑' : '🤝'}</div>
@@ -840,7 +871,6 @@ export default function BoardView({
             </div>
           </div>
         ) : null}
-      </div>
       {tacticalMode && <div className="tactical-legend" aria-label="Légende du mode tactique">
         <span><i className="free" aria-hidden="true" />Case libre</span>
         <span title={TACTICAL_LABELS.movement}><i className="movement" aria-hidden="true" />Déplacement bloqué</span>

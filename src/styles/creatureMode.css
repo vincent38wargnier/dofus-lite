@@ -13,6 +13,10 @@
   left: calc(var(--hw) * -3.288318); top: calc(var(--hw) * -4.333645);
 }
 .creature-token .avatar { font-size: calc(var(--hw) * .55); border-width: 1px; }
+.token.custom-artwork-token.creature-token .custom-character-sprite {
+  width: calc(var(--hw) * 1.2); height: calc(var(--hw) * 1.2);
+  left: calc(var(--hw) * -.15); bottom: calc(var(--hw) * -.15);
+}
 .board .token.creature-token .mini-hp {
   width: calc(var(--hw) * .9); left: calc(var(--hw) * -.45);
   bottom: calc(var(--hw) * 1.18); height: max(2px, calc(var(--hw) * .11));

@@ -1,4 +1,6 @@
 import fs from 'fs';
+import { newAdventure, addAdventureHero, adventureTeam } from '../engine/adventures';
+import { LiveMatch } from '../game/liveMatch';
 import { TextEncoder, TextDecoder } from 'util';
 import { inflateRawSync } from 'zlib';
 import { buildAtelierArchive, prepareAtelierFiles, prepareWorkshopFile, importWorkshopFile, ATELIER_LIMITS } from '../ui/atelierArchive';
@@ -12,6 +14,7 @@ import { CREATION_SPELLS } from '../ui/creationCatalogue';
 import { newAuthoredSpell, normalizeAuthoredSpell } from '../engine/authoredSpells';
 import { createGame, applyAction, spellsOf } from '../engine/engine';
 import { customDungeonRoster } from '../engine/customDungeons';
+import { withDungeonRooms, roomSnapshot } from '../engine/dungeonCampaign';
 import { CREATIONS_STORAGE, emptyCreations, validCreations, persistCreationsTogether } from '../ui/creationsStore';
 import { CHARACTER_ARTWORK_SPEC as SPEC } from '../ui/characterArtwork';
 
@@ -33,6 +36,23 @@ beforeAll(() => {
   }); };
 });
 beforeEach(() => { localStorage.clear(); options.verifyPixels.mockClear(); });
+
+test('future campaign rooms export their own characters, equipment and artwork into a fresh library', async () => {
+  const first = entry('dungeon'), second = entry('dungeon'), character = entry('class'), equipment = item();
+  character.loadout.artworkId = 'future-room-art'; character.loadout.slots.hat = equipment.id;
+  character.loadout.customEquipment = { [equipment.id]: equipment };
+  second.members = [{ character, count: 1 }];
+  const dungeon = withDungeonRooms(first, [roomSnapshot(first), roomSnapshot(second)]);
+  const images = Object.fromEntries(SPEC.files.map(spec => [spec.name, new File([png(spec.name)], spec.name)]));
+  const archive = await buildAtelierArchive({ dungeons: [dungeon] }, { readArtwork: async id => ({ id, images }) });
+  expect(archive.manifest.characters).toHaveLength(0); expect(archive.manifest.artwork).toHaveLength(1);
+  const imported = await prepare(archive.bytes), future = imported.dungeons[0].rooms[1].members[0].character;
+  expect(future.loadout.artworkId).toBe(imported.records[0].id);
+  expect(future.loadout.customEquipment[future.loadout.slots.hat].stats).toEqual(equipment.stats);
+  expect(future.loadout.slots.hat).not.toBe(equipment.id);
+  expect(new LiveMatch({ mode: 'custom', dungeon: imported.dungeons[0], playerClass: 'IOP', roomIndex: 1, seed: 1 }).state.fighters.B.name).toBe(character.name);
+  await expect(buildAtelierArchive({ dungeons: [dungeon] }, { readArtwork: async () => null })).rejects.toThrow();
+});
 
 test('a mixed ZIP preserves spells, appearance, stats, exact FM rolls and immutable equipment versions', async () => {
   const equipment = item(), character = entry('class'), dungeon = entry('dungeon');
@@ -207,4 +227,45 @@ test('image write failure never modifies either creation library', async () => {
   await expect(importWorkshopFile({}, { commitCreations, importEquipment }, { prepare: async () => ({ records: [] }),
     write: async () => { throw new Error('Stockage images plein'); } })).rejects.toThrow(/images plein/);
   expect(commitCreations).not.toHaveBeenCalled(); expect(importEquipment).not.toHaveBeenCalled();
+});
+
+
+test('a dungeon-only adventure ZIP carries every hero dependency into an empty game', async () => {
+  const dungeon = entry('dungeon'), character = entry('class'), equipment = item();
+  character.loadout.artworkId = 'adventure-only-art';
+  character.loadout.customEquipment = { [equipment.id]: equipment }; character.loadout.slots.hat = equipment.id;
+  character.loadout.slots.ring1 = 100;
+  character.loadout.forgedItems = { ring1: createForgedItem(ITEMS[100], rolledEffects(ITEMS[100], character.loadout, 'ring1'), 9) };
+  character.loadout.forgedItems.ring1.stats.pa = 1;
+  const images = Object.fromEntries(SPEC.files.map(spec => [spec.name, new File([png(spec.name)], spec.name)]));
+  dungeon.adventure = addAdventureHero(newAdventure(), character, 'hero-in-package');
+  const original = JSON.stringify(dungeon);
+  const archive = await buildAtelierArchive({ dungeons: [dungeon] }, { readArtwork: async () => ({ id: 'adventure-only-art', images }) });
+  expect(archive.manifest.characters).toEqual([]); expect(archive.manifest.equipment).toEqual([]);
+  const imported = await prepare(archive.bytes);
+  const copy = imported.dungeons[0], hero = adventureTeam(copy)[0];
+  expect(imported.records).toHaveLength(1);
+  expect(hero.loadout.artworkId).toBe(imported.records[0].id);
+  expect(hero.loadout.slots.hat).not.toBe(equipment.id);
+  expect(hero.loadout.customEquipment[hero.loadout.slots.hat].stats).toEqual(equipment.stats);
+  expect(hero.loadout.forgedItems).toEqual(character.loadout.forgedItems);
+  expect(hero.loadout.spells).toEqual(character.loadout.spells);
+  const match = new LiveMatch({ mode: 'custom', dungeon: copy, seed: 6 });
+  expect(match.state.fighters.A.hp).toBe(resolveLoadout(character.classId, character.loadout).hp);
+  expect(spellsOf(match.state.fighters.A)).toBeDefined();
+  const records = new Map(imported.records.map(record => [record.id, record]));
+  const roundtrip = await prepare((await buildAtelierArchive({ dungeons: [copy] }, { readArtwork: id => records.get(id) })).bytes);
+  expect(adventureTeam(roundtrip.dungeons[0])[0].loadout.forgedItems).toEqual(character.loadout.forgedItems);
+  expect(JSON.stringify(dungeon)).toBe(original);
+});
+
+test('ready packages reject invalid rules and incomplete heroes before exporting or importing', async () => {
+  const dungeon = entry('dungeon'); dungeon.adventure = newAdventure();
+  await expect(buildAtelierArchive({ dungeons: [dungeon] })).rejects.toThrow(/héros/);
+  dungeon.adventure = addAdventureHero(newAdventure(), entry('class'), 'hero');
+  const { manifest } = await buildAtelierArchive({ dungeons: [dungeon] });
+  manifest.dungeons[0].adventure.heroes[0].character.loadout.slots.weapon = 999999;
+  await expect(prepareAtelierFiles(manifestFiles(manifest), options)).rejects.toThrow();
+  manifest.dungeons[0].adventure = { version: 99 };
+  await expect(prepareAtelierFiles(manifestFiles(manifest), options)).rejects.toThrow();
 });

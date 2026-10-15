@@ -9,9 +9,11 @@ import useFighterInspection from './useFighterInspection';
 import BoardView from './BoardView';
 import CombatStatsPanel from './CombatStatsPanel';
 import CombatTimeline from './CombatTimeline';
+import CombatSpellbook, { SpellbookButton } from './CombatSpellbook';
 import LogPanel from './LogPanel';
+import { CampaignBrief, CampaignResult } from './DungeonCampaign';
 
-export default function AutoDungeonFight({ config, active, onExit, onCancel = onExit, onRematch, exitLabel = 'Retour à Combat' }) {
+export default function AutoDungeonFight({ config, active, onExit, onCancel = onExit, onRematch, onNextRoom, exitLabel = 'Retour à Combat' }) {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [progress, setProgress] = useState(1);
@@ -19,6 +21,8 @@ export default function AutoDungeonFight({ config, active, onExit, onCancel = on
   const [playing, setPlaying] = useState(true);
   const [speed, setSpeed] = useState(1);
   const [showLog, setShowLog] = useState(false);
+  const [spellbookOpen, setSpellbookOpen] = useState(false);
+  const [roomBrief, setRoomBrief] = useState(!!config.dungeon?.rooms);
   const assets = useRetroAssets();
   const { appearances } = useAppearances();
   const frame = result?.frames[index];
@@ -36,11 +40,11 @@ export default function AutoDungeonFight({ config, active, onExit, onCancel = on
   }, [config]);
 
   useEffect(() => {
-    if (!active || !playing || !frame || atEnd) return undefined;
+    if (!active || !playing || !frame || atEnd || spellbookOpen || roomBrief) return undefined;
     const delay = Math.max(480, combatAnimationMs(frame.events, frame.state.fighters, assets, appearances)) / speed;
     const timer = setTimeout(() => setIndex(value => Math.min(lastIndex, value + 1)), delay);
     return () => clearTimeout(timer);
-  }, [active, playing, frame, atEnd, speed, assets, appearances, lastIndex]);
+  }, [active, playing, frame, atEnd, speed, assets, appearances, lastIndex, spellbookOpen, roomBrief]);
 
   const eventCounts = useMemo(() => {
     let count = 0;
@@ -72,13 +76,17 @@ export default function AutoDungeonFight({ config, active, onExit, onCancel = on
         <LogPanel events={log} namesById={names} state={state} />
       </section>}
       <div className="fight-main">
-        <div className="fight-heading"><div><h1>{MAPS[state.mapId].name.replace(/^🗺\s*/, '')}</h1>
-          <p>{composed ? 'IA contre IA' : 'IA contre donjon'} · {config.controllerName} · Tour {state.turn}</p></div>
+        <div className="fight-heading"><div><h1>{(state.board.name || MAPS[state.mapId]?.name || 'Terrain personnalisé').replace(/^🗺\s*/, '')}</h1>
+          <p>{composed ? 'IA contre IA' : 'IA contre donjon'} · {config.controllerName} · Tour {state.turn}{state.encounter?.commanderId && <span className="army-objective" data-army-objective> · Objectif : {state.fighters[state.encounter.commanderId]?.name}</span>}</p></div>
           <div className="fight-heading-actions"><button className="btn" aria-expanded={showLog} aria-controls="auto-fight-log" onClick={() => setShowLog(value => !value)}>Journal</button>
+            <SpellbookButton onClick={() => setSpellbookOpen(true)} />
             <button className="btn" onClick={onExit}>{exitLabel}</button></div>
         </div>
         <div className="fight-map"><BoardView fitToContainer state={state} frameEvents={frame.events} frameIdx={index}
-          inspectionController={inspection} inspectionPanelId="auto-combat-stats" viewerTeam="A" showWinner={false} /></div>
+          inspectionController={inspection} inspectionPanelId="auto-combat-stats" viewerTeam="A" showWinner={false} />
+          {atEnd && config.dungeon?.rooms && <CampaignResult dungeon={config.dungeon} roomIndex={config.roomIndex || 0} state={state}
+            onNext={onNextRoom} onRetry={onRematch} onExit={onExit} />}
+          {roomBrief && config.dungeon?.rooms && <CampaignBrief dungeon={config.dungeon} roomIndex={config.roomIndex || 0} onClose={() => setRoomBrief(false)} />}</div>
         <div className="combat-dock">
           <CombatTimeline state={state} controller={inspection} panelId="auto-combat-stats" />
           <div className="auto-replay-controls" aria-label="Lecture du combat">
@@ -108,5 +116,6 @@ export default function AutoDungeonFight({ config, active, onExit, onCancel = on
         </div>
       </div>
     </div>
+    {spellbookOpen && <CombatSpellbook state={state} initialFighterId={inspection.inspection?.id} onClose={() => setSpellbookOpen(false)} />}
   </div>;
 }

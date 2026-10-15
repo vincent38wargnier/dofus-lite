@@ -14,7 +14,10 @@ import { makeBotApi } from '../bots/api';
 import { utilityDecide } from '../bots/utilityBrain';
 import { monsterDecide } from '../engine/monsters';
 import { dungeonMapId, dungeonRoster, dungeonForBoss } from '../engine/dungeons';
-import { customDungeonRoster } from '../engine/customDungeons';
+import { adventureEnabled, adventureTeam, defaultAdventureChoice } from '../engine/adventures';
+import { customDungeonErrors, customDungeonRoster } from '../engine/customDungeons';
+import { dungeonEncounter } from '../engine/encounters';
+import { dungeonRoom } from '../engine/dungeonCampaign';
 import { opponentRoster, opponentFighterId } from '../engine/opponentTeam';
 import { allyRoster, teamRoster } from '../engine/allyTeam';
 
@@ -33,14 +36,26 @@ function* matchSteps({
   bossId,
   bossGrade,
   dungeon,
+  roomIndex = 0,
   opponents,
   allies = [],
   team,
+  adventureChoice,
 }) {
+  const sourceDungeon = dungeon;
+  if (mode === 'custom' && dungeon?.rooms) { const errors = customDungeonErrors(dungeon); if (errors.length) throw new Error(errors.join(' ')); }
+  if (mode === 'custom') dungeon = dungeonRoom(dungeon, roomIndex);
+  if (mode === 'custom' && adventureEnabled(dungeon)) {
+    team = adventureTeam(dungeon, { ...defaultAdventureChoice(dungeon), ...adventureChoice, automatic: true });
+    // A packaged encounter owns both camps; callers cannot replace its enemies.
+    opponents = undefined;
+  }
   if (mode === 'boss') mapId = dungeonMapId(bossId);
   if (mode === 'custom') mapId = dungeon?.mapId;
   const init = createGame({
     mapId,
+    battlefield: mode === 'custom' ? dungeon?.battlefield : undefined,
+    encounter: mode === 'custom' ? dungeonEncounter(dungeon) : undefined,
     seed,
     fighters: [
       ...(team ? teamRoster(team) : [{ id: 'A', name: bots.A.name, botName: bots.A.name, classId: classes.A, loadout: loadouts.A }, ...allyRoster(allies)]),
@@ -193,7 +208,7 @@ function* matchSteps({
       ...(allies.length ? { allies: JSON.parse(JSON.stringify(allies)) } : {}),
       ...(opponents ? { opponents: JSON.parse(JSON.stringify(opponents)) } : {}),
       ...(mode === 'boss' ? { mode, bossId, bossGrade } : {}),
-      ...(mode === 'custom' ? { mode, dungeon: JSON.parse(JSON.stringify(dungeon)) } : {}),
+      ...(mode === 'custom' ? { mode, dungeon: JSON.parse(JSON.stringify(sourceDungeon)), roomIndex } : {}),
       botNames: { A: team ? state.fighters.A.name : bots.A.name, B: opponents ? state.fighters.B.name : mode === 'custom' ? dungeon.name : mode === 'boss' ? dungeonForBoss(bossId).name : bots.B.name } },
     winner: state.winner,          // 'A' | 'B' | null (draw)
     endReason: state.endReason,

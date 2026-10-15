@@ -38,5 +38,5 @@ export function opponentRoster(entries) {
   if (errors.length) throw new Error(errors.join(' '));
   return entries.map((entry, index) => ({ id: opponentFighterId(index), team: 'B',
     ...(entry.kind === 'monster' ? { monsterId: entry.monsterId, monsterGrade: entry.grade }
-      : { name: entry.name, classId: entry.classId, loadout: JSON.parse(JSON.stringify(entry.loadout)) }) }));
+      : { name: entry.name, classId: entry.classId, className: entry.className, loadout: JSON.parse(JSON.stringify(entry.loadout)) }) }));
 }

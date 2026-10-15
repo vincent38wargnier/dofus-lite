@@ -1,0 +1,92 @@
+{
+  "format": "dofus-lite-spell-fx-design",
+  "version": 1,
+  "runtimeImportable": false,
+  "id": "example-projectile",
+  "name": "Orbe des braises",
+  "durationMs": 1500,
+  "travel": {
+    "kind": "arc",
+    "startMs": 350,
+    "endMs": 950,
+    "arcHeightPercent": 20
+  },
+  "layers": [
+    {
+      "role": "cast",
+      "file": "cast.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      },
+      "startMs": 0,
+      "endMs": 350,
+      "loop": false,
+      "attachment": "caster",
+      "depth": "front",
+      "rotation": "none",
+      "scalePercent": 100,
+      "blend": "normal"
+    },
+    {
+      "role": "projectile",
+      "file": "projectile.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      },
+      "startMs": 350,
+      "endMs": 950,
+      "loop": true,
+      "attachment": "projectile",
+      "depth": "front",
+      "rotation": "path",
+      "scalePercent": 45,
+      "blend": "normal"
+    },
+    {
+      "role": "trail",
+      "file": "trail.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      },
+      "startMs": 350,
+      "endMs": 1300,
+      "loop": false,
+      "attachment": "path",
+      "depth": "front",
+      "rotation": "none",
+      "scalePercent": 25,
+      "blend": "normal"
+    },
+    {
+      "role": "impact",
+      "file": "impact.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      },
+      "startMs": 950,
+      "endMs": 1400,
+      "loop": false,
+      "attachment": "target",
+      "depth": "front",
+      "rotation": "none",
+      "scalePercent": 100,
+      "blend": "normal"
+    }
+  ]
+}

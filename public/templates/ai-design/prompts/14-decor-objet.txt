@@ -1,0 +1,6 @@
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+PROP: [name, material, exact occupied cells from geometry.json, whether it blocks LoS].
+Draw one isolated isometric scenery object using the SAME camera and light as the approved map. Set its footprint from the provided cell polygons; supply its pixel ground anchor in an accompanying note, relative to its own canvas, so it can later be placed without guessing. No pedestal, UI, ground tile or scene. Preserve transparency. Avoid large overhangs that hide neighbouring walkable tiles. A low LoS-transparent obstacle must look low; a LoS blocker must read as solid. This is design source material, not an importable collision definition or automatic scenery layer.

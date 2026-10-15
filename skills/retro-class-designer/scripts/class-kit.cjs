@@ -122,8 +122,8 @@ function validateManifest(manifest) {
   return { errors, warnings: [...new Set(warnings)] };
 }
 
-function decodePng(buffer, name, width, height, frames, transparent) {
-  check(buffer.length <= limits.png && buffer.subarray(0, 8).equals(signature), `${name}: invalid or oversized PNG.`);
+function decodePng(buffer, name, width, height, frames, transparent, { maxBytes = limits.png } = {}) {
+  check(buffer.length <= maxBytes && buffer.subarray(0, 8).equals(signature), `${name}: invalid or oversized PNG.`);
   let cursor = 8, header = null, ended = false;
   const chunks = [];
   while (cursor + 12 <= buffer.length) {

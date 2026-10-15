@@ -1,34 +1,55 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ArrowDownWideNarrow, GripVertical, LockKeyhole } from 'lucide-react';
+import React, { useEffect, useId, useRef, useState } from 'react';
+import { ArrowDownWideNarrow, GripVertical, Info, LockKeyhole } from 'lucide-react';
 import { ELEMENT_EMOJI } from '../engine/formulas';
 import { RetroSpellIcon } from './RetroAssets';
 import { combatShortcut, combatShortcutIndex, isTypingTarget, moveCombatSpell } from './combatShortcuts';
 import { sortSpellsByType, spellPresentation } from './spellPresentation';
+import { inspectCombatSpell, spellRangeLabel, turnLabel } from './spellDetailModel';
+import SpellHoverCard from './SpellHoverCard';
 
-function spellTitle(s) {
-  const bits = [...(!s.isWeapon ? [`niveau ${s.grade}`] : []), `${s.pa} PA`, `portée ${s.range[0]}-${s.range[1]}`];
-  if (s.lineOnly) bits.push('en ligne');
-  if (!s.needsLos) bits.push('sans ligne de vue');
-  if (s.cooldown > 0) bits.push(`relance ${s.cooldown}t`);
-  if (s.usesPerTurn > 0) bits.push(`${s.usesPerTurn}x/tour`);
-  if (s.usesPerTarget > 0) bits.push(`${s.usesPerTarget}x/cible`);
-  if (s.failRate > 0) bits.push(`échec critique 1/${s.failRate} (${(100 / s.failRate).toLocaleString('fr-FR', { maximumFractionDigits: 2 })} %)${s.endsTurnOnFailure ? ' : termine le tour' : ''}`);
-  if (s.unsupportedEffects?.length) bits.push('Certains effets restent à reproduire — voir le Grimoire');
-  return `${s.name} — ${bits.join(' · ')}`;
-}
-
-export default function CombatSpellBar({ spells, spellInfo, pa, humanTurn, active, selectedSpell, onSelect, onSelfCast, onHover, onCancel, onReorder, saveError, status }) {
+export default function CombatSpellBar({ spells, spellInfo, fighter, pa, humanTurn, active, selectedSpell, onSelect, onSelfCast, onHover, onCancel, onReorder, onInspect, saveError, status }) {
   const [dragged, setDragged] = useState(null);
   const [dropTarget, setDropTarget] = useState(null);
   const drag = useRef(null);
   const suppressClick = useRef(false);
+  const barRef = useRef(null);
+  const [barWidth, setBarWidth] = useState(0);
+  useEffect(() => {
+    if (!barRef.current || typeof ResizeObserver === 'undefined') return undefined;
+    const observer = new ResizeObserver(([entry]) => setBarWidth(entry.contentRect.width));
+    observer.observe(barRef.current);
+    return () => observer.disconnect();
+  }, []);
+  const [hoverCard, setHoverCard] = useState(null);
+  const hoverTimer = useRef(null), cardId = useId();
+  const keepCard = () => clearTimeout(hoverTimer.current);
+  const closeCard = () => { keepCard(); setHoverCard(null); };
+  const leaveCard = () => { keepCard(); hoverTimer.current = setTimeout(() => setHoverCard(null), 200); };
+  const showCard = (spell, index, anchor) => {
+    if (drag.current !== null || document.querySelector('dialog[open]')) return;
+    keepCard();
+    if (hoverCard?.spellKey === spell.key) return;
+    setHoverCard(null);
+    hoverTimer.current = setTimeout(() => {
+      if (anchor.isConnected && drag.current === null && !document.querySelector('dialog[open]')) {
+        setHoverCard({ spellKey: spell.key, index, anchor });
+      }
+    }, 1000);
+  };
+  useEffect(() => () => clearTimeout(hoverTimer.current), []);
+  useEffect(() => {
+    if (!hoverCard) return undefined;
+    const escape = event => { if (event.key === 'Escape') { event.preventDefault(); closeCard(); } };
+    window.addEventListener('keydown', escape, true);
+    return () => window.removeEventListener('keydown', escape, true);
+  });
   const unavailable = info => !humanTurn || !info || info.pa > pa || info.cooldownLeft > 0 || info.usesLeft <= 0;
 
   useEffect(() => {
     if (!active || !humanTurn) return undefined;
     const keydown = event => {
       if (event.defaultPrevented || event.repeat || event.isComposing || drag.current !== null
-        || isTypingTarget(event.target) || document.querySelector('dialog[open], [role="dialog"][aria-modal="true"]')) return;
+        || isTypingTarget(event.target) || event.target.closest?.('.spell-hover-card') || document.querySelector('dialog[open], [role="dialog"][aria-modal="true"]')) return;
       if (event.key === 'Escape' && selectedSpell) {
         event.preventDefault(); onCancel(); return;
       }
@@ -50,12 +71,17 @@ export default function CombatSpellBar({ spells, spellInfo, pa, humanTurn, activ
     if (next !== ids) onReorder(next);
   };
 
-  // Keep the standard spell book on two rows so names have room to be read.
-  const rows = Math.max(2, Math.ceil(spells.length / 24));
-  const narrowRows = Math.max(2, Math.ceil(spells.length / 16));
-  return <section className="combat-spellbar" aria-label="Barre de sorts" style={{
+  // Wrap only when another slot would squeeze the icons and their controls.
+  const minimumWidth = barWidth >= 900 ? 82 : barWidth >= 650 ? 60 : 44;
+  const capacity = barWidth ? Math.max(1, Math.floor((barWidth + 3) / (minimumWidth + 3))) : 12;
+  const rows = Math.max(1, Math.ceil(spells.length / capacity));
+  const hovered = hoverCard && spells.find(spell => spell.key === hoverCard.spellKey);
+  const details = hovered && { ...inspectCombatSpell(hovered, fighter), ...spellInfo[hovered.key] };
+  const availability = details?.cooldownLeft > 0 ? `Disponible dans ${turnLabel(details.cooldownLeft)}`
+    : details?.usesLeft <= 0 ? 'Limite de lancers atteinte pour ce tour'
+      : humanTurn && details?.pa > pa ? `PA insuffisants : ${details.pa} nécessaires, ${pa} disponibles` : !humanTurn ? 'Consultation · En attente de votre tour' : null;
+  return <section ref={barRef} className="combat-spellbar" aria-label="Barre de sorts" style={{
     '--spell-columns': Math.ceil(spells.length / rows), '--spell-rows': rows,
-    '--spell-columns-narrow': Math.ceil(spells.length / narrowRows), '--spell-rows-narrow': narrowRows,
   }}>
     <div className="spellbar-guide">
       {status || <span title="Glissez les sorts pour les déplacer ; leur ordre est sauvegardé automatiquement.">Glisser pour réorganiser</span>}
@@ -71,22 +97,24 @@ export default function CombatSpellBar({ spells, spellInfo, pa, humanTurn, activ
       {spells.map((spell, index) => {
         const info = spellInfo[spell.key], disabled = unavailable(info), shortcut = combatShortcut(index);
         const presentation = spellPresentation(spell);
-        const title = `${spellTitle(info || spell)} · ${presentation.label}${shortcut ? ` · Raccourci ${shortcut.label}` : ''} · Clic droit : lancer sur vous si le ciblage le permet`;
+        const title = `${spell.name} — ${(info || spell).pa} PA · ${spellRangeLabel(info || spell)}${shortcut ? ` · Raccourci ${shortcut.label}` : ''}`;
         return <div key={spell.key} data-spell-id={spell.id}
           data-spell-category={presentation.category} style={{ '--spell-color': presentation.color }}
           className={`spell-slot${dragged === spell.id ? ' dragging' : ''}${dropTarget === spell.id && dragged !== spell.id ? ' drop-target' : ''}`}
-          draggable={!spell.isWeapon && !!onReorder} title={`${title} · ${spell.isWeapon ? 'Arme toujours en première case' : onReorder ? 'Glissez pour déplacer ; Alt + ← / → au clavier' : 'Sort du monstre'}`}
+          draggable={!spell.isWeapon && !!onReorder}
           tabIndex={disabled ? 0 : undefined} aria-label={disabled ? `${spell.name}, indisponible. ${spell.isWeapon ? 'Arme en première case.' : 'Alt + flèches pour déplacer.'}` : undefined}
-          onMouseEnter={() => onHover?.(active && !disabled && drag.current === null ? info : null)}
+          onMouseEnter={event => onHover?.(!event.target.closest?.('.spell-info-button') && active && !disabled && drag.current === null ? info : null)}
           onMouseLeave={() => onHover?.(null)}
           onPointerDown={() => { suppressClick.current = false; }}
           onClickCapture={event => { if (suppressClick.current) { event.preventDefault(); event.stopPropagation(); suppressClick.current = false; } }}
           onContextMenu={event => {
             event.preventDefault();
+            closeCard();
             if (active && !disabled && drag.current === null) onSelfCast?.(info);
           }}
           onDragStart={event => {
             if (spell.isWeapon || !onReorder) { event.preventDefault(); return; }
+            closeCard();
             onHover?.(null);
             drag.current = spell.id; setDragged(spell.id); suppressClick.current = true;
             event.dataTransfer.effectAllowed = 'move';
@@ -109,10 +137,11 @@ export default function CombatSpellBar({ spells, spellInfo, pa, humanTurn, activ
           }}>
           <div className="spell-slot-tools" aria-hidden="true"><kbd>{shortcut?.label || '—'}</kbd>{spell.isWeapon ? <LockKeyhole size={13} /> : <GripVertical size={13} />}</div>
           <button type="button" className={`spell-btn${selectedSpell === spell.key ? ' selected' : ''}`}
-            disabled={disabled} title={title} aria-label={title} aria-keyshortcuts={shortcut?.aria}
-            onClick={() => { if (active && !disabled) onSelect(info); }}>
+            disabled={disabled} aria-label={title} aria-keyshortcuts={shortcut?.aria}
+            onMouseEnter={() => onHover?.(active && !disabled && drag.current === null ? info : null)}
+            onClick={() => { closeCard(); if (active && !disabled) onSelect(info); }}>
             <span className="ic"><RetroSpellIcon spell={spell} /></span>
-            <span className={`spell-cost${info?.cooldownLeft > 0 ? ' on-cooldown' : ''}`} aria-hidden="true" title={info?.cooldownLeft > 0 ? 'Tours de relance restants' : 'Coût en PA'}>{info?.cooldownLeft > 0 ? `⌛${info.cooldownLeft}` : info?.pa ?? spell.pa}</span>
+            <span className={`spell-cost${info?.cooldownLeft > 0 ? ' on-cooldown' : ''}`} aria-hidden="true">{info?.cooldownLeft > 0 ? `⌛${info.cooldownLeft}` : info?.pa ?? spell.pa}</span>
             <span className="nm">{spell.name}</span>
             <span className="meta">
               {spell.element ? `${ELEMENT_EMOJI[spell.element]} ` : ''}{info?.pa ?? spell.pa} PA
@@ -121,9 +150,29 @@ export default function CombatSpellBar({ spells, spellInfo, pa, humanTurn, activ
               {info && info.cooldownLeft > 0 ? ` · ⏳${info.cooldownLeft}` : ''}
             </span>
           </button>
+          <button type="button" className="spell-info-button" aria-label={`Informations sur ${spell.name}`}
+            aria-expanded={hoverCard?.spellKey === spell.key}
+            aria-controls={hoverCard?.spellKey === spell.key ? cardId : undefined}
+            onMouseEnter={event => { onHover?.(null); showCard(spell, index, event.currentTarget); }}
+            onMouseLeave={leaveCard}
+            onFocus={event => showCard(spell, index, event.currentTarget)}
+            onBlur={event => { if (!event.relatedTarget?.closest?.('.spell-hover-card')) leaveCard(); }}
+            onPointerDown={event => { event.stopPropagation(); suppressClick.current = false; }}
+            onClick={event => { event.stopPropagation(); showCard(spell, index, event.currentTarget); }}
+            onContextMenu={event => { event.preventDefault(); event.stopPropagation(); }}
+            draggable={false} onDragStart={event => { event.preventDefault(); event.stopPropagation(); }}>
+            <Info size={14} aria-hidden="true" />
+          </button>
         </div>;
       })}
     </div>
+    {details && <SpellHoverCard id={cardId} anchor={hoverCard.anchor} spell={details} ownerName={fighter?.name}
+      shortcut={combatShortcut(hoverCard.index)?.label} availability={availability}
+      onKeepOpen={keepCard} onLeave={leaveCard} onClose={closeCard}
+      onOpen={onInspect ? () => {
+        hoverCard.anchor.focus({ preventScroll: true });
+        closeCard(); onInspect(hovered.key);
+      } : undefined} />}
     {saveError && <p className="spellbar-save-error" role="alert">L’ordre a été modifié, mais sa sauvegarde dans le navigateur a échoué.</p>}
   </section>;
 }

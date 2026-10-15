@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Bot, Castle, ChevronRight, Gamepad2, MapPin, Plus, Shield, Swords, Target, Users, X } from 'lucide-react';
 import { MAPS } from '../engine/maps';
+import { dungeonMap } from '../engine/customMaps';
 import { KANOJEDO_MAP_ID, POUTCH_ID, POUTCH_GRADES, getMonster, monsterGrades } from '../engine/monsters';
 import { dungeonForBoss, dungeonRoster } from '../engine/dungeons';
 import { opponentSummary } from '../engine/opponentTeam';
@@ -26,7 +27,7 @@ export default function CombatPreview({ mode, leader, allies, opponents, automat
   const assets = useRetroAssets();
   const room = mode === 'boss' ? dungeonForBoss(bossId) : null;
   const monster = getMonster(mode === 'kanojedo' ? POUTCH_ID : bossId, mode === 'kanojedo' ? monsterGrade : bossGrade);
-  const arena = MAPS[mode === 'kanojedo' ? KANOJEDO_MAP_ID : mode === 'boss' ? customDungeon?.mapId || room?.combatMapId : mapId];
+  const arena = mode === 'boss' && customDungeon ? dungeonMap(customDungeon) : MAPS[mode === 'kanojedo' ? KANOJEDO_MAP_ID : mode === 'boss' ? room?.combatMapId : mapId];
   const foes = useMemo(() => {
     if (mode === 'duel') return opponents;
     if (mode === 'kanojedo') return [{ kind: 'monster', monsterId: POUTCH_ID, grade: monsterGrade }];

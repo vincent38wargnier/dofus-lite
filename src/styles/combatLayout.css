@@ -37,7 +37,7 @@ html:has(.app.in-combat), body:has(.app.in-combat), #root:has(.app.in-combat) { 
 /* Compact icons keep every learned spell visible, including extra spells. */
 .combat-dock { flex: 0 0 auto; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 5px; }
 .in-combat .combat-spellbar { min-width: 0; position: relative; display: flex; flex-direction: column; gap: 3px; padding: 0 2px; }
-.in-combat .spellbar-guide { height: 24px; min-width: 0; margin: 0; font-size: 9px; line-height: 18px; flex-wrap: nowrap; align-items: center; }
+.in-combat .spellbar-guide { height: 20px; min-width: 0; margin: 0; font-size: 9px; line-height: 18px; flex-wrap: nowrap; align-items: center; }
 .in-combat .spellbar-guide > * { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .in-combat .spellbar-guide > .spellbar-actions { flex-shrink: 0; overflow: visible; display: flex; gap: 10px; align-items: center; }
 .spellbar-shortcuts, .spellbar-count { color: #72795f; }
@@ -47,17 +47,17 @@ html:has(.app.in-combat), body:has(.app.in-combat), #root:has(.app.in-combat) { 
 .in-combat .turn-status { min-width: 0; font-size: 11px; font-weight: 600; }
 .in-combat .turn-status.yours { color: #4c672d; }
 .tackle-chance { color: #a86a30; }
-.in-combat .spellbar { display: grid; min-width: 0; gap: 3px; grid-template-columns: repeat(var(--spell-columns), minmax(0, 1fr)); grid-template-rows: repeat(var(--spell-rows), 54px); }
+.in-combat .spellbar { display: grid; min-width: 0; gap: 3px; grid-template-columns: repeat(var(--spell-columns), minmax(0, 1fr)); grid-template-rows: repeat(var(--spell-rows), 44px); }
 .in-combat .spell-slot { min-height: 0; }
-.in-combat .spell-slot .spell-btn { min-width: 0; min-height: 0; width: 100%; height: 100%; padding: 10px 3px 1px; gap: 0; justify-content: center; overflow: hidden; border-radius: 4px; border-color: #b9bea4; border-left: 3px solid var(--spell-color); background: #f7f6e9; }
+.in-combat .spell-slot .spell-btn { min-width: 0; min-height: 0; width: 100%; height: 100%; padding: 5px 3px 1px; gap: 0; justify-content: center; overflow: hidden; border-radius: 4px; border-color: #b9bea4; border-left: 3px solid var(--spell-color); background: #f7f6e9; }
 .in-combat .spell-slot .spell-btn.selected { border-color: #657f37; background: #e2ebc5; }
 .in-combat .spell-slot[draggable=false] { cursor: default; }
 .in-combat .spell-slot .spell-btn:disabled { opacity: .46; }
 .in-combat .spell-slot-tools { top: 1px; left: 3px; right: 2px; }
 .in-combat .spell-slot-tools kbd { font-size: 8px; line-height: 10px; }
 .in-combat .spell-slot-tools svg { width: 9px; height: 9px; opacity: .5; }
-.in-combat .spell-btn .ic { display: flex; align-items: center; justify-content: center; flex: 0 0 29px; width: 29px; height: 29px; max-width: 100%; min-height: 0; }
-.in-combat .spell-btn .retro-spell-icon { width: 29px; height: 29px; max-width: 100%; max-height: 100%; padding: 0; object-fit: contain; }
+.in-combat .spell-btn .ic { display: flex; align-items: center; justify-content: center; flex: 0 0 26px; width: 26px; height: 26px; max-width: 100%; min-height: 0; }
+.in-combat .spell-btn .retro-spell-icon { width: 26px; height: 26px; max-width: 100%; max-height: 100%; padding: 0; object-fit: contain; }
 .in-combat .spell-btn .nm { display: block; width: 100%; padding: 0 8px; min-height: 11px; font-size: 9px; line-height: 11px; overflow: hidden; text-overflow: ellipsis; }
 .in-combat .spell-btn .meta { display: none; }
 .spell-cost { position: absolute; right: 2px; bottom: 1px; padding: 0 2px; border-radius: 3px; font-size: 8px; font-weight: 800; line-height: 11px; color: #305d82; background: #f7f6e9e8; }
@@ -65,7 +65,7 @@ html:has(.app.in-combat), body:has(.app.in-combat), #root:has(.app.in-combat) { 
 .in-combat .spellbar-save-error { position: absolute; bottom: 100%; margin: 0; padding: 6px; background: var(--panel); border: 1px solid var(--red); border-radius: 4px; font-size: 11px; z-index: 2700; }
 
 /* Effects and inspected stats flank the player's permanent turn controls. */
-.combat-stats { height: 136px; min-width: 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 156px minmax(0, 1fr); gap: 12px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 7px; background: var(--panel); }
+.combat-stats { height: 116px; min-width: 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 156px minmax(0, 1fr); gap: 12px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 7px; background: var(--panel); }
 .combat-stats.inspecting { border-color: #b48a53; background: #fcf9ee; }
 .dock-details, .dock-fighter-summary { display: flex; flex-direction: column; min-width: 0; min-height: 0; gap: 5px; }
 .dock-fighter-heading { display: flex; align-items: center; min-width: 0; gap: 7px; flex: 0 0 29px; }
@@ -109,7 +109,7 @@ html:has(.app.in-combat), body:has(.app.in-combat), #root:has(.app.in-combat) { 
 .player-resources > span { display: flex; align-items: center; gap: 2px; }
 .player-resources strong { font-size: 12px; }.player-resources small { display: none; }
 .player-resources .hp { color: #b74735; }
-.turn-dial { flex: 0 0 auto; width: 66px; height: 66px; padding: 4px; border-radius: 50%; background: conic-gradient(#7c914e var(--turn-progress), #dfe2d4 0); box-shadow: 0 0 0 1px #cdd2bd; }
+.turn-dial { flex: 0 0 auto; width: 52px; height: 52px; padding: 4px; border-radius: 50%; background: conic-gradient(#7c914e var(--turn-progress), #dfe2d4 0); box-shadow: 0 0 0 1px #cdd2bd; }
 .turn-dial.urgent { background: conic-gradient(#c75e3d var(--turn-progress), #e6ddd2 0); }
 .turn-dial > div { width: 100%; height: 100%; border-radius: 50%; background: #36432e; color: #fffdec; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; gap: 2px; }
 .turn-dial strong { font-size: 25px; font-variant-numeric: tabular-nums; }.turn-dial small { font-size: 7px; letter-spacing: 1px; color: #bfcbae; }.turn-dial span { font-size: 9px; }
@@ -130,7 +130,7 @@ html:has(.app.in-combat), body:has(.app.in-combat), #root:has(.app.in-combat) { 
 .auto-dungeon .player-resources small { display: inline; font-size: 8px; }
 
 @container (max-width: 900px) {
-  .in-combat .spellbar { grid-template-columns: repeat(var(--spell-columns-narrow), minmax(0, 1fr)); grid-template-rows: repeat(var(--spell-rows-narrow), 32px); }
+  .in-combat .spellbar { grid-template-rows: repeat(var(--spell-rows), 32px); }
   .in-combat .spell-slot .spell-btn { padding-top: 7px; }
   .in-combat .spell-btn .ic, .in-combat .spell-btn .retro-spell-icon { width: 23px; height: 23px; flex-basis: 23px; }
   .in-combat .spell-btn .nm { display: none; }
@@ -154,7 +154,7 @@ html:has(.app.in-combat), body:has(.app.in-combat), #root:has(.app.in-combat) { 
   .in-combat .fight-heading > div:first-child { flex-direction: column; align-items: stretch; gap: 0; }
   .in-combat .fight-heading h1 { font-size: 11px; }.in-combat .fight-heading > div > p:last-child { font-size: 9px; }
   .in-combat .fight-heading .btn { padding: 4px 6px; font-size: 10px; }
-  .in-combat .spellbar { grid-template-columns: repeat(8, minmax(0, 1fr)); grid-template-rows: none; grid-auto-rows: 31px; gap: 3px; }
+  .in-combat .spellbar { grid-template-rows: repeat(var(--spell-rows), 31px); gap: 3px; }
   .in-combat .spell-slot-tools svg { display: none; }
   .spellbar-count { display: none; }
   .in-combat .turn-status { font-size: 10px; }

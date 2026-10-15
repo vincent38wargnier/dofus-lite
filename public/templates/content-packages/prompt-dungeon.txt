@@ -11,7 +11,7 @@ The user imports the ZIP in Atelier → Importer un ZIP. Images and JSON are sav
 If you can create files, return the actual ZIP and a brief kit/room summary. If you cannot attach files, be honest and provide one complete Python script (stdlib zipfile, json; no downloads) that writes the exact ZIP, including all JSON. Do not claim to have created a file you cannot attach. Never invent a download link.
 
 ## Creative freedom and supported scope
-Follow the user's theme for names, visual identity, personalities, tactics and spell combinations. You may combine any of the supported effects. All names/descriptions may be French. This version imports one class or one combat room, not a campaign. Choose any listed map; imported geometry/backgrounds are not supported yet. Each creature may have a different reference model, artwork and a unique spell kit. You define EVERY creature's spells; its original reference spellbook is replaced completely.
+Follow the user's theme for names, visual identity, personalities, tactics and spell combinations. You may combine any of the supported effects. All names/descriptions may be French. The content.json format imports one class or one combat room. For a sequential campaign use an Atelier archive (atelier.json), with 1–20 ordered rooms and shared supplied heroes; see references/dungeon-campaigns.md. Each room unlocks only after victory in the preceding room, and the party resets fully between rooms. Include ALL rooms and their image/spell/equipment dependencies; the archive does not include saved victories. Choose any listed map for this content.json format. The separate Atelier archive can embed original flat battlefields up to 40×40 cells and explicit army encounters with up to 32 enemies (8 allies); optional commander defeat collapses the army. See references/original-battlefields.md in the full kit for that distinct format. Do not put Atelier fields into content.json. Each creature may have a different reference model, artwork and a unique spell kit. You define EVERY creature's spells; its original reference spellbook is replaced completely.
 Custom mechanics available in v1: damage, lifeSteal, heal, buffs (damage/power/stats/PA/PM/range/crit/vitality), armor, resistance buffs/debuffs, dodgeable PA/PM removal, range reduction, push, pull, teleport. New summons, poisons, traps, glyphs, conditional triggers, states, resurrection and scripted mechanics are NOT available in this ZIP version. Do not disguise an unsupported mechanic in a description or an animation ID. Adapt the theme honestly to supported mechanics. Existing UI catalogue spells remain available separately.
 
 ## Enforced limits
@@ -44,7 +44,7 @@ For weapons, at item level L set F=(10+.15*L)/(1+(100+2*L)/100). Each damage/hea
 Raw total = passive+attack. Item score = 100*max(rawTotal/totalAllowance, passive/passiveAllowance, attack/attackAllowance), with the attack ratio zero for non-weapons. Every positive stat must ALSO fit its independent numerical cap; a legal +1 AP is not automatically a 100-point item. Check the unrounded score against 100; the displayed decimal is not extra budget. Negative stats require a supported negative effect and magnitude <=max(1,the positive stat ceiling), with no budget credit.
 
 ### Equipment creator limits
-Supported families: hats, capes/bags, amulets, rings, belts, boots, bows, wands, staves, daggers, swords, hammers, shovels, axes, shields, pets and mounts. Name 1-80 characters; required level 1-200; supported integer bonuses and fixed permanent rolls. Dofus, special tools, arbitrary effects/scripts and custom set bonuses cannot be created. Appearance comes from a native model; its type, weapon area, handedness and failure rate cannot be overridden. Shields retain their model's rank conditions. Mounted animations are not added by the creator.
+Supported families: hats, capes/bags, amulets, rings, belts, boots, bows, wands, staves, daggers, swords, hammers, shovels, axes, shields, pets and mounts. Name 1-80 characters; required level 1-200; supported integer bonuses and fixed permanent rolls. Dofus, special tools, arbitrary effects/scripts and custom set bonuses cannot be created. Appearance uses a built-in custom shape (equipment, crystal or rune) with a six-digit hex colour, or a legacy native appearance; arbitrary equipment PNGs are not imported. The reference model still fixes type, weapon area, handedness and failure rate. Shields retain their model's rank conditions. Mounted animations are not added by the creator.
 Weapon: 2-7 AP; 1-4 lines; melee range exactly 1-1, bows/wands min/max 1-10 with min<=max. Damage/lifeSteal/heal bounds 1-80 per line, AP removal/steal 1-2, min<=max. Critical disabled (0) or denominator 20-100, bonus 0-20 per eligible line. These are structural ceilings, not allowances to set every field to its maximum. Permanent bonus caps AND all power budgets must still pass. Custom gear has fixed rolls and cannot be forgemaged; edit it in the equipment workshop. Saved revisions keep existing equipped copies/replays intact.
 
 ### Whole-outfit budget
@@ -73,10 +73,389 @@ Test normal/critical variants, boosts→attack in same turn, three consecutive t
 ## Images, animations and archive
 Images OPTIONAL: omit artwork and icon fields to use existing native models/icons. This makes a text-only AI's ZIP directly playable. If artwork is declared, include ALL three required PNGs for that owner. The same artwork folder/icon may be shared. No empty images, absent referenced files, undeclared files or fake placeholders claiming finished theme art.
 artwork is a folder path, e.g. artwork/warden. Required portrait.png, idle-front.png, idle-back.png are 256×256. Feet anchor x=128,y=224; front faces screen down-right, back up-left, other directions are mirrored. Use consistent scale and leave headroom. Non-portrait frames must contain visible pixels and transparent background. Optional walk-front/back and cast-front/back strips are 1536×256 (6 horizontal 256×256 frames); optional hit-front/back strips 768×256 (3 frames). Walk12fps, cast10fps, hit10fps. Missing actions use idle; include animation strips for fully animated custom artwork.
-Optional spell icon path icons/<slug>.png: 64×64 visible PNG. PNGs must be RGBA 8-bit, non-interlaced, no APNG; each ≤2 MiB, character artwork set ≤12 MiB. visualSpellId must exist in the listed class catalogue; it chooses the original icon/effect/gesture/audio fallback and has NO influence on mechanics. Custom raster icons/characters are accepted; new Flash effects/audio are not imported.
+Optional spell icon path icons/<slug>.png: 64×64 visible PNG. PNGs must be RGBA 8-bit, non-interlaced, no APNG; each ≤2 MiB, character artwork set ≤12 MiB. Choose either visualSpellId from the listed class catalogue OR visualEffect for original visuals. visualEffect has exactly {version:1,kind,color,accent,durationMs}; kind is slash,thrust,arrow,ice-lance,shatter,fireball,fire-wave,shield,embers,raven-step,fang,rally,bell; colors are six-digit hex and durationMs is integer 250–1500. This uses original vector choreography and synthesized audio with no client effect assets. Prefer it when the user requests wholly original themed visuals. Both choices have NO influence on mechanics. Custom raster icons/characters are accepted; new Flash effects/audio are not imported.
 ZIP is standard STORE or DEFLATE, no passwords, symlinks, ZIP64, executables, external URLs or ../ paths. Limit 32 MiB packed, 48 MiB expanded, 180 entries including directories; content.json ≤512 KiB. Only content.json and declared icons/artwork PNGs belong in the ZIP; omit .DS_Store, __MACOSX, README, schemas and unused images. Directory entries are allowed. No manual installation is needed.
 Before delivering, validate the exact schema plus semantic limits above, all references, unique keys, total room count, spell counts, effect compatibility, image dimensions and actual PNG contents. A schema-only check is insufficient. Explain any remaining balance concerns separately from the ZIP.
+If the complete authoring kit is attached, run from its retro-class-designer directory: node scripts/validate.cjs package your-final.zip (Node.js 20+, no npm install). This bundles the game's actual numeric validators and reference data. Fix errors until exit code 0, then deliver its JSON report with the ZIP. During design, equipment item.json checks a custom item and character character.json checks a full {name,classId,loadout} snapshot, including equipment, FM, spells and outfit synergy; these JSON inputs do not change the import format. The kit's references/validation.md explains all modes. If no execution tool or kit is available, state that these checks were not run; do not claim a score was verified from estimates alone.
 
+## AI art production
+Keep one approved art direction, palette, light direction and character reference throughout the package. Create one image per requested filename, not a labelled contact sheet. Generate each distinct class/creature once; duplicate enemies may share its artwork. Include clothing in the character art: PNG actors do not have automatic hat/cape/pet attachment points. A larger boss uses the SAME 256x256 frames and foot anchor; do not enlarge its canvas.
+Character/creature artwork and 64x64 spell icons are importable today. The legacy map-layer guides, equipment PNGs, cover images and arbitrary spell PNG/audio sequences are DESIGN SOURCES. New flat map geometry/backgrounds can now travel in atelier.json via battlefield; see references/original-battlefields.md. content.json still uses an existing map ID. Both formats accept the original vector visualEffect descriptor described in the runtime rules. Deliver only the unsupported design sources separately in a design-sources folder/ZIP; do not put undeclared files inside the playable ZIP. Equipment stats and built-in shape/color appearances CAN travel in an Atelier export; this does not enable arbitrary equipment PNGs. New terrain/collision/placement rules cannot be created by drawing a map.
+For the legacy map-layer design workflow, choose an existing map ID and use its exact guide from the complete kit (assets/ai-design/maps/<mapId>/). Attach guide.png, clean.png and geometry.json to the image AI; preserve projection, canvas, traversable cells, LoS and spawn positions. The overlay is technical guidance, never part of the final picture. Full map and layer prompts are included below. Without the guide files, produce a labelled concept only and retain the original playable map. Do not invent an import field for it.
+AI images may have wrong sizes, painted checkerboards, clipped silhouettes, extra frames or inconsistent limbs. Inspect EVERY animation frame and verify real alpha, dimensions, filenames and file limits before packing. Blank guides are drawing aids and must never be presented as finished theme art. If the AI has no image tools, omit optional artwork fields and state that native fallbacks are used; do not fabricate PNGs, downloads or completed image work.
+The complete kit includes an offline visual guide, one prompt per output, character SVG/blank PNG templates, icon/equipment templates, map guides/geometry and a local PNG checker. These authoring resources are not files to put in content.json's playable ZIP.
+Raster spell animations have a complete DESIGN-source kit in assets/ai-design/spell-fx/: a closed effect.json schema, six layer templates, an offline animated viewer and a portable checker (scripts/check-spell-fx.cjs). Use the complete effect and per-layer prompts below. These conventions are new authoring rules, not the native SWF format, and are not yet imported by the game.
+
+### Direction artistique commune — reference
+THEME / CE QUE JE VEUX CREER: [describe the project].
+Plan a consistent visual identity for a tactical RPG class, dungeon and equipment collection. Deliver a short art bible with palette (hex colours), light direction, materials, silhouette language, readable motifs, and the difference between hero, companion and boss. Keep the UI's elemental colour cues legible.
+Create an asset checklist: each distinct character/creature needs 3 core PNGs and up to 6 animation PNGs; each distinct spell may have one 64x64 icon. The map-layer guide outputs, equipment art, covers and arbitrary PNG FX/audio remain design sources. Original flat battlefields and vector effects have a separate runtime contract in references/original-battlefields.md; use that contract when original playable scenery/effects are required.
+For every entry specify owner key, exact filename, size, frame count, input references, prompt, current import support and review status (planned / generated / checked). Do not mark a file generated until it exists. Do not change combat mechanics to match the art. Start by approving a front idle and palette; reuse them for all other views. Reference images and descriptions are not sprites.
+
+### Portrait — importable
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+
+OUTPUT: artwork/<owner-key>/portrait.png, exactly 256x256 pixels.
+Draw a recognisable bust portrait of this character/creature, centred with breathing room around the face, on a transparent background. Preserve the same face and accessories as the approved front idle. This is only the menu portrait; it does not replace the full-body combat frames.
+Export 8-bit RGBA, non-interlaced PNG, no APNG, maximum 2 MiB per file. Transparency must be actual alpha, not a drawn checkerboard or a solid colour.
+The complete 3–9-file set must total at most 12 MiB. Use character/guides/portrait.svg to check alignment; hide all guides in the final export. These same requirements apply to humanoids, animals, monsters and bosses. This file is importable when declared by its owner's artwork folder.
+
+### Repos · face ↘ — importable
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+
+OUTPUT: artwork/<owner-key>/idle-front.png, exactly 256x256 pixels.
+Show the full character in three-quarter FRONT view, facing screen DOWN-RIGHT (SE), in a fixed 2:1 isometric game view. The game mirrors this art for the opposite diagonal. Every combat frame is 256x256. The ground contact midpoint is (128,224), measured from the TOP LEFT of EACH frame. Suggested body region x32..224, y24..224; weapons/hair may extend inside the canvas but must not be clipped. Use a fixed camera and scale. No floor, pedestal, cast shadow, selection ring, health bar or scenery. Draw the complete equipped appearance; separate item images are not overlaid on PNG characters.
+One calm, readable idle pose.
+Export 8-bit RGBA, non-interlaced PNG, no APNG, maximum 2 MiB per file. Transparency must be actual alpha, not a drawn checkerboard or a solid colour.
+The complete 3–9-file set must total at most 12 MiB. Use character/guides/idle-front.svg to check alignment; hide all guides in the final export. These same requirements apply to humanoids, animals, monsters and bosses. This file is importable when declared by its owner's artwork folder.
+
+### Repos · dos ↖ — importable
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+
+OUTPUT: artwork/<owner-key>/idle-back.png, exactly 256x256 pixels.
+Show the full character in three-quarter REAR view, facing screen UP-LEFT (NW), in a fixed 2:1 isometric game view. The game mirrors this art for the opposite diagonal. Every combat frame is 256x256. The ground contact midpoint is (128,224), measured from the TOP LEFT of EACH frame. Suggested body region x32..224, y24..224; weapons/hair may extend inside the canvas but must not be clipped. Use a fixed camera and scale. No floor, pedestal, cast shadow, selection ring, health bar or scenery. Draw the complete equipped appearance; separate item images are not overlaid on PNG characters.
+One calm, readable idle pose.
+Export 8-bit RGBA, non-interlaced PNG, no APNG, maximum 2 MiB per file. Transparency must be actual alpha, not a drawn checkerboard or a solid colour.
+The complete 3–9-file set must total at most 12 MiB. Use character/guides/idle-back.svg to check alignment; hide all guides in the final export. These same requirements apply to humanoids, animals, monsters and bosses. This file is importable when declared by its owner's artwork folder.
+
+### Marche · face ↘ — importable
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+
+OUTPUT: artwork/<owner-key>/walk-front.png, exactly 1536x256 pixels.
+Show the full character in three-quarter FRONT view, facing screen DOWN-RIGHT (SE), in a fixed 2:1 isometric game view. The game mirrors this art for the opposite diagonal. Every combat frame is 256x256. The ground contact midpoint is (128,224), measured from the TOP LEFT of EACH frame. Suggested body region x32..224, y24..224; weapons/hair may extend inside the canvas but must not be clipped. Use a fixed camera and scale. No floor, pedestal, cast shadow, selection ring, health bar or scenery. Draw the complete equipped appearance; separate item images are not overlaid on PNG characters.
+Animate six-frame full walk cycle: left contact, left down/passing, right passing/up, right contact, right down/passing, left passing/up. Alternate the legs clearly. Move in place; do not slide the whole body across the strip. Frame 6 must transition cleanly to frame 1.
+Place exactly 6 frames LEFT TO RIGHT in ONE horizontal row, no margins between frames, no padding. Keep direction and outfit identical in every frame. Playback: 12 fps. If your tool cannot make a reliable strip, generate individual 256x256 frames and assemble without stretching them; the delivered file must still be the exact strip size.
+Export 8-bit RGBA, non-interlaced PNG, no APNG, maximum 2 MiB per file. Transparency must be actual alpha, not a drawn checkerboard or a solid colour.
+The complete 3–9-file set must total at most 12 MiB. Use character/guides/walk-front.svg to check alignment; hide all guides in the final export. These same requirements apply to humanoids, animals, monsters and bosses. This file is importable when declared by its owner's artwork folder.
+
+### Marche · dos ↖ — importable
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+
+OUTPUT: artwork/<owner-key>/walk-back.png, exactly 1536x256 pixels.
+Show the full character in three-quarter REAR view, facing screen UP-LEFT (NW), in a fixed 2:1 isometric game view. The game mirrors this art for the opposite diagonal. Every combat frame is 256x256. The ground contact midpoint is (128,224), measured from the TOP LEFT of EACH frame. Suggested body region x32..224, y24..224; weapons/hair may extend inside the canvas but must not be clipped. Use a fixed camera and scale. No floor, pedestal, cast shadow, selection ring, health bar or scenery. Draw the complete equipped appearance; separate item images are not overlaid on PNG characters.
+Animate six-frame full walk cycle: left contact, left down/passing, right passing/up, right contact, right down/passing, left passing/up. Alternate the legs clearly. Move in place; do not slide the whole body across the strip. Frame 6 must transition cleanly to frame 1.
+Place exactly 6 frames LEFT TO RIGHT in ONE horizontal row, no margins between frames, no padding. Keep direction and outfit identical in every frame. Playback: 12 fps. If your tool cannot make a reliable strip, generate individual 256x256 frames and assemble without stretching them; the delivered file must still be the exact strip size.
+Export 8-bit RGBA, non-interlaced PNG, no APNG, maximum 2 MiB per file. Transparency must be actual alpha, not a drawn checkerboard or a solid colour.
+The complete 3–9-file set must total at most 12 MiB. Use character/guides/walk-back.svg to check alignment; hide all guides in the final export. These same requirements apply to humanoids, animals, monsters and bosses. This file is importable when declared by its owner's artwork folder.
+
+### Sort ou arme · face ↘ — importable
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+
+OUTPUT: artwork/<owner-key>/cast-front.png, exactly 1536x256 pixels.
+Show the full character in three-quarter FRONT view, facing screen DOWN-RIGHT (SE), in a fixed 2:1 isometric game view. The game mirrors this art for the opposite diagonal. Every combat frame is 256x256. The ground contact midpoint is (128,224), measured from the TOP LEFT of EACH frame. Suggested body region x32..224, y24..224; weapons/hair may extend inside the canvas but must not be clipped. Use a fixed camera and scale. No floor, pedestal, cast shadow, selection ring, health bar or scenery. Draw the complete equipped appearance; separate item images are not overlaid on PNG characters.
+Animate six-frame one-shot action: ready, anticipation, wind-up, release, follow-through, return to ready. It is the SAME generic gesture for every spell and weapon, not a separate spell effect. Keep the silhouette readable without a large projectile obscuring the actor.
+Place exactly 6 frames LEFT TO RIGHT in ONE horizontal row, no margins between frames, no padding. Keep direction and outfit identical in every frame. Playback: 10 fps. If your tool cannot make a reliable strip, generate individual 256x256 frames and assemble without stretching them; the delivered file must still be the exact strip size.
+Export 8-bit RGBA, non-interlaced PNG, no APNG, maximum 2 MiB per file. Transparency must be actual alpha, not a drawn checkerboard or a solid colour.
+The complete 3–9-file set must total at most 12 MiB. Use character/guides/cast-front.svg to check alignment; hide all guides in the final export. These same requirements apply to humanoids, animals, monsters and bosses. This file is importable when declared by its owner's artwork folder.
+
+### Sort ou arme · dos ↖ — importable
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+
+OUTPUT: artwork/<owner-key>/cast-back.png, exactly 1536x256 pixels.
+Show the full character in three-quarter REAR view, facing screen UP-LEFT (NW), in a fixed 2:1 isometric game view. The game mirrors this art for the opposite diagonal. Every combat frame is 256x256. The ground contact midpoint is (128,224), measured from the TOP LEFT of EACH frame. Suggested body region x32..224, y24..224; weapons/hair may extend inside the canvas but must not be clipped. Use a fixed camera and scale. No floor, pedestal, cast shadow, selection ring, health bar or scenery. Draw the complete equipped appearance; separate item images are not overlaid on PNG characters.
+Animate six-frame one-shot action: ready, anticipation, wind-up, release, follow-through, return to ready. It is the SAME generic gesture for every spell and weapon, not a separate spell effect. Keep the silhouette readable without a large projectile obscuring the actor.
+Place exactly 6 frames LEFT TO RIGHT in ONE horizontal row, no margins between frames, no padding. Keep direction and outfit identical in every frame. Playback: 10 fps. If your tool cannot make a reliable strip, generate individual 256x256 frames and assemble without stretching them; the delivered file must still be the exact strip size.
+Export 8-bit RGBA, non-interlaced PNG, no APNG, maximum 2 MiB per file. Transparency must be actual alpha, not a drawn checkerboard or a solid colour.
+The complete 3–9-file set must total at most 12 MiB. Use character/guides/cast-back.svg to check alignment; hide all guides in the final export. These same requirements apply to humanoids, animals, monsters and bosses. This file is importable when declared by its owner's artwork folder.
+
+### Impact reçu · face ↘ — importable
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+
+OUTPUT: artwork/<owner-key>/hit-front.png, exactly 768x256 pixels.
+Show the full character in three-quarter FRONT view, facing screen DOWN-RIGHT (SE), in a fixed 2:1 isometric game view. The game mirrors this art for the opposite diagonal. Every combat frame is 256x256. The ground contact midpoint is (128,224), measured from the TOP LEFT of EACH frame. Suggested body region x32..224, y24..224; weapons/hair may extend inside the canvas but must not be clipped. Use a fixed camera and scale. No floor, pedestal, cast shadow, selection ring, health bar or scenery. Draw the complete equipped appearance; separate item images are not overlaid on PNG characters.
+Animate three-frame one-shot reaction: neutral, readable recoil, recovered stance. Keep the ground anchor and actor scale stable; no blood effect or knockback across the sheet.
+Place exactly 3 frames LEFT TO RIGHT in ONE horizontal row, no margins between frames, no padding. Keep direction and outfit identical in every frame. Playback: 10 fps. If your tool cannot make a reliable strip, generate individual 256x256 frames and assemble without stretching them; the delivered file must still be the exact strip size.
+Export 8-bit RGBA, non-interlaced PNG, no APNG, maximum 2 MiB per file. Transparency must be actual alpha, not a drawn checkerboard or a solid colour.
+The complete 3–9-file set must total at most 12 MiB. Use character/guides/hit-front.svg to check alignment; hide all guides in the final export. These same requirements apply to humanoids, animals, monsters and bosses. This file is importable when declared by its owner's artwork folder.
+
+### Impact reçu · dos ↖ — importable
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+
+OUTPUT: artwork/<owner-key>/hit-back.png, exactly 768x256 pixels.
+Show the full character in three-quarter REAR view, facing screen UP-LEFT (NW), in a fixed 2:1 isometric game view. The game mirrors this art for the opposite diagonal. Every combat frame is 256x256. The ground contact midpoint is (128,224), measured from the TOP LEFT of EACH frame. Suggested body region x32..224, y24..224; weapons/hair may extend inside the canvas but must not be clipped. Use a fixed camera and scale. No floor, pedestal, cast shadow, selection ring, health bar or scenery. Draw the complete equipped appearance; separate item images are not overlaid on PNG characters.
+Animate three-frame one-shot reaction: neutral, readable recoil, recovered stance. Keep the ground anchor and actor scale stable; no blood effect or knockback across the sheet.
+Place exactly 3 frames LEFT TO RIGHT in ONE horizontal row, no margins between frames, no padding. Keep direction and outfit identical in every frame. Playback: 10 fps. If your tool cannot make a reliable strip, generate individual 256x256 frames and assemble without stretching them; the delivered file must still be the exact strip size.
+Export 8-bit RGBA, non-interlaced PNG, no APNG, maximum 2 MiB per file. Transparency must be actual alpha, not a drawn checkerboard or a solid colour.
+The complete 3–9-file set must total at most 12 MiB. Use character/guides/hit-back.svg to check alignment; hide all guides in the final export. These same requirements apply to humanoids, animals, monsters and bosses. This file is importable when declared by its owner's artwork folder.
+
+### Icône de sort — importable
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+SPELL: [name, action, role and real element(s)].
+OUTPUT: icons/<spell-key>.png, exactly 64x64 pixels. One strong central symbol, readable at 32–40 pixels, useful contrast and a clear silhouette; keep a 5-pixel safe margin. Distinguish damage, heal, boost and control by motif, not by tiny text. Respect the spell's real element; the game applies its own slot colour. No painted slot border, AP cost, cooldown, number, tooltip or letter. Transparent background recommended. Export 8-bit RGBA, non-interlaced PNG, no APNG, maximum 2 MiB per file. Transparency must be actual alpha, not a drawn checkerboard or a solid colour.
+A larger working master is fine; deliver the exact 64x64 export. This PNG is imported through the spell's icon field. It does not create a new in-combat animation or change mechanics.
+
+### Design d’équipement — design-only
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+ITEM: [name, family, theme, shape, material, palette and distinguishing detail].
+OUTPUT: design-sources/equipment/<item-key>.png, 256x256 transparent PNG. This is a recommended DESIGN canvas, not an accepted equipment-image contract. Show ONE complete item, centred, with 24 pixels of breathing room. Three-quarter inventory view, coherent lighting, strong silhouette readable at 40 pixels. No stat text, rarity frame, backdrop, UI or floor shadow. For a pet or mount, show a readable full-body creature design; this icon does not provide riding or pet animation sheets. Export 8-bit RGBA, non-interlaced PNG, no APNG, maximum 2 MiB per file. Transparency must be actual alpha, not a drawn checkerboard or a solid colour.
+The game currently supports built-in equipment shapes and colour, or native appearances, not uploaded equipment PNGs. Keep this file outside both playable ZIP formats. If the item must appear on an imported character, draw it into that character's whole sprite set. Design the actual item stats separately using equipment-rules.md and equipment-limits.json; never infer power from the picture.
+
+### Carte complète — design-only
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+MAP: [existing map ID, desired setting, mood and landmarks].
+REFERENCES TO ATTACH: maps/<mapId>/guide.png (legend in geometry.json), clean.png (unlabelled footprint) and geometry.json. Use their EXACT canvas dimensions and projected cell coordinates. Locked orthographic 2:1 isometric projection, no vanishing point, no zoom, camera tilt, rotation, crop or stretched canvas. Preserve elevations from the guide.
+Light floor cells are walkable; dark cells block movement AND line of sight; blue-grey cells block movement but allow line of sight; transparent void is not playable. A/B outlines mark initial placement cells, not painted final art. Do not add walls, doors, bridges, holes, slopes, traps or hazards on open cells. Do not turn obstacles into walkable-looking paths. Keep ground quiet under units and spell previews. Tall props must not hide playable cells behind them. Outer scenery may extend only inside the fixed canvas. Remove grid, coordinates, letters, spawn colours, UI and creatures from final images.
+All output here is DESIGN-ONLY. geometry.json is a reference, not an import schema. A painted map does not define collision or starting cells. Keep the game's existing mapId for the playable package; this guide-based geometry is not itself an import format. To author an original flat battlefield for an Atelier archive, follow references/original-battlefields.md, declare its geometry and image together, and generate a new guide from that geometry.
+OUTPUT: map-preview.png at geometry.json.canvas.width x canvas.height. Render a complete themed room with ground, low obstacles and perimeter scenery, suitable for visual review against the guide. Use strong peripheral landmarks and low-detail combat space. Keep blocked-cell type readable. Transparent outside the intended scenery footprint. Supply the image without guide marks plus a separate alignment proof; do not present the proof as final art. If geometry references are absent, provide only a concept clearly labelled as unaligned.
+
+### Fond, sol et décors séparés — design-only
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+MAP: [existing map ID, desired setting, mood and landmarks].
+REFERENCES TO ATTACH: maps/<mapId>/guide.png (legend in geometry.json), clean.png (unlabelled footprint) and geometry.json. Use their EXACT canvas dimensions and projected cell coordinates. Locked orthographic 2:1 isometric projection, no vanishing point, no zoom, camera tilt, rotation, crop or stretched canvas. Preserve elevations from the guide.
+Light floor cells are walkable; dark cells block movement AND line of sight; blue-grey cells block movement but allow line of sight; transparent void is not playable. A/B outlines mark initial placement cells, not painted final art. Do not add walls, doors, bridges, holes, slopes, traps or hazards on open cells. Do not turn obstacles into walkable-looking paths. Keep ground quiet under units and spell previews. Tall props must not hide playable cells behind them. Outer scenery may extend only inside the fixed canvas. Remove grid, coordinates, letters, spawn colours, UI and creatures from final images.
+All output here is DESIGN-ONLY. geometry.json is a reference, not an import schema. A painted map does not define collision or starting cells. Keep the game's existing mapId for the playable package; this guide-based geometry is not itself an import format. To author an original flat battlefield for an Atelier archive, follow references/original-battlefields.md, declare its geometry and image together, and generate a new guide from that geometry.
+OUTPUT: three separate PNGs at the SAME exact canvas size and origin, plus a composite preview. Generate each layer separately with the approved map-preview as reference: background.png = distant/perimeter atmosphere behind the room; ground.png = walkable ground and blocked water/hole footprints; scenery.png = visible walls, rocks and low props only on the matching blocked cells. Non-painted regions are genuinely transparent. Do not redraw scenery into every layer or introduce perspective/offset changes. No extra foreground occluder across playable ground. These three source layers are an AUTHORING CONVENTION for future integration, not native engine layer names or a promise of automatic import.
+
+### Élément de décor isolé — design-only
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+PROP: [name, material, exact occupied cells from geometry.json, whether it blocks LoS].
+Draw one isolated isometric scenery object using the SAME camera and light as the approved map. Set its footprint from the provided cell polygons; supply its pixel ground anchor in an accompanying note, relative to its own canvas, so it can later be placed without guessing. No pedestal, UI, ground tile or scene. Preserve transparency. Avoid large overhangs that hide neighbouring walkable tiles. A low LoS-transparent obstacle must look low; a LoS blocker must read as solid. This is design source material, not an importable collision definition or automatic scenery layer.
+
+### Illustration de l’aventure — design-only
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+OUTPUT: design-sources/cover.png, recommended 1600x900 composition. Create a hero image for the adventure using the approved heroes, enemies and environment. One clear focal point; legible silhouettes and palette continuity. Keep the central 80% readable on smaller crops. No text or fake game interface. This is a promotional/reference illustration, not a map, sprite sheet or an importable cover field. Keep it outside the playable ZIP.
+
+### Brief d’effets et de sons — design-only
+THEME: [theme and approved visual direction].
+SPELLS: [names, mechanics, elements and the chosen visualEffect or native visualSpellId].
+For each spell describe a short caster gesture, trajectory/impact and sound cue that reads clearly during rapid consecutive casts. For wholly original PLAYABLE visuals, choose a visualEffect descriptor from references/original-battlefields.md: slash, thrust, arrow, ice-lance, shatter, fireball, fire-wave, shield, embers, raven-step, fang, rally or bell; provide two six-digit hex colours and durationMs 250–1500. These use original vector choreography and synthesized audio, without client effect assets. Use a native visualSpellId only when that is wanted. Both options are cosmetic and do not change mechanics. Arbitrary PNG animation storyboards and audio-generation prompts belong in design-sources/effects.md and are DESIGN-ONLY: the importers do not load effect.json/PNG sequences, SWFs, WAV/MP3 or scripted triggers. Do not add those files to the playable ZIP or suggest that a character's generic cast strip replaces a spell effect.
+
+### Animation de sort complète — design-only
+THEME / VISUAL DIRECTION: [theme, palette, materials, light and approved references].
+SPELL: [name, element, action, visual motif; mechanics are already defined separately].
+Produce ORIGINAL spell-effect art for a tactical RPG, consistent with the approved reference. Effects contain no character, map, ground tile, UI, text, numbers, labels or watermark. Generate each file separately. True alpha transparency, never a painted checkerboard. PNG RGBA 8-bit, non-interlaced, no APNG, no more than 2 MiB per image and 12 MiB per effect folder.
+Each default strip is EXACTLY 2048x256: eight 256x256 frames in ONE horizontal row, left to right, no gutters. 24 fps. No part may clip the frame. Use a stable origin and equal scale across frames. If generating separate frames, preserve 256x256 and assemble them without stretching. Guides are technical references to remove before export.
+This is a DESIGN package only: put it in design-sources/spell-fx/<spell-key>/, outside the playable ZIP. Neither game importer accepts effect.json or these PNGs. Keep visualSpellId pointing to an existing effect for the playable version. A generic character cast-front/cast-back strip is a different asset. Do not generate executable SWF/JavaScript or change damage, targeting or duration of a combat buff to match the picture.
+
+Generate ONE complete effect folder, using only the layers this spell needs. Basic families: impact, aura, projectile with optional cast/trail/impact, or beam with optional cast/impact. Do not require six layers for every spell. Deliver effect.json and its declared PNGs; keep references, prompts and guides in a separate work folder.
+Use the exact schema below. Times are integer milliseconds; duration 100..2000 ms, normally 1500. Frames may be 1..16, fps 8..60, each frame 256x256, sheet width=frames*256. Scale is in percent. Anchors are pixels from the TOP LEFT of each frame. All fields are required; no unrecognised properties.
+Role/attachment: cast/caster; projectile/projectile; trail/path; impact/target; aura/caster or target; beam/path. One instance and one PNG per role. Only projectile and beam may use rotation=path. Cast, impact and trail particles cannot loop. Allow each non-looping sheet enough time: endMs-startMs >= frames/fps*1000. All windows fit durationMs. For travel none, startMs=endMs=arcHeightPercent=0. Line travel has arcHeightPercent=0; arc is screen-up quadratic curvature, height=distance*arcHeightPercent/100. Projectile times exactly match travel. Trail emits one stationary particle every 50 ms during travel; it starts with travel and endMs must be at least travel.endMs+frames/fps*1000 so the last particles can fade. Impact begins at or after arrival. A beam uses no travel, rotation=path, anchor (0,128).
+Use the per-part prompts and spell-fx/guides/<role>.svg. Read spell-fx/SPEC.md. Open spell-fx/index.html for local playback and checking direction, distance, anchors and timing. From the extracted retro-class-designer kit run: node scripts/check-spell-fx.cjs design-sources/spell-fx/<spell-key>. Fix errors and deliver the JSON report with the design-source ZIP. This checker proves source-format validity only; runtimeImportable MUST remain false. If you cannot run it, say so.
+## Drawing instructions for every part (use only the parts this spell needs)
+### Lancement — cast.png
+Build-up light/magic attached to the caster, not the caster itself. Anchor (128,128). Eight frames: emerging spark, gathering energy, concentration, anticipation peak, release flash, follow-through, dissipation, faint residual glow. One shot, at least 334 ms; almost transparent final frame but still nonempty. Do not loop.
+
+### Projectile — projectile.png
+Draw the moving object centred on anchor (128,128), facing RIGHT along +X. Animate energy/flicker IN PLACE in an eight-frame loop; do not move it across the sheet. The viewer applies rotation and line/arc travel. The silhouette and mass stay stable, and frame 8 joins frame 1. No baked arc, long trail or target explosion.
+
+### Traînée — trail.png
+One small dissipating particle/puff at anchor (128,128), not an entire path. Eight frames, from bright coherent particle to faint residual dust, final frame nonempty. It is stamped behind the moving projectile. No camera movement, floor shadow or long baked trajectory.
+
+### Impact — impact.png
+One readable impact/explosion, centred at (128,128). Eight successive frames: initial contact, compressed flash, expansion, peak silhouette, fragments, fading energy, residual particles, faint final residue. One shot, at least 334 ms. Final frame remains nonempty. The anchor never moves; intensity expands around it. No screen-wide flash or obscuring the whole battlefield.
+
+### Aura / soin / protection — aura.png
+A compact eight-frame seamless loop at anchor (128,128). For a ground ring, use a 2:1 isometric ellipse centred at that anchor; for a vertical glow, declare that in the motif. Keep a clear centre so the actor remains readable. This is a short visual cue, not the duration or hit area of a gameplay buff.
+
+### Rayon — beam.png
+A horizontal beam from the LEFT edge midpoint (0,128) towards (256,128), eight-frame energy loop. It is stretched only along X and rotated by the viewer to join caster and target. Keep width/thickness stable, no circles or complex symbols that become distorted. No baked endpoint explosion; use impact.png separately. Unlike other parts, its anchor is (0,128).
+## Exact design-source JSON Schema
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"Spell FX design v1 — NOT a game import format","type":"object","properties":{"format":{"const":"dofus-lite-spell-fx-design"},"version":{"const":1},"runtimeImportable":{"const":false},"id":{"type":"string","minLength":1,"maxLength":60,"pattern":"^[a-z][a-z0-9-]*$"},"name":{"type":"string","minLength":1,"maxLength":80},"durationMs":{"type":"integer","minimum":100,"maximum":2000},"travel":{"type":"object","properties":{"kind":{"enum":["none","line","arc"]},"startMs":{"type":"integer","minimum":0,"maximum":2000},"endMs":{"type":"integer","minimum":0,"maximum":2000},"arcHeightPercent":{"type":"integer","minimum":0,"maximum":60}},"required":["kind","startMs","endMs","arcHeightPercent"],"additionalProperties":false},"layers":{"type":"array","minItems":1,"maxItems":6,"items":{"type":"object","properties":{"role":{"enum":["cast","projectile","trail","impact","aura","beam"]},"file":{"type":"string","minLength":1,"maxLength":60,"pattern":"^[a-z][a-z0-9-]*\\.png$"},"frames":{"type":"integer","minimum":1,"maximum":16},"fps":{"type":"integer","minimum":8,"maximum":60},"frameSize":{"const":256},"anchor":{"type":"object","properties":{"x":{"type":"integer","minimum":0,"maximum":255},"y":{"type":"integer","minimum":0,"maximum":255}},"required":["x","y"],"additionalProperties":false},"startMs":{"type":"integer","minimum":0,"maximum":2000},"endMs":{"type":"integer","minimum":1,"maximum":2000},"loop":{"type":"boolean"},"attachment":{"enum":["caster","target","projectile","path"]},"depth":{"enum":["behind","front"]},"rotation":{"enum":["none","path"]},"scalePercent":{"type":"integer","minimum":25,"maximum":200},"blend":{"enum":["normal","add"]}},"required":["role","file","frames","fps","frameSize","anchor","startMs","endMs","loop","attachment","depth","rotation","scalePercent","blend"],"additionalProperties":false}}},"required":["format","version","runtimeImportable","id","name","durationMs","travel","layers"],"additionalProperties":false}
+## Complete example (replace the visual identity, keep a coherent timeline)
+{
+  "format": "dofus-lite-spell-fx-design",
+  "version": 1,
+  "runtimeImportable": false,
+  "id": "example-projectile",
+  "name": "Orbe des braises",
+  "durationMs": 1500,
+  "travel": {
+    "kind": "arc",
+    "startMs": 350,
+    "endMs": 950,
+    "arcHeightPercent": 20
+  },
+  "layers": [
+    {
+      "role": "cast",
+      "file": "cast.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      },
+      "startMs": 0,
+      "endMs": 350,
+      "loop": false,
+      "attachment": "caster",
+      "depth": "front",
+      "rotation": "none",
+      "scalePercent": 100,
+      "blend": "normal"
+    },
+    {
+      "role": "projectile",
+      "file": "projectile.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      },
+      "startMs": 350,
+      "endMs": 950,
+      "loop": true,
+      "attachment": "projectile",
+      "depth": "front",
+      "rotation": "path",
+      "scalePercent": 45,
+      "blend": "normal"
+    },
+    {
+      "role": "trail",
+      "file": "trail.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      },
+      "startMs": 350,
+      "endMs": 1300,
+      "loop": false,
+      "attachment": "path",
+      "depth": "front",
+      "rotation": "none",
+      "scalePercent": 25,
+      "blend": "normal"
+    },
+    {
+      "role": "impact",
+      "file": "impact.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      },
+      "startMs": 950,
+      "endMs": 1400,
+      "loop": false,
+      "attachment": "target",
+      "depth": "front",
+      "rotation": "none",
+      "scalePercent": 100,
+      "blend": "normal"
+    }
+  ]
+}
+If an image tool is unavailable, return the manifest and the individual production prompts, clearly marking PNG generation as not done. Do not pretend the technical example is finished artwork for the theme.
+
+### Effet · Lancement — design-only
+THEME / VISUAL DIRECTION: [theme, palette, materials, light and approved references].
+SPELL: [name, element, action, visual motif; mechanics are already defined separately].
+Produce ORIGINAL spell-effect art for a tactical RPG, consistent with the approved reference. Effects contain no character, map, ground tile, UI, text, numbers, labels or watermark. Generate each file separately. True alpha transparency, never a painted checkerboard. PNG RGBA 8-bit, non-interlaced, no APNG, no more than 2 MiB per image and 12 MiB per effect folder.
+Each default strip is EXACTLY 2048x256: eight 256x256 frames in ONE horizontal row, left to right, no gutters. 24 fps. No part may clip the frame. Use a stable origin and equal scale across frames. If generating separate frames, preserve 256x256 and assemble them without stretching. Guides are technical references to remove before export.
+This is a DESIGN package only: put it in design-sources/spell-fx/<spell-key>/, outside the playable ZIP. Neither game importer accepts effect.json or these PNGs. Keep visualSpellId pointing to an existing effect for the playable version. A generic character cast-front/cast-back strip is a different asset. Do not generate executable SWF/JavaScript or change damage, targeting or duration of a combat buff to match the picture.
+
+OUTPUT: cast.png (2048x256, eight frames at 24 fps).
+Build-up light/magic attached to the caster, not the caster itself. Anchor (128,128). Eight frames: emerging spark, gathering energy, concentration, anticipation peak, release flash, follow-through, dissipation, faint residual glow. One shot, at least 334 ms; almost transparent final frame but still nonempty. Do not loop.
+Attach spell-fx/guides/cast.png. Export the unlabelled strip; include it in effect.json with role=cast. Inspect every frame on both dark and light backgrounds.
+
+### Effet · Projectile — design-only
+THEME / VISUAL DIRECTION: [theme, palette, materials, light and approved references].
+SPELL: [name, element, action, visual motif; mechanics are already defined separately].
+Produce ORIGINAL spell-effect art for a tactical RPG, consistent with the approved reference. Effects contain no character, map, ground tile, UI, text, numbers, labels or watermark. Generate each file separately. True alpha transparency, never a painted checkerboard. PNG RGBA 8-bit, non-interlaced, no APNG, no more than 2 MiB per image and 12 MiB per effect folder.
+Each default strip is EXACTLY 2048x256: eight 256x256 frames in ONE horizontal row, left to right, no gutters. 24 fps. No part may clip the frame. Use a stable origin and equal scale across frames. If generating separate frames, preserve 256x256 and assemble them without stretching. Guides are technical references to remove before export.
+This is a DESIGN package only: put it in design-sources/spell-fx/<spell-key>/, outside the playable ZIP. Neither game importer accepts effect.json or these PNGs. Keep visualSpellId pointing to an existing effect for the playable version. A generic character cast-front/cast-back strip is a different asset. Do not generate executable SWF/JavaScript or change damage, targeting or duration of a combat buff to match the picture.
+
+OUTPUT: projectile.png (2048x256, eight frames at 24 fps).
+Draw the moving object centred on anchor (128,128), facing RIGHT along +X. Animate energy/flicker IN PLACE in an eight-frame loop; do not move it across the sheet. The viewer applies rotation and line/arc travel. The silhouette and mass stay stable, and frame 8 joins frame 1. No baked arc, long trail or target explosion.
+Attach spell-fx/guides/projectile.png. Export the unlabelled strip; include it in effect.json with role=projectile. Inspect every frame on both dark and light backgrounds.
+
+### Effet · Traînée — design-only
+THEME / VISUAL DIRECTION: [theme, palette, materials, light and approved references].
+SPELL: [name, element, action, visual motif; mechanics are already defined separately].
+Produce ORIGINAL spell-effect art for a tactical RPG, consistent with the approved reference. Effects contain no character, map, ground tile, UI, text, numbers, labels or watermark. Generate each file separately. True alpha transparency, never a painted checkerboard. PNG RGBA 8-bit, non-interlaced, no APNG, no more than 2 MiB per image and 12 MiB per effect folder.
+Each default strip is EXACTLY 2048x256: eight 256x256 frames in ONE horizontal row, left to right, no gutters. 24 fps. No part may clip the frame. Use a stable origin and equal scale across frames. If generating separate frames, preserve 256x256 and assemble them without stretching. Guides are technical references to remove before export.
+This is a DESIGN package only: put it in design-sources/spell-fx/<spell-key>/, outside the playable ZIP. Neither game importer accepts effect.json or these PNGs. Keep visualSpellId pointing to an existing effect for the playable version. A generic character cast-front/cast-back strip is a different asset. Do not generate executable SWF/JavaScript or change damage, targeting or duration of a combat buff to match the picture.
+
+OUTPUT: trail.png (2048x256, eight frames at 24 fps).
+One small dissipating particle/puff at anchor (128,128), not an entire path. Eight frames, from bright coherent particle to faint residual dust, final frame nonempty. It is stamped behind the moving projectile. No camera movement, floor shadow or long baked trajectory.
+Attach spell-fx/guides/trail.png. Export the unlabelled strip; include it in effect.json with role=trail. Inspect every frame on both dark and light backgrounds.
+
+### Effet · Impact — design-only
+THEME / VISUAL DIRECTION: [theme, palette, materials, light and approved references].
+SPELL: [name, element, action, visual motif; mechanics are already defined separately].
+Produce ORIGINAL spell-effect art for a tactical RPG, consistent with the approved reference. Effects contain no character, map, ground tile, UI, text, numbers, labels or watermark. Generate each file separately. True alpha transparency, never a painted checkerboard. PNG RGBA 8-bit, non-interlaced, no APNG, no more than 2 MiB per image and 12 MiB per effect folder.
+Each default strip is EXACTLY 2048x256: eight 256x256 frames in ONE horizontal row, left to right, no gutters. 24 fps. No part may clip the frame. Use a stable origin and equal scale across frames. If generating separate frames, preserve 256x256 and assemble them without stretching. Guides are technical references to remove before export.
+This is a DESIGN package only: put it in design-sources/spell-fx/<spell-key>/, outside the playable ZIP. Neither game importer accepts effect.json or these PNGs. Keep visualSpellId pointing to an existing effect for the playable version. A generic character cast-front/cast-back strip is a different asset. Do not generate executable SWF/JavaScript or change damage, targeting or duration of a combat buff to match the picture.
+
+OUTPUT: impact.png (2048x256, eight frames at 24 fps).
+One readable impact/explosion, centred at (128,128). Eight successive frames: initial contact, compressed flash, expansion, peak silhouette, fragments, fading energy, residual particles, faint final residue. One shot, at least 334 ms. Final frame remains nonempty. The anchor never moves; intensity expands around it. No screen-wide flash or obscuring the whole battlefield.
+Attach spell-fx/guides/impact.png. Export the unlabelled strip; include it in effect.json with role=impact. Inspect every frame on both dark and light backgrounds.
+
+### Effet · Aura / soin / protection — design-only
+THEME / VISUAL DIRECTION: [theme, palette, materials, light and approved references].
+SPELL: [name, element, action, visual motif; mechanics are already defined separately].
+Produce ORIGINAL spell-effect art for a tactical RPG, consistent with the approved reference. Effects contain no character, map, ground tile, UI, text, numbers, labels or watermark. Generate each file separately. True alpha transparency, never a painted checkerboard. PNG RGBA 8-bit, non-interlaced, no APNG, no more than 2 MiB per image and 12 MiB per effect folder.
+Each default strip is EXACTLY 2048x256: eight 256x256 frames in ONE horizontal row, left to right, no gutters. 24 fps. No part may clip the frame. Use a stable origin and equal scale across frames. If generating separate frames, preserve 256x256 and assemble them without stretching. Guides are technical references to remove before export.
+This is a DESIGN package only: put it in design-sources/spell-fx/<spell-key>/, outside the playable ZIP. Neither game importer accepts effect.json or these PNGs. Keep visualSpellId pointing to an existing effect for the playable version. A generic character cast-front/cast-back strip is a different asset. Do not generate executable SWF/JavaScript or change damage, targeting or duration of a combat buff to match the picture.
+
+OUTPUT: aura.png (2048x256, eight frames at 24 fps).
+A compact eight-frame seamless loop at anchor (128,128). For a ground ring, use a 2:1 isometric ellipse centred at that anchor; for a vertical glow, declare that in the motif. Keep a clear centre so the actor remains readable. This is a short visual cue, not the duration or hit area of a gameplay buff.
+Attach spell-fx/guides/aura.png. Export the unlabelled strip; include it in effect.json with role=aura. Inspect every frame on both dark and light backgrounds.
+
+### Effet · Rayon — design-only
+THEME / VISUAL DIRECTION: [theme, palette, materials, light and approved references].
+SPELL: [name, element, action, visual motif; mechanics are already defined separately].
+Produce ORIGINAL spell-effect art for a tactical RPG, consistent with the approved reference. Effects contain no character, map, ground tile, UI, text, numbers, labels or watermark. Generate each file separately. True alpha transparency, never a painted checkerboard. PNG RGBA 8-bit, non-interlaced, no APNG, no more than 2 MiB per image and 12 MiB per effect folder.
+Each default strip is EXACTLY 2048x256: eight 256x256 frames in ONE horizontal row, left to right, no gutters. 24 fps. No part may clip the frame. Use a stable origin and equal scale across frames. If generating separate frames, preserve 256x256 and assemble them without stretching. Guides are technical references to remove before export.
+This is a DESIGN package only: put it in design-sources/spell-fx/<spell-key>/, outside the playable ZIP. Neither game importer accepts effect.json or these PNGs. Keep visualSpellId pointing to an existing effect for the playable version. A generic character cast-front/cast-back strip is a different asset. Do not generate executable SWF/JavaScript or change damage, targeting or duration of a combat buff to match the picture.
+
+OUTPUT: beam.png (2048x256, eight frames at 24 fps).
+A horizontal beam from the LEFT edge midpoint (0,128) towards (256,128), eight-frame energy loop. It is stretched only along X and rotated by the viewer to join caster and target. Keep width/thickness stable, no circles or complex symbols that become distorted. No baked endpoint explosion; use impact.png separately. Unlike other parts, its anchor is (0,128).
+Attach spell-fx/guides/beam.png. Export the unlabelled strip; include it in effect.json with role=beam. Inspect every frame on both dark and light backgrounds.
 ## Equipment stat weights and level-200 allowances (design only, not ZIP fields)
 Stat rows are [key,weight,negativeAllowed]. An omitted stat ceiling is zero.
 ["force",1,true]
@@ -164,7 +543,7 @@ pull: min/max 1..6; duration 0.
 teleport: min/max 0..0; duration 0.
 
 ## Exact JSON Schema (and the semantic rules above)
-{"$schema":"http://json-schema.org/draft-07/schema#","title":"Dofus Lite — themed class or dungeon","type":"object","properties":{"format":{"const":"dofus-lite-content"},"schemaVersion":{"const":1},"type":{"enum":["class","dungeon"]},"id":{"type":"string","minLength":1,"maxLength":48,"pattern":"^[a-z][a-z0-9_-]*$"},"version":{"type":"string","minLength":1,"maxLength":30,"pattern":"^\\d+\\.\\d+\\.\\d+$"},"name":{"type":"string","minLength":1,"maxLength":80},"description":{"type":"string","minLength":1,"maxLength":800},"author":{"type":"string","minLength":1,"maxLength":100},"design":{"type":"object","properties":{"role":{"type":"string","minLength":1,"maxLength":100},"strengths":{"type":"array","items":{"type":"string","minLength":1,"maxLength":200},"minItems":1,"maxItems":3},"weaknesses":{"type":"array","items":{"type":"string","minLength":1,"maxLength":200},"minItems":2,"maxItems":4},"turnLoop":{"type":"string","minLength":1,"maxLength":800},"counterplay":{"type":"string","minLength":1,"maxLength":800}},"required":["role","strengths","weaknesses","turnLoop","counterplay"],"additionalProperties":false},"class":{"type":"object","properties":{"baseClass":{"enum":["FECA","OSAMODAS","ENUTROF","SRAM","XELOR","ECAFLIP","ENIRIPSA","IOP","CRA","SADIDA","SACRIEUR","PANDAWA"]},"sex":{"enum":[0,1]},"artwork":{"type":"string","minLength":1,"maxLength":100,"pattern":"^artwork/[a-z][a-z0-9_-]*$"},"spells":{"type":"array","items":{"$ref":"#/$defs/spell"},"minItems":1,"maxItems":10}},"required":["baseClass","sex","spells"],"additionalProperties":false},"dungeon":{"type":"object","properties":{"mapId":{"type":"string","minLength":1,"maxLength":80},"monsters":{"type":"array","items":{"type":"object","properties":{"key":{"type":"string","minLength":1,"maxLength":48,"pattern":"^[a-z][a-z0-9_-]*$"},"name":{"type":"string","minLength":1,"maxLength":80},"description":{"type":"string","minLength":1,"maxLength":800},"role":{"type":"string","minLength":1,"maxLength":100},"counterplay":{"type":"string","minLength":1,"maxLength":800},"reference":{"type":"object","properties":{"monsterId":{"type":"integer","minimum":1,"maximum":100000},"grade":{"type":"integer","minimum":1,"maximum":20}},"required":["monsterId","grade"],"additionalProperties":false},"tuning":{"type":"object","properties":{"hpPercent":{"type":"integer","minimum":25,"maximum":150},"statsPercent":{"type":"integer","minimum":25,"maximum":150},"paBonus":{"type":"integer","minimum":-2,"maximum":2},"pmBonus":{"type":"integer","minimum":-2,"maximum":2}},"required":["hpPercent","statsPercent","paBonus","pmBonus"],"additionalProperties":false},"artwork":{"type":"string","minLength":1,"maxLength":100,"pattern":"^artwork/[a-z][a-z0-9_-]*$"},"spells":{"type":"array","items":{"$ref":"#/$defs/spell"},"minItems":1,"maxItems":10}},"required":["key","name","description","role","counterplay","reference","tuning","spells"],"additionalProperties":false},"minItems":1,"maxItems":8},"members":{"type":"array","items":{"type":"object","properties":{"monster":{"type":"string","minLength":1,"maxLength":48,"pattern":"^[a-z][a-z0-9_-]*$"},"count":{"type":"integer","minimum":1,"maximum":8}},"required":["monster","count"],"additionalProperties":false},"minItems":1,"maxItems":8}},"required":["mapId","monsters","members"],"additionalProperties":false}},"required":["format","schemaVersion","type","id","version","name","description","author","design"],"additionalProperties":false,"$defs":{"spell":{"type":"object","properties":{"key":{"type":"string","minLength":1,"maxLength":48,"pattern":"^[a-z][a-z0-9_-]*$"},"name":{"type":"string","minLength":1,"maxLength":80},"description":{"type":"string","minLength":1,"maxLength":800},"counterplay":{"type":"string","minLength":1,"maxLength":800},"pa":{"type":"integer","minimum":1,"maximum":8},"rangeMin":{"type":"integer","minimum":0,"maximum":12},"rangeMax":{"type":"integer","minimum":0,"maximum":12},"targetMode":{"enum":["enemy","fighter","cell","freeCell","self"]},"needsLos":{"type":"boolean"},"lineOnly":{"type":"boolean"},"adjustableRange":{"type":"boolean"},"maxPerTurn":{"type":"integer","minimum":1,"maximum":3},"maxPerTarget":{"type":"integer","minimum":1,"maximum":3},"cooldown":{"type":"integer","minimum":0,"maximum":10},"critRate":{"type":"integer","minimum":0,"maximum":100},"failRate":{"type":"integer","minimum":0,"maximum":1000},"endsTurnOnFailure":{"type":"boolean"},"visualSpellId":{"type":"integer","minimum":1,"maximum":1000000},"icon":{"type":"string","minLength":1,"maxLength":100,"pattern":"^icons/[a-z][a-z0-9_-]*\\.png$"},"effects":{"type":"array","items":{"type":"object","properties":{"kind":{"enum":["damage","lifeSteal","heal","buffDamage","buffPower","buffStat","buffPa","buffPm","buffRange","buffCrit","buffVitality","armor","resistBuff","removePa","removePm","debuffRange","resistDebuff","push","pull","teleport"]},"min":{"type":"integer","minimum":0,"maximum":500},"max":{"type":"integer","minimum":0,"maximum":500},"duration":{"type":"integer","minimum":0,"maximum":5},"zone":{"enum":["Pa","Cb","Cc","Xb","Xc","Lb","Lc","Tb"]},"target":{"enum":["self","ally","otherAlly","enemy","fighter"]},"element":{"enum":["neutre","terre","feu","eau","air"]},"stat":{"enum":["force","intelligence","chance","agilite","sagesse"]}},"required":["kind","min","max","duration","zone","target"],"additionalProperties":false},"minItems":1,"maxItems":4},"critEffects":{"type":"array","items":{"type":"object","properties":{"kind":{"enum":["damage","lifeSteal","heal","buffDamage","buffPower","buffStat","buffPa","buffPm","buffRange","buffCrit","buffVitality","armor","resistBuff","removePa","removePm","debuffRange","resistDebuff","push","pull","teleport"]},"min":{"type":"integer","minimum":0,"maximum":500},"max":{"type":"integer","minimum":0,"maximum":500},"duration":{"type":"integer","minimum":0,"maximum":5},"zone":{"enum":["Pa","Cb","Cc","Xb","Xc","Lb","Lc","Tb"]},"target":{"enum":["self","ally","otherAlly","enemy","fighter"]},"element":{"enum":["neutre","terre","feu","eau","air"]},"stat":{"enum":["force","intelligence","chance","agilite","sagesse"]}},"required":["kind","min","max","duration","zone","target"],"additionalProperties":false},"minItems":0,"maxItems":4}},"required":["key","name","description","counterplay","pa","rangeMin","rangeMax","targetMode","needsLos","lineOnly","adjustableRange","maxPerTurn","maxPerTarget","cooldown","critRate","failRate","endsTurnOnFailure","visualSpellId","effects","critEffects"],"additionalProperties":false}}}
+{"$schema":"http://json-schema.org/draft-07/schema#","title":"Dofus Lite — themed class or dungeon","type":"object","properties":{"format":{"const":"dofus-lite-content"},"schemaVersion":{"const":1},"type":{"enum":["class","dungeon"]},"id":{"type":"string","minLength":1,"maxLength":48,"pattern":"^[a-z][a-z0-9_-]*$"},"version":{"type":"string","minLength":1,"maxLength":30,"pattern":"^\\d+\\.\\d+\\.\\d+$"},"name":{"type":"string","minLength":1,"maxLength":80},"description":{"type":"string","minLength":1,"maxLength":800},"author":{"type":"string","minLength":1,"maxLength":100},"design":{"type":"object","properties":{"role":{"type":"string","minLength":1,"maxLength":100},"strengths":{"type":"array","items":{"type":"string","minLength":1,"maxLength":200},"minItems":1,"maxItems":3},"weaknesses":{"type":"array","items":{"type":"string","minLength":1,"maxLength":200},"minItems":2,"maxItems":4},"turnLoop":{"type":"string","minLength":1,"maxLength":800},"counterplay":{"type":"string","minLength":1,"maxLength":800}},"required":["role","strengths","weaknesses","turnLoop","counterplay"],"additionalProperties":false},"class":{"type":"object","properties":{"baseClass":{"enum":["FECA","OSAMODAS","ENUTROF","SRAM","XELOR","ECAFLIP","ENIRIPSA","IOP","CRA","SADIDA","SACRIEUR","PANDAWA"]},"sex":{"enum":[0,1]},"artwork":{"type":"string","minLength":1,"maxLength":100,"pattern":"^artwork/[a-z][a-z0-9_-]*$"},"spells":{"type":"array","items":{"$ref":"#/$defs/spell"},"minItems":1,"maxItems":10}},"required":["baseClass","sex","spells"],"additionalProperties":false},"dungeon":{"type":"object","properties":{"mapId":{"type":"string","minLength":1,"maxLength":80},"monsters":{"type":"array","items":{"type":"object","properties":{"key":{"type":"string","minLength":1,"maxLength":48,"pattern":"^[a-z][a-z0-9_-]*$"},"name":{"type":"string","minLength":1,"maxLength":80},"description":{"type":"string","minLength":1,"maxLength":800},"role":{"type":"string","minLength":1,"maxLength":100},"counterplay":{"type":"string","minLength":1,"maxLength":800},"reference":{"type":"object","properties":{"monsterId":{"type":"integer","minimum":1,"maximum":100000},"grade":{"type":"integer","minimum":1,"maximum":20}},"required":["monsterId","grade"],"additionalProperties":false},"tuning":{"type":"object","properties":{"hpPercent":{"type":"integer","minimum":25,"maximum":150},"statsPercent":{"type":"integer","minimum":25,"maximum":150},"paBonus":{"type":"integer","minimum":-2,"maximum":2},"pmBonus":{"type":"integer","minimum":-2,"maximum":2}},"required":["hpPercent","statsPercent","paBonus","pmBonus"],"additionalProperties":false},"artwork":{"type":"string","minLength":1,"maxLength":100,"pattern":"^artwork/[a-z][a-z0-9_-]*$"},"spells":{"type":"array","items":{"$ref":"#/$defs/spell"},"minItems":1,"maxItems":10}},"required":["key","name","description","role","counterplay","reference","tuning","spells"],"additionalProperties":false},"minItems":1,"maxItems":8},"members":{"type":"array","items":{"type":"object","properties":{"monster":{"type":"string","minLength":1,"maxLength":48,"pattern":"^[a-z][a-z0-9_-]*$"},"count":{"type":"integer","minimum":1,"maximum":8}},"required":["monster","count"],"additionalProperties":false},"minItems":1,"maxItems":8}},"required":["mapId","monsters","members"],"additionalProperties":false}},"required":["format","schemaVersion","type","id","version","name","description","author","design"],"additionalProperties":false,"$defs":{"spell":{"type":"object","properties":{"key":{"type":"string","minLength":1,"maxLength":48,"pattern":"^[a-z][a-z0-9_-]*$"},"name":{"type":"string","minLength":1,"maxLength":80},"description":{"type":"string","minLength":1,"maxLength":800},"counterplay":{"type":"string","minLength":1,"maxLength":800},"pa":{"type":"integer","minimum":1,"maximum":8},"rangeMin":{"type":"integer","minimum":0,"maximum":12},"rangeMax":{"type":"integer","minimum":0,"maximum":12},"targetMode":{"enum":["enemy","fighter","cell","freeCell","self"]},"needsLos":{"type":"boolean"},"lineOnly":{"type":"boolean"},"adjustableRange":{"type":"boolean"},"maxPerTurn":{"type":"integer","minimum":1,"maximum":3},"maxPerTarget":{"type":"integer","minimum":1,"maximum":3},"cooldown":{"type":"integer","minimum":0,"maximum":10},"critRate":{"type":"integer","minimum":0,"maximum":100},"failRate":{"type":"integer","minimum":0,"maximum":1000},"endsTurnOnFailure":{"type":"boolean"},"visualSpellId":{"type":"integer","minimum":1,"maximum":1000000},"visualEffect":{"type":"object","properties":{"version":{"const":1},"kind":{"enum":["slash","thrust","arrow","ice-lance","shatter","fireball","fire-wave","shield","embers","raven-step","fang","rally","bell"]},"color":{"type":"string","pattern":"^#[0-9a-fA-F]{6}$"},"accent":{"type":"string","pattern":"^#[0-9a-fA-F]{6}$"},"durationMs":{"type":"integer","minimum":250,"maximum":1500}},"required":["version","kind","color","accent","durationMs"],"additionalProperties":false},"icon":{"type":"string","minLength":1,"maxLength":100,"pattern":"^icons/[a-z][a-z0-9_-]*\\.png$"},"effects":{"type":"array","items":{"type":"object","properties":{"kind":{"enum":["damage","lifeSteal","heal","buffDamage","buffPower","buffStat","buffPa","buffPm","buffRange","buffCrit","buffVitality","armor","resistBuff","removePa","removePm","debuffRange","resistDebuff","push","pull","teleport"]},"min":{"type":"integer","minimum":0,"maximum":500},"max":{"type":"integer","minimum":0,"maximum":500},"duration":{"type":"integer","minimum":0,"maximum":5},"zone":{"enum":["Pa","Cb","Cc","Xb","Xc","Lb","Lc","Tb"]},"target":{"enum":["self","ally","otherAlly","enemy","fighter"]},"element":{"enum":["neutre","terre","feu","eau","air"]},"stat":{"enum":["force","intelligence","chance","agilite","sagesse"]}},"required":["kind","min","max","duration","zone","target"],"additionalProperties":false},"minItems":1,"maxItems":4},"critEffects":{"type":"array","items":{"type":"object","properties":{"kind":{"enum":["damage","lifeSteal","heal","buffDamage","buffPower","buffStat","buffPa","buffPm","buffRange","buffCrit","buffVitality","armor","resistBuff","removePa","removePm","debuffRange","resistDebuff","push","pull","teleport"]},"min":{"type":"integer","minimum":0,"maximum":500},"max":{"type":"integer","minimum":0,"maximum":500},"duration":{"type":"integer","minimum":0,"maximum":5},"zone":{"enum":["Pa","Cb","Cc","Xb","Xc","Lb","Lc","Tb"]},"target":{"enum":["self","ally","otherAlly","enemy","fighter"]},"element":{"enum":["neutre","terre","feu","eau","air"]},"stat":{"enum":["force","intelligence","chance","agilite","sagesse"]}},"required":["kind","min","max","duration","zone","target"],"additionalProperties":false},"minItems":0,"maxItems":4}},"required":["key","name","description","counterplay","pa","rangeMin","rangeMax","targetMode","needsLos","lineOnly","adjustableRange","maxPerTurn","maxPerTarget","cooldown","critRate","failRate","endsTurnOnFailure","effects","critEffects"],"additionalProperties":false}}}
 
 ## Valid complete example, images omitted intentionally
 {

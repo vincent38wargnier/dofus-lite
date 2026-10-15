@@ -1,0 +1,3287 @@
+{
+  "sourceHash": "6cfb86d13bc8cb7169685056909cf3f91b90f6feff76a46468f662c8d97f0ddf",
+  "cases": [
+    {
+      "classId": "FECA",
+      "enemyClass": "SRAM",
+      "variant": 0,
+      "seed": 430,
+      "action": {
+        "type": "CAST",
+        "spell": "immunite",
+        "target": {
+          "x": 4,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "FECA",
+      "enemyClass": "XELOR",
+      "variant": 1,
+      "seed": 431,
+      "action": {
+        "type": "CAST",
+        "spell": "immunite",
+        "target": {
+          "x": 4,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "FECA",
+      "enemyClass": "ECAFLIP",
+      "variant": 2,
+      "seed": 432,
+      "action": {
+        "type": "CAST",
+        "spell": "immunite",
+        "target": {
+          "x": 4,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "FECA",
+      "enemyClass": "ENIRIPSA",
+      "variant": 3,
+      "seed": 433,
+      "action": {
+        "type": "CAST",
+        "spell": "immunite",
+        "target": {
+          "x": 4,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "FECA",
+      "enemyClass": "IOP",
+      "variant": 4,
+      "seed": 434,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 3,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "FECA",
+      "enemyClass": "CRA",
+      "variant": 5,
+      "seed": 435,
+      "action": {
+        "type": "CAST",
+        "spell": "immunite",
+        "target": {
+          "x": 4,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "OSAMODAS",
+      "enemyClass": "XELOR",
+      "variant": 0,
+      "seed": 436,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 5,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "OSAMODAS",
+      "enemyClass": "ECAFLIP",
+      "variant": 1,
+      "seed": 437,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 8,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "OSAMODAS",
+      "enemyClass": "ENIRIPSA",
+      "variant": 2,
+      "seed": 438,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 5,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "OSAMODAS",
+      "enemyClass": "IOP",
+      "variant": 3,
+      "seed": 439,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 3,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "OSAMODAS",
+      "enemyClass": "CRA",
+      "variant": 4,
+      "seed": 440,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 1,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "OSAMODAS",
+      "enemyClass": "SADIDA",
+      "variant": 5,
+      "seed": 441,
+      "action": {
+        "type": "CAST",
+        "spell": "invocation_de_prespic",
+        "target": {
+          "x": 6,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ENUTROF",
+      "enemyClass": "ECAFLIP",
+      "variant": 0,
+      "seed": 442,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 1,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ENUTROF",
+      "enemyClass": "ENIRIPSA",
+      "variant": 1,
+      "seed": 443,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 5,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ENUTROF",
+      "enemyClass": "IOP",
+      "variant": 2,
+      "seed": 444,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 1,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ENUTROF",
+      "enemyClass": "CRA",
+      "variant": 3,
+      "seed": 445,
+      "action": {
+        "type": "CAST",
+        "spell": "sac_anime",
+        "target": {
+          "x": 5,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ENUTROF",
+      "enemyClass": "SADIDA",
+      "variant": 4,
+      "seed": 446,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 2,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "ENUTROF",
+      "enemyClass": "SACRIEUR",
+      "variant": 5,
+      "seed": 447,
+      "action": {
+        "type": "CAST",
+        "spell": "cle_reductrice",
+        "target": {
+          "x": 10,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "SRAM",
+      "enemyClass": "ENIRIPSA",
+      "variant": 0,
+      "seed": 448,
+      "action": {
+        "type": "CAST",
+        "spell": "attaque_mortelle",
+        "target": {
+          "x": 6,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "SRAM",
+      "enemyClass": "IOP",
+      "variant": 1,
+      "seed": 449,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 8,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "SRAM",
+      "enemyClass": "CRA",
+      "variant": 2,
+      "seed": 450,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 6,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "SRAM",
+      "enemyClass": "SADIDA",
+      "variant": 3,
+      "seed": 451,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 8,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "SRAM",
+      "enemyClass": "SACRIEUR",
+      "variant": 4,
+      "seed": 452,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 3,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "SRAM",
+      "enemyClass": "PANDAWA",
+      "variant": 5,
+      "seed": 453,
+      "action": {
+        "type": "CAST",
+        "spell": "invisibilite",
+        "target": {
+          "x": 4,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "XELOR",
+      "enemyClass": "IOP",
+      "variant": 0,
+      "seed": 454,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 3,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "XELOR",
+      "enemyClass": "CRA",
+      "variant": 1,
+      "seed": 455,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 5,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "XELOR",
+      "enemyClass": "SADIDA",
+      "variant": 2,
+      "seed": 456,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 2,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "XELOR",
+      "enemyClass": "SACRIEUR",
+      "variant": 3,
+      "seed": 457,
+      "action": {
+        "type": "CAST",
+        "spell": "cadran_de_xelor",
+        "target": {
+          "x": 9,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "XELOR",
+      "enemyClass": "PANDAWA",
+      "variant": 4,
+      "seed": 458,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 2,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "XELOR",
+      "enemyClass": "FECA",
+      "variant": 5,
+      "seed": 459,
+      "action": {
+        "type": "CAST",
+        "spell": "aiguille",
+        "target": {
+          "x": 10,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ECAFLIP",
+      "enemyClass": "CRA",
+      "variant": 0,
+      "seed": 460,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 5,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ECAFLIP",
+      "enemyClass": "SADIDA",
+      "variant": 1,
+      "seed": 461,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 8,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ECAFLIP",
+      "enemyClass": "SACRIEUR",
+      "variant": 2,
+      "seed": 462,
+      "action": {
+        "type": "CAST",
+        "spell": "roue_de_la_fortune",
+        "target": {
+          "x": 4,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ECAFLIP",
+      "enemyClass": "PANDAWA",
+      "variant": 3,
+      "seed": 463,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 8,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ECAFLIP",
+      "enemyClass": "FECA",
+      "variant": 4,
+      "seed": 464,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 5,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ECAFLIP",
+      "enemyClass": "OSAMODAS",
+      "variant": 5,
+      "seed": 465,
+      "action": {
+        "type": "CAST",
+        "spell": "tout_ou_rien",
+        "target": {
+          "x": 4,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ENIRIPSA",
+      "enemyClass": "SADIDA",
+      "variant": 0,
+      "seed": 466,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 2,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ENIRIPSA",
+      "enemyClass": "SACRIEUR",
+      "variant": 1,
+      "seed": 467,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 6,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ENIRIPSA",
+      "enemyClass": "PANDAWA",
+      "variant": 2,
+      "seed": 468,
+      "action": {
+        "type": "CAST",
+        "spell": "mot_de_reconstitution",
+        "target": {
+          "x": 4,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ENIRIPSA",
+      "enemyClass": "FECA",
+      "variant": 3,
+      "seed": 469,
+      "action": {
+        "type": "CAST",
+        "spell": "mot_de_reconstitution",
+        "target": {
+          "x": 4,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "ENIRIPSA",
+      "enemyClass": "OSAMODAS",
+      "variant": 4,
+      "seed": 470,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 1,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "ENIRIPSA",
+      "enemyClass": "ENUTROF",
+      "variant": 5,
+      "seed": 471,
+      "action": {
+        "type": "CAST",
+        "spell": "mot_de_reconstitution",
+        "target": {
+          "x": 4,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "IOP",
+      "enemyClass": "SACRIEUR",
+      "variant": 0,
+      "seed": 472,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 6,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "IOP",
+      "enemyClass": "PANDAWA",
+      "variant": 1,
+      "seed": 473,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 7,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "IOP",
+      "enemyClass": "FECA",
+      "variant": 2,
+      "seed": 474,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 6,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "IOP",
+      "enemyClass": "OSAMODAS",
+      "variant": 3,
+      "seed": 475,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 7,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "IOP",
+      "enemyClass": "ENUTROF",
+      "variant": 4,
+      "seed": 476,
+      "action": {
+        "type": "PASS"
+      }
+    },
+    {
+      "classId": "IOP",
+      "enemyClass": "SRAM",
+      "variant": 5,
+      "seed": 477,
+      "action": {
+        "type": "CAST",
+        "spell": "bond",
+        "target": {
+          "x": 9,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "CRA",
+      "enemyClass": "PANDAWA",
+      "variant": 0,
+      "seed": 478,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 1,
+          "y": 6
+        }
+      }
+    },
+    {
+      "classId": "CRA",
+      "enemyClass": "FECA",
+      "variant": 1,
+      "seed": 479,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 5,
+          "y": 8
+        }
+      }
+    },
+    {
+      "classId": "CRA",
+      "enemyClass": "OSAMODAS",
+      "variant": 2,
+      "seed": 480,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 1,
+          "y": 6
+        }
+      }
+    },
+    {
+      "classId": "CRA",
+      "enemyClass": "ENUTROF",
+      "variant": 3,
+      "seed": 481,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 5,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "CRA",
+      "enemyClass": "SRAM",
+      "variant": 4,
+      "seed": 482,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 2,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "CRA",
+      "enemyClass": "XELOR",
+      "variant": 5,
+      "seed": 483,
+      "action": {
+        "type": "CAST",
+        "spell": "oeil_de_taupe",
+        "target": {
+          "x": 10,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "SADIDA",
+      "enemyClass": "FECA",
+      "variant": 0,
+      "seed": 484,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 0,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "SADIDA",
+      "enemyClass": "OSAMODAS",
+      "variant": 1,
+      "seed": 485,
+      "action": {
+        "type": "CAST",
+        "spell": "la_bloqueuse",
+        "target": {
+          "x": 5,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "SADIDA",
+      "enemyClass": "ENUTROF",
+      "variant": 2,
+      "seed": 486,
+      "action": {
+        "type": "CAST",
+        "spell": "la_bloqueuse",
+        "target": {
+          "x": 5,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "SADIDA",
+      "enemyClass": "SRAM",
+      "variant": 3,
+      "seed": 487,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 2,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "SADIDA",
+      "enemyClass": "XELOR",
+      "variant": 4,
+      "seed": 488,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 1,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "SADIDA",
+      "enemyClass": "ECAFLIP",
+      "variant": 5,
+      "seed": 489,
+      "action": {
+        "type": "CAST",
+        "spell": "ronce_apaisante",
+        "target": {
+          "x": 10,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "SACRIEUR",
+      "enemyClass": "OSAMODAS",
+      "variant": 0,
+      "seed": 490,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 5,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "SACRIEUR",
+      "enemyClass": "ENUTROF",
+      "variant": 1,
+      "seed": 491,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 8,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "SACRIEUR",
+      "enemyClass": "SRAM",
+      "variant": 2,
+      "seed": 492,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 5,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "SACRIEUR",
+      "enemyClass": "XELOR",
+      "variant": 3,
+      "seed": 493,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 8,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "SACRIEUR",
+      "enemyClass": "ECAFLIP",
+      "variant": 4,
+      "seed": 494,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 3,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "SACRIEUR",
+      "enemyClass": "ENIRIPSA",
+      "variant": 5,
+      "seed": 495,
+      "action": {
+        "type": "CAST",
+        "spell": "epee_volante",
+        "target": {
+          "x": 7,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "PANDAWA",
+      "enemyClass": "ENUTROF",
+      "variant": 0,
+      "seed": 496,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 2,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "PANDAWA",
+      "enemyClass": "SRAM",
+      "variant": 1,
+      "seed": 497,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 6,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "PANDAWA",
+      "enemyClass": "XELOR",
+      "variant": 2,
+      "seed": 498,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 2,
+          "y": 5
+        }
+      }
+    },
+    {
+      "classId": "PANDAWA",
+      "enemyClass": "ECAFLIP",
+      "variant": 3,
+      "seed": 499,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 3,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "PANDAWA",
+      "enemyClass": "ENIRIPSA",
+      "variant": 4,
+      "seed": 500,
+      "action": {
+        "type": "MOVE",
+        "to": {
+          "x": 3,
+          "y": 4
+        }
+      }
+    },
+    {
+      "classId": "PANDAWA",
+      "enemyClass": "IOP",
+      "variant": 5,
+      "seed": 501,
+      "action": {
+        "type": "CAST",
+        "spell": "flasque_explosive",
+        "target": {
+          "x": 8,
+          "y": 5
+        }
+      }
+    }
+  ],
+  "sequences": [
+    {
+      "classId": "FECA",
+      "enemyClass": "ECAFLIP",
+      "seed": 709,
+      "mapId": "arene",
+      "actions": [
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "griffe_invocatrice",
+            "target": {
+              "x": 4,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "contrecoup",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "Bs1",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 2,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "Bs1",
+          "action": {
+            "type": "CAST",
+            "spell": "chatataque",
+            "target": {
+              "x": 1,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "Bs1",
+          "action": {
+            "type": "CAST",
+            "spell": "chatataque",
+            "target": {
+              "x": 1,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "Bs1",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "immunite",
+            "target": {
+              "x": 1,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 4,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "glyphe_d_immobilisation",
+            "target": {
+              "x": 4,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "odorat",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 7,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "perception",
+            "target": {
+              "x": 7,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 5,
+              "y": 9
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "Bs1",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 5,
+              "y": 7
+            }
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "classId": "OSAMODAS",
+      "enemyClass": "ENIRIPSA",
+      "seed": 710,
+      "mapId": "arene",
+      "actions": [
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "mot_d_envol",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "mot_vampirique",
+            "target": {
+              "x": 1,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "mot_stimulant",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 5,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "invocation_bouftou",
+            "target": {
+              "x": 5,
+              "y": 5
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 7,
+              "y": 5
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "CAST",
+            "spell": "morsure_du_bouftou",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "mot_vampirique",
+            "target": {
+              "x": 5,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "mot_vampirique",
+            "target": {
+              "x": 5,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 8,
+              "y": 9
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 7,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "invocation_de_prespic",
+            "target": {
+              "x": 6,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "resistance_naturelle",
+            "target": {
+              "x": 6,
+              "y": 7
+            }
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "classId": "ENUTROF",
+      "enemyClass": "IOP",
+      "seed": 711,
+      "mapId": "arene",
+      "actions": [
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "epee_de_iop",
+            "target": {
+              "x": 3,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "mutilation",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 2,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "corruption",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 3,
+              "y": 8
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 2,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "cle_reductrice",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "maladresse",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 1,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "pelle_massacrante",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 5,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "epee_celeste",
+            "target": {
+              "x": 2,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "mutilation",
+            "target": {
+              "x": 5,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "amplification",
+            "target": {
+              "x": 5,
+              "y": 7
+            }
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "classId": "SRAM",
+      "enemyClass": "CRA",
+      "seed": 712,
+      "mapId": "arene",
+      "actions": [
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 8,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "maitrise_de_l_arc",
+            "target": {
+              "x": 8,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "fleche_immobilisation",
+            "target": {
+              "x": 1,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 9,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "fleche_persecutrice",
+            "target": {
+              "x": 1,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 4,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "invisibilite",
+            "target": {
+              "x": 4,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 5,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "piege_de_silence",
+            "target": {
+              "x": 8,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "reperage",
+            "target": {
+              "x": 5,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 12,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 12,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "fleche_persecutrice",
+            "target": {
+              "x": 5,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 9,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "piege_d_immobilisation",
+            "target": {
+              "x": 12,
+              "y": 7
+            }
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "classId": "XELOR",
+      "enemyClass": "SADIDA",
+      "seed": 713,
+      "mapId": "arene",
+      "actions": [
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "ronce_apaisante",
+            "target": {
+              "x": 1,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "ronces_agressives",
+            "target": {
+              "x": 1,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "cadran_de_xelor",
+            "target": {
+              "x": 5,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "devouement",
+            "target": {
+              "x": 1,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "sablier_de_xelor",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "flou",
+            "target": {
+              "x": 4,
+              "y": 5
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 6,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 5,
+              "y": 8
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "la_folle",
+            "target": {
+              "x": 5,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "Bs1",
+          "action": {
+            "type": "CAST",
+            "spell": "agacement",
+            "target": {
+              "x": 1,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "Bs1",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "poussiere_temporelle",
+            "target": {
+              "x": 3,
+              "y": 8
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "ralentissement",
+            "target": {
+              "x": 5,
+              "y": 7
+            }
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "classId": "ECAFLIP",
+      "enemyClass": "SACRIEUR",
+      "seed": 714,
+      "mapId": "arene",
+      "actions": [
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 5,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "griffe_invocatrice",
+            "target": {
+              "x": 8,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "contrecoup",
+            "target": {
+              "x": 5,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 10,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "CAST",
+            "spell": "chatataque",
+            "target": {
+              "x": 11,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "CAST",
+            "spell": "chatataque",
+            "target": {
+              "x": 11,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 8,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "derobade",
+            "target": {
+              "x": 8,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "epee_volante",
+            "target": {
+              "x": 5,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "Bs1",
+          "action": {
+            "type": "CAST",
+            "spell": "decoupage",
+            "target": {
+              "x": 5,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "Bs1",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 8,
+              "y": 5
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "roue_de_la_fortune",
+            "target": {
+              "x": 8,
+              "y": 5
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "rekop",
+            "target": {
+              "x": 8,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "classId": "ENIRIPSA",
+      "enemyClass": "PANDAWA",
+      "seed": 715,
+      "mapId": "arene",
+      "actions": [
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "flasque_explosive",
+            "target": {
+              "x": 3,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "pandatak",
+            "target": {
+              "x": 2,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 3,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "mot_vampirique",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "mot_blessant",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 3,
+              "y": 8
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 6,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "flasque_explosive",
+            "target": {
+              "x": 3,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "ivresse",
+            "target": {
+              "x": 5,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 5,
+              "y": 8
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "Bs1",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 5,
+              "y": 10
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "mot_vampirique",
+            "target": {
+              "x": 5,
+              "y": 8
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "mot_blessant",
+            "target": {
+              "x": 5,
+              "y": 8
+            }
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "classId": "IOP",
+      "enemyClass": "FECA",
+      "seed": 716,
+      "mapId": "arene",
+      "actions": [
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 4,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "bond",
+            "target": {
+              "x": 8,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "mutilation",
+            "target": {
+              "x": 8,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "immunite",
+            "target": {
+              "x": 11,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "glyphe_enflamme",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 10,
+              "y": 8
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "vitalite",
+            "target": {
+              "x": 10,
+              "y": 8
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "mutilation",
+            "target": {
+              "x": 10,
+              "y": 8
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "amplification",
+            "target": {
+              "x": 10,
+              "y": 8
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 10,
+              "y": 5
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "retour_du_baton",
+            "target": {
+              "x": 10,
+              "y": 8
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "retour_du_baton",
+            "target": {
+              "x": 10,
+              "y": 8
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "mise_en_garde",
+            "target": {
+              "x": 10,
+              "y": 5
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 11,
+              "y": 5
+            }
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "classId": "CRA",
+      "enemyClass": "OSAMODAS",
+      "seed": 717,
+      "mapId": "arene",
+      "actions": [
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 3,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "oeil_de_taupe",
+            "target": {
+              "x": 11,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 4,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "fleche_recul",
+            "target": {
+              "x": 11,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 10,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 8,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "invocation_bouftou",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "Bs1",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 4,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "Bs1",
+          "action": {
+            "type": "CAST",
+            "spell": "morsure_du_bouftou",
+            "target": {
+              "x": 4,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "Bs1",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "fleche_glacee",
+            "target": {
+              "x": 8,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "fleche_enflammee",
+            "target": {
+              "x": 8,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 3,
+              "y": 9
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 7,
+              "y": 8
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "invocation_de_prespic",
+            "target": {
+              "x": 5,
+              "y": 8
+            }
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "classId": "SADIDA",
+      "enemyClass": "ENUTROF",
+      "seed": 718,
+      "mapId": "arene",
+      "actions": [
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "cle_reductrice",
+            "target": {
+              "x": 1,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "pelle_massacrante",
+            "target": {
+              "x": 1,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "maladresse",
+            "target": {
+              "x": 1,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 3,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "la_bloqueuse",
+            "target": {
+              "x": 4,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 3,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "ronces_multiples",
+            "target": {
+              "x": 8,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 6,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 6,
+              "y": 4
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "pelle_massacrante",
+            "target": {
+              "x": 3,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "lancer_de_pieces",
+            "target": {
+              "x": 3,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 5,
+              "y": 5
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "poison_paralysant",
+            "target": {
+              "x": 6,
+              "y": 4
+            }
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "classId": "SACRIEUR",
+      "enemyClass": "SRAM",
+      "seed": 719,
+      "mapId": "arene",
+      "actions": [
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "invisibilite",
+            "target": {
+              "x": 7,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "piege_d_immobilisation",
+            "target": {
+              "x": 3,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 7,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 2,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 3,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "epee_volante",
+            "target": {
+              "x": 5,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "chatiment_vitalesque",
+            "target": {
+              "x": 3,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 5,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 6,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 7,
+              "y": 7
+            }
+          },
+          "ok": false
+        }
+      ]
+    },
+    {
+      "classId": "PANDAWA",
+      "enemyClass": "XELOR",
+      "seed": 720,
+      "mapId": "arene",
+      "actions": [
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 5,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "ivresse",
+            "target": {
+              "x": 5,
+              "y": 5
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "flasque_explosive",
+            "target": {
+              "x": 9,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 9,
+              "y": 5
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "cadran_de_xelor",
+            "target": {
+              "x": 5,
+              "y": 4
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "devouement",
+            "target": {
+              "x": 9,
+              "y": 5
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "ralentissement",
+            "target": {
+              "x": 5,
+              "y": 6
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "protection_aveuglante",
+            "target": {
+              "x": 9,
+              "y": 5
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "Bs1",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "MOVE",
+            "to": {
+              "x": 7,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "CAST",
+            "spell": "colere_de_zatoishwan",
+            "target": {
+              "x": 7,
+              "y": 7
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "A",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "CAST",
+            "spell": "beuverie",
+            "target": {
+              "x": 9,
+              "y": 5
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "As1",
+          "action": {
+            "type": "PASS"
+          },
+          "ok": true
+        },
+        {
+          "id": "B",
+          "action": {
+            "type": "CAST",
+            "spell": "ralentissement",
+            "target": {
+              "x": 7,
+              "y": 7
+            }
+          },
+          "ok": true
+        }
+      ]
+    }
+  ]
+}

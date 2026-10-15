@@ -1,0 +1,170 @@
+{
+  "id": "validation-example",
+  "name": "Gardien des braises",
+  "description": "Un exemple jouable à personnaliser.",
+  "package": {
+    "id": "ember-warden",
+    "version": "1.0.0",
+    "author": "Votre nom",
+    "design": {
+      "role": "Dégâts à moyenne portée",
+      "strengths": [
+        "Préparation offensive"
+      ],
+      "weaknesses": [
+        "Ligne de vue nécessaire",
+        "Aucun soin"
+      ],
+      "turnLoop": "Se rapprocher, préparer Résolution, puis lancer Braise vive.",
+      "counterplay": "Profiter de la relance du bonus et des obstacles."
+    }
+  },
+  "classId": "IOP",
+  "loadout": {
+    "version": 1,
+    "slots": {
+      "hat": 1000000001
+    },
+    "base": {
+      "vitalite": 0,
+      "force": 198,
+      "intelligence": 0,
+      "chance": 0,
+      "agilite": 0,
+      "sagesse": 0
+    },
+    "rollMode": "max",
+    "rollSeed": 1,
+    "profile": {
+      "sex": 0
+    },
+    "level": 200,
+    "spells": {
+      "custom": [
+        {
+          "authoringVersion": 1,
+          "id": 1791919184116020,
+          "key": "custom_1791919184116020",
+          "name": "Braise vive",
+          "description": "Une attaque de feu à moyenne portée.\nContre-jeu : Couper la ligne de vue ou résister au feu.",
+          "grade": 6,
+          "requiredLevel": 200,
+          "emoji": "✨",
+          "visualSpellId": 161,
+          "pa": 3,
+          "rangeMin": 1,
+          "rangeMax": 5,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "emptyCellOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 2,
+          "maxPerTarget": 2,
+          "cooldown": 0,
+          "initialCooldown": 0,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "requiredStates": [],
+          "forbiddenStates": [
+            1,
+            3,
+            18,
+            19,
+            41
+          ],
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 15,
+              "max": 19,
+              "duration": 0,
+              "zone": "Pa",
+              "element": "feu",
+              "targetMask": 1,
+              "p1": 15,
+              "p2": 19,
+              "p3": 0,
+              "id": 0,
+              "chance": 0
+            }
+          ],
+          "critEffects": []
+        },
+        {
+          "authoringVersion": 1,
+          "id": 1791919184116199,
+          "key": "custom_1791919184116199",
+          "name": "Résolution",
+          "description": "Prépare le prochain assaut.\nContre-jeu : Garder ses distances pendant les deux tours du bonus.",
+          "grade": 6,
+          "requiredLevel": 200,
+          "emoji": "✨",
+          "visualSpellId": 153,
+          "pa": 2,
+          "rangeMin": 0,
+          "rangeMax": 0,
+          "targetMode": "self",
+          "needsLos": true,
+          "lineOnly": false,
+          "emptyCellOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 4,
+          "initialCooldown": 0,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "requiredStates": [],
+          "forbiddenStates": [
+            1,
+            3,
+            18,
+            19,
+            41
+          ],
+          "effects": [
+            {
+              "kind": "buffDamage",
+              "min": 8,
+              "max": 8,
+              "duration": 2,
+              "zone": "Pa",
+              "targetMask": 32,
+              "p1": 8,
+              "p2": 8,
+              "p3": 0,
+              "id": 0,
+              "chance": 0
+            }
+          ],
+          "critEffects": []
+        }
+      ],
+      "order": [
+        1791919184116020,
+        1791919184116199
+      ]
+    },
+    "customEquipment": {
+      "1000000001": {
+        "version": 1,
+        "id": 1000000001,
+        "referenceId": 7143,
+        "name": "Coiffe des braises",
+        "appearance": {
+          "shape": "equipment",
+          "color": "#8964cf"
+        },
+        "level": 200,
+        "stats": {
+          "vitalite": 200,
+          "force": 40,
+          "damage": 5
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+.original-spell-effect { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+.original-map-prop { position: absolute; pointer-events: none; overflow: visible; }
+.original-brazier-flame { transform-origin: 50px 116px; animation: brazier-flicker 1.3s ease-in-out infinite alternate; }
+@keyframes brazier-flicker { from { transform: scale(.91, .94) skewX(-2deg); } to { transform: scale(1.03, 1.04) skewX(2deg); } }
+@media (prefers-reduced-motion: reduce) { .original-brazier-flame { animation: none; } }

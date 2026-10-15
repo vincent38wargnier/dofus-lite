@@ -1,0 +1,25 @@
+.board-wrap { touch-action: none; }
+.board-camera-layer { position: relative; flex: none; }
+/* Positions belong to the world; labels and their animated travel use screen
+   pixels. Individual scale composes with existing transforms/animations without
+   replacing them (HP fill, floating numbers, speech and path entrances). */
+.board .mini-hp { scale: var(--board-ui-scale, 1); transform-origin: center bottom; }
+.board .creature-turn-position { scale: var(--board-ui-scale, 1); transform-origin: left bottom; }
+.board .bubble { scale: var(--board-ui-scale, 1); transform-origin: left bottom; }
+.board .float-text, .board .path-cost { scale: var(--board-ui-scale, 1); transform-origin: left top; }
+.board .path-dot { scale: var(--board-ui-scale, 1); transform-origin: center; }
+.board-wrap.camera-dragging .board-camera-layer { will-change: transform; }
+.board-wrap.camera-dragging, .board-wrap.camera-dragging * { cursor: grabbing !important; }
+.board-camera-tools { position: absolute; z-index: 2601; bottom: 10px; right: 10px; display: flex; align-items: center; gap: 2px; padding: 3px; border: 1px solid #adbda670; border-radius: 10px; color: #eff2e9; background: #262f26ed; box-shadow: 0 2px 8px #0003; }
+.board-camera-tools button { display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 32px; min-width: 32px; padding: 4px 7px; border: 0; border-radius: 6px; font: inherit; font-size: 11px; color: inherit; background: transparent; cursor: pointer; }
+.board-camera-tools button:hover { background: #52614a; }
+.board-camera-tools button:disabled { opacity: .35; cursor: default; }
+.board-camera-tools button:focus-visible { outline: 2px solid #f4d87d; outline-offset: 1px; }
+.board-camera-tools .camera-zoom { min-width: 36px; text-align: center; font-size: 11px; font-variant-numeric: tabular-nums; }
+.board-camera-tools .camera-reset { border-left: 1px solid #87937c70; border-radius: 0 6px 6px 0; }
+.fitted-board.tactical-mode .board-camera-tools { bottom: 34px; }
+@media (max-width: 700px), (max-height: 500px) {
+  .board-camera-tools { bottom: 6px; right: 6px; padding: 2px; }
+  .board-camera-tools button { height: 28px; min-width: 28px; padding: 3px 5px; }
+  .board-camera-tools .camera-reset span { display: none; }
+}

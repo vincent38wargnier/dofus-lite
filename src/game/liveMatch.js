@@ -12,7 +12,10 @@ import { utilityDecide } from '../bots/utilityBrain';
 import { MAX_ACTIONS_PER_TURN, MAX_INVALID_PER_TURN } from '../arena/runner';
 import { KANOJEDO_MAP_ID, POUTCH_ID, DEFAULT_BOSS_ID, defaultMonsterGrade, monsterDecide, BOSSES } from '../engine/monsters';
 import { dungeonRoster, dungeonMapId } from '../engine/dungeons';
-import { customDungeonRoster } from '../engine/customDungeons';
+import { adventureEnabled, adventureTeam } from '../engine/adventures';
+import { customDungeonErrors, customDungeonRoster } from '../engine/customDungeons';
+import { dungeonEncounter } from '../engine/encounters';
+import { dungeonRoom } from '../engine/dungeonCampaign';
 import { opponentRoster } from '../engine/opponentTeam';
 import { allyRoster, allyFighterId, teamRoster, teamFighterId } from '../engine/allyTeam';
 
@@ -25,10 +28,17 @@ export const TURN_SECONDS = 30; // comme en 1.29
 const MAX_SAYS_PER_TURN = 200;
 
 export class LiveMatch {
-  constructor({ playerClass, botClass, mapId, seed, botName, botDecide, playerName = 'Vous', playerController = 'player', loadouts = {}, mode = 'duel', monsterGrade = 5, bossId = DEFAULT_BOSS_ID, bossGrade = defaultMonsterGrade(bossId), dungeon, opponents, opponentBots = {}, allies = [], allyBots = {}, team }) {
+  constructor({ playerClass, botClass, mapId, seed, botName, botDecide, playerName = 'Vous', playerController = 'player', loadouts = {}, mode = 'duel', monsterGrade = 5, bossId = DEFAULT_BOSS_ID, bossGrade = defaultMonsterGrade(bossId), dungeon, roomIndex = 0, opponents, opponentBots = {}, allies = [], allyBots = {}, team, adventureChoice }) {
+    if (mode === 'custom' && dungeon?.rooms) { const errors = customDungeonErrors(dungeon); if (errors.length) throw new Error(errors.join(' ')); }
+    this.campaign = mode === 'custom' && dungeon?.rooms ? { dungeon: JSON.parse(JSON.stringify(dungeon)), roomIndex } : null;
+    if (mode === 'custom') dungeon = dungeonRoom(dungeon, roomIndex);
+    const prepared = mode === 'custom' && adventureEnabled(dungeon);
+    if (prepared) team = adventureTeam(dungeon, adventureChoice);
     if (mode === 'boss' && !BOSSES.some(boss => boss.id === bossId)) throw new Error('Boss inconnu.');
     const init = createGame({
       mapId: mode === 'custom' ? dungeon?.mapId : mode === 'kanojedo' ? KANOJEDO_MAP_ID : mode === 'boss' ? dungeonMapId(bossId) : mapId,
+      battlefield: mode === 'custom' ? dungeon?.battlefield : undefined,
+    encounter: mode === 'custom' ? dungeonEncounter(dungeon) : undefined,
       seed,
       placement: true,
       fighters: [
@@ -44,8 +54,8 @@ export class LiveMatch {
     this.humanIds = new Set(team ? team.flatMap((entry, index) => entry.controller === 'player' ? [teamFighterId(index)] : [])
       : [...(playerController === 'player' ? [HUMAN_ID] : []), ...allies.flatMap((entry, index) => entry.controller === 'player' ? [allyFighterId(index)] : [])]);
     this.lastHumanId = this.humanIds.values().next().value || HUMAN_ID;
-    this.allyBots = allyBots;
-    this.opponentBots = opponentBots;
+    this.allyBots = prepared ? {} : allyBots;
+    this.opponentBots = prepared ? {} : opponentBots;
     this.dungeonCharacters = new Set(mode === 'custom' ? Object.values(init.state.fighters).filter(f => f.team === 'B' && !f.isMonster).map(f => f.id) : []);
     for (const opponent of Object.values(init.state.fighters).filter(f => f.team !== 'A')) {
       const ready = readyFighter(this.state, opponent.id);

@@ -5,32 +5,33 @@ export const HEALTH_FLOAT_MS = 1100;
 
 // Adjacent fighters can have heads only a few pixels apart in the isometric
 // projection. Reserve a column for each position over the full upward motion.
-function layoutFloats(floats, L) {
+// Collision bounds are in world coordinates; text and gaps stay in screen pixels.
+function layoutFloats(floats, L, zoom) {
   const columns = new Map();
   for (const f of floats) {
     const key = `${f.target}:${f.pos.x},${f.pos.y}`;
     const p = L.head(f.pos);
-    const width = Math.max(64, (String(f.amount).length + 1) * 14 + 12);
-    const top = p.y - 48 - f.lane * 34;
+    const width = Math.max(64, (String(f.amount).length + 1) * 14 + 12) / zoom;
+    const top = p.y - (48 + f.lane * 34) / zoom;
     if (!columns.has(key)) columns.set(key, { x: p.x, width: 0, top, bottom: top, floats: [] });
     const c = columns.get(key);
     c.width = Math.max(c.width, width);
-    c.top = Math.min(c.top, top - 40);
-    c.bottom = Math.max(c.bottom, top + 32);
+    c.top = Math.min(c.top, top - 40 / zoom);
+    c.bottom = Math.max(c.bottom, top + 32 / zoom);
     c.floats.push({ ...f, top });
   }
   const placed = [];
   for (const c of [...columns.values()].sort((a, b) => a.x - b.x)) {
     for (const other of placed) {
       if (c.top >= other.bottom || c.bottom <= other.top) continue;
-      if (c.x - c.width / 2 < other.x + other.width / 2 + 10) c.x = other.x + (other.width + c.width) / 2 + 10;
+      if (c.x - c.width / 2 < other.x + other.width / 2 + 10 / zoom) c.x = other.x + (other.width + c.width) / 2 + 10 / zoom;
     }
     placed.push(c);
   }
-  return placed.flatMap(c => c.floats.map(f => ({ ...f, left: c.x, width: c.width })));
+  return placed.flatMap(c => c.floats.map(f => ({ ...f, left: c.x, width: c.width * zoom })));
 }
 
-export default function HealthChangeFloats({ frameEvents, frameIdx, fighters, L }) {
+export default function HealthChangeFloats({ frameEvents, frameIdx, fighters, L, zoom = 1 }) {
   const [floats, setFloats] = useState([]);
   const previous = useRef(null);
   useEffect(() => {
@@ -67,7 +68,7 @@ export default function HealthChangeFloats({ frameEvents, frameIdx, fighters, L 
   }, [floats]);
 
   const visible = floats.filter(f => fighters.some(fighter => fighter.id === f.target));
-  return layoutFloats(visible, L).map(f => {
+  return layoutFloats(visible, L, zoom).map(f => {
     return <div key={f.id} className={`float-text health-change ${f.t === 'damage' ? 'dmg' : 'heal'}`}
       data-target={f.target} data-action-id={f.actionId} data-health-lines={f.lines.length}
       style={{ left: f.left, top: f.top, width: f.width }}>

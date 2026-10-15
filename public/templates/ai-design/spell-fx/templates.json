@@ -1,0 +1,78 @@
+{
+  "format": "dofus-lite-spell-fx-templates",
+  "version": 1,
+  "runtimeImportable": false,
+  "limits": {
+    "pngBytes": 2097152,
+    "totalBytes": 12582912,
+    "jsonBytes": 65536
+  },
+  "templates": [
+    {
+      "role": "cast",
+      "file": "cast.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      }
+    },
+    {
+      "role": "projectile",
+      "file": "projectile.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      }
+    },
+    {
+      "role": "trail",
+      "file": "trail.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      }
+    },
+    {
+      "role": "impact",
+      "file": "impact.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      }
+    },
+    {
+      "role": "aura",
+      "file": "aura.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      }
+    },
+    {
+      "role": "beam",
+      "file": "beam.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 0,
+        "y": 128
+      }
+    }
+  ]
+}

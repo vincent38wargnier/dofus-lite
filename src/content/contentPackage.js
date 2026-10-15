@@ -14,12 +14,14 @@ const clone = value => JSON.parse(JSON.stringify(value));
 export function compilePackageSpell(spell, existingIds = []) {
   const raw = newAuthoredSpell(existingIds);
   const { key, counterplay, icon, ...fields } = spell;
-  return normalizeAuthoredSpell({ ...raw, ...fields, key: raw.key,
+  const compiled = normalizeAuthoredSpell({ ...raw, ...fields, key: raw.key,
     description: `${spell.description}\nContre-jeu : ${counterplay}`.slice(0, 800),
     effects: spell.effects.map(effect => { const { target, ...rest } = effect; return { ...rest, targetMask: masks[target] }; }),
     critEffects: spell.critEffects.map(effect => { const { target, ...rest } = effect; return { ...rest, targetMask: masks[target] }; }),
     ...(icon ? { iconFile: icon } : {}),
   });
+  if (compiled.visualEffect) delete compiled.visualSpellId;
+  return compiled;
 }
 
 export function packageBalanceErrors(spell) {
@@ -46,6 +48,7 @@ export function validateContentManifest(manifest) {
     if (new Set(owner.spells.map(spell => spell.key)).size !== owner.spells.length) errors.push(`${owner.name} : clés de sorts dupliquées.`);
     const kit = owner.spells.map(spell => { const raw = compilePackageSpell(spell, ids); ids.push(raw.id); return raw; });
     owner.spells.forEach((spell, index) => {
+      if (spell.visualSpellId == null && spell.visualEffect == null) errors.push(`${owner.name} / ${spell.key} : choisissez une animation.`);
       errors.push(...authoredSpellErrors(kit[index]).map(error => `${owner.name} / ${spell.key} : ${error}`));
       errors.push(...packageBalanceErrors(spell).map(error => `${owner.name} / ${spell.key} : ${error}`));
       warnings.push(...authoredSpellWarnings(kit[index], kit).map(warning => `${owner.name} / ${spell.name} : ${warning}`));

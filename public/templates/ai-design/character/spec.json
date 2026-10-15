@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "frameSize": 256,
+  "anchor": {
+    "x": 128,
+    "y": 224
+  },
+  "files": [
+    {
+      "name": "portrait.png",
+      "label": "Portrait",
+      "required": true,
+      "frames": 1,
+      "fps": 1,
+      "pose": "portrait"
+    },
+    {
+      "name": "idle-front.png",
+      "label": "Repos · face ↘",
+      "required": true,
+      "frames": 1,
+      "fps": 1,
+      "pose": "static",
+      "direction": "R"
+    },
+    {
+      "name": "idle-back.png",
+      "label": "Repos · dos ↖",
+      "required": true,
+      "frames": 1,
+      "fps": 1,
+      "pose": "static",
+      "direction": "L"
+    },
+    {
+      "name": "walk-front.png",
+      "label": "Marche · face ↘",
+      "required": false,
+      "frames": 6,
+      "fps": 12,
+      "pose": "walk",
+      "direction": "R"
+    },
+    {
+      "name": "walk-back.png",
+      "label": "Marche · dos ↖",
+      "required": false,
+      "frames": 6,
+      "fps": 12,
+      "pose": "walk",
+      "direction": "L"
+    },
+    {
+      "name": "cast-front.png",
+      "label": "Sort ou arme · face ↘",
+      "required": false,
+      "frames": 6,
+      "fps": 10,
+      "pose": "cast",
+      "direction": "R"
+    },
+    {
+      "name": "cast-back.png",
+      "label": "Sort ou arme · dos ↖",
+      "required": false,
+      "frames": 6,
+      "fps": 10,
+      "pose": "cast",
+      "direction": "L"
+    },
+    {
+      "name": "hit-front.png",
+      "label": "Impact reçu · face ↘",
+      "required": false,
+      "frames": 3,
+      "fps": 10,
+      "pose": "hit",
+      "direction": "R"
+    },
+    {
+      "name": "hit-back.png",
+      "label": "Impact reçu · dos ↖",
+      "required": false,
+      "frames": 3,
+      "fps": 10,
+      "pose": "hit",
+      "direction": "L"
+    }
+  ]
+}

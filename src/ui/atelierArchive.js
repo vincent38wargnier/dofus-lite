@@ -3,6 +3,8 @@ import { PACKAGE_LIMITS } from '../content/packageSchema';
 import { customEquipmentShape, customEquipmentItem, newEquipmentId, validateCustomEquipment } from '../engine/customEquipment';
 import { resolveLoadout } from '../engine/equipment';
 import { customDungeonErrors } from '../engine/customDungeons';
+import { dungeonRooms } from '../engine/dungeonCampaign';
+import { MAP_ART_MAX_BYTES } from '../engine/customMaps';
 import { parseCharacterShape } from '../visuals/customShapes';
 import { cloneCreation, newCreationId, validCreations } from './creationsStore';
 import { CHARACTER_ARTWORK_SPEC as SPEC, readCharacterArtwork, writeArtworkRecords, removeArtworkRecords,
@@ -10,13 +12,13 @@ import { CHARACTER_ARTWORK_SPEC as SPEC, readCharacterArtwork, writeArtworkRecor
 import { pngHeader, prepareContentFiles } from './contentPackageImport';
 
 export const ATELIER_LIMITS = { zipBytes: 128 * 1048576, expandedBytes: 160 * 1048576,
-  jsonBytes: 8 * 1048576, pngBytes: 2 * 1048576, files: 4096, creations: 200 };
+  jsonBytes: 8 * 1048576, pngBytes: MAP_ART_MAX_BYTES, files: 4096, creations: 200 };
 const check = (ok, message) => { if (!ok) throw new Error(message); };
 const record = value => !!value && typeof value === 'object' && !Array.isArray(value);
 const idPattern = /^[a-zA-Z0-9_-]{1,100}$/;
 const iconPattern = /^icons\/[a-z][a-z0-9_-]*\.png$/;
 const assetPath = /^assets\/a\d+\/[a-z][a-z0-9_-]*\.png$/;
-const archivePath = name => name === 'atelier.json' || name === 'content.json' || name === 'class.json'
+export const atelierArchivePath = name => name === 'atelier.json' || name === 'content.json' || name === 'class.json'
   || /^assets\/(?:a\d+\/)?(?:[a-z][a-z0-9_-]*\.png)?$/.test(name)
   || /^icons\/(?:[a-z][a-z0-9_-]*\.png)?$/.test(name)
   || /^artwork\/(?:[a-z][a-z0-9_-]*\/)?(?:[a-z][a-z0-9_-]*\.png)?$/.test(name);
@@ -29,19 +31,25 @@ export const atelierCounts = value => [
 
 // Both top-level classes and characters embedded in rooms own full loadouts.
 const archiveCharacters = content => [...content.characters,
-  ...content.dungeons.flatMap(dungeon => dungeon.members.flatMap(member => member.character ? [member.character] : []))];
+  ...content.dungeons.flatMap(dungeon => [...(dungeon.rooms ? [dungeon, ...dungeon.rooms] : dungeonRooms(dungeon)).flatMap(room => room.members.flatMap(member => member.character ? [member.character] : [])),
+    ...(dungeon.adventure?.heroes || []).map(hero => hero.character)])];
 
 // Visit only engine-owned image fields; never treat arbitrary metadata as a URL.
 function artworkReferences(content, change = id => id) {
   const references = new Map();
-  const use = (owner, field, icon) => {
+  const use = (owner, field, icon, map) => {
     const id = owner?.[field];
     if (!id || (field === 'artworkId' && parseCharacterShape(id))) return;
     check(typeof id === 'string' && idPattern.test(id), 'Identifiant d’image invalide.');
     if (field === 'iconArtworkId') check(typeof icon === 'string' && iconPattern.test(icon), 'Chemin d’icône de sort invalide.');
-    if (!references.has(id)) references.set(id, { character: false, icons: new Set() });
+    if (!references.has(id)) references.set(id, { character: false, icons: new Set(), maps: new Map() });
     const ref = references.get(id);
-    if (field === 'artworkId') ref.character = true; else ref.icons.add(icon);
+    if (map) {
+      const previous = ref.maps.get(map.file);
+      check(!previous || (previous.width === map.width && previous.height === map.height), 'Dimensions de terrain contradictoires.');
+      ref.maps.set(map.file, { width: map.width, height: map.height, frames: 1, pose: 'portrait' });
+      if (map.propsFile) ref.maps.set(map.propsFile, { width: 768, height: 256, frames: 3, frameSize: 256, pose: 'prop' });
+    } else if (field === 'artworkId') ref.character = true; else ref.icons.add(icon);
     owner[field] = change(id);
   };
   const spells = list => (list || []).forEach(spell => {
@@ -49,9 +57,12 @@ function artworkReferences(content, change = id => id) {
     use(spell, 'iconArtworkId', spell.iconFile);
   });
   archiveCharacters(content).forEach(character => { use(character.loadout, 'artworkId'); spells(character.loadout.spells?.custom); });
-  content.dungeons.forEach(dungeon => dungeon.members.forEach(member => {
+  content.dungeons.flatMap(dungeon => dungeon.rooms ? [dungeon, ...dungeon.rooms] : [dungeon]).forEach(dungeon => {
+    if (dungeon.battlefield) use(dungeon.battlefield.background, 'artworkId', null, dungeon.battlefield.background);
+    dungeon.members.forEach(member => {
     if (member.customMonster) { use(member.customMonster, 'artworkId'); spells(member.customMonster.spells); }
-  }));
+    });
+  });
   return references;
 }
 
@@ -69,6 +80,10 @@ function validateContent(content) {
   check(record(content) && ['characters', 'dungeons', 'equipment'].every(key => Array.isArray(content[key])), 'Archive Atelier : collections invalides.');
   check(atelierCount(content) > 0 && atelierCount(content) <= ATELIER_LIMITS.creations, 'Sélectionnez de 1 à 200 créations par ZIP.');
   check(validCreations({ version: 1, characters: content.characters, dungeons: content.dungeons }), 'Une classe ou un donjon est illisible, ou référence un monstre / terrain inconnu.');
+  for (const dungeon of content.dungeons.filter(d => d.adventure != null)) {
+    const errors = customDungeonErrors(dungeon);
+    check(!errors.length, `${dungeon.name} : aventure prête à jouer invalide. ${errors.join(' ')}`);
+  }
   const definitions = [...content.equipment, ...archiveCharacters(content).flatMap(c => Object.values(c.loadout.customEquipment || {}))];
   check(definitions.every(item => customEquipmentShape(item) && customEquipmentItem(item)), 'Définition ou référence d’équipement inconnue.');
   check(new Set(content.equipment.map(item => item.id)).size === content.equipment.length, 'Équipement présent plusieurs fois.');
@@ -96,13 +111,14 @@ export async function buildAtelierArchive(selection, { readArtwork = readCharact
   for (const [id, ref] of references) {
     const saved = await readArtwork(id);
     const images = {};
-    const names = [...new Set([...ref.icons, ...(ref.character ? SPEC.files.filter(file => saved.images[file.name]).map(file => file.name) : [])])];
+    const names = [...new Set([...ref.icons, ...ref.maps.keys(), ...(ref.character ? SPEC.files.filter(file => saved.images[file.name]).map(file => file.name) : [])])];
     if (ref.character) check(SPEC.files.filter(file => file.required).every(file => saved.images[file.name]), 'Apparence incomplète : réimportez ses PNG avant l’export.');
     for (const name of names) {
       check(saved.images[name], `Image manquante : ${name}. Réimportez-la avant l’export.`);
       const path = `assets/a${artwork.length}/${name.replace('icons/', 'icon-')}`;
       const bytes = new Uint8Array(await saved.images[name].arrayBuffer());
-      check(bytes.length <= ATELIER_LIMITS.pngBytes, `${name} : maximum 2 Mio par image.`);
+      const limit = ref.maps.has(name) ? MAP_ART_MAX_BYTES : 2 * 1048576;
+      check(bytes.length <= limit, `${name} : maximum ${limit / 1048576} Mio par image.`);
       files.set(path, bytes); images[name] = path;
     }
     artwork.push({ id, name: saved.name || 'Images', images });
@@ -130,23 +146,28 @@ export async function prepareAtelierFiles(files, { newId = newCreationId, equipm
   for (const asset of manifest.artwork) {
     check(record(asset) && references.has(asset.id) && !remappedArt.has(asset.id) && record(asset.images), 'Lot d’images invalide ou dupliqué.');
     const ref = references.get(asset.id), images = {};
-    const required = new Set([...ref.icons, ...(ref.character ? SPEC.files.filter(file => file.required).map(file => file.name) : [])]);
+    const required = new Set([...ref.icons, ...ref.maps.keys(), ...(ref.character ? SPEC.files.filter(file => file.required).map(file => file.name) : [])]);
     for (const name of required) check(asset.images[name], `Image requise absente : ${name}.`);
     for (const [name, path] of Object.entries(asset.images)) {
       const spec = ref.character && SPEC.files.find(file => file.name === name);
-      check(spec || ref.icons.has(name), `Image non utilisée : ${name}.`);
+      const map = ref.maps.get(name);
+      check(spec || map || ref.icons.has(name), `Image non utilisée : ${name}.`);
       check(typeof path === 'string' && assetPath.test(path) && !declared.has(path) && files.has(path), `Image absente ou chemin invalide : ${path}.`);
       declared.add(path);
       const bytes = files.get(path), size = pngHeader(path, bytes, { strict: false });
+      check(bytes.length <= (map ? MAP_ART_MAX_BYTES : 2 * 1048576), `${name} : image trop volumineuse.`);
       const file = new File([bytes], name, { type: 'image/png' });
-      if (spec) await verifyPixels(file, validateArtworkPng(name, bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)));
+      if (map) {
+        check(size.width === map.width && size.height === map.height, `${name} : dimensions du décor incorrectes.`);
+        await verifyPixels(file, map);
+      } else if (spec) await verifyPixels(file, validateArtworkPng(name, bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)));
       else {
         check(size.width === 64 && size.height === 64, `${name} : icône 64 × 64 requise.`);
         await verifyPixels(file, { frames: 1, frameSize: 64, pose: 'portrait' });
       }
       images[name] = file;
     }
-    if (ref.character) validateArtworkFiles(Object.entries(images).filter(([name]) => !iconPattern.test(name)).map(([, image]) => image));
+    if (ref.character) validateArtworkFiles(Object.entries(images).filter(([name]) => SPEC.files.some(f => f.name === name)).map(([, image]) => image));
     const id = newId(); remappedArt.set(asset.id, id);
     records.push({ id, name: String(asset.name || 'Images').slice(0, 200), version: SPEC.version, images });
   }
@@ -178,7 +199,7 @@ export async function prepareAtelierFiles(files, { newId = newCreationId, equipm
 export async function prepareWorkshopFile(file, dependencies = {}) {
   check(file && file.size <= ATELIER_LIMITS.zipBytes, 'Choisissez un ZIP de 128 Mio maximum.');
   const bytes = await file.arrayBuffer();
-  const files = await readContentZip(bytes, undefined, { limits: ATELIER_LIMITS, allowName: archivePath });
+  const files = await readContentZip(bytes, undefined, { limits: ATELIER_LIMITS, allowName: atelierArchivePath });
   if (files.has('atelier.json')) return prepareAtelierFiles(files, dependencies);
   // Preserve the stricter limits and validation of AI-authored content packages.
   check(file.size <= PACKAGE_LIMITS.zipBytes, 'Les ZIP de création IA sont limités à 32 Mio.');

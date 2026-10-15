@@ -1,0 +1,170 @@
+[
+  {
+    "key": "lannister",
+    "frames": [
+      {
+        "name": "portrait.png",
+        "source": [
+          1254,
+          418
+        ],
+        "crop": [
+          17,
+          3,
+          401,
+          415
+        ],
+        "scale": 0.5975903614457831,
+        "anchor": null
+      },
+      {
+        "name": "idle-front.png",
+        "source": [
+          1254,
+          418
+        ],
+        "crop": [
+          93,
+          4,
+          231,
+          412
+        ],
+        "scale": 0.49514563106796117,
+        "anchor": [
+          128,
+          224
+        ]
+      },
+      {
+        "name": "idle-back.png",
+        "source": [
+          1254,
+          418
+        ],
+        "crop": [
+          88,
+          4,
+          309,
+          408
+        ],
+        "scale": 0.49514563106796117,
+        "anchor": [
+          128,
+          224
+        ]
+      }
+    ]
+  },
+  {
+    "key": "frey",
+    "frames": [
+      {
+        "name": "portrait.png",
+        "source": [
+          1254,
+          418
+        ],
+        "crop": [
+          13,
+          0,
+          405,
+          418
+        ],
+        "scale": 0.5933014354066986,
+        "anchor": null
+      },
+      {
+        "name": "idle-front.png",
+        "source": [
+          1254,
+          418
+        ],
+        "crop": [
+          124,
+          3,
+          203,
+          397
+        ],
+        "scale": 0.5138539042821159,
+        "anchor": [
+          128,
+          224
+        ]
+      },
+      {
+        "name": "idle-back.png",
+        "source": [
+          1254,
+          418
+        ],
+        "crop": [
+          101,
+          4,
+          259,
+          394
+        ],
+        "scale": 0.5138539042821159,
+        "anchor": [
+          128,
+          224
+        ]
+      }
+    ]
+  },
+  {
+    "key": "bolton",
+    "frames": [
+      {
+        "name": "portrait.png",
+        "source": [
+          1254,
+          418
+        ],
+        "crop": [
+          12,
+          0,
+          406,
+          418
+        ],
+        "scale": 0.5933014354066986,
+        "anchor": null
+      },
+      {
+        "name": "idle-front.png",
+        "source": [
+          1254,
+          418
+        ],
+        "crop": [
+          110,
+          0,
+          209,
+          402
+        ],
+        "scale": 0.5074626865671642,
+        "anchor": [
+          128,
+          224
+        ]
+      },
+      {
+        "name": "idle-back.png",
+        "source": [
+          1254,
+          418
+        ],
+        "crop": [
+          124,
+          0,
+          211,
+          402
+        ],
+        "scale": 0.5074626865671642,
+        "anchor": [
+          128,
+          224
+        ]
+      }
+    ]
+  }
+]

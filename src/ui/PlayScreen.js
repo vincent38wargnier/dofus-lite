@@ -11,10 +11,15 @@ import BoardView from './BoardView';
 import CombatStatsPanel from './CombatStatsPanel';
 import useFighterInspection from './useFighterInspection';
 import LogPanel from './LogPanel';
+import { adventureEnabled, adventureTeam } from '../engine/adventures';
+import useAdventureChoice from './useAdventureChoice';
+import { CampaignBrief, CampaignResult, PeerCampaignResult } from './DungeonCampaign';
+import useDungeonProgress, { readDungeonProgress } from './dungeonProgress';
 import PlayerSetup from './PlayerSetup';
 import CombatTurnControls from './CombatTurnControls';
 import CombatSpellBar from './CombatSpellBar';
 import CombatTimeline, { timelineFighterVisible } from './CombatTimeline';
+import CombatSpellbook, { SpellbookButton } from './CombatSpellbook';
 import { readPlayerSetup, SETUP_STORAGE } from './playerSetupState';
 import { combatAnimationMs, useRetroAssets, useAppearances } from './RetroAssets';
 import { weaponTargetPlans, weaponZoneLabel } from './weaponTargeting';
@@ -107,7 +112,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   } : playerEquipment;
   const opponents = useMemo(() => opponentDraft || [{ kind: 'character', name: CLASSES[legacyBotClass].name,
     classId: legacyBotClass, loadout: standardEquipment.loadouts.B, botId }], [opponentDraft, legacyBotClass, standardEquipment.loadouts.B, botId]);
-  const team = [...(includePlayer ? [{ kind: 'character', classId: playerClass, name: profile?.name || customCharacter?.name || CLASSES[playerClass].name,
+  const freeTeam = [...(includePlayer ? [{ kind: 'character', classId: playerClass, name: profile?.name || customCharacter?.name || CLASSES[playerClass].name,
     loadout: equipment.loadouts.A, controller, botId: playerBotId }] : []), ...allies];
   useEffect(() => {
     if (opponentDraft === null) return;
@@ -126,6 +131,13 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const [bossGrade, setBossGrade] = useState(initial.bossGrade);
   const [customDungeonId, setCustomDungeonId] = useState(initial.customDungeonId);
   const customDungeon = creations?.dungeons.find(entry => entry.id === customDungeonId);
+  const campaignProgress = useDungeonProgress(customDungeon);
+  const preparedAdventure = mode === 'boss' && adventureEnabled(customDungeon);
+  const [adventureChoice, setAdventureChoice, adventureSaveError] = useAdventureChoice(preparedAdventure ? customDungeon : null);
+  let team = freeTeam;
+  if (preparedAdventure) {
+    try { team = adventureTeam(customDungeon, adventureChoice); } catch (_) { team = []; }
+  }
   useEffect(() => { if (customDungeonId && !customDungeon) setCustomDungeonId(null); }, [customDungeonId, customDungeon]);
   const handledSelection = useRef(null);
   const [externalSession, setExternalSession] = useState(null);
@@ -147,6 +159,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   useEffect(() => { if (!allBots.some(bot => bot.id === playerBotId)) setPlayerBotId('maison'); }, [allBots, playerBotId]);
 
   const [phase, setPhase] = useState('setup'); // 'setup' | 'fight'
+  const [roomBrief, setRoomBrief] = useState(false);
   const [botName, setBotName] = useState('');
   const [step, setStep] = useState(0);
   const [lastEvents, setLastEvents] = useState([]);
@@ -155,6 +168,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const [hoverCell, setHoverCell] = useState(null);
   const [timelineHoverId, setTimelineHoverId] = useState(null);
   const [hoveredSpell, setHoveredSpell] = useState(null);
+  const [spellbook, setSpellbook] = useState(null);
   const [timeLeft, setTimeLeft] = useState(TURN_SECONDS);
   const [placementId, setPlacementId] = useState('A');
   const [wideLog, setWideLog] = useState(true);
@@ -230,34 +244,44 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const createPeerRoom = ({ role, character }) => {
     closePeer();
     const room = new PeerRoom({ role, character,
-      settings: { mode: mode === 'boss' && customDungeon ? 'custom' : mode, mapId, seed: (Number(seed) || 1) >>> 0, bossId, bossGrade, monsterGrade }, dungeon: customDungeon,
-      onChange: () => { if (peerRef.current === room) setStep(value => value + 1); },
+      settings: { mode: mode === 'boss' && customDungeon ? 'custom' : mode, mapId, seed: (Number(seed) || 1) >>> 0, bossId, bossGrade, monsterGrade }, dungeon: customDungeon, roomIndex: campaignProgress.roomIndex, adventureChoice,
+      onChange: () => { if (peerRef.current === room) {
+        if (room.status === 'lobby' && matchRef.current?.network && matchRef.current.over) {
+          matchRef.current = null; setPhase('setup'); setPeerOpen(true); setRoomBrief(false);
+        }
+        setStep(value => value + 1);
+      } },
       onEvents: events => { if (peerRef.current === room) peerEvents.current(events); },
       onStart: match => {
         if (peerRef.current !== room) return;
         matchRef.current = match; animationUntil.current = 0;
+        setRoomBrief(!!room.settings.campaign);
         setSeed(match.seed); setPlacementId(match.localId); setBotName(match.state.fighters.B.name);
         setLog(match.initialEvents); setLastEvents(match.initialEvents); setSelectedSpell(null); setHoverCell(null); setHoveredSpell(null);
         setExternalSession(null); setCompactLog(false); setPeerOpen(false); setPeerInput(''); setError(null); setPhase('fight'); setStep(value => value + 1);
       } });
     peerRef.current = room; setPeerRoom(room); return room;
   };
-  const start = (newSeed) => {
+  const start = (newSeed, previousConfig = null, nextRoom) => {
     animationUntil.current = 0;
     setError(null);
     const s = newSeed ?? (Number(seed) || 1);
     setSeed(s);
     let m;
     try {
-      m = new LiveMatch({ playerClass, playerName: profile?.name || customCharacter?.name || 'Vous', botClass, mapId: mode === 'kanojedo' ? KANOJEDO_MAP_ID : mapId,
+      const config = previousConfig ? { ...previousConfig, seed: s, roomIndex: nextRoom ?? previousConfig.roomIndex } : { playerClass, playerName: profile?.name || customCharacter?.name || 'Vous', botClass, mapId: mode === 'kanojedo' ? KANOJEDO_MAP_ID : mapId,
         mode: mode === 'boss' && customDungeon ? 'custom' : mode, dungeon: customDungeon,
         opponents: mode === 'duel' ? opponents : undefined,
         opponentBots: mode === 'duel' ? compileOpponentBots(opponents, allBots, botId) : {},
-        team, allyBots: compileCompleteTeamBots(team, allBots),
-        monsterGrade, bossId, bossGrade, seed: s, loadouts: equipment.loadouts });
+        team, adventureChoice, allyBots: compileCompleteTeamBots(team, allBots),
+        monsterGrade, bossId, bossGrade, seed: s, loadouts: equipment.loadouts, roomIndex: campaignProgress.roomIndex };
+      if (config.dungeon?.rooms && config.roomIndex > readDungeonProgress(config.dungeon).unlocked) throw new Error('Battez la salle précédente pour continuer.');
+      m = new LiveMatch(config); m.launchConfig = config;
     } catch (e) { setError(e.message); return; }
     matchRef.current = m;
-    m.includeProfile = includePlayer;
+    setRoomBrief(!!m.campaign);
+    m.includeProfile = !preparedAdventure && includePlayer;
+    m.adventure = preparedAdventure;
     setPlacementId('A');
     setBotName(m.state.fighters.B.name);
     setLog(m.initialEvents);
@@ -273,7 +297,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const startAutomatic = () => {
     // Only a fully automatic team uses the replay runner. A manual companion
     // must keep its controls even when the principal character has an AI.
-    if (!isAutomaticTeam(controller, allies, includePlayer)) { start(); return false; }
+    if (!(preparedAdventure ? adventureChoice.automatic : isAutomaticTeam(controller, allies, includePlayer))) { start(); return false; }
     try {
       compileCompleteTeamBots(team, allBots);
       if (mode === 'duel') compileOpponentBots(opponents, allBots, botId);
@@ -282,9 +306,9 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
           : { classId: playerClass, name: profile?.name || customCharacter?.name || CLASSES[playerClass].name, loadout: equipment.loadouts.A },
         opponent: { classId: botClass, name: CLASSES[botClass].name, loadout: equipment.loadouts.B },
         opponents: mode === 'kanojedo' ? [{ kind: 'monster', monsterId: POUTCH_ID, grade: monsterGrade }] : mode === 'duel' ? opponents : undefined,
-        allies, team,
+        allies, team, adventureChoice,
         botId: team[0]?.botId || playerBotId, botB: botId, mapId: mode === 'kanojedo' ? KANOJEDO_MAP_ID : mapId, bossId, bossGrade, dungeon: mode === 'boss' ? customDungeon || null : null,
-        seed: Number(seed) || 1 }));
+        seed: Number(seed) || 1, roomIndex: campaignProgress.roomIndex }));
       setError(null);
       return true;
     } catch (e) { setError(e.message); return false; }
@@ -296,9 +320,11 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
     try {
       animationUntil.current = 0;
       setError(null); setSeed(newSeed);
-      const match = new LiveMatch({ mode: 'custom', dungeon, seed: newSeed,
+      const config = { mode: 'custom', dungeon, seed: newSeed, roomIndex: readDungeonProgress(dungeon).roomIndex,
         allies, allyBots: compileAllyBots(allies, allBots),
-        playerClass: character.classId, playerName: character.name, loadouts });
+        playerClass: character.classId, playerName: character.name, loadouts };
+      const match = new LiveMatch(config); match.launchConfig = config;
+      setRoomBrief(!!match.campaign);
       setPlacementId('A');
       matchRef.current = match; setBotName(dungeon.name);
       setLog(match.initialEvents); setLastEvents(match.initialEvents);
@@ -397,7 +423,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   // calcule) re-sondent VITE: rien ne s'anime, chaque 620 ms d'attente serait
   // du temps de tour perdu. Les vraies actions gardent la cadence d'animation.
   useEffect(() => {
-    if (!m || m.placing || m.over || m.isHumanTurn() || (m.network && !m.canBotStep())) return undefined;
+    if (!m || m.placing || m.over || m.isHumanTurn() || roomBrief || (spellbook && !m.network) || (m.network && !m.canBotStep())) return undefined;
     const thinking = lastEventsRef.current?.length === 1 && lastEventsRef.current[0]?.t === 'say'
       && String(lastEventsRef.current[0]?.text || '').includes('calcule');
     const delay = thinking ? 150 : Math.max(BOT_STEP_MS, animationUntil.current - Date.now());
@@ -408,10 +434,12 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
     }, delay);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, phase]);
+  }, [step, phase, spellbook, roomBrief]);
 
   // Chrono de tour (30 s, comme en 1.29) — uniquement pour l'humain.
   const humanTurnKey = humanTurn ? `${m.current().id}:${m.state.turn}` : 'none';
+  const spellbookOpen = useRef(false);
+  spellbookOpen.current = !!spellbook;
   useEffect(() => {
     if (m?.network) {
       const update = () => setTimeLeft(m.room.timeLeft());
@@ -420,9 +448,12 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
     }
     if (humanTurnKey === 'none') return undefined;
     setTimeLeft(TURN_SECONDS);
-    const started = Date.now();
+    let remaining = TURN_SECONDS * 1000, lastTick = Date.now();
     const iv = setInterval(() => {
-      const left = TURN_SECONDS - (Date.now() - started) / 1000;
+      const now = Date.now();
+      if (!spellbookOpen.current) remaining -= now - lastTick;
+      lastTick = now;
+      const left = remaining / 1000;
       setTimeLeft(Math.max(0, left));
       if (left <= 0) {
         clearInterval(iv);
@@ -510,6 +541,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
     // Cosmetic preference only: keep the current combat export and saved draft
     // in sync without advancing the turn or replaying the last animation.
     mm.state = { ...mm.state, fighters: { ...mm.state.fighters, [fighter.id]: { ...fighter, loadout: withOrder(fighter.loadout) } } };
+    if (mm.adventure) { setStep(value => value + 1); return; }
     if (fighter.id !== 'A' || mm.includeProfile === false) {
       setAllies(previous => previous.map((entry, index) => (mm.includeProfile === false ? teamFighterId(index) : allyFighterId(index)) === fighter.id ? { ...entry, loadout: withOrder(entry.loadout) } : entry));
       setStep(value => value + 1);
@@ -550,6 +582,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const inspectedFighter = hoveredFighter && (hoveredFighter.team === viewerTeam || !isInvisible(hoveredFighter)) ? hoveredFighter : null;
   const statsFighter = inspectedFighter || controlled;
   const leaveFight = () => {
+    setSpellbook(null);
     if (matchRef.current?.network) closePeer();
     matchRef.current = null; setPhase('setup'); setHoverCell(null);
     if (peerInput) setPeerOpen(true);
@@ -563,7 +596,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
     <div className={phase === 'fight' ? 'play-screen fight-screen' : 'play-screen'}>
       {phase !== 'fight' ? (
         <PlayerSetup {...{ playerClass, setPlayerClass, customCharacter, selectCustomCharacter, botClass, setBotClass, botId, allBots, mapId, setMapId, mode, setMode, monsterGrade, setMonsterGrade, bossId, setBossId, bossGrade, setBossGrade, seed, setSeed, equipment, error, settingsError,
-          profiles, onOpenCreator, selectionRequest, customDungeonId, setCustomDungeonId, active, controller, setController, playerBotId, setPlayerBotId,
+          profiles, onOpenCreator, selectionRequest, customDungeonId, setCustomDungeonId, adventureChoice, setAdventureChoice, adventureSaveError, active, controller, setController, playerBotId, setPlayerBotId,
           opponents, opponentSaveError, editingOpponentIndex, editingTeam, allies, allySaveError, includePlayer, setIncludePlayer }}
           onAlliesChange={setAllies} onSelectAlly={index => { setEditingTeam('allies'); setEditingOpponentIndex(index); }}
           onOpponentsChange={setOpponentDraft} onSelectOpponent={index => { setEditingTeam('opponents'); setEditingOpponentIndex(index); }}
@@ -577,8 +610,9 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
             <LogPanel events={log} namesById={namesById} state={m.state} />
           </section>}
           <div className="fight-main">
-          <div className="fight-heading"><div><h1>{MAPS[m.state.mapId].name.replace(/^🗺\s*/, '')}</h1><p>{placing ? 'Placement' : m.over ? 'Combat terminé' : `Tour ${m.state.turn} / ${m.state.maxTurns}`} · {controlled.name}</p></div>
+          <div className="fight-heading"><div><h1>{(m.state.board.name || MAPS[m.state.mapId]?.name || 'Terrain personnalisé').replace(/^🗺\s*/, '')}</h1><p>{placing ? 'Placement' : m.over ? 'Combat terminé' : `Tour ${m.state.turn} / ${m.state.maxTurns}`} · {controlled.name}{m.state.encounter?.commanderId && <span className="army-objective" data-army-objective> · Objectif : {m.state.fighters[m.state.encounter.commanderId]?.name}</span>}</p></div>
             <div className="fight-heading-actions"><button className="btn" aria-expanded={showLog} aria-controls="fight-log" onClick={() => setShowLog(open => !open)}>Journal</button>
+              <SpellbookButton onClick={() => { setHoveredSpell(null); setSpellbook({ fighterId: inspectedFighter?.id }); }} />
               <button className="btn" onClick={leaveFight}>{m.over || placing ? externalSession ? 'Retour à l’atelier' : 'Préparation' : 'Abandonner'}</button></div></div>
           {error ? <p className="loadout-errors" role="alert">{error}</p> : null}
           {m.network && <PeerFightBar room={m.room} />}
@@ -597,18 +631,25 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
                 frameIdx={step}
                 winnerName={m.state.winner ? namesById[m.state.winner] : null}
                 endReason={m.state.endReason}
-                showWinner={m.over}
+                showWinner={m.over && !m.campaign && !m.room?.settings.campaign}
                 highlights={m.over ? null : highlights}
                 onCellClick={m.over ? null : onCellClick}
                 onCellHover={m.over ? null : onCellHover}
                 pathPreview={m.over ? null : pathPreview}
                 targetPreview={m.over ? null : targetPreview}
               />
+              {m.over && m.campaign && <CampaignResult {...m.campaign} state={m.state} onExit={leaveFight}
+                onNext={() => start(Math.floor(Math.random() * 1e9), m.launchConfig, m.campaign.roomIndex + 1)}
+                onRetry={() => start(Math.floor(Math.random() * 1e9), m.launchConfig)} />}
+              {roomBrief && m.campaign && <CampaignBrief {...m.campaign} onClose={() => setRoomBrief(false)} />}
+              {roomBrief && m.room?.settings.campaign && <CampaignBrief meta={m.room.settings.campaign} onClose={() => setRoomBrief(false)} />}
+              {m.over && m.room?.settings.campaign && <PeerCampaignResult room={m.room} onExit={leaveFight} />}
           </div>
           <div className="combat-dock">
               {!placing && <CombatTimeline state={m.state} controller={inspection} panelId="combat-stats" viewerTeam={viewerTeam}
                 casting={!!selectedInfo} canTarget={canTargetPortrait} onTarget={onPortraitTarget} onTargetHover={onPortraitHover} />}
-              <CombatSpellBar key={controlled.id} spells={Object.values(spellsOf(controlled))} spellInfo={spellInfo}
+              <CombatSpellBar key={controlled.id} spells={Object.values(spellsOf(controlled))} spellInfo={spellInfo} fighter={controlled}
+                onInspect={spellKey => { setHoveredSpell(null); setSpellbook({ fighterId: controlled.id, spellKey }); }}
                 pa={view?.you.pa || 0} humanTurn={humanTurn} active={active && !placing && !m.over} selectedSpell={selectedSpell}
                 onSelect={onSpellClick} onSelfCast={onSpellSelfCast} onHover={onSpellHover}
                 onCancel={() => setSelectedSpell(null)} onReorder={controlled.loadout ? reorderSpells : undefined} saveError={equipment.saveError || !!allySaveError}
@@ -624,15 +665,17 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
               isActive={!placing && !m.over && m.current().id === statsFighter.id}
               controller={inspection} inspecting={statsFighter.id !== controlled.id}
               controls={<CombatTurnControls player={controlled} resources={combatResources(controlled, m.state)} turn={m.state.turn} {...{ placing, humanTurn, timeLeft }}
-                over={m.over} onReady={confirmPlacement} onEndTurn={endTurn} onRematch={m.network ? leaveFight : () => start(Math.floor(Math.random() * 1e9))}
+                over={m.over} onReady={confirmPlacement} onEndTurn={endTurn} onRematch={m.network ? leaveFight : () => start(Math.floor(Math.random() * 1e9), m.launchConfig)}
                 readyDisabled={m.network && (!m.available || m.isReady())} readyLabel={m.network && m.isReady() ? 'En attente…' : 'Prêt'} rematchLabel={m.network ? 'Préparation' : 'Revanche'}
                 onPlayerFocus={() => inspection.dismiss()} />} />
           </div>
           </div>
         </div>
       )}
-      {peerOpen && phase === 'setup' && <PeerLobby profiles={profiles?.profiles} customCharacters={creations?.characters} customDungeons={creations?.dungeons}
-        character={profile || { id: 'current', name: customCharacter?.name || CLASSES[playerClass].name, classId: playerClass, loadout: equipment.loadouts.A }}
+      {phase === 'fight' && spellbook && <CombatSpellbook state={m.state} viewerTeam={viewerTeam} initialFighterId={spellbook.fighterId}
+        initialSpellKey={spellbook.spellKey} live={!!m.network} onClose={() => setSpellbook(null)} />}
+      {peerOpen && phase === 'setup' && <PeerLobby adventure={preparedAdventure ? customDungeon.adventure : null} profiles={preparedAdventure ? team : profiles?.profiles} customCharacters={creations?.characters} customDungeons={creations?.dungeons}
+        character={(preparedAdventure && team[0]) || profile || { id: 'current', name: customCharacter?.name || CLASSES[playerClass].name, classId: playerClass, loadout: equipment.loadouts.A }}
         settings={{ mode: mode === 'boss' && customDungeon ? 'custom' : mode }}
         encounterName={mode === 'boss' ? customDungeon?.name || 'Le donjon sélectionné dans Combat' : mode === 'kanojedo' ? 'Kanojedo · Poutchs' : MAPS[mapId]?.name}
         initialCode={peerInput} room={peerRoom} createRoom={createPeerRoom} onReset={closePeer}

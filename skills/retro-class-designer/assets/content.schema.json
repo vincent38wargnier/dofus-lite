@@ -396,6 +396,52 @@
           "minimum": 1,
           "maximum": 1000000
         },
+        "visualEffect": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "const": 1
+            },
+            "kind": {
+              "enum": [
+                "slash",
+                "thrust",
+                "arrow",
+                "ice-lance",
+                "shatter",
+                "fireball",
+                "fire-wave",
+                "shield",
+                "embers",
+                "raven-step",
+                "fang",
+                "rally",
+                "bell"
+              ]
+            },
+            "color": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "accent": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "durationMs": {
+              "type": "integer",
+              "minimum": 250,
+              "maximum": 1500
+            }
+          },
+          "required": [
+            "version",
+            "kind",
+            "color",
+            "accent",
+            "durationMs"
+          ],
+          "additionalProperties": false
+        },
         "icon": {
           "type": "string",
           "minLength": 1,
@@ -615,7 +661,6 @@
         "critRate",
         "failRate",
         "endsTurnOnFailure",
-        "visualSpellId",
         "effects",
         "critEffects"
       ],

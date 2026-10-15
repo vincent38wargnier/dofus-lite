@@ -108,6 +108,15 @@ test('tournament replays still use the requested participants, map and seed', as
   expect(result.finalState.over).toBe(true);
 });
 
+test('a watched Studio duel preserves zero seed and the exact selected loadouts', async () => {
+  const replay={botA:personalBot.id,botB:personalBot.id,classA:'IOP',classB:'CRA',mapId:'arene',seed:0,
+    loadouts:{A:draft('IOP',125),B:draft('CRA',150)},names:{A:'Studio A',B:'Studio B'}};
+  mount({replay,onReplayConsumed:jest.fn()});
+  let result;await act(async()=>{result=await match.mock.results[0].value;});
+  expect(result.config.seed).toBe(0);expect(result.config.loadouts).toEqual(replay.loadouts);
+  expect(result.frames[0].state.fighters.A.level).toBe(125);expect(result.frames[0].state.fighters.B.level).toBe(150);
+});
+
 test('one saved custom character can play both sides with independent changes and monster spells', async () => {
   const character = { id: 'hybrid', name: 'Mon hybride', classId: 'ENUTROF', loadout: {
     ...draft('ENUTROF', 200), spells: { custom: [202, 305].map(id => CREATION_SPELLS_BY_ID[id].grades.at(-1)) },

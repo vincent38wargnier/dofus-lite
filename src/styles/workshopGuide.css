@@ -1,0 +1,83 @@
+.workshop-step-intro { display:flex; align-items:flex-start; gap:13px; padding:18px 0; }
+.workshop-step-intro > span { flex:none; width:34px; height:34px; border-radius:50%; display:grid; place-items:center; background:#e6edd9; color:#526637; font-weight:800; }
+.workshop-step-intro h3 { margin:0 0 6px; font-size:19px; color:#34412b; }
+.workshop-step-intro p { margin:0; color:#747b69; line-height:1.55; font-size:13px; max-width:70ch; }
+.workshop-role-cards, .workshop-map-choice { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:10px 0 24px; }
+.workshop-map-choice { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.workshop-start-card { min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:10px; text-align:left; font:inherit; padding:23px 18px; background:linear-gradient(140deg,#f9fbf3,#edf1e4); border:1px solid #d1dbc0; border-radius:16px; color:#485938; cursor:pointer; transition:background .15s, border-color .15s; }
+.workshop-start-card:hover { background:#e4ecd7; border-color:#7f9661; }
+.workshop-start-card:focus-visible { outline:3px solid #829961; outline-offset:3px; }
+.workshop-start-card:disabled { opacity:.45; cursor:default; }
+.workshop-start-card strong { font-size:15px; }
+.workshop-start-card span,.workshop-start-card small { font-size:12px; line-height:1.5; color:#757f67; }
+.workshop-start-card .retro-portrait { width:64px; height:72px; object-fit:contain; }
+.workshop-step-footer { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding:18px 0 4px; border-top:1px solid #dee2d5; margin-top:18px; }
+.workshop-step-footer small { color:#77806b; }
+.workshop-ai-help { padding:13px 15px; margin:14px 0; background:#f1f0f8; border:1px solid #dbd7e9; border-radius:10px; min-width:0; }
+.workshop-ai-help summary { display:flex; gap:8px; align-items:center; cursor:pointer; color:#655880; font-size:13px; font-weight:650; }
+.workshop-ai-help summary small { margin-left:auto; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:#8b819e; }
+.workshop-ai-help p { font-size:13px; line-height:1.6; color:#736c80; }
+.workshop-ai-help textarea { box-sizing:border-box; width:100%; min-width:0; font-size:12px; line-height:1.5; resize:vertical; background:#fff; border:1px solid #d6d0e0; border-radius:8px; padding:12px; }
+.workshop-help-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:12px 0; }
+.workshop-help-actions .field { flex:1; min-width:110px; }
+.workshop-file-button { position:relative; overflow:hidden; cursor:pointer; display:inline-flex; }
+.workshop-file-button input[type=file] { position:absolute; inset:0; opacity:0; width:100%; height:100%; cursor:pointer; }
+.workshop-file-button:focus-within { outline:3px solid #829961; outline-offset:2px; }
+.workshop-file-button.disabled { opacity:.5; }
+.workshop-image-step { padding:18px; border:1px solid #d6dfc8; border-radius:12px; background:#f9faf5; margin-bottom:18px; }
+.workshop-image-step > small { color:#757c6a; display:block; line-height:1.5; }
+.workshop-creature-library { display:grid; gap:9px; }
+.workshop-creature-library article { display:flex; align-items:center; gap:12px; border:1px solid #dfe4d4; border-radius:10px; padding:12px; }
+.workshop-creature-library article > div { flex:1; min-width:0; }
+.workshop-creature-library strong,.workshop-creature-library small { display:block; overflow-wrap:anywhere; }
+.workshop-creature-library small { font-size:11px; color:#7d846f; margin-top:5px; }
+.workshop-creature-library .retro-portrait { width:40px; height:48px; object-fit:contain; }
+.workshop-studio .creator-dungeon-layout:has(.workshop-creature-editor) { grid-template-columns:minmax(0,1fr); }
+.workshop-studio .creator-dungeon-layout:has(.workshop-creature-editor) > .creator-dungeon-summary { display:none; }
+.workshop-creature-editor { grid-column:1; grid-row:1; min-width:0; }
+.workshop-creature-editor > .field { margin:14px 0; }
+.workshop-creature-editor textarea,.workshop-map-editor textarea,.workshop-image-step textarea { box-sizing:border-box; width:100%; border:1px solid #cfd9c0; border-radius:9px; padding:12px; background:#fffef9; font:inherit; font-size:13px; line-height:1.5; resize:vertical; margin-top:5px; }
+.workshop-creature-heading { display:flex; align-items:center; gap:18px; margin:18px 0; }
+.workshop-creature-heading .retro-portrait { width:64px; height:72px; object-fit:contain; }
+.workshop-creature-heading h3 { margin:0; font-size:22px; }
+.workshop-creature-heading p { color:#737e65; font-size:13px; margin:7px 0 0; }
+.workshop-power { border:1px solid #dce3d0; border-radius:12px; padding:18px; margin:18px 0; }
+.workshop-power legend { font-weight:700; padding:0 7px; }
+.workshop-power input[type=range] { width:100%; accent-color:#6e854e; }
+.workshop-native-maps,.workshop-ground-art { border-top:1px solid #e1e6d8; padding:18px 0; }
+.workshop-native-maps summary,.workshop-ground-art summary { cursor:pointer; font-weight:600; color:#61734b; }
+.workshop-map-settings { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.workshop-map-tools { display:flex; flex-wrap:wrap; gap:6px; margin:16px 0 10px; }
+.workshop-map-tools .btn[aria-pressed=true] { background:#536b42; border-color:#536b42; color:white; }
+.workshop-map-tools .brush-A { border-color:#72aaca; color:#397fa9; }
+.workshop-map-tools .brush-B { border-color:#c98878; color:#b26150; }
+.workshop-map-status { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:10px 0; }
+.workshop-map-status > span { flex:1; min-width:180px; font-size:12px; color:#7d846f; }
+.workshop-map-canvas { display:block; width:100%; max-height:580px; border-radius:14px; background:#25323a; touch-action:none; }
+.workshop-map-viewport { max-height:580px; overflow:auto; border-radius:14px; background:#25323a; }
+.workshop-map-status > .workshop-edit-zoom { flex:none; min-width:45px; text-align:center; }
+.workshop-paint-cell { cursor:crosshair; }
+.workshop-paint-cell:hover,.workshop-paint-cell:focus { stroke:#fff4ab; stroke-width:3; fill:#ffe87c45; outline:none; }
+.workshop-map-counts { font-size:12px; color:#7d846f; line-height:1.6; }
+.workshop-spell-presets { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:16px; }
+.workshop-studio .creator-spell-columns.workshop-spells-focused { grid-template-columns:minmax(0,1fr); }
+.workshop-open-catalogue { justify-self:start; }
+.workshop-map-editor { min-width:0; }
+.workshop-map-editor .field small { line-height:1.4; }
+@media(max-width:1150px) {
+  .workshop-studio .creator-dungeon-layout { grid-template-columns:minmax(0,1fr); }
+  .workshop-studio .creator-dungeon-summary { grid-column:1; grid-row:2; }
+  .workshop-studio .creator-monster-catalogue { grid-column:1; grid-row:1; }
+}
+@media(max-width:650px) {
+  .workshop-role-cards { grid-template-columns:minmax(0,1fr); gap:8px; }
+  .workshop-start-card { padding:16px; }
+  .workshop-role-cards .workshop-start-card { display:grid; grid-template-columns:50px minmax(0,1fr); gap:4px 12px; }
+  .workshop-role-cards .workshop-start-card > svg,.workshop-role-cards .workshop-start-card > .retro-portrait { grid-row:1/4; width:45px; height:58px; }
+  .workshop-role-cards .workshop-start-card > strong,.workshop-role-cards .workshop-start-card > span,.workshop-role-cards .workshop-start-card > small { grid-column:2; }
+  .workshop-map-choice,.workshop-map-settings { grid-template-columns:minmax(0,1fr); }
+  .workshop-ai-help summary { flex-wrap:wrap; }
+  .workshop-step-footer > .btn { flex:1; }
+  .workshop-creature-editor.creator-card { padding:12px; }
+  .workshop-image-step { padding:12px; }
+}

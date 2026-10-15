@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { BUILTIN_BOTS } from '../bots/builtins';
 import { ensureNeuralLoading } from '../bots/neural';
 
@@ -25,33 +25,28 @@ function persist(list) {
 
 export function useCustomBots() {
   const [customBots, setCustomBots] = useState(load);
+  const current = useRef(customBots);
+  const commit = useCallback(change => {
+    const next = change(current.current);
+    // Persist before publishing, so a quota failure reaches the editor and
+    // never registers an AI that will disappear on the next reload.
+    persist(next); current.current = next; setCustomBots(next);
+  }, []);
 
   const addBot = useCallback((bot) => {
-    const id = `custom-${Date.now().toString(36)}`;
+    const id = `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
     const entry = { id, emoji: '🤖', ...bot, custom: true, updatedAt: Date.now() };
-    setCustomBots((prev) => {
-      const next = [...prev, entry];
-      persist(next);
-      return next;
-    });
+    commit(prev => [...prev, entry]);
     return id;
-  }, []);
+  }, [commit]);
 
   const updateBot = useCallback((id, patch) => {
-    setCustomBots((prev) => {
-      const next = prev.map((b) => (b.id === id ? { ...b, ...patch, updatedAt: Date.now() } : b));
-      persist(next);
-      return next;
-    });
-  }, []);
+    commit(prev => prev.map(b => b.id === id ? { ...b, ...patch, updatedAt: Date.now() } : b));
+  }, [commit]);
 
   const deleteBot = useCallback((id) => {
-    setCustomBots((prev) => {
-      const next = prev.filter((b) => b.id !== id);
-      persist(next);
-      return next;
-    });
-  }, []);
+    commit(prev => prev.filter(b => b.id !== id));
+  }, [commit]);
 
   return { customBots, addBot, updateBot, deleteBot };
 }

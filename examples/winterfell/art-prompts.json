@@ -1,0 +1,46 @@
+{
+  "brief": "Use case: stylized-concept. Production game sprite asset for a tactical isometric Game of Thrones fan adventure, The Last Ember of Winterfell. Original illustrated interpretation, polished painterly 2D fantasy RPG, moderately stylized proportions (head about one quarter of body), crisp clean silhouette, fine controlled detail, softly shaded materials, dramatic but readable highlights. Not a photograph or UI mockup. Exactly THREE equal square panels left-to-right in a single very wide 3:1 atlas (1536x512 total, each cell 512x512). No separators or drawn frame. Panel 1: bust portrait. Panel 2: whole-body three-quarter FRONT view facing screen DOWN-RIGHT / southeast. Panel 3: SAME character whole-body three-quarter REAR view facing screen UP-LEFT / northwest; see the back of the head and cloak, not its front face. Identity, clothing, weapon, scale and lighting identical in all panels. For panels 2 and 3 each local cell has feet midpoint at (256,448); body and weapons within x64..448,y40..448, no cutoff, keep transparent margin. Neutral balanced standing combat pose. Portrait can fill its cell with head and shoulders, no pedestal. Output PNG with REAL TRANSPARENT ALPHA everywhere outside the figures, including between panels. No background, scenery, shadows on floor, checkerboard painted into pixels, text, letters, watermark, border or labels. This atlas is for technical extraction into game-sized PNGs. Character:",
+  "characters": [
+    [
+      "jon",
+      "Jon Snow, adult northern swordsman, dark wavy shoulder-length hair tied partly back, light short beard, stern gentle face, heavy charcoal-black wolf-fur mantle over dark steel and leather Night's Watch armor, long dark cloak, leather gloves and boots. Longclaw, a silver-grey straight longsword with a small pale wolf-head pommel, held downward without leaving the safe box. Muted black, gunmetal, worn brown, tiny silver highlights."
+    ],
+    [
+      "frost-commander",
+      "An original White Walker commander called The Bellkeeper, male ancient ice revenant with cold blue luminous eyes, pale blue-white cracked frost skin, crown-like short ice ridges on his bald head, weathered layered obsidian-black armor edged with frost, ragged midnight mantle, slim translucent blue ice spear held diagonally close to body. A dark iron handbell hangs from his belt. Regal and menacing, clean non-gory fantasy design. Ice cyan, obsidian navy, weathered silver. Broad torso and clear readable silhouette."
+    ],
+    [
+      "arya",
+      "Arya Stark, ADULT woman in her mid twenties, a small athletic northern duelist, lively determined grey eyes, dark brown hair tied back, charcoal leather armor over quilted muted slate-blue tunic, a short practical dark cloak, boots, gloves. Needle, a thin silver rapier, in her right hand pointed diagonally down; a dark glossy dragonglass dagger at her belt. Agile slim silhouette. No fur hood, no mask, no sexualized pose. Desaturated slate blue, graphite, dark brown, cool silver. Keep rapier and all figure anatomy inside each cell."
+    ],
+    [
+      "melisandre",
+      "Melisandre, ADULT woman, red priestess with auburn red hair, composed beautiful face, ruby pendant on neck, rich flowing CRIMSON robe with dark red layered skirts and small gold embroidered edges, deep burgundy cape. One hand holds a tiny amber flame close to her chest, the other lowered. Warm red and gold silhouette that reads distinctly against snow and blue enemies. Dignified standing battle pose. No background fire, no overflowing magical halo; the tiny flame belongs to the figure and remains inside the cell."
+    ],
+    [
+      "wight",
+      "An original undead Northern shield soldier for a Game of Thrones winter battle. A clean non-gory wight with gaunt frost-pale face, hollow glowing cyan eyes, cracked dark leather and oxidized steel armor, tattered brown cloak with snow on shoulders, broken round wooden shield on left arm and short worn steel sword in right hand pointed down. Lean hunched but upright full body. Helmet absent so face is readable. Earthy brown, dark iron, cyan accents. A regular enemy rather than a king: no crown, no huge ornaments. Identical equipment front and back."
+    ],
+    [
+      "rime-archer",
+      "An original undead archer called a Rime Archer for a Game of Thrones winter battle. ADULT frost-pale face, glowing cyan eyes within a dark grey hood, lean narrow frame, charcoal padded ranger coat wrapped in ragged blue-grey scarves, boots, exposed gloved hands. Weathered tall ashwood recurved bow held close to body in one hand, other hand near quiver on back with blue ice arrowheads. No drawn bow: calm standing full-body ready pose. Non-gory. Distinct tall hooded silhouette, blue-grey, muted brown, small bright frost highlights. Bow and quiver identical across views, and fully inside each square cell."
+    ],
+    [
+      "frost-hound",
+      "An original undead direwolf called a Frost Hound for a Game of Thrones winter battle. A FOUR-LEGGED ANIMAL, not humanoid. Powerful lean wolf, pale blue-grey shaggy fur edged with ice, long bushy tail, pricked ears, cold luminous blue eyes, a few dark fur patches. Mouth slightly open, no gore. Panel 1 is a close-up wolf HEAD portrait. Panels 2 and 3 whole-body QUADRUPED standing, all four paws and tail visible inside each cell, front faces down-right, rear faces up-left. Wolf body spans width rather than height, realistic animal anatomy, front and rear consistently same creature. Sturdy readable paws aligned on a shared invisible baseline at local y448. Elegant dangerous frost creature."
+    ]
+  ],
+  "icons": "Create one production 4-by-4 atlas of exactly SIXTEEN square fantasy RPG spell icons, total image 1024x1024, each cell exactly256x256, no gutters, no outside margin, no text, no labels, no watermarks. Fine painterly game icon artwork, modern premium dark fantasy, highly readable central symbol, bold simple silhouette with delicate detail. Each icon has its own dark almost-black blue square background and soft circular magical light; absolutely no border that overlaps a neighboring cell. Objects remain fully inside their own square. Every cell distinct. THEME: a fan tactical Game of Thrones adventure, northern steel and wolves versus blue ice and undead, with amber fire magic. ROW1 left-to-right: (1) silver straight longsword with small white wolf-head pommel slashing diagonally, (2) dark steel shield with silver wolf symbol, (3) silver wolf head howling against subtle moonlight, (4) a broad crescent steel blade sweep with steel sparks. ROW2: (5) running boot crashing through snow with white motion arc, (6) two crossed dragonglass daggers glinting black-purple, (7) shadow of a hooded woman slipping between wisps of dark smoke, (8) one flying thin throwing knife with a small blue trail. ROW3: (9) compact vivid orange fireball, (10) open hand holding a warm healing ember, (11) three orange flame tongues spreading outward like a fan, (12) dark red ruby pendant radiating a protective gold ring. ROW4: (13) spear made of jagged translucent blue ice, (14) ancient dark iron bell covered in frost emitting blue sound rings, (15) a bone-white arrow with blue ice arrowhead, (16) wolf jaws and fangs formed from blue frost. Ensure an exact4x4 grid whose cell centers are128,384,640,896 on each axis. No scene/background outside this atlas.",
+  "tool": "image_gen.imagegen",
+  "notes": "Generated masters preserved unchanged. Mechanical extraction registers combat sprites at (128,224). No authored map or custom FX is falsely included as runtime content.",
+  "battlefield": {
+    "reference": "sources/courtyard-guide.png",
+    "source": "sources/courtyard-generated.png",
+    "prompt": "Generate a 1536×1024 original Winterfell courtyard at blue hour, hand-painted dark fantasy 2.5D isometric 2:1. The geometry-only guide defines a flat playable diamond at (768,200), (1392,512), (768,824), (144,512). Keep all interior cells flat snowy paving. No objects, holes, stairs, units, grid, letters or UI in the diamond. Dark northern stone walls and towers outside the upper edges, torches, torn direwolf banners and a broken gate. No Dofus shapes, Christmas trees, floating island or reused game assets. Fill the canvas with opaque scenery. Interactive obstacles are separate."
+  },
+  "props": {
+    "reference": "assets/battlefield/courtyard.png",
+    "source": "sources/props-generated.png",
+    "prompt": "Create a transparent 1536×1024 atlas of three original Winterfell props, matching the painted courtyard. Three equal columns, no labels or floor. Left: weathered dark northern stone pier, chest height, chipped mortar and snow cap. Middle: iron brazier on three legs with glowing embers and orange flame. Right: low crossed timber barricade, dull spear tips, snow on wood. Isometric 2:1, consistent light, no characters, no text, no backdrop, no cartoon treatment or Dofus imagery. Complete separated silhouettes, bases near y830. Actual alpha transparency."
+  }
+}

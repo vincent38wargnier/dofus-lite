@@ -1,0 +1,14 @@
+THEME / CE QUE JE VEUX CREER: [votre thème et votre ambiance].
+MAP ID: dungeon_9535 (Donjon du Tofu Royal [5;6]).
+EXACT CANVAS: 920x605 pixels.
+Attach guide.png, clean.png and geometry.json from this folder.
+
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+MAP: [existing map ID, desired setting, mood and landmarks].
+REFERENCES TO ATTACH: maps/<mapId>/guide.png (legend in geometry.json), clean.png (unlabelled footprint) and geometry.json. Use their EXACT canvas dimensions and projected cell coordinates. Locked orthographic 2:1 isometric projection, no vanishing point, no zoom, camera tilt, rotation, crop or stretched canvas. Preserve elevations from the guide.
+Light floor cells are walkable; dark cells block movement AND line of sight; blue-grey cells block movement but allow line of sight; transparent void is not playable. A/B outlines mark initial placement cells, not painted final art. Do not add walls, doors, bridges, holes, slopes, traps or hazards on open cells. Do not turn obstacles into walkable-looking paths. Keep ground quiet under units and spell previews. Tall props must not hide playable cells behind them. Outer scenery may extend only inside the fixed canvas. Remove grid, coordinates, letters, spawn colours, UI and creatures from final images.
+All output here is DESIGN-ONLY. geometry.json is a reference, not an import schema. A painted map does not define collision or starting cells. Keep the game's existing mapId for the playable package; this guide-based geometry is not itself an import format. To author an original flat battlefield for an Atelier archive, follow references/original-battlefields.md, declare its geometry and image together, and generate a new guide from that geometry.
+OUTPUT: map-preview.png at geometry.json.canvas.width x canvas.height. Render a complete themed room with ground, low obstacles and perimeter scenery, suitable for visual review against the guide. Use strong peripheral landmarks and low-detail combat space. Keep blocked-cell type readable. Transparent outside the intended scenery footprint. Supply the image without guide marks plus a separate alignment proof; do not present the proof as final art. If geometry references are absent, provide only a concept clearly labelled as unaligned.

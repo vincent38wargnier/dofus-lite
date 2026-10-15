@@ -1,0 +1,296 @@
+{
+  "samples": 128,
+  "independentSamples": 96,
+  "heroes": 6,
+  "scope": "Tours observés avec l’IA et l’équipe fournie. Vos décisions peuvent changer ces durées.",
+  "rooms": [
+    {
+      "season": 1,
+      "enemies": 4,
+      "rounds": {
+        "min": 2,
+        "median": 3,
+        "max": 4
+      },
+      "heroCommands": {
+        "min": 41,
+        "median": 49,
+        "max": 58
+      },
+      "heroHpRemainingPercent": {
+        "min": 97.1,
+        "median": 98.4,
+        "max": 99.3
+      },
+      "baselineRounds": {
+        "min": 6,
+        "median": 7,
+        "max": 8
+      },
+      "baselineHeroCommands": {
+        "min": 131,
+        "median": 137.5,
+        "max": 149
+      },
+      "survivors": {
+        "min": 6,
+        "median": 6,
+        "max": 6
+      },
+      "wins": 16,
+      "samples": 16
+    },
+    {
+      "season": 2,
+      "enemies": 5,
+      "rounds": {
+        "min": 3,
+        "median": 4,
+        "max": 5
+      },
+      "heroCommands": {
+        "min": 50,
+        "median": 65.5,
+        "max": 76
+      },
+      "heroHpRemainingPercent": {
+        "min": 94.3,
+        "median": 95.7,
+        "max": 96.8
+      },
+      "baselineRounds": {
+        "min": 9,
+        "median": 9,
+        "max": 10
+      },
+      "baselineHeroCommands": {
+        "min": 161,
+        "median": 173,
+        "max": 184
+      },
+      "survivors": {
+        "min": 6,
+        "median": 6,
+        "max": 6
+      },
+      "wins": 16,
+      "samples": 16
+    },
+    {
+      "season": 3,
+      "enemies": 6,
+      "rounds": {
+        "min": 4,
+        "median": 5,
+        "max": 6
+      },
+      "heroCommands": {
+        "min": 66,
+        "median": 79,
+        "max": 101
+      },
+      "heroHpRemainingPercent": {
+        "min": 93.4,
+        "median": 95.1,
+        "max": 96
+      },
+      "baselineRounds": {
+        "min": 8,
+        "median": 8.5,
+        "max": 9
+      },
+      "baselineHeroCommands": {
+        "min": 155,
+        "median": 163,
+        "max": 179
+      },
+      "survivors": {
+        "min": 6,
+        "median": 6,
+        "max": 6
+      },
+      "wins": 16,
+      "samples": 16
+    },
+    {
+      "season": 4,
+      "enemies": 8,
+      "rounds": {
+        "min": 4,
+        "median": 5,
+        "max": 6
+      },
+      "heroCommands": {
+        "min": 78,
+        "median": 96.5,
+        "max": 108
+      },
+      "heroHpRemainingPercent": {
+        "min": 91,
+        "median": 92.5,
+        "max": 94.5
+      },
+      "baselineRounds": {
+        "min": 8,
+        "median": 10,
+        "max": 12
+      },
+      "baselineHeroCommands": {
+        "min": 155,
+        "median": 183.5,
+        "max": 218
+      },
+      "survivors": {
+        "min": 6,
+        "median": 6,
+        "max": 6
+      },
+      "wins": 16,
+      "samples": 16
+    },
+    {
+      "season": 5,
+      "enemies": 10,
+      "rounds": {
+        "min": 4,
+        "median": 5,
+        "max": 6
+      },
+      "heroCommands": {
+        "min": 73,
+        "median": 90,
+        "max": 119
+      },
+      "heroHpRemainingPercent": {
+        "min": 88.3,
+        "median": 91.3,
+        "max": 93.1
+      },
+      "baselineRounds": {
+        "min": 10,
+        "median": 13,
+        "max": 14
+      },
+      "baselineHeroCommands": {
+        "min": 205,
+        "median": 233.5,
+        "max": 249
+      },
+      "survivors": {
+        "min": 6,
+        "median": 6,
+        "max": 6
+      },
+      "wins": 16,
+      "samples": 16
+    },
+    {
+      "season": 6,
+      "enemies": 12,
+      "rounds": {
+        "min": 6,
+        "median": 7,
+        "max": 10
+      },
+      "heroCommands": {
+        "min": 125,
+        "median": 139,
+        "max": 168
+      },
+      "heroHpRemainingPercent": {
+        "min": 80.6,
+        "median": 85.5,
+        "max": 86.4
+      },
+      "baselineRounds": {
+        "min": 9,
+        "median": 10.5,
+        "max": 11
+      },
+      "baselineHeroCommands": {
+        "min": 199,
+        "median": 204.5,
+        "max": 219
+      },
+      "survivors": {
+        "min": 6,
+        "median": 6,
+        "max": 6
+      },
+      "wins": 16,
+      "samples": 16
+    },
+    {
+      "season": 7,
+      "enemies": 16,
+      "rounds": {
+        "min": 6,
+        "median": 7,
+        "max": 10
+      },
+      "heroCommands": {
+        "min": 131,
+        "median": 147.5,
+        "max": 192
+      },
+      "heroHpRemainingPercent": {
+        "min": 79.1,
+        "median": 82.3,
+        "max": 87.1
+      },
+      "baselineRounds": {
+        "min": 12,
+        "median": 13,
+        "max": 13
+      },
+      "baselineHeroCommands": {
+        "min": 243,
+        "median": 254,
+        "max": 258
+      },
+      "survivors": {
+        "min": 6,
+        "median": 6,
+        "max": 6
+      },
+      "wins": 16,
+      "samples": 16
+    },
+    {
+      "season": 8,
+      "enemies": 32,
+      "rounds": {
+        "min": 4,
+        "median": 6,
+        "max": 12
+      },
+      "heroCommands": {
+        "min": 75,
+        "median": 109.5,
+        "max": 203
+      },
+      "heroHpRemainingPercent": {
+        "min": 32.5,
+        "median": 64.5,
+        "max": 79.8
+      },
+      "baselineRounds": {
+        "min": 10,
+        "median": 13,
+        "max": 19
+      },
+      "baselineHeroCommands": {
+        "min": 184,
+        "median": 268.5,
+        "max": 378
+      },
+      "survivors": {
+        "min": 4,
+        "median": 6,
+        "max": 6
+      },
+      "wins": 16,
+      "samples": 16
+    }
+  ]
+}

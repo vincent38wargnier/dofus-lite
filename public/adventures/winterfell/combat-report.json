@@ -1,0 +1,1394 @@
+{
+  "fixtureCasts": [
+    {
+      "owner": "Jon Snow",
+      "spell": "Tranchant de Grand-Griffe",
+      "pa": 4,
+      "events": [
+        "cast",
+        "damage"
+      ]
+    },
+    {
+      "owner": "Jon Snow",
+      "spell": "Tenir la porte",
+      "pa": 3,
+      "events": [
+        "cast",
+        "effect_add"
+      ]
+    },
+    {
+      "owner": "Jon Snow",
+      "spell": "Serment de la Garde",
+      "pa": 3,
+      "events": [
+        "cast",
+        "effect_add"
+      ]
+    },
+    {
+      "owner": "Jon Snow",
+      "spell": "Brise-glace",
+      "pa": 3,
+      "events": [
+        "cast",
+        "damage",
+        "push"
+      ]
+    },
+    {
+      "owner": "Jon Snow",
+      "spell": "Ouvrir la brèche",
+      "pa": 2,
+      "events": [
+        "cast",
+        "effect_add"
+      ]
+    },
+    {
+      "owner": "Jon Snow",
+      "spell": "Par-delà le rempart",
+      "pa": 4,
+      "events": [
+        "cast",
+        "teleport"
+      ]
+    },
+    {
+      "owner": "Arya Stark",
+      "spell": "La pointe d’Aiguille",
+      "pa": 3,
+      "events": [
+        "cast",
+        "damage"
+      ]
+    },
+    {
+      "owner": "Arya Stark",
+      "spell": "Baiser de verredragon",
+      "pa": 4,
+      "events": [
+        "cast",
+        "damage"
+      ]
+    },
+    {
+      "owner": "Arya Stark",
+      "spell": "Couteau dans la neige",
+      "pa": 3,
+      "events": [
+        "cast",
+        "damage"
+      ]
+    },
+    {
+      "owner": "Arya Stark",
+      "spell": "Pas aujourd’hui",
+      "pa": 3,
+      "events": [
+        "cast",
+        "teleport"
+      ]
+    },
+    {
+      "owner": "Arya Stark",
+      "spell": "Une faille dans la glace",
+      "pa": 2,
+      "events": [
+        "cast",
+        "effect_add"
+      ]
+    },
+    {
+      "owner": "Arya Stark",
+      "spell": "Le pas de la louve",
+      "pa": 2,
+      "events": [
+        "cast",
+        "effect_add"
+      ]
+    },
+    {
+      "owner": "Melisandre",
+      "spell": "Une braise dans la nuit",
+      "pa": 3,
+      "events": [
+        "cast",
+        "damage"
+      ]
+    },
+    {
+      "owner": "Melisandre",
+      "spell": "La nuit est sombre",
+      "pa": 4,
+      "events": [
+        "cast",
+        "damage"
+      ]
+    },
+    {
+      "owner": "Melisandre",
+      "spell": "La dernière chaleur",
+      "pa": 3,
+      "events": [
+        "cast",
+        "heal"
+      ]
+    },
+    {
+      "owner": "Melisandre",
+      "spell": "Le rubis veille",
+      "pa": 3,
+      "events": [
+        "cast",
+        "effect_add"
+      ]
+    },
+    {
+      "owner": "Melisandre",
+      "spell": "Rallumer les vivants",
+      "pa": 3,
+      "events": [
+        "cast",
+        "effect_add"
+      ]
+    },
+    {
+      "owner": "Melisandre",
+      "spell": "Recule, ombre",
+      "pa": 3,
+      "events": [
+        "cast",
+        "damage",
+        "push"
+      ]
+    },
+    {
+      "owner": "Le Sonneur de la Longue Nuit",
+      "spell": "La lance du silence",
+      "pa": 5,
+      "events": [
+        "cast",
+        "damage"
+      ]
+    },
+    {
+      "owner": "Le Sonneur de la Longue Nuit",
+      "spell": "Le glas sous la neige",
+      "pa": 4,
+      "events": [
+        "cast",
+        "damage",
+        "point_removal"
+      ]
+    },
+    {
+      "owner": "Le Sonneur de la Longue Nuit",
+      "spell": "Étouffer la braise",
+      "pa": 3,
+      "events": [
+        "cast",
+        "point_removal",
+        "effect_add"
+      ]
+    },
+    {
+      "owner": "Le Sonneur de la Longue Nuit",
+      "spell": "Marchez encore",
+      "pa": 4,
+      "events": [
+        "cast",
+        "effect_add"
+      ]
+    },
+    {
+      "owner": "Garde enseveli",
+      "spell": "Acier rouillé",
+      "pa": 4,
+      "events": [
+        "cast",
+        "damage"
+      ]
+    },
+    {
+      "owner": "Garde enseveli",
+      "spell": "Le vieux bouclier",
+      "pa": 3,
+      "events": [
+        "cast",
+        "effect_add"
+      ]
+    },
+    {
+      "owner": "Archer du givre",
+      "spell": "Flèche de givre",
+      "pa": 3,
+      "events": [
+        "cast",
+        "damage"
+      ]
+    },
+    {
+      "owner": "Archer du givre",
+      "spell": "Cloué par le froid",
+      "pa": 4,
+      "events": [
+        "cast",
+        "damage",
+        "point_removal"
+      ]
+    },
+    {
+      "owner": "Limier des neiges mortes",
+      "spell": "Morsure de givre",
+      "pa": 3,
+      "events": [
+        "cast",
+        "damage"
+      ]
+    },
+    {
+      "owner": "Limier des neiges mortes",
+      "spell": "L’odeur des vivants",
+      "pa": 2,
+      "events": [
+        "cast",
+        "effect_add"
+      ]
+    },
+    {
+      "owner": "Limier des neiges mortes",
+      "spell": "À terre dans la neige",
+      "pa": 3,
+      "events": [
+        "cast",
+        "damage",
+        "point_removal"
+      ]
+    }
+  ],
+  "scenarios": [
+    "All 29 authored spells cast through the real engine, consume their declared AP and apply damage/healing/teleport as appropriate.",
+    "Empty-cell firewave hits both the nearby enemy and ally; friendly fire is real.",
+    "A 1 AP / 149–150 damage mutation and a +10,000 stat item remain rejected by the live budget checks."
+  ],
+  "matches": [
+    {
+      "seed": 12101,
+      "endReason": "turn_limit",
+      "ms": 3234,
+      "winner": "A",
+      "winnerTeam": "A",
+      "rounds": 41,
+      "invalid": 0,
+      "errors": 0,
+      "heroes": [
+        {
+          "name": "Jon Snow",
+          "hp": 841,
+          "maxHp": 2539
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 0,
+          "maxHp": 2463
+        },
+        {
+          "name": "Melisandre",
+          "hp": 0,
+          "maxHp": 2464
+        }
+      ],
+      "stats": {
+        "A": {
+          "damageDealt": 3328,
+          "healingDone": 0,
+          "actions": 131,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A2": {
+          "damageDealt": 1382,
+          "healingDone": 0,
+          "actions": 27,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A3": {
+          "damageDealt": 4520,
+          "healingDone": 0,
+          "actions": 67,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B": {
+          "damageDealt": 1958,
+          "healingDone": 0,
+          "actions": 45,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B2": {
+          "damageDealt": 1273,
+          "healingDone": 0,
+          "actions": 49,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B3": {
+          "damageDealt": 1230,
+          "healingDone": 0,
+          "actions": 39,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B4": {
+          "damageDealt": 1345,
+          "healingDone": 0,
+          "actions": 112,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B5": {
+          "damageDealt": 1143,
+          "healingDone": 0,
+          "actions": 51,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B6": {
+          "damageDealt": 355,
+          "healingDone": 0,
+          "actions": 17,
+          "invalid": 0,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "seed": 12102,
+      "endReason": "ko",
+      "ms": 2587,
+      "winner": "A",
+      "winnerTeam": "A",
+      "rounds": 14,
+      "invalid": 0,
+      "errors": 0,
+      "heroes": [
+        {
+          "name": "Jon Snow",
+          "hp": 932,
+          "maxHp": 2552
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 0,
+          "maxHp": 2461
+        },
+        {
+          "name": "Melisandre",
+          "hp": 1308,
+          "maxHp": 2585
+        }
+      ],
+      "stats": {
+        "A": {
+          "damageDealt": 3441,
+          "healingDone": 0,
+          "actions": 61,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A2": {
+          "damageDealt": 2835,
+          "healingDone": 0,
+          "actions": 50,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A3": {
+          "damageDealt": 3716,
+          "healingDone": 0,
+          "actions": 61,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B": {
+          "damageDealt": 1559,
+          "healingDone": 0,
+          "actions": 34,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B2": {
+          "damageDealt": 1134,
+          "healingDone": 0,
+          "actions": 47,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B3": {
+          "damageDealt": 1258,
+          "healingDone": 0,
+          "actions": 38,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B4": {
+          "damageDealt": 870,
+          "healingDone": 0,
+          "actions": 38,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B5": {
+          "damageDealt": 571,
+          "healingDone": 0,
+          "actions": 28,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B6": {
+          "damageDealt": 513,
+          "healingDone": 0,
+          "actions": 17,
+          "invalid": 0,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "seed": 12103,
+      "endReason": "ko",
+      "ms": 2982,
+      "winner": "A2",
+      "winnerTeam": "A",
+      "rounds": 17,
+      "invalid": 0,
+      "errors": 0,
+      "heroes": [
+        {
+          "name": "Jon Snow",
+          "hp": 0,
+          "maxHp": 2465
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 2201,
+          "maxHp": 2668
+        },
+        {
+          "name": "Melisandre",
+          "hp": 0,
+          "maxHp": 2460
+        }
+      ],
+      "stats": {
+        "A": {
+          "damageDealt": 1899,
+          "healingDone": 0,
+          "actions": 37,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A2": {
+          "damageDealt": 4311,
+          "healingDone": 0,
+          "actions": 93,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A3": {
+          "damageDealt": 3810,
+          "healingDone": 0,
+          "actions": 59,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B": {
+          "damageDealt": 1816,
+          "healingDone": 0,
+          "actions": 42,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B2": {
+          "damageDealt": 561,
+          "healingDone": 0,
+          "actions": 22,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B3": {
+          "damageDealt": 551,
+          "healingDone": 0,
+          "actions": 19,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B4": {
+          "damageDealt": 1200,
+          "healingDone": 0,
+          "actions": 52,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B5": {
+          "damageDealt": 1475,
+          "healingDone": 0,
+          "actions": 65,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B6": {
+          "damageDealt": 341,
+          "healingDone": 0,
+          "actions": 14,
+          "invalid": 0,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "seed": 12104,
+      "endReason": "ko",
+      "ms": 2702,
+      "winner": "A",
+      "winnerTeam": "A",
+      "rounds": 13,
+      "invalid": 0,
+      "errors": 0,
+      "heroes": [
+        {
+          "name": "Jon Snow",
+          "hp": 207,
+          "maxHp": 2486
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 1314,
+          "maxHp": 2584
+        },
+        {
+          "name": "Melisandre",
+          "hp": 961,
+          "maxHp": 2550
+        }
+      ],
+      "stats": {
+        "A": {
+          "damageDealt": 3209,
+          "healingDone": 0,
+          "actions": 52,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A2": {
+          "damageDealt": 3509,
+          "healingDone": 0,
+          "actions": 68,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A3": {
+          "damageDealt": 3302,
+          "healingDone": 0,
+          "actions": 54,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B": {
+          "damageDealt": 1738,
+          "healingDone": 0,
+          "actions": 40,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B2": {
+          "damageDealt": 435,
+          "healingDone": 0,
+          "actions": 17,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B3": {
+          "damageDealt": 1388,
+          "healingDone": 0,
+          "actions": 45,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B4": {
+          "damageDealt": 746,
+          "healingDone": 0,
+          "actions": 33,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B5": {
+          "damageDealt": 1009,
+          "healingDone": 0,
+          "actions": 41,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B6": {
+          "damageDealt": 347,
+          "healingDone": 0,
+          "actions": 16,
+          "invalid": 0,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "seed": 12105,
+      "endReason": "ko",
+      "ms": 2931,
+      "winner": "A",
+      "winnerTeam": "A",
+      "rounds": 15,
+      "invalid": 0,
+      "errors": 0,
+      "heroes": [
+        {
+          "name": "Jon Snow",
+          "hp": 748,
+          "maxHp": 2536
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 375,
+          "maxHp": 2494
+        },
+        {
+          "name": "Melisandre",
+          "hp": 2303,
+          "maxHp": 2667
+        }
+      ],
+      "stats": {
+        "A": {
+          "damageDealt": 2424,
+          "healingDone": 0,
+          "actions": 57,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A2": {
+          "damageDealt": 3835,
+          "healingDone": 0,
+          "actions": 80,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A3": {
+          "damageDealt": 3745,
+          "healingDone": 110,
+          "actions": 64,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B": {
+          "damageDealt": 1955,
+          "healingDone": 0,
+          "actions": 48,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B2": {
+          "damageDealt": 429,
+          "healingDone": 0,
+          "actions": 15,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B3": {
+          "damageDealt": 414,
+          "healingDone": 0,
+          "actions": 19,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B4": {
+          "damageDealt": 763,
+          "healingDone": 0,
+          "actions": 35,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B5": {
+          "damageDealt": 1158,
+          "healingDone": 0,
+          "actions": 52,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B6": {
+          "damageDealt": 110,
+          "healingDone": 0,
+          "actions": 8,
+          "invalid": 0,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "seed": 12106,
+      "endReason": "ko",
+      "ms": 2398,
+      "winner": "A",
+      "winnerTeam": "A",
+      "rounds": 15,
+      "invalid": 0,
+      "errors": 0,
+      "heroes": [
+        {
+          "name": "Jon Snow",
+          "hp": 1508,
+          "maxHp": 2603
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 597,
+          "maxHp": 2514
+        },
+        {
+          "name": "Melisandre",
+          "hp": 0,
+          "maxHp": 2460
+        }
+      ],
+      "stats": {
+        "A": {
+          "damageDealt": 3319,
+          "healingDone": 0,
+          "actions": 66,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A2": {
+          "damageDealt": 4407,
+          "healingDone": 0,
+          "actions": 75,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A3": {
+          "damageDealt": 2294,
+          "healingDone": 0,
+          "actions": 33,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B": {
+          "damageDealt": 2704,
+          "healingDone": 0,
+          "actions": 57,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B2": {
+          "damageDealt": 1259,
+          "healingDone": 0,
+          "actions": 35,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B3": {
+          "damageDealt": 711,
+          "healingDone": 0,
+          "actions": 23,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B4": {
+          "damageDealt": 719,
+          "healingDone": 0,
+          "actions": 32,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B5": {
+          "damageDealt": 195,
+          "healingDone": 0,
+          "actions": 9,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B6": {
+          "damageDealt": 452,
+          "healingDone": 0,
+          "actions": 24,
+          "invalid": 0,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "seed": 12107,
+      "endReason": "ko",
+      "ms": 2639,
+      "winner": "A2",
+      "winnerTeam": "A",
+      "rounds": 16,
+      "invalid": 0,
+      "errors": 0,
+      "heroes": [
+        {
+          "name": "Jon Snow",
+          "hp": 0,
+          "maxHp": 2468
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 618,
+          "maxHp": 2505
+        },
+        {
+          "name": "Melisandre",
+          "hp": 2114,
+          "maxHp": 2649
+        }
+      ],
+      "stats": {
+        "A": {
+          "damageDealt": 2373,
+          "healingDone": 0,
+          "actions": 39,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A2": {
+          "damageDealt": 3869,
+          "healingDone": 110,
+          "actions": 80,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A3": {
+          "damageDealt": 3758,
+          "healingDone": 110,
+          "actions": 69,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B": {
+          "damageDealt": 1529,
+          "healingDone": 0,
+          "actions": 36,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B2": {
+          "damageDealt": 716,
+          "healingDone": 0,
+          "actions": 26,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B3": {
+          "damageDealt": 854,
+          "healingDone": 0,
+          "actions": 35,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B4": {
+          "damageDealt": 1042,
+          "healingDone": 0,
+          "actions": 57,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B5": {
+          "damageDealt": 1237,
+          "healingDone": 0,
+          "actions": 55,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B6": {
+          "damageDealt": 255,
+          "healingDone": 0,
+          "actions": 8,
+          "invalid": 0,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "seed": 12108,
+      "endReason": "ko",
+      "ms": 2517,
+      "winner": "A",
+      "winnerTeam": "A",
+      "rounds": 17,
+      "invalid": 0,
+      "errors": 0,
+      "heroes": [
+        {
+          "name": "Jon Snow",
+          "hp": 761,
+          "maxHp": 2534
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 0,
+          "maxHp": 2462
+        },
+        {
+          "name": "Melisandre",
+          "hp": 409,
+          "maxHp": 2502
+        }
+      ],
+      "stats": {
+        "A": {
+          "damageDealt": 4119,
+          "healingDone": 0,
+          "actions": 71,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A2": {
+          "damageDealt": 1911,
+          "healingDone": 0,
+          "actions": 38,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A3": {
+          "damageDealt": 3930,
+          "healingDone": 0,
+          "actions": 68,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B": {
+          "damageDealt": 1736,
+          "healingDone": 0,
+          "actions": 40,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B2": {
+          "damageDealt": 1404,
+          "healingDone": 0,
+          "actions": 49,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B3": {
+          "damageDealt": 1913,
+          "healingDone": 0,
+          "actions": 60,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B4": {
+          "damageDealt": 609,
+          "healingDone": 0,
+          "actions": 29,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B5": {
+          "damageDealt": 861,
+          "healingDone": 0,
+          "actions": 41,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B6": {
+          "damageDealt": 452,
+          "healingDone": 0,
+          "actions": 21,
+          "invalid": 0,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "seed": 18101,
+      "endReason": "ko",
+      "ms": 2553,
+      "winner": "A2",
+      "winnerTeam": "A",
+      "rounds": 13,
+      "invalid": 0,
+      "errors": 0,
+      "heroes": [
+        {
+          "name": "Jon Snow",
+          "hp": 0,
+          "maxHp": 2465
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 1919,
+          "maxHp": 2641
+        },
+        {
+          "name": "Melisandre",
+          "hp": 388,
+          "maxHp": 2496
+        }
+      ],
+      "stats": {
+        "A": {
+          "damageDealt": 2958,
+          "healingDone": 0,
+          "actions": 42,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A2": {
+          "damageDealt": 3702,
+          "healingDone": 0,
+          "actions": 72,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A3": {
+          "damageDealt": 3360,
+          "healingDone": 0,
+          "actions": 55,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B": {
+          "damageDealt": 1512,
+          "healingDone": 0,
+          "actions": 36,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B2": {
+          "damageDealt": 1225,
+          "healingDone": 0,
+          "actions": 40,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B3": {
+          "damageDealt": 911,
+          "healingDone": 0,
+          "actions": 31,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B4": {
+          "damageDealt": 797,
+          "healingDone": 0,
+          "actions": 34,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B5": {
+          "damageDealt": 1082,
+          "healingDone": 0,
+          "actions": 48,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B6": {
+          "damageDealt": 311,
+          "healingDone": 0,
+          "actions": 12,
+          "invalid": 0,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "seed": 18102,
+      "endReason": "ko",
+      "ms": 2434,
+      "winner": "A",
+      "winnerTeam": "A",
+      "rounds": 16,
+      "invalid": 0,
+      "errors": 0,
+      "heroes": [
+        {
+          "name": "Jon Snow",
+          "hp": 1829,
+          "maxHp": 2634
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 470,
+          "maxHp": 2507
+        },
+        {
+          "name": "Melisandre",
+          "hp": 0,
+          "maxHp": 2463
+        }
+      ],
+      "stats": {
+        "A": {
+          "damageDealt": 3392,
+          "healingDone": 0,
+          "actions": 66,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A2": {
+          "damageDealt": 4304,
+          "healingDone": 0,
+          "actions": 81,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A3": {
+          "damageDealt": 2324,
+          "healingDone": 0,
+          "actions": 31,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B": {
+          "damageDealt": 1402,
+          "healingDone": 0,
+          "actions": 30,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B2": {
+          "damageDealt": 1131,
+          "healingDone": 0,
+          "actions": 37,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B3": {
+          "damageDealt": 851,
+          "healingDone": 0,
+          "actions": 38,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B4": {
+          "damageDealt": 727,
+          "healingDone": 0,
+          "actions": 30,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B5": {
+          "damageDealt": 1287,
+          "healingDone": 0,
+          "actions": 59,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B6": {
+          "damageDealt": 448,
+          "healingDone": 0,
+          "actions": 21,
+          "invalid": 0,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "seed": 18103,
+      "endReason": "ko",
+      "ms": 2693,
+      "winner": "A",
+      "winnerTeam": "A",
+      "rounds": 15,
+      "invalid": 0,
+      "errors": 0,
+      "heroes": [
+        {
+          "name": "Jon Snow",
+          "hp": 1314,
+          "maxHp": 2586
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 261,
+          "maxHp": 2486
+        },
+        {
+          "name": "Melisandre",
+          "hp": 410,
+          "maxHp": 2499
+        }
+      ],
+      "stats": {
+        "A": {
+          "damageDealt": 3247,
+          "healingDone": 0,
+          "actions": 63,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A2": {
+          "damageDealt": 3032,
+          "healingDone": 0,
+          "actions": 64,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A3": {
+          "damageDealt": 3741,
+          "healingDone": 0,
+          "actions": 58,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B": {
+          "damageDealt": 2670,
+          "healingDone": 0,
+          "actions": 60,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B2": {
+          "damageDealt": 708,
+          "healingDone": 0,
+          "actions": 25,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B3": {
+          "damageDealt": 547,
+          "healingDone": 0,
+          "actions": 19,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B4": {
+          "damageDealt": 959,
+          "healingDone": 0,
+          "actions": 42,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B5": {
+          "damageDealt": 1021,
+          "healingDone": 0,
+          "actions": 43,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B6": {
+          "damageDealt": 255,
+          "healingDone": 0,
+          "actions": 9,
+          "invalid": 0,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "seed": 18104,
+      "endReason": "ko",
+      "ms": 2616,
+      "winner": "A",
+      "winnerTeam": "A",
+      "rounds": 15,
+      "invalid": 0,
+      "errors": 0,
+      "heroes": [
+        {
+          "name": "Jon Snow",
+          "hp": 820,
+          "maxHp": 2542
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 40,
+          "maxHp": 2442
+        },
+        {
+          "name": "Melisandre",
+          "hp": 2121,
+          "maxHp": 2652
+        }
+      ],
+      "stats": {
+        "A": {
+          "damageDealt": 3234,
+          "healingDone": 0,
+          "actions": 60,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A2": {
+          "damageDealt": 3330,
+          "healingDone": 203,
+          "actions": 64,
+          "invalid": 0,
+          "errors": 0
+        },
+        "A3": {
+          "damageDealt": 3432,
+          "healingDone": 93,
+          "actions": 66,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B": {
+          "damageDealt": 1548,
+          "healingDone": 0,
+          "actions": 35,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B2": {
+          "damageDealt": 1012,
+          "healingDone": 0,
+          "actions": 38,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B3": {
+          "damageDealt": 1080,
+          "healingDone": 0,
+          "actions": 44,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B4": {
+          "damageDealt": 579,
+          "healingDone": 0,
+          "actions": 23,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B5": {
+          "damageDealt": 929,
+          "healingDone": 0,
+          "actions": 45,
+          "invalid": 0,
+          "errors": 0
+        },
+        "B6": {
+          "damageDealt": 312,
+          "healingDone": 0,
+          "actions": 11,
+          "invalid": 0,
+          "errors": 0
+        }
+      }
+    }
+  ],
+  "scope": "Local numerical and encounter testing, not competitive class certification.",
+  "summary": {
+    "spellCasts": 29,
+    "encounters": 12,
+    "heroVictories": 11,
+    "turnLimits": 1,
+    "allHeroesSurvive": 4,
+    "minRounds": 13,
+    "maxRounds": 41,
+    "illegalActions": 0,
+    "engineErrors": 0
+  }
+}

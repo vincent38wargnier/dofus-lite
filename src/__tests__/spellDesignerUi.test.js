@@ -79,7 +79,7 @@ test('ordered effects and critical lists are separately editable, with meaningfu
   expect(saved().spells.custom[0].effects.map(e => e.kind)).toEqual(['buffDamage', 'damage']);
   expect(saved().spells.custom[0].critEffects[0].min).toBe(10);
   fireEvent.click(screen.getByRole('button', { name: '+ Créer un sort' }));
-  change(editor(), 'Partir d’un modèle', 'teleport');
+  fireEvent.click(within(editor().getByRole('group', { name: 'Partir d’un modèle' })).getByRole('button', { name: 'Téléportation' }));
   expect(editor().getByLabelText('Cible du lancer')).toHaveValue('freeCell');
   fireEvent.click(editor().getByLabelText('Portée modifiable'));
   expect(editor().getByRole('button', { name: 'Ajouter à ma classe' })).toBeDisabled();

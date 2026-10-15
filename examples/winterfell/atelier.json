@@ -1,0 +1,2814 @@
+{
+  "format": "dofus-lite-atelier",
+  "version": 1,
+  "characters": [],
+  "dungeons": [
+    {
+      "id": "winterfell-last-ember-v2",
+      "name": "Winterfell — La Dernière Braise",
+      "description": "Game of Thrones · aventure alternative · 3 héros équipés contre le Sonneur et 5 morts. Une salle finale complète ; victoire en éliminant tout le camp adverse.",
+      "mapId": "custom-winterfell-courtyard",
+      "battlefield": {
+        "version": 1,
+        "id": "custom-winterfell-courtyard",
+        "name": "Winterfell · La cour du dernier brasier",
+        "description": "La porte brisée donne sur une cour enneigée. Les vivants défendent le brasier ; les morts traversent la brèche.",
+        "width": 13,
+        "height": 13,
+        "background": {
+          "artworkId": "winterfell-battlefield-v2",
+          "file": "courtyard.png",
+          "propsFile": "props.png",
+          "width": 1536,
+          "height": 1024,
+          "hw": 48,
+          "top": 200,
+          "originX": 16
+        },
+        "startingCells": [
+          [
+            {
+              "x": 2,
+              "y": 9
+            },
+            {
+              "x": 3,
+              "y": 10
+            },
+            {
+              "x": 1,
+              "y": 10
+            },
+            {
+              "x": 1,
+              "y": 8
+            },
+            {
+              "x": 3,
+              "y": 9
+            },
+            {
+              "x": 2,
+              "y": 11
+            },
+            {
+              "x": 4,
+              "y": 10
+            },
+            {
+              "x": 2,
+              "y": 8
+            }
+          ],
+          [
+            {
+              "x": 10,
+              "y": 3
+            },
+            {
+              "x": 9,
+              "y": 2
+            },
+            {
+              "x": 11,
+              "y": 2
+            },
+            {
+              "x": 9,
+              "y": 1
+            },
+            {
+              "x": 11,
+              "y": 4
+            },
+            {
+              "x": 8,
+              "y": 2
+            },
+            {
+              "x": 10,
+              "y": 1
+            },
+            {
+              "x": 10,
+              "y": 4
+            }
+          ]
+        ],
+        "obstacles": [
+          {
+            "x": 6,
+            "y": 6,
+            "type": "BUSH",
+            "prop": "brazier"
+          },
+          {
+            "x": 4,
+            "y": 4,
+            "type": "ROCK",
+            "prop": "pillar"
+          },
+          {
+            "x": 8,
+            "y": 8,
+            "type": "ROCK",
+            "prop": "pillar"
+          },
+          {
+            "x": 4,
+            "y": 7,
+            "type": "BUSH",
+            "prop": "barricade"
+          },
+          {
+            "x": 8,
+            "y": 5,
+            "type": "BUSH",
+            "prop": "barricade"
+          }
+        ]
+      },
+      "members": [
+        {
+          "customMonster": {
+            "key": "frost-commander",
+            "name": "Le Sonneur de la Longue Nuit",
+            "description": "Un lieutenant oublié des Marcheurs blancs. Sa cloche ne réveille personne : elle rappelle aux morts où marchent les vivants.",
+            "role": "Commandant et contrôle de zone",
+            "counterplay": "Sa résistance terre est élevée ; le feu et l’air sont ses faiblesses. Dispersez-vous contre le glas. Sa mort ne fait pas disparaître son escorte.",
+            "reference": {
+              "monsterId": 173,
+              "grade": 5
+            },
+            "tuning": {
+              "hpPercent": 80,
+              "statsPercent": 150,
+              "paBonus": -2,
+              "pmBonus": -1
+            },
+            "spells": [
+              {
+                "authoringVersion": 1,
+                "id": 1800000010000019,
+                "key": "custom_1800000010000019",
+                "name": "La lance du silence",
+                "description": "Une forte attaque eau sur une seule cible. Le Sonneur ne peut pas tout faire le même tour.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                "grade": 6,
+                "requiredLevel": 200,
+                "emoji": "✨",
+                "pa": 5,
+                "rangeMin": 1,
+                "rangeMax": 6,
+                "targetMode": "enemy",
+                "needsLos": true,
+                "lineOnly": false,
+                "emptyCellOnly": false,
+                "adjustableRange": false,
+                "maxPerTurn": 2,
+                "maxPerTarget": 2,
+                "cooldown": 0,
+                "initialCooldown": 0,
+                "critRate": 0,
+                "failRate": 0,
+                "endsTurnOnFailure": false,
+                "requiredStates": [],
+                "forbiddenStates": [
+                  1,
+                  3,
+                  18,
+                  19,
+                  41
+                ],
+                "effects": [
+                  {
+                    "kind": "damage",
+                    "min": 38,
+                    "max": 44,
+                    "duration": 0,
+                    "zone": "Pa",
+                    "element": "eau",
+                    "targetMask": 1,
+                    "p1": 38,
+                    "p2": 44,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  }
+                ],
+                "critEffects": [],
+                "visualEffect": {
+                  "version": 1,
+                  "kind": "ice-lance",
+                  "color": "#66bde6",
+                  "accent": "#e3fbff",
+                  "durationMs": 1100
+                },
+                "iconFile": "icons/icespear.png",
+                "iconArtworkId": "winterfell-icons-v1"
+              },
+              {
+                "authoringVersion": 1,
+                "id": 1800000010000020,
+                "key": "custom_1800000010000020",
+                "name": "Le glas sous la neige",
+                "description": "Dégâts eau et retrait esquivable de 1 PM en cercle de rayon 1.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                "grade": 6,
+                "requiredLevel": 200,
+                "emoji": "✨",
+                "pa": 4,
+                "rangeMin": 1,
+                "rangeMax": 5,
+                "targetMode": "cell",
+                "needsLos": true,
+                "lineOnly": false,
+                "emptyCellOnly": false,
+                "adjustableRange": false,
+                "maxPerTurn": 1,
+                "maxPerTarget": 1,
+                "cooldown": 3,
+                "initialCooldown": 0,
+                "critRate": 0,
+                "failRate": 0,
+                "endsTurnOnFailure": false,
+                "requiredStates": [],
+                "forbiddenStates": [
+                  1,
+                  3,
+                  18,
+                  19,
+                  41
+                ],
+                "effects": [
+                  {
+                    "kind": "damage",
+                    "min": 12,
+                    "max": 16,
+                    "duration": 0,
+                    "zone": "Cb",
+                    "element": "eau",
+                    "targetMask": 1,
+                    "p1": 12,
+                    "p2": 16,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  },
+                  {
+                    "kind": "removePm",
+                    "min": 1,
+                    "max": 1,
+                    "duration": 0,
+                    "zone": "Cb",
+                    "targetMask": 1,
+                    "p1": 1,
+                    "p2": 1,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  }
+                ],
+                "critEffects": [],
+                "visualEffect": {
+                  "version": 1,
+                  "kind": "bell",
+                  "color": "#66bde6",
+                  "accent": "#e3fbff",
+                  "durationMs": 1100
+                },
+                "iconFile": "icons/bell.png",
+                "iconArtworkId": "winterfell-icons-v1"
+              },
+              {
+                "authoringVersion": 1,
+                "id": 1800000010000021,
+                "key": "custom_1800000010000021",
+                "name": "Étouffer la braise",
+                "description": "Retire 1 PA esquivable et 1 portée pendant un tour. Impossible au contact.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                "grade": 6,
+                "requiredLevel": 200,
+                "emoji": "✨",
+                "pa": 3,
+                "rangeMin": 2,
+                "rangeMax": 7,
+                "targetMode": "enemy",
+                "needsLos": true,
+                "lineOnly": false,
+                "emptyCellOnly": false,
+                "adjustableRange": false,
+                "maxPerTurn": 1,
+                "maxPerTarget": 1,
+                "cooldown": 3,
+                "initialCooldown": 0,
+                "critRate": 0,
+                "failRate": 0,
+                "endsTurnOnFailure": false,
+                "requiredStates": [],
+                "forbiddenStates": [
+                  1,
+                  3,
+                  18,
+                  19,
+                  41
+                ],
+                "effects": [
+                  {
+                    "kind": "removePa",
+                    "min": 1,
+                    "max": 1,
+                    "duration": 0,
+                    "zone": "Pa",
+                    "targetMask": 1,
+                    "p1": 1,
+                    "p2": 1,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  },
+                  {
+                    "kind": "debuffRange",
+                    "min": 1,
+                    "max": 1,
+                    "duration": 1,
+                    "zone": "Pa",
+                    "targetMask": 1,
+                    "p1": 1,
+                    "p2": 1,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  }
+                ],
+                "critEffects": [],
+                "visualEffect": {
+                  "version": 1,
+                  "kind": "bell",
+                  "color": "#66bde6",
+                  "accent": "#e3fbff",
+                  "durationMs": 1100
+                },
+                "iconFile": "icons/bell.png",
+                "iconArtworkId": "winterfell-icons-v1"
+              },
+              {
+                "authoringVersion": 1,
+                "id": 1800000010000022,
+                "key": "custom_1800000010000022",
+                "name": "Marchez encore",
+                "description": "Renforce les morts regroupés. Aucune invocation ni résurrection : le groupe est fixe.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                "grade": 6,
+                "requiredLevel": 200,
+                "emoji": "✨",
+                "pa": 4,
+                "rangeMin": 0,
+                "rangeMax": 5,
+                "targetMode": "fighter",
+                "needsLos": true,
+                "lineOnly": false,
+                "emptyCellOnly": false,
+                "adjustableRange": false,
+                "maxPerTurn": 1,
+                "maxPerTarget": 1,
+                "cooldown": 4,
+                "initialCooldown": 0,
+                "critRate": 0,
+                "failRate": 0,
+                "endsTurnOnFailure": false,
+                "requiredStates": [],
+                "forbiddenStates": [
+                  1,
+                  3,
+                  18,
+                  19,
+                  41
+                ],
+                "effects": [
+                  {
+                    "kind": "buffDamage",
+                    "min": 8,
+                    "max": 8,
+                    "duration": 2,
+                    "zone": "Cb",
+                    "targetMask": 4,
+                    "p1": 8,
+                    "p2": 8,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  }
+                ],
+                "critEffects": [],
+                "visualEffect": {
+                  "version": 1,
+                  "kind": "rally",
+                  "color": "#66bde6",
+                  "accent": "#e3fbff",
+                  "durationMs": 1100
+                },
+                "iconFile": "icons/bell.png",
+                "iconArtworkId": "winterfell-icons-v1"
+              }
+            ],
+            "artworkId": "winterfell-frost-commander-v1"
+          },
+          "count": 1
+        },
+        {
+          "customMonster": {
+            "key": "wight",
+            "name": "Garde enseveli",
+            "description": "Il porte encore l’écusson d’une maison disparue. Il ne sait plus laquelle.",
+            "role": "Obstacle de mêlée",
+            "counterplay": "Il avance lentement et ne frappe qu’au contact. Contournez son bouclier plutôt que de vous regrouper.",
+            "reference": {
+              "monsterId": 181,
+              "grade": 5
+            },
+            "tuning": {
+              "hpPercent": 65,
+              "statsPercent": 150,
+              "paBonus": 1,
+              "pmBonus": -2
+            },
+            "spells": [
+              {
+                "authoringVersion": 1,
+                "id": 1800000010000023,
+                "key": "custom_1800000010000023",
+                "name": "Acier rouillé",
+                "description": "Acier rouillé\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                "grade": 6,
+                "requiredLevel": 200,
+                "emoji": "✨",
+                "pa": 4,
+                "rangeMin": 1,
+                "rangeMax": 1,
+                "targetMode": "enemy",
+                "needsLos": true,
+                "lineOnly": false,
+                "emptyCellOnly": false,
+                "adjustableRange": false,
+                "maxPerTurn": 2,
+                "maxPerTarget": 2,
+                "cooldown": 0,
+                "initialCooldown": 0,
+                "critRate": 0,
+                "failRate": 0,
+                "endsTurnOnFailure": false,
+                "requiredStates": [],
+                "forbiddenStates": [
+                  1,
+                  3,
+                  18,
+                  19,
+                  41
+                ],
+                "effects": [
+                  {
+                    "kind": "damage",
+                    "min": 27,
+                    "max": 33,
+                    "duration": 0,
+                    "zone": "Pa",
+                    "element": "terre",
+                    "targetMask": 1,
+                    "p1": 27,
+                    "p2": 33,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  }
+                ],
+                "critEffects": [],
+                "visualEffect": {
+                  "version": 1,
+                  "kind": "slash",
+                  "color": "#9b775b",
+                  "accent": "#d7c1ab",
+                  "durationMs": 850
+                },
+                "iconFile": "icons/longclaw.png",
+                "iconArtworkId": "winterfell-icons-v1"
+              },
+              {
+                "authoringVersion": 1,
+                "id": 1800000010000024,
+                "key": "custom_1800000010000024",
+                "name": "Le vieux bouclier",
+                "description": "Le vieux bouclier\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                "grade": 6,
+                "requiredLevel": 200,
+                "emoji": "✨",
+                "pa": 3,
+                "rangeMin": 0,
+                "rangeMax": 0,
+                "targetMode": "self",
+                "needsLos": true,
+                "lineOnly": false,
+                "emptyCellOnly": false,
+                "adjustableRange": false,
+                "maxPerTurn": 1,
+                "maxPerTarget": 1,
+                "cooldown": 3,
+                "initialCooldown": 0,
+                "critRate": 0,
+                "failRate": 0,
+                "endsTurnOnFailure": false,
+                "requiredStates": [],
+                "forbiddenStates": [
+                  1,
+                  3,
+                  18,
+                  19,
+                  41
+                ],
+                "effects": [
+                  {
+                    "kind": "armor",
+                    "min": 8,
+                    "max": 8,
+                    "duration": 2,
+                    "zone": "Pa",
+                    "targetMask": 32,
+                    "p1": 8,
+                    "p2": 8,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  }
+                ],
+                "critEffects": [],
+                "visualEffect": {
+                  "version": 1,
+                  "kind": "shield",
+                  "color": "#66bde6",
+                  "accent": "#e3fbff",
+                  "durationMs": 1100
+                },
+                "iconFile": "icons/guard.png",
+                "iconArtworkId": "winterfell-icons-v1"
+              }
+            ],
+            "artworkId": "winterfell-wight-v1"
+          },
+          "count": 2
+        },
+        {
+          "customMonster": {
+            "key": "rime-archer",
+            "name": "Archer du givre",
+            "description": "Chaque flèche est taillée dans l’eau gelée des douves.",
+            "role": "Tireur et ralentissement",
+            "counterplay": "Ses deux tirs ont une portée minimale de trois cases. Arya ou Jon peuvent le gêner en s’approchant.",
+            "reference": {
+              "monsterId": 228,
+              "grade": 5
+            },
+            "tuning": {
+              "hpPercent": 150,
+              "statsPercent": 150,
+              "paBonus": 0,
+              "pmBonus": -1
+            },
+            "spells": [
+              {
+                "authoringVersion": 1,
+                "id": 1800000010000025,
+                "key": "custom_1800000010000025",
+                "name": "Flèche de givre",
+                "description": "Flèche de givre\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                "grade": 6,
+                "requiredLevel": 200,
+                "emoji": "✨",
+                "pa": 3,
+                "rangeMin": 3,
+                "rangeMax": 8,
+                "targetMode": "enemy",
+                "needsLos": true,
+                "lineOnly": false,
+                "emptyCellOnly": false,
+                "adjustableRange": false,
+                "maxPerTurn": 2,
+                "maxPerTarget": 2,
+                "cooldown": 0,
+                "initialCooldown": 0,
+                "critRate": 0,
+                "failRate": 0,
+                "endsTurnOnFailure": false,
+                "requiredStates": [],
+                "forbiddenStates": [
+                  1,
+                  3,
+                  18,
+                  19,
+                  41
+                ],
+                "effects": [
+                  {
+                    "kind": "damage",
+                    "min": 18,
+                    "max": 22,
+                    "duration": 0,
+                    "zone": "Pa",
+                    "element": "eau",
+                    "targetMask": 1,
+                    "p1": 18,
+                    "p2": 22,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  }
+                ],
+                "critEffects": [],
+                "visualEffect": {
+                  "version": 1,
+                  "kind": "arrow",
+                  "color": "#66bde6",
+                  "accent": "#e3fbff",
+                  "durationMs": 1100
+                },
+                "iconFile": "icons/icearrow.png",
+                "iconArtworkId": "winterfell-icons-v1"
+              },
+              {
+                "authoringVersion": 1,
+                "id": 1800000010000026,
+                "key": "custom_1800000010000026",
+                "name": "Cloué par le froid",
+                "description": "Un tir et un retrait esquivable de 1 PM ; pas de piège caché au sol.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                "grade": 6,
+                "requiredLevel": 200,
+                "emoji": "✨",
+                "pa": 4,
+                "rangeMin": 3,
+                "rangeMax": 7,
+                "targetMode": "enemy",
+                "needsLos": true,
+                "lineOnly": false,
+                "emptyCellOnly": false,
+                "adjustableRange": false,
+                "maxPerTurn": 1,
+                "maxPerTarget": 1,
+                "cooldown": 2,
+                "initialCooldown": 0,
+                "critRate": 0,
+                "failRate": 0,
+                "endsTurnOnFailure": false,
+                "requiredStates": [],
+                "forbiddenStates": [
+                  1,
+                  3,
+                  18,
+                  19,
+                  41
+                ],
+                "effects": [
+                  {
+                    "kind": "damage",
+                    "min": 12,
+                    "max": 16,
+                    "duration": 0,
+                    "zone": "Pa",
+                    "element": "eau",
+                    "targetMask": 1,
+                    "p1": 12,
+                    "p2": 16,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  },
+                  {
+                    "kind": "removePm",
+                    "min": 1,
+                    "max": 1,
+                    "duration": 0,
+                    "zone": "Pa",
+                    "targetMask": 1,
+                    "p1": 1,
+                    "p2": 1,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  }
+                ],
+                "critEffects": [],
+                "visualEffect": {
+                  "version": 1,
+                  "kind": "ice-lance",
+                  "color": "#66bde6",
+                  "accent": "#e3fbff",
+                  "durationMs": 1100
+                },
+                "iconFile": "icons/icearrow.png",
+                "iconArtworkId": "winterfell-icons-v1"
+              }
+            ],
+            "artworkId": "winterfell-rime-archer-v1"
+          },
+          "count": 2
+        },
+        {
+          "customMonster": {
+            "key": "frost-hound",
+            "name": "Limier des neiges mortes",
+            "description": "Le dernier loup que l’on croyait avoir entendu hurler derrière le Mur.",
+            "role": "Poursuivant mobile",
+            "counterplay": "Repoussez-le ou bloquez son accès à Melisandre. Il est rapide, mais sans attaque à distance ni soin.",
+            "reference": {
+              "monsterId": 102,
+              "grade": 5
+            },
+            "tuning": {
+              "hpPercent": 110,
+              "statsPercent": 150,
+              "paBonus": -2,
+              "pmBonus": 0
+            },
+            "spells": [
+              {
+                "authoringVersion": 1,
+                "id": 1800000010000027,
+                "key": "custom_1800000010000027",
+                "name": "Morsure de givre",
+                "description": "Morsure de givre\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                "grade": 6,
+                "requiredLevel": 200,
+                "emoji": "✨",
+                "pa": 3,
+                "rangeMin": 1,
+                "rangeMax": 1,
+                "targetMode": "enemy",
+                "needsLos": true,
+                "lineOnly": false,
+                "emptyCellOnly": false,
+                "adjustableRange": false,
+                "maxPerTurn": 2,
+                "maxPerTarget": 2,
+                "cooldown": 0,
+                "initialCooldown": 0,
+                "critRate": 0,
+                "failRate": 0,
+                "endsTurnOnFailure": false,
+                "requiredStates": [],
+                "forbiddenStates": [
+                  1,
+                  3,
+                  18,
+                  19,
+                  41
+                ],
+                "effects": [
+                  {
+                    "kind": "damage",
+                    "min": 18,
+                    "max": 23,
+                    "duration": 0,
+                    "zone": "Pa",
+                    "element": "eau",
+                    "targetMask": 1,
+                    "p1": 18,
+                    "p2": 23,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  }
+                ],
+                "critEffects": [],
+                "visualEffect": {
+                  "version": 1,
+                  "kind": "fang",
+                  "color": "#66bde6",
+                  "accent": "#e3fbff",
+                  "durationMs": 1100
+                },
+                "iconFile": "icons/frostbite.png",
+                "iconArtworkId": "winterfell-icons-v1"
+              },
+              {
+                "authoringVersion": 1,
+                "id": 1800000010000028,
+                "key": "custom_1800000010000028",
+                "name": "L’odeur des vivants",
+                "description": "L’odeur des vivants\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                "grade": 6,
+                "requiredLevel": 200,
+                "emoji": "✨",
+                "pa": 2,
+                "rangeMin": 0,
+                "rangeMax": 0,
+                "targetMode": "self",
+                "needsLos": true,
+                "lineOnly": false,
+                "emptyCellOnly": false,
+                "adjustableRange": false,
+                "maxPerTurn": 1,
+                "maxPerTarget": 1,
+                "cooldown": 3,
+                "initialCooldown": 0,
+                "critRate": 0,
+                "failRate": 0,
+                "endsTurnOnFailure": false,
+                "requiredStates": [],
+                "forbiddenStates": [
+                  1,
+                  3,
+                  18,
+                  19,
+                  41
+                ],
+                "effects": [
+                  {
+                    "kind": "buffPm",
+                    "min": 1,
+                    "max": 1,
+                    "duration": 1,
+                    "zone": "Pa",
+                    "targetMask": 32,
+                    "p1": 1,
+                    "p2": 1,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  },
+                  {
+                    "kind": "buffPower",
+                    "min": 60,
+                    "max": 60,
+                    "duration": 1,
+                    "zone": "Pa",
+                    "targetMask": 32,
+                    "p1": 60,
+                    "p2": 60,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  }
+                ],
+                "critEffects": [],
+                "visualEffect": {
+                  "version": 1,
+                  "kind": "rally",
+                  "color": "#66bde6",
+                  "accent": "#e3fbff",
+                  "durationMs": 1100
+                },
+                "iconFile": "icons/frostbite.png",
+                "iconArtworkId": "winterfell-icons-v1"
+              },
+              {
+                "authoringVersion": 1,
+                "id": 1800000010000029,
+                "key": "custom_1800000010000029",
+                "name": "À terre dans la neige",
+                "description": "À terre dans la neige\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                "grade": 6,
+                "requiredLevel": 200,
+                "emoji": "✨",
+                "pa": 3,
+                "rangeMin": 1,
+                "rangeMax": 1,
+                "targetMode": "enemy",
+                "needsLos": true,
+                "lineOnly": false,
+                "emptyCellOnly": false,
+                "adjustableRange": false,
+                "maxPerTurn": 1,
+                "maxPerTarget": 1,
+                "cooldown": 2,
+                "initialCooldown": 0,
+                "critRate": 0,
+                "failRate": 0,
+                "endsTurnOnFailure": false,
+                "requiredStates": [],
+                "forbiddenStates": [
+                  1,
+                  3,
+                  18,
+                  19,
+                  41
+                ],
+                "effects": [
+                  {
+                    "kind": "damage",
+                    "min": 10,
+                    "max": 14,
+                    "duration": 0,
+                    "zone": "Pa",
+                    "element": "eau",
+                    "targetMask": 1,
+                    "p1": 10,
+                    "p2": 14,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  },
+                  {
+                    "kind": "removePm",
+                    "min": 1,
+                    "max": 1,
+                    "duration": 0,
+                    "zone": "Pa",
+                    "targetMask": 1,
+                    "p1": 1,
+                    "p2": 1,
+                    "p3": 0,
+                    "id": 0,
+                    "chance": 0
+                  }
+                ],
+                "critEffects": [],
+                "visualEffect": {
+                  "version": 1,
+                  "kind": "fang",
+                  "color": "#66bde6",
+                  "accent": "#e3fbff",
+                  "durationMs": 1100
+                },
+                "iconFile": "icons/frostbite.png",
+                "iconArtworkId": "winterfell-icons-v1"
+              }
+            ],
+            "artworkId": "winterfell-frost-hound-v1"
+          },
+          "count": 1
+        }
+      ],
+      "adventure": {
+        "version": 1,
+        "mode": "fixed",
+        "partySize": 3,
+        "allowAI": true,
+        "description": "La cloche de Winterfell sonne, mais le clocher est vide. Un Marcheur blanc a volé son battant pour guider les morts jusqu’au dernier brasier. Jon tient le passage. Arya murmure : « Il suffit de faire taire le sonneur. » Melisandre serre une braise : « Alors protégez les vivants. »\n\nÉliminez le Sonneur ET ses cinq morts. Dispersez-vous face au glas. Le feu et l’air percent l’armure du boss. Défi : ramener les trois héros. Une histoire alternative de Game of Thrones.",
+        "heroes": [
+          {
+            "id": "winterfell-jon",
+            "character": {
+              "name": "Jon Snow",
+              "classId": "IOP",
+              "className": "Rempart du Nord",
+              "loadout": {
+                "version": 1,
+                "slots": {
+                  "hat": 1800000201,
+                  "cape": 1800000202,
+                  "amulet": 1800000203,
+                  "ring1": 1800000204,
+                  "ring2": 1800000205,
+                  "belt": 1800000206,
+                  "boots": 1800000207,
+                  "weapon": 1800000208
+                },
+                "base": {
+                  "force": 150,
+                  "vitalite": 644
+                },
+                "rollMode": "max",
+                "rollSeed": 1,
+                "profile": {
+                  "sex": 0,
+                  "alignment": 0,
+                  "rank": 0
+                },
+                "level": 200,
+                "customEquipment": {
+                  "1800000201": {
+                    "version": 1,
+                    "id": 1800000201,
+                    "name": "Capuche de la Garde",
+                    "level": 200,
+                    "referenceId": 7143,
+                    "stats": {
+                      "vitalite": 120,
+                      "force": 25,
+                      "sagesse": 10
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#79a6c6"
+                    }
+                  },
+                  "1800000202": {
+                    "version": 1,
+                    "id": 1800000202,
+                    "name": "Manteau du Lord Commandant",
+                    "level": 200,
+                    "referenceId": 8280,
+                    "stats": {
+                      "vitalite": 120,
+                      "force": 25,
+                      "sagesse": 10,
+                      "res_terre": 5
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#79a6c6"
+                    }
+                  },
+                  "1800000203": {
+                    "version": 1,
+                    "id": 1800000203,
+                    "name": "Serment du Nord",
+                    "level": 200,
+                    "referenceId": 7221,
+                    "stats": {
+                      "vitalite": 120,
+                      "force": 25,
+                      "sagesse": 10,
+                      "pa": 1
+                    },
+                    "appearance": {
+                      "shape": "crystal",
+                      "color": "#79a6c6"
+                    }
+                  },
+                  "1800000204": {
+                    "version": 1,
+                    "id": 1800000204,
+                    "name": "Anneau du Rempart",
+                    "level": 200,
+                    "referenceId": 8270,
+                    "stats": {
+                      "vitalite": 120,
+                      "force": 25,
+                      "sagesse": 10,
+                      "pa": 1
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#79a6c6"
+                    }
+                  },
+                  "1800000205": {
+                    "version": 1,
+                    "id": 1800000205,
+                    "name": "Anneau du Loup",
+                    "level": 200,
+                    "referenceId": 8270,
+                    "stats": {
+                      "vitalite": 120,
+                      "force": 25,
+                      "sagesse": 10,
+                      "damage": 3
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#79a6c6"
+                    }
+                  },
+                  "1800000206": {
+                    "version": 1,
+                    "id": 1800000206,
+                    "name": "Baudrier de la Garde",
+                    "level": 200,
+                    "referenceId": 8283,
+                    "stats": {
+                      "vitalite": 120,
+                      "force": 25,
+                      "sagesse": 10,
+                      "res_eau": 5
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#79a6c6"
+                    }
+                  },
+                  "1800000207": {
+                    "version": 1,
+                    "id": 1800000207,
+                    "name": "Bottes du Mur",
+                    "level": 200,
+                    "referenceId": 7217,
+                    "stats": {
+                      "vitalite": 120,
+                      "force": 25,
+                      "sagesse": 10,
+                      "pm": 1
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#79a6c6"
+                    }
+                  },
+                  "1800000208": {
+                    "version": 1,
+                    "id": 1800000208,
+                    "name": "Grand-Griffe",
+                    "level": 200,
+                    "referenceId": 7195,
+                    "stats": {
+                      "vitalite": 80,
+                      "force": 25,
+                      "sagesse": 10
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#79a6c6"
+                    },
+                    "weapon": {
+                      "pa": 4,
+                      "range": [
+                        1,
+                        1
+                      ],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "slash",
+                        "color": "#7b9caf",
+                        "accent": "#eff7ff",
+                        "durationMs": 780
+                      },
+                      "critRate": 30,
+                      "critBonus": 3,
+                      "lines": [
+                        {
+                          "id": 97,
+                          "min": 23,
+                          "max": 28
+                        }
+                      ]
+                    }
+                  }
+                },
+                "artworkId": "winterfell-jon-v1",
+                "spells": {
+                  "custom": [
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000001,
+                      "key": "custom_1800000010000001",
+                      "name": "Tranchant de Grand-Griffe",
+                      "description": "Une frappe fiable, sans zone ni effet caché.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 4,
+                      "rangeMin": 1,
+                      "rangeMax": 2,
+                      "targetMode": "enemy",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 2,
+                      "maxPerTarget": 2,
+                      "cooldown": 0,
+                      "initialCooldown": 0,
+                      "critRate": 30,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "damage",
+                          "min": 26,
+                          "max": 30,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "element": "terre",
+                          "targetMask": 1,
+                          "p1": 26,
+                          "p2": 30,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [
+                        {
+                          "kind": "damage",
+                          "min": 29,
+                          "max": 33,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "element": "terre",
+                          "targetMask": 1,
+                          "p1": 29,
+                          "p2": 33,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "slash",
+                        "color": "#7b9caf",
+                        "accent": "#eff7ff",
+                        "durationMs": 780
+                      },
+                      "iconFile": "icons/longclaw.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000002,
+                      "key": "custom_1800000010000002",
+                      "name": "Tenir la porte",
+                      "description": "Réduit les prochaines frappes. Protéger maintenant coûte une attaque.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 3,
+                      "rangeMin": 0,
+                      "rangeMax": 0,
+                      "targetMode": "self",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 1,
+                      "maxPerTarget": 1,
+                      "cooldown": 3,
+                      "initialCooldown": 0,
+                      "critRate": 0,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "armor",
+                          "min": 8,
+                          "max": 8,
+                          "duration": 2,
+                          "zone": "Pa",
+                          "targetMask": 32,
+                          "p1": 8,
+                          "p2": 8,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "shield",
+                        "color": "#7b9caf",
+                        "accent": "#eff7ff",
+                        "durationMs": 780
+                      },
+                      "iconFile": "icons/guard.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000003,
+                      "key": "custom_1800000010000003",
+                      "name": "Serment de la Garde",
+                      "description": "Renforce immédiatement les attaques de Jon ; 2 tours, 4 tours de relance.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 3,
+                      "rangeMin": 0,
+                      "rangeMax": 0,
+                      "targetMode": "self",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 1,
+                      "maxPerTarget": 1,
+                      "cooldown": 4,
+                      "initialCooldown": 0,
+                      "critRate": 0,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "buffPower",
+                          "min": 75,
+                          "max": 75,
+                          "duration": 2,
+                          "zone": "Pa",
+                          "targetMask": 32,
+                          "p1": 75,
+                          "p2": 75,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "rally",
+                        "color": "#7b9caf",
+                        "accent": "#eff7ff",
+                        "durationMs": 780
+                      },
+                      "iconFile": "icons/oath.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000004,
+                      "key": "custom_1800000010000004",
+                      "name": "Brise-glace",
+                      "description": "Une frappe suivie d’une poussée d’une case. Libère le passage ou provoque une collision.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 3,
+                      "rangeMin": 1,
+                      "rangeMax": 1,
+                      "targetMode": "enemy",
+                      "needsLos": true,
+                      "lineOnly": true,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 2,
+                      "maxPerTarget": 2,
+                      "cooldown": 0,
+                      "initialCooldown": 0,
+                      "critRate": 0,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "damage",
+                          "min": 15,
+                          "max": 18,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "element": "terre",
+                          "targetMask": 1,
+                          "p1": 15,
+                          "p2": 18,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        },
+                        {
+                          "kind": "push",
+                          "min": 1,
+                          "max": 1,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "targetMask": 1,
+                          "p1": 1,
+                          "p2": 1,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "shatter",
+                        "color": "#66bde6",
+                        "accent": "#e3fbff",
+                        "durationMs": 1100
+                      },
+                      "iconFile": "icons/sweep.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000005,
+                      "key": "custom_1800000010000005",
+                      "name": "Ouvrir la brèche",
+                      "description": "Retire 12 % de résistance terre pendant un tour. Utile contre le Sonneur, sans annuler son armure.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 2,
+                      "rangeMin": 1,
+                      "rangeMax": 3,
+                      "targetMode": "enemy",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 1,
+                      "maxPerTarget": 1,
+                      "cooldown": 3,
+                      "initialCooldown": 0,
+                      "critRate": 0,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "resistDebuff",
+                          "min": 12,
+                          "max": 12,
+                          "duration": 1,
+                          "zone": "Pa",
+                          "element": "terre",
+                          "targetMask": 1,
+                          "p1": 12,
+                          "p2": 12,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "thrust",
+                        "color": "#7b9caf",
+                        "accent": "#eff7ff",
+                        "durationMs": 780
+                      },
+                      "iconFile": "icons/knife.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000006,
+                      "key": "custom_1800000010000006",
+                      "name": "Par-delà le rempart",
+                      "description": "Un bond court pour tenir un passage ou rejoindre une cible. Ne provoque aucun dégât.\nContre-jeu : La destination doit être libre ; la relance interdit les bonds successifs.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 4,
+                      "rangeMin": 1,
+                      "rangeMax": 4,
+                      "targetMode": "freeCell",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": true,
+                      "adjustableRange": false,
+                      "maxPerTurn": 1,
+                      "maxPerTarget": 1,
+                      "cooldown": 3,
+                      "initialCooldown": 0,
+                      "critRate": 0,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "teleport",
+                          "min": 0,
+                          "max": 0,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "targetMask": 32,
+                          "p1": 4,
+                          "p2": 0,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "raven-step",
+                        "color": "#7b9caf",
+                        "accent": "#eff7ff",
+                        "durationMs": 780
+                      },
+                      "iconFile": "icons/charge.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    }
+                  ],
+                  "order": [
+                    0,
+                    1800000010000001,
+                    1800000010000002,
+                    1800000010000003,
+                    1800000010000004,
+                    1800000010000005,
+                    1800000010000006
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "winterfell-arya",
+            "character": {
+              "name": "Arya Stark",
+              "classId": "SRAM",
+              "className": "Lame des sans-visage",
+              "loadout": {
+                "version": 1,
+                "slots": {
+                  "hat": 1800000209,
+                  "cape": 1800000210,
+                  "amulet": 1800000211,
+                  "ring1": 1800000212,
+                  "ring2": 1800000213,
+                  "belt": 1800000214,
+                  "boots": 1800000215,
+                  "weapon": 1800000216
+                },
+                "base": {
+                  "agilite": 150,
+                  "vitalite": 644
+                },
+                "rollMode": "max",
+                "rollSeed": 1,
+                "profile": {
+                  "sex": 1,
+                  "alignment": 0,
+                  "rank": 0
+                },
+                "level": 200,
+                "customEquipment": {
+                  "1800000209": {
+                    "version": 1,
+                    "id": 1800000209,
+                    "name": "Capuche de Braavos",
+                    "level": 200,
+                    "referenceId": 7143,
+                    "stats": {
+                      "vitalite": 120,
+                      "agilite": 25,
+                      "sagesse": 10
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#9b93e0"
+                    }
+                  },
+                  "1800000210": {
+                    "version": 1,
+                    "id": 1800000210,
+                    "name": "Manteau de personne",
+                    "level": 200,
+                    "referenceId": 8280,
+                    "stats": {
+                      "vitalite": 120,
+                      "agilite": 25,
+                      "sagesse": 10,
+                      "res_terre": 5
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#9b93e0"
+                    }
+                  },
+                  "1800000211": {
+                    "version": 1,
+                    "id": 1800000211,
+                    "name": "Souvenir de Winterfell",
+                    "level": 200,
+                    "referenceId": 7221,
+                    "stats": {
+                      "vitalite": 120,
+                      "agilite": 25,
+                      "sagesse": 10,
+                      "pa": 1
+                    },
+                    "appearance": {
+                      "shape": "crystal",
+                      "color": "#9b93e0"
+                    }
+                  },
+                  "1800000212": {
+                    "version": 1,
+                    "id": 1800000212,
+                    "name": "Anneau du passage",
+                    "level": 200,
+                    "referenceId": 8270,
+                    "stats": {
+                      "vitalite": 120,
+                      "agilite": 25,
+                      "sagesse": 10,
+                      "pa": 1
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#9b93e0"
+                    }
+                  },
+                  "1800000213": {
+                    "version": 1,
+                    "id": 1800000213,
+                    "name": "Anneau sans nom",
+                    "level": 200,
+                    "referenceId": 8270,
+                    "stats": {
+                      "vitalite": 120,
+                      "agilite": 25,
+                      "sagesse": 10,
+                      "damage": 3
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#9b93e0"
+                    }
+                  },
+                  "1800000214": {
+                    "version": 1,
+                    "id": 1800000214,
+                    "name": "Ceinture aux couteaux",
+                    "level": 200,
+                    "referenceId": 8283,
+                    "stats": {
+                      "vitalite": 120,
+                      "agilite": 25,
+                      "sagesse": 10,
+                      "res_eau": 5
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#9b93e0"
+                    }
+                  },
+                  "1800000215": {
+                    "version": 1,
+                    "id": 1800000215,
+                    "name": "Pas de la louve",
+                    "level": 200,
+                    "referenceId": 7217,
+                    "stats": {
+                      "vitalite": 120,
+                      "agilite": 25,
+                      "sagesse": 10,
+                      "pm": 1
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#9b93e0"
+                    }
+                  },
+                  "1800000216": {
+                    "version": 1,
+                    "id": 1800000216,
+                    "name": "Aiguille",
+                    "level": 200,
+                    "referenceId": 7195,
+                    "stats": {
+                      "vitalite": 80,
+                      "agilite": 25,
+                      "sagesse": 10
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#9b93e0"
+                    },
+                    "weapon": {
+                      "pa": 3,
+                      "range": [
+                        1,
+                        1
+                      ],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "thrust",
+                        "color": "#7b9caf",
+                        "accent": "#eff7ff",
+                        "durationMs": 780
+                      },
+                      "critRate": 30,
+                      "critBonus": 3,
+                      "lines": [
+                        {
+                          "id": 98,
+                          "min": 17,
+                          "max": 21
+                        }
+                      ]
+                    }
+                  }
+                },
+                "artworkId": "winterfell-arya-v1",
+                "spells": {
+                  "custom": [
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000007,
+                      "key": "custom_1800000010000007",
+                      "name": "La pointe d’Aiguille",
+                      "description": "Estoc rapide. Deux lancers par cible et par tour.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 3,
+                      "rangeMin": 1,
+                      "rangeMax": 3,
+                      "targetMode": "enemy",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 2,
+                      "maxPerTarget": 2,
+                      "cooldown": 0,
+                      "initialCooldown": 0,
+                      "critRate": 30,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "damage",
+                          "min": 17,
+                          "max": 21,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "element": "air",
+                          "targetMask": 1,
+                          "p1": 17,
+                          "p2": 21,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [
+                        {
+                          "kind": "damage",
+                          "min": 20,
+                          "max": 24,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "element": "air",
+                          "targetMask": 1,
+                          "p1": 20,
+                          "p2": 24,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "thrust",
+                        "color": "#7b9caf",
+                        "accent": "#eff7ff",
+                        "durationMs": 780
+                      },
+                      "iconFile": "icons/knife.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000008,
+                      "key": "custom_1800000010000008",
+                      "name": "Baiser de verredragon",
+                      "description": "Une frappe lourde à courte portée ; sa relance laisse une fenêtre à l’ennemi.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 4,
+                      "rangeMin": 1,
+                      "rangeMax": 2,
+                      "targetMode": "enemy",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 1,
+                      "maxPerTarget": 1,
+                      "cooldown": 2,
+                      "initialCooldown": 0,
+                      "critRate": 30,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "damage",
+                          "min": 28,
+                          "max": 32,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "element": "air",
+                          "targetMask": 1,
+                          "p1": 28,
+                          "p2": 32,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [
+                        {
+                          "kind": "damage",
+                          "min": 31,
+                          "max": 35,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "element": "air",
+                          "targetMask": 1,
+                          "p1": 31,
+                          "p2": 35,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "shatter",
+                        "color": "#394e75",
+                        "accent": "#b1c8fa",
+                        "durationMs": 950
+                      },
+                      "iconFile": "icons/dragonglass.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000009,
+                      "key": "custom_1800000010000009",
+                      "name": "Couteau dans la neige",
+                      "description": "Attaque à distance moins puissante ; impossible au contact.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 3,
+                      "rangeMin": 2,
+                      "rangeMax": 6,
+                      "targetMode": "enemy",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 2,
+                      "maxPerTarget": 2,
+                      "cooldown": 0,
+                      "initialCooldown": 0,
+                      "critRate": 0,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "damage",
+                          "min": 12,
+                          "max": 16,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "element": "air",
+                          "targetMask": 1,
+                          "p1": 12,
+                          "p2": 16,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "arrow",
+                        "color": "#7b9caf",
+                        "accent": "#eff7ff",
+                        "durationMs": 780
+                      },
+                      "iconFile": "icons/knife.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000010,
+                      "key": "custom_1800000010000010",
+                      "name": "Pas aujourd’hui",
+                      "description": "Rejoint une case libre à trois cases au plus. La téléportation ne rend pas invisible.\nContre-jeu : La destination doit être libre ; la relance interdit les bonds successifs.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 3,
+                      "rangeMin": 1,
+                      "rangeMax": 3,
+                      "targetMode": "freeCell",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": true,
+                      "adjustableRange": false,
+                      "maxPerTurn": 1,
+                      "maxPerTarget": 1,
+                      "cooldown": 3,
+                      "initialCooldown": 0,
+                      "critRate": 0,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "teleport",
+                          "min": 0,
+                          "max": 0,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "targetMask": 32,
+                          "p1": 3,
+                          "p2": 0,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "raven-step",
+                        "color": "#394e75",
+                        "accent": "#b1c8fa",
+                        "durationMs": 950
+                      },
+                      "iconFile": "icons/shadow.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000011,
+                      "key": "custom_1800000010000011",
+                      "name": "Une faille dans la glace",
+                      "description": "Retire 10 % de résistance air pendant un tour. À lancer avant Aiguille.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 2,
+                      "rangeMin": 1,
+                      "rangeMax": 4,
+                      "targetMode": "enemy",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 1,
+                      "maxPerTarget": 1,
+                      "cooldown": 3,
+                      "initialCooldown": 0,
+                      "critRate": 0,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "resistDebuff",
+                          "min": 10,
+                          "max": 10,
+                          "duration": 1,
+                          "zone": "Pa",
+                          "element": "air",
+                          "targetMask": 1,
+                          "p1": 10,
+                          "p2": 10,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "shatter",
+                        "color": "#394e75",
+                        "accent": "#b1c8fa",
+                        "durationMs": 950
+                      },
+                      "iconFile": "icons/dragonglass.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000012,
+                      "key": "custom_1800000010000012",
+                      "name": "Le pas de la louve",
+                      "description": "Gagne immédiatement 1 PM. Ne rembourse pas son coût en PA.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 2,
+                      "rangeMin": 0,
+                      "rangeMax": 0,
+                      "targetMode": "self",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 1,
+                      "maxPerTarget": 1,
+                      "cooldown": 3,
+                      "initialCooldown": 0,
+                      "critRate": 0,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "buffPm",
+                          "min": 1,
+                          "max": 1,
+                          "duration": 1,
+                          "zone": "Pa",
+                          "targetMask": 32,
+                          "p1": 1,
+                          "p2": 1,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "rally",
+                        "color": "#394e75",
+                        "accent": "#b1c8fa",
+                        "durationMs": 950
+                      },
+                      "iconFile": "icons/charge.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    }
+                  ],
+                  "order": [
+                    0,
+                    1800000010000007,
+                    1800000010000008,
+                    1800000010000009,
+                    1800000010000010,
+                    1800000010000011,
+                    1800000010000012
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "winterfell-melisandre",
+            "character": {
+              "name": "Melisandre",
+              "classId": "ENIRIPSA",
+              "className": "Gardienne de la braise",
+              "loadout": {
+                "version": 1,
+                "slots": {
+                  "hat": 1800000217,
+                  "cape": 1800000218,
+                  "amulet": 1800000219,
+                  "ring1": 1800000220,
+                  "ring2": 1800000221,
+                  "belt": 1800000222,
+                  "boots": 1800000223,
+                  "weapon": 1800000224
+                },
+                "base": {
+                  "intelligence": 150,
+                  "vitalite": 644
+                },
+                "rollMode": "max",
+                "rollSeed": 1,
+                "profile": {
+                  "sex": 1,
+                  "alignment": 0,
+                  "rank": 0
+                },
+                "level": 200,
+                "customEquipment": {
+                  "1800000217": {
+                    "version": 1,
+                    "id": 1800000217,
+                    "name": "Voile de la prêtresse",
+                    "level": 200,
+                    "referenceId": 7143,
+                    "stats": {
+                      "vitalite": 120,
+                      "intelligence": 25,
+                      "sagesse": 10
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#d75646"
+                    }
+                  },
+                  "1800000218": {
+                    "version": 1,
+                    "id": 1800000218,
+                    "name": "Manteau de la braise",
+                    "level": 200,
+                    "referenceId": 8280,
+                    "stats": {
+                      "vitalite": 120,
+                      "intelligence": 25,
+                      "sagesse": 10,
+                      "res_terre": 5
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#d75646"
+                    }
+                  },
+                  "1800000219": {
+                    "version": 1,
+                    "id": 1800000219,
+                    "name": "Rubis d’Asshaï",
+                    "level": 200,
+                    "referenceId": 7221,
+                    "stats": {
+                      "vitalite": 120,
+                      "intelligence": 25,
+                      "sagesse": 10,
+                      "pa": 1
+                    },
+                    "appearance": {
+                      "shape": "crystal",
+                      "color": "#d75646"
+                    }
+                  },
+                  "1800000220": {
+                    "version": 1,
+                    "id": 1800000220,
+                    "name": "Anneau des flammes",
+                    "level": 200,
+                    "referenceId": 8270,
+                    "stats": {
+                      "vitalite": 120,
+                      "intelligence": 25,
+                      "sagesse": 10,
+                      "pa": 1
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#d75646"
+                    }
+                  },
+                  "1800000221": {
+                    "version": 1,
+                    "id": 1800000221,
+                    "name": "Sceau du brasier",
+                    "level": 200,
+                    "referenceId": 8270,
+                    "stats": {
+                      "vitalite": 120,
+                      "intelligence": 25,
+                      "sagesse": 10,
+                      "damage": 3
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#d75646"
+                    }
+                  },
+                  "1800000222": {
+                    "version": 1,
+                    "id": 1800000222,
+                    "name": "Écharpe pourpre",
+                    "level": 200,
+                    "referenceId": 8283,
+                    "stats": {
+                      "vitalite": 120,
+                      "intelligence": 25,
+                      "sagesse": 10,
+                      "res_eau": 5
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#d75646"
+                    }
+                  },
+                  "1800000223": {
+                    "version": 1,
+                    "id": 1800000223,
+                    "name": "Sandales de cendre",
+                    "level": 200,
+                    "referenceId": 7217,
+                    "stats": {
+                      "vitalite": 120,
+                      "intelligence": 25,
+                      "sagesse": 10,
+                      "pm": 1
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#d75646"
+                    }
+                  },
+                  "1800000224": {
+                    "version": 1,
+                    "id": 1800000224,
+                    "name": "Tison d’Asshaï",
+                    "level": 200,
+                    "referenceId": 7103,
+                    "stats": {
+                      "vitalite": 80,
+                      "intelligence": 25,
+                      "sagesse": 10
+                    },
+                    "appearance": {
+                      "shape": "equipment",
+                      "color": "#d75646"
+                    },
+                    "weapon": {
+                      "pa": 4,
+                      "range": [
+                        2,
+                        4
+                      ],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "fireball",
+                        "color": "#ed672d",
+                        "accent": "#ffe3a0",
+                        "durationMs": 1100
+                      },
+                      "critRate": 30,
+                      "critBonus": 3,
+                      "lines": [
+                        {
+                          "id": 99,
+                          "min": 23,
+                          "max": 28
+                        }
+                      ]
+                    }
+                  }
+                },
+                "artworkId": "winterfell-melisandre-v1",
+                "spells": {
+                  "custom": [
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000013,
+                      "key": "custom_1800000010000013",
+                      "name": "Une braise dans la nuit",
+                      "description": "Trait de feu précis. Deux lancers par cible et par tour.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 3,
+                      "rangeMin": 1,
+                      "rangeMax": 6,
+                      "targetMode": "enemy",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 2,
+                      "maxPerTarget": 2,
+                      "cooldown": 0,
+                      "initialCooldown": 0,
+                      "critRate": 30,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "damage",
+                          "min": 15,
+                          "max": 19,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "element": "feu",
+                          "targetMask": 1,
+                          "p1": 15,
+                          "p2": 19,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [
+                        {
+                          "kind": "damage",
+                          "min": 18,
+                          "max": 22,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "element": "feu",
+                          "targetMask": 1,
+                          "p1": 18,
+                          "p2": 22,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "fireball",
+                        "color": "#ed672d",
+                        "accent": "#ffe3a0",
+                        "durationMs": 1100
+                      },
+                      "iconFile": "icons/ember.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000014,
+                      "key": "custom_1800000010000014",
+                      "name": "La nuit est sombre",
+                      "description": "Cercle de feu de rayon 1 : touche AUSSI les alliés. Visez une case vide pour prendre plusieurs morts.\nContre-jeu : Écartez les héros ; la zone est montrée au survol avant le lancer.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 4,
+                      "rangeMin": 1,
+                      "rangeMax": 4,
+                      "targetMode": "cell",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 1,
+                      "maxPerTarget": 1,
+                      "cooldown": 0,
+                      "initialCooldown": 0,
+                      "critRate": 0,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "damage",
+                          "min": 12,
+                          "max": 16,
+                          "duration": 0,
+                          "zone": "Cb",
+                          "element": "feu",
+                          "targetMask": 0,
+                          "p1": 12,
+                          "p2": 16,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "fire-wave",
+                        "color": "#ed672d",
+                        "accent": "#ffe3a0",
+                        "durationMs": 1100
+                      },
+                      "iconFile": "icons/firewave.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000015,
+                      "key": "custom_1800000010000015",
+                      "name": "La dernière chaleur",
+                      "description": "Soigne un allié ou Melisandre. Un seul soin par tour : impossible de tout réparer.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 3,
+                      "rangeMin": 0,
+                      "rangeMax": 5,
+                      "targetMode": "fighter",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 1,
+                      "maxPerTarget": 1,
+                      "cooldown": 0,
+                      "initialCooldown": 0,
+                      "critRate": 0,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "heal",
+                          "min": 17,
+                          "max": 21,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "targetMask": 4,
+                          "p1": 17,
+                          "p2": 21,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "embers",
+                        "color": "#ed672d",
+                        "accent": "#ffe3a0",
+                        "durationMs": 1100
+                      },
+                      "iconFile": "icons/warmth.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000016,
+                      "key": "custom_1800000010000016",
+                      "name": "Le rubis veille",
+                      "description": "Petite armure et +10 % de résistance eau pour un allié, durant deux tours.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 3,
+                      "rangeMin": 0,
+                      "rangeMax": 4,
+                      "targetMode": "fighter",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 1,
+                      "maxPerTarget": 1,
+                      "cooldown": 3,
+                      "initialCooldown": 0,
+                      "critRate": 0,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "armor",
+                          "min": 5,
+                          "max": 5,
+                          "duration": 2,
+                          "zone": "Pa",
+                          "targetMask": 4,
+                          "p1": 5,
+                          "p2": 5,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        },
+                        {
+                          "kind": "resistBuff",
+                          "min": 10,
+                          "max": 10,
+                          "duration": 2,
+                          "zone": "Pa",
+                          "element": "eau",
+                          "targetMask": 4,
+                          "p1": 10,
+                          "p2": 10,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "shield",
+                        "color": "#ed672d",
+                        "accent": "#ffe3a0",
+                        "durationMs": 1100
+                      },
+                      "iconFile": "icons/ruby.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000017,
+                      "key": "custom_1800000010000017",
+                      "name": "Rallumer les vivants",
+                      "description": "+8 dommages immédiats pour un allié. Choisissez celui qui va attaquer.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 3,
+                      "rangeMin": 0,
+                      "rangeMax": 4,
+                      "targetMode": "fighter",
+                      "needsLos": true,
+                      "lineOnly": false,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 1,
+                      "maxPerTarget": 1,
+                      "cooldown": 3,
+                      "initialCooldown": 0,
+                      "critRate": 0,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "buffDamage",
+                          "min": 8,
+                          "max": 8,
+                          "duration": 1,
+                          "zone": "Pa",
+                          "targetMask": 4,
+                          "p1": 8,
+                          "p2": 8,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "rally",
+                        "color": "#ed672d",
+                        "accent": "#ffe3a0",
+                        "durationMs": 1100
+                      },
+                      "iconFile": "icons/ruby.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    },
+                    {
+                      "authoringVersion": 1,
+                      "id": 1800000010000018,
+                      "key": "custom_1800000010000018",
+                      "name": "Recule, ombre",
+                      "description": "Une flamme repousse d’une case. Utile pour dégager Melisandre ; coûte un soin ou une attaque.\nContre-jeu : Respectez la portée et les obstacles ; exploitez les tours de relance.",
+                      "grade": 6,
+                      "requiredLevel": 200,
+                      "emoji": "✨",
+                      "pa": 3,
+                      "rangeMin": 1,
+                      "rangeMax": 3,
+                      "targetMode": "enemy",
+                      "needsLos": true,
+                      "lineOnly": true,
+                      "emptyCellOnly": false,
+                      "adjustableRange": false,
+                      "maxPerTurn": 1,
+                      "maxPerTarget": 1,
+                      "cooldown": 0,
+                      "initialCooldown": 0,
+                      "critRate": 0,
+                      "failRate": 0,
+                      "endsTurnOnFailure": false,
+                      "requiredStates": [],
+                      "forbiddenStates": [
+                        1,
+                        3,
+                        18,
+                        19,
+                        41
+                      ],
+                      "effects": [
+                        {
+                          "kind": "damage",
+                          "min": 10,
+                          "max": 14,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "element": "feu",
+                          "targetMask": 1,
+                          "p1": 10,
+                          "p2": 14,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        },
+                        {
+                          "kind": "push",
+                          "min": 1,
+                          "max": 1,
+                          "duration": 0,
+                          "zone": "Pa",
+                          "targetMask": 1,
+                          "p1": 1,
+                          "p2": 1,
+                          "p3": 0,
+                          "id": 0,
+                          "chance": 0
+                        }
+                      ],
+                      "critEffects": [],
+                      "visualEffect": {
+                        "version": 1,
+                        "kind": "fire-wave",
+                        "color": "#ed672d",
+                        "accent": "#ffe3a0",
+                        "durationMs": 1100
+                      },
+                      "iconFile": "icons/firewave.png",
+                      "iconArtworkId": "winterfell-icons-v1"
+                    }
+                  ],
+                  "order": [
+                    0,
+                    1800000010000013,
+                    1800000010000014,
+                    1800000010000015,
+                    1800000010000016,
+                    1800000010000017,
+                    1800000010000018
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "equipment": [],
+  "artwork": [
+    {
+      "id": "winterfell-jon-v1",
+      "name": "Jon Snow",
+      "images": {
+        "portrait.png": "assets/a0/portrait.png",
+        "idle-front.png": "assets/a0/idle-front.png",
+        "idle-back.png": "assets/a0/idle-back.png"
+      }
+    },
+    {
+      "id": "winterfell-icons-v1",
+      "name": "Winterfell — sorts",
+      "images": {
+        "icons/longclaw.png": "assets/a1/icon-longclaw.png",
+        "icons/guard.png": "assets/a1/icon-guard.png",
+        "icons/oath.png": "assets/a1/icon-oath.png",
+        "icons/sweep.png": "assets/a1/icon-sweep.png",
+        "icons/knife.png": "assets/a1/icon-knife.png",
+        "icons/charge.png": "assets/a1/icon-charge.png",
+        "icons/dragonglass.png": "assets/a1/icon-dragonglass.png",
+        "icons/shadow.png": "assets/a1/icon-shadow.png",
+        "icons/ember.png": "assets/a1/icon-ember.png",
+        "icons/firewave.png": "assets/a1/icon-firewave.png",
+        "icons/warmth.png": "assets/a1/icon-warmth.png",
+        "icons/ruby.png": "assets/a1/icon-ruby.png",
+        "icons/icespear.png": "assets/a1/icon-icespear.png",
+        "icons/bell.png": "assets/a1/icon-bell.png",
+        "icons/icearrow.png": "assets/a1/icon-icearrow.png",
+        "icons/frostbite.png": "assets/a1/icon-frostbite.png"
+      }
+    },
+    {
+      "id": "winterfell-arya-v1",
+      "name": "Arya Stark",
+      "images": {
+        "portrait.png": "assets/a2/portrait.png",
+        "idle-front.png": "assets/a2/idle-front.png",
+        "idle-back.png": "assets/a2/idle-back.png"
+      }
+    },
+    {
+      "id": "winterfell-melisandre-v1",
+      "name": "Melisandre",
+      "images": {
+        "portrait.png": "assets/a3/portrait.png",
+        "idle-front.png": "assets/a3/idle-front.png",
+        "idle-back.png": "assets/a3/idle-back.png"
+      }
+    },
+    {
+      "id": "winterfell-battlefield-v2",
+      "name": "Winterfell · La cour du dernier brasier",
+      "images": {
+        "courtyard.png": "assets/a4/courtyard.png",
+        "props.png": "assets/a4/props.png"
+      }
+    },
+    {
+      "id": "winterfell-frost-commander-v1",
+      "name": "Le Sonneur de la Longue Nuit",
+      "images": {
+        "portrait.png": "assets/a5/portrait.png",
+        "idle-front.png": "assets/a5/idle-front.png",
+        "idle-back.png": "assets/a5/idle-back.png"
+      }
+    },
+    {
+      "id": "winterfell-wight-v1",
+      "name": "Garde enseveli",
+      "images": {
+        "portrait.png": "assets/a6/portrait.png",
+        "idle-front.png": "assets/a6/idle-front.png",
+        "idle-back.png": "assets/a6/idle-back.png"
+      }
+    },
+    {
+      "id": "winterfell-rime-archer-v1",
+      "name": "Archer du givre",
+      "images": {
+        "portrait.png": "assets/a7/portrait.png",
+        "idle-front.png": "assets/a7/idle-front.png",
+        "idle-back.png": "assets/a7/idle-back.png"
+      }
+    },
+    {
+      "id": "winterfell-frost-hound-v1",
+      "name": "Limier des neiges mortes",
+      "images": {
+        "portrait.png": "assets/a8/portrait.png",
+        "idle-front.png": "assets/a8/idle-front.png",
+        "idle-back.png": "assets/a8/idle-back.png"
+      }
+    }
+  ]
+}

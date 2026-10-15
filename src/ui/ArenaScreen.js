@@ -124,7 +124,7 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed, active 
       simulation.current?.abort(); simulation.current = null; setRunning(false);
       setPlaying(false); setError(null);
       setAutoConfig({ mode: dungeon ? 'custom' : 'boss', dungeon: dungeon ? cloneCreation(dungeon) : undefined,
-        allies: cloneCreation(request?.allies || []), team: request?.team,
+        allies: cloneCreation(request?.allies || []), team: request?.team, adventureChoice: request?.adventureChoice, roomIndex: request?.roomIndex || 0,
         bossId: selectedBoss, bossGrade: request?.bossGrade ?? bossGrade, seed: Number(request?.seed ?? seed) || 1, controllerName: request?.team ? 'IA de chaque combattant' : bot.name,
         bots: request?.team ? compileCompleteTeamBots(request.team, allBots) : { A: { name: character.name, decide }, ...compileAllyBots(request?.allies || [], allBots, true) },
         classes: { A: request?.team ? request.team[0]?.classId : character.classId }, loadouts: { A: cloneCreation(request?.team ? request.team[0]?.loadout || {} : character.loadout) } });
@@ -166,7 +166,7 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed, active 
         },
         classes: { A: c.classA, B: c.classB },
         mapId: c.mapId,
-        seed: Number(c.seed) || 1,
+        seed: Number.isSafeInteger(Number(c.seed)) ? Number(c.seed) : 1,
         loadouts: c.loadouts,
       }, { signal: controller.signal, onProgress: setProgress });
       if (controller.signal.aborted) return;
@@ -285,7 +285,8 @@ export default function ArenaScreen({ allBots, replay, onReplayConsumed, active 
     equipment.update(side, current => applySavedEquipment(current, build.loadout), classId);
   };
 
-  if (autoConfig) return <AutoDungeonFight config={autoConfig} active={active} onExit={onExit || exit} onCancel={exit} exitLabel={exitLabel}
+  if (autoConfig) return <AutoDungeonFight key={`${autoConfig.seed}:${autoConfig.roomIndex || 0}`} config={autoConfig} active={active} onExit={onExit || exit} onCancel={exit} exitLabel={exitLabel}
+    onNextRoom={() => setAutoConfig(previous => ({ ...previous, roomIndex: (previous.roomIndex || 0) + 1, seed: Math.floor(Math.random() * 1e9) }))}
     onRematch={() => setAutoConfig(previous => ({ ...previous, seed: Math.floor(Math.random() * 1e9) }))} />;
 
   return (

@@ -1,0 +1,161 @@
+{
+  "matches": [
+    {
+      "seed": 25101,
+      "ms": 5777,
+      "turns": 16,
+      "winner": "A",
+      "reason": "ko",
+      "survivors": [
+        {
+          "name": "Jon Snow",
+          "hp": 2402
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 676
+        },
+        {
+          "name": "Melisandre",
+          "hp": 1829
+        },
+        {
+          "name": "Brienne de Torth",
+          "hp": 2006
+        },
+        {
+          "name": "Jaime Lannister",
+          "hp": 888
+        },
+        {
+          "name": "Tormund Fléau-d’Ogres",
+          "hp": 1722
+        }
+      ],
+      "bossHp": 0,
+      "collapses": 4,
+      "slowestHeroDecisionMs": 21,
+      "decisions": 399,
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 25102,
+      "ms": 5290,
+      "turns": 12,
+      "winner": "A",
+      "reason": "ko",
+      "survivors": [
+        {
+          "name": "Jon Snow",
+          "hp": 1407
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 848
+        },
+        {
+          "name": "Melisandre",
+          "hp": 2542
+        },
+        {
+          "name": "Brienne de Torth",
+          "hp": 2357
+        },
+        {
+          "name": "Jaime Lannister",
+          "hp": 1700
+        },
+        {
+          "name": "Tormund Fléau-d’Ogres",
+          "hp": 1336
+        }
+      ],
+      "bossHp": 0,
+      "collapses": 10,
+      "slowestHeroDecisionMs": 21,
+      "decisions": 308,
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 25103,
+      "ms": 4145,
+      "turns": 11,
+      "winner": "A",
+      "reason": "ko",
+      "survivors": [
+        {
+          "name": "Jon Snow",
+          "hp": 2213
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 1639
+        },
+        {
+          "name": "Melisandre",
+          "hp": 1775
+        },
+        {
+          "name": "Brienne de Torth",
+          "hp": 2567
+        },
+        {
+          "name": "Jaime Lannister",
+          "hp": 1547
+        },
+        {
+          "name": "Tormund Fléau-d’Ogres",
+          "hp": 1588
+        }
+      ],
+      "bossHp": 0,
+      "collapses": 13,
+      "slowestHeroDecisionMs": 17,
+      "decisions": 283,
+      "invalid": 0,
+      "errors": 0
+    },
+    {
+      "seed": 25104,
+      "ms": 5275,
+      "turns": 12,
+      "winner": "A",
+      "reason": "ko",
+      "survivors": [
+        {
+          "name": "Jon Snow",
+          "hp": 2122
+        },
+        {
+          "name": "Arya Stark",
+          "hp": 2231
+        },
+        {
+          "name": "Melisandre",
+          "hp": 1894
+        },
+        {
+          "name": "Brienne de Torth",
+          "hp": 2394
+        },
+        {
+          "name": "Jaime Lannister",
+          "hp": 864
+        },
+        {
+          "name": "Tormund Fléau-d’Ogres",
+          "hp": 1846
+        }
+      ],
+      "bossHp": 0,
+      "collapses": 13,
+      "slowestHeroDecisionMs": 33,
+      "decisions": 294,
+      "invalid": 0,
+      "errors": 0
+    }
+  ],
+  "scope": "Seeded simulations of the real 6 vs 32 encounter. Static budgets are not competitive balance certification."
+}

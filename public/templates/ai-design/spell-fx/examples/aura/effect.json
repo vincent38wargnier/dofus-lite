@@ -1,0 +1,35 @@
+{
+  "format": "dofus-lite-spell-fx-design",
+  "version": 1,
+  "runtimeImportable": false,
+  "id": "example-aura",
+  "name": "Aura de protection",
+  "durationMs": 1500,
+  "travel": {
+    "kind": "none",
+    "startMs": 0,
+    "endMs": 0,
+    "arcHeightPercent": 0
+  },
+  "layers": [
+    {
+      "role": "aura",
+      "file": "aura.png",
+      "frames": 8,
+      "frameSize": 256,
+      "fps": 24,
+      "anchor": {
+        "x": 128,
+        "y": 128
+      },
+      "startMs": 0,
+      "endMs": 1500,
+      "loop": true,
+      "attachment": "target",
+      "depth": "behind",
+      "rotation": "none",
+      "scalePercent": 100,
+      "blend": "normal"
+    }
+  ]
+}

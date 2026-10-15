@@ -171,6 +171,7 @@ export function weaponSpell(item) {
     targetMode: 'cell', emptyCellOnly: false, critRate: w.critRate, failRate: w.failRate,
     endsTurnOnFailure: true, usesPerTurn: 0, usesPerTarget: 0, cooldown: 0,
     requiredStates: [], forbiddenStates: [], animation: w.animation,
+    ...(w.visualEffect ? { visualEffect: JSON.parse(JSON.stringify(w.visualEffect)) } : {}),
     element: effects.find(e => e.element)?.element || null, effects, critEffects };
 }
 

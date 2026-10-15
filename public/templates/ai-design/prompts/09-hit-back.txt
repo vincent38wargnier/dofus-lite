@@ -1,0 +1,11 @@
+ART DIRECTION: [theme, palette, materials, lighting, level of stylisation].
+IDENTITY: [name, role, silhouette, anatomy, outfit, distinctive details].
+REFERENCES: [approved reference images attached].
+Use the SAME identity, proportions, clothing, colours and lighting as the references. Readable tactical RPG art at small screen size. No text, watermark, interface, labels, numbers or sheet borders. Return the actual image if your tools allow; otherwise return a production brief and clearly state that the image has not been generated.
+
+OUTPUT: artwork/<owner-key>/hit-back.png, exactly 768x256 pixels.
+Show the full character in three-quarter REAR view, facing screen UP-LEFT (NW), in a fixed 2:1 isometric game view. The game mirrors this art for the opposite diagonal. Every combat frame is 256x256. The ground contact midpoint is (128,224), measured from the TOP LEFT of EACH frame. Suggested body region x32..224, y24..224; weapons/hair may extend inside the canvas but must not be clipped. Use a fixed camera and scale. No floor, pedestal, cast shadow, selection ring, health bar or scenery. Draw the complete equipped appearance; separate item images are not overlaid on PNG characters.
+Animate three-frame one-shot reaction: neutral, readable recoil, recovered stance. Keep the ground anchor and actor scale stable; no blood effect or knockback across the sheet.
+Place exactly 3 frames LEFT TO RIGHT in ONE horizontal row, no margins between frames, no padding. Keep direction and outfit identical in every frame. Playback: 10 fps. If your tool cannot make a reliable strip, generate individual 256x256 frames and assemble without stretching them; the delivered file must still be the exact strip size.
+Export 8-bit RGBA, non-interlaced PNG, no APNG, maximum 2 MiB per file. Transparency must be actual alpha, not a drawn checkerboard or a solid colour.
+The complete 3–9-file set must total at most 12 MiB. Use character/guides/hit-back.svg to check alignment; hide all guides in the final export. These same requirements apply to humanoids, animals, monsters and bosses. This file is importable when declared by its owner's artwork folder.

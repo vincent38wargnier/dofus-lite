@@ -1,9 +1,13 @@
+import { validAdventure } from '../engine/adventures';
 import { CLASSES } from '../engine/classes';
 import { MAPS } from '../engine/maps';
+import { customMapErrors } from '../engine/customMaps';
 import { monsterGrades } from '../engine/monsters';
 import { validCustomMonster } from '../engine/customMonsters';
 import { dungeonMemberKind, isDungeonCharacter } from '../engine/customDungeons';
 import { isLoadout } from './loadoutStore';
+import { dungeonCapacity, validDungeonEncounter } from '../engine/encounters';
+import { dungeonRoom, dungeonRooms, validCampaignShape } from '../engine/dungeonCampaign';
 
 export const CREATIONS_STORAGE = 'dofus-lite-creations-v1';
 export const emptyCreations = () => ({ version: 1, characters: [], dungeons: [] });
@@ -15,11 +19,16 @@ export function validCreations(value) {
     && entry.id && typeof entry.name === 'string') && new Set(entries.map(entry => entry.id)).size === entries.length;
   return value?.version === 1 && identified(value.characters) && identified(value.dungeons)
     && value.characters.every(entry => CLASSES[entry.classId] && isLoadout(entry.loadout))
-    && value.dungeons.every(entry => Object.prototype.hasOwnProperty.call(MAPS, entry.mapId) && Array.isArray(entry.members) && entry.members.length <= 8
+    && value.dungeons.every(dungeon => validCampaignShape(dungeon) && dungeonRooms(dungeon).every((_, index) => {
+      const entry = dungeonRoom(dungeon, index);
+      return (entry.adventure == null || (validAdventure(entry.adventure) && entry.adventure.heroes.every(hero => isLoadout(hero.character.loadout))))
+      && validDungeonEncounter(entry)
+      && (entry.battlefield ? entry.mapId === entry.battlefield.id && !customMapErrors(entry.battlefield).length : Object.prototype.hasOwnProperty.call(MAPS, entry.mapId)) && Array.isArray(entry.members) && entry.members.length <= dungeonCapacity(entry)
       && entry.members.every(member => dungeonMemberKind(member) && (member.character ? isDungeonCharacter(member.character) && isLoadout(member.character.loadout)
         : member.customMonster ? validCustomMonster(member.customMonster, { allowEmpty: true }) : monsterGrades(member.monsterId).some(grade => grade.grade === member.grade))
-        && Number.isInteger(member.count) && member.count >= 1 && member.count <= 8)
-      && entry.members.reduce((sum, member) => sum + member.count, 0) <= 8);
+        && Number.isInteger(member.count) && member.count >= 1 && member.count <= dungeonCapacity(entry))
+      && entry.members.reduce((sum, member) => sum + member.count, 0) <= dungeonCapacity(entry);
+    }));
 }
 export function readCreations(storage) {
   try {

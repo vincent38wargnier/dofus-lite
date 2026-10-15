@@ -1,0 +1,86 @@
+Dofus Koliséum
+VOTRE ARÈNE, VOS RÈGLES
+Jouer
+Atelier
+Grimoire
+Outils
+Son
+VOTRE JEU, VOS RÈGLES
+L’Atelier.
+
+Imaginez. Assemblez. Jouez.
+
+Importer un ZIP
+Exporter
+Vos créations se sauvegardent ici
+Mes classes
+Un héros, vos propres sorts
+0
+Mes donjons
+Une carte, votre bestiaire
+1
+Mes équipements
+Une allure, les bons bonus
+0
+Nouveau donjon
+Winterfell — La Dernière Braise
+6 / 8 combattants · Prêt à jouer
+Créer avec une IA
+Prompt & import ZIP
+NOM DU DONJON
+6 / 8 combattants · Prêt à jouer · une salle sur mesure
+Tester
+Groupe
+6/8
+Terrain
+Prêt à jouer
+Votre donjon, prêt à jouer.
+
+Fournissez les héros et leur équipement. Vos amis importent le ZIP et jouent avec vos règles.
+
+Prêt à jouer
+Qui part à l’aventure ?
+Équipe imposée
+Tous les héros ci-dessous jouent ensemble.
+Héros au choix
+Le joueur choisit dans votre sélection.
+Le mot de l’auteur
+Facultatif
+Autoriser le jeu automatique
+Héros fournis 3/8
+Niveau, équipement et sorts fixés
+Jon Snow
+Rempart du Nord · Niv. 200
+2 715 PV
+9 PA
+4 PM
+8 objets · 6 sorts inclus
+Arya Stark
+Lame des sans-visage · Niv. 200
+2 715 PV
+9 PA
+4 PM
+8 objets · 6 sorts inclus
+Melisandre
+Gardienne de la braise · Niv. 200
+2 715 PV
+9 PA
+4 PM
+8 objets · 6 sorts inclus
+
+Chaque héros est une copie indépendante. Préparez son stuff dans Jouer, puis ajoutez-le ici. Pour actualiser une copie, retirez-la et ajoutez la nouvelle version.
+
+Ajouter un héros équipé
+Mes personnages
+Mes classes
+Iop
+Iop · Niv. 100
+796 PV
+8 PA
+3 PM
+7 objets · 21 sorts inclus
+Ajouter ce héros
+Un ZIP, toute l’aventure
+Terrain, ennemis, héros, sorts, objets, FM et images.
+Exporter l’aventure
+ZIP prêt.

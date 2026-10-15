@@ -1,0 +1,140 @@
+{
+  "checks": [
+    "Clean import restores eight rooms and six equipped heroes without any preexisting content.",
+    "Manual placement and an original hero boost work in room one.",
+    "Eight real browser simulations win in order; each victory unlocks exactly one next room and preserves supplied heroes.",
+    "Reload retains completed progression; unlocked rooms and story fit a phone viewport.",
+    "Re-export restores all dependencies in an empty browser at room one; room add, duplicate, reorder, delete and reload also work."
+  ],
+  "errors": [],
+  "rooms": [
+    {
+      "season": 1,
+      "heading": "Port-Réal · Les marches de Baelor",
+      "rounds": 2,
+      "result": {
+        "outcome": "victory",
+        "text": "Victoire · Salle vaincue4 / 4 combattants vaincus · 2 tours · 16107 / 16274 PV restants"
+      },
+      "layout": {
+        "width": 1920,
+        "height": 1080,
+        "overflow": false,
+        "fighters": 10,
+        "native": 0
+      }
+    },
+    {
+      "season": 2,
+      "heading": "La Néra · Le quai des flammes",
+      "rounds": 3,
+      "result": {
+        "outcome": "victory",
+        "text": "Victoire · Salle vaincue5 / 5 combattants vaincus · 3 tours · 15482 / 16218 PV restants"
+      },
+      "layout": {
+        "width": 1920,
+        "height": 1080,
+        "overflow": false,
+        "fighters": 11,
+        "native": 0
+      }
+    },
+    {
+      "season": 3,
+      "heading": "Les Jumeaux · La cour du banquet",
+      "rounds": 4,
+      "result": {
+        "outcome": "victory",
+        "text": "Victoire · Salle vaincue6 / 6 combattants vaincus · 4 tours · 15173 / 16194 PV restants"
+      },
+      "layout": {
+        "width": 1920,
+        "height": 1080,
+        "overflow": false,
+        "fighters": 12,
+        "native": 0
+      }
+    },
+    {
+      "season": 4,
+      "heading": "Châteaunoir · La porte sud",
+      "rounds": 6,
+      "result": {
+        "outcome": "victory",
+        "text": "Victoire · Salle vaincue8 / 8 combattants vaincus · 6 tours · 14847 / 16173 PV restants"
+      },
+      "layout": {
+        "width": 1920,
+        "height": 1080,
+        "overflow": false,
+        "fighters": 14,
+        "native": 0
+      }
+    },
+    {
+      "season": 5,
+      "heading": "Durlieu · Le dernier embarcadère",
+      "rounds": 4,
+      "result": {
+        "outcome": "victory",
+        "text": "Victoire · Salle vaincue10 / 10 combattants vaincus · 4 tours · 15206 / 16194 PV restants"
+      },
+      "layout": {
+        "width": 1920,
+        "height": 1080,
+        "overflow": false,
+        "fighters": 16,
+        "native": 0
+      }
+    },
+    {
+      "season": 6,
+      "heading": "Winterfell · Le champ des lances",
+      "rounds": 9,
+      "result": {
+        "outcome": "victory",
+        "text": "Victoire · Salle vaincue12 / 12 combattants vaincus · 9 tours · 13892 / 16070 PV restants"
+      },
+      "layout": {
+        "width": 1920,
+        "height": 1080,
+        "overflow": false,
+        "fighters": 18,
+        "native": 0
+      }
+    },
+    {
+      "season": 7,
+      "heading": "Au-delà du Mur · Le lac figé",
+      "rounds": 7,
+      "result": {
+        "outcome": "victory",
+        "text": "Victoire · Salle vaincue16 / 16 combattants vaincus · 7 tours · 13149 / 15995 PV restants"
+      },
+      "layout": {
+        "width": 1920,
+        "height": 1080,
+        "overflow": false,
+        "fighters": 22,
+        "native": 0
+      }
+    },
+    {
+      "season": 8,
+      "heading": "Winterfell · La Longue Nuit",
+      "rounds": 9,
+      "result": {
+        "outcome": "victory",
+        "text": "Victoire · Salle vaincue32 / 32 combattants vaincus · 9 tours · 9007 / 15628 PV restants"
+      },
+      "layout": {
+        "width": 1920,
+        "height": 1080,
+        "overflow": false,
+        "fighters": 38,
+        "native": 0
+      }
+    }
+  ]
+}

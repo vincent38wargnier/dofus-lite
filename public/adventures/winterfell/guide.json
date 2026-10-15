@@ -1,0 +1,2303 @@
+{
+  "title": "Winterfell — La Dernière Braise",
+  "introduction": "La cloche de Winterfell sonne, mais le clocher est vide. Un Marcheur blanc a volé son battant pour guider les morts jusqu’au dernier brasier. Jon tient le passage. Arya murmure : « Il suffit de faire taire le sonneur. » Melisandre serre une braise : « Alors protégez les vivants. »\n\nÉliminez le Sonneur ET ses cinq morts. Dispersez-vous face au glas. Le feu et l’air percent l’armure du boss. Défi : ramener les trois héros. Une histoire alternative de Game of Thrones.",
+  "heroes": [
+    {
+      "key": "jon",
+      "name": "Jon Snow",
+      "classId": "IOP",
+      "sex": 0,
+      "role": "Rempart du Nord",
+      "stat": "force",
+      "base": 150,
+      "color": "#79a6c6",
+      "description": "Tenir le passage, repousser un mort et ouvrir une brèche. Fort au contact ; portée courte et aucune guérison.",
+      "spells": [
+        {
+          "key": "longclaw",
+          "name": "Tranchant de Grand-Griffe",
+          "description": "Une frappe fiable, sans zone ni effet caché.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 4,
+          "rangeMin": 1,
+          "rangeMax": 2,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 2,
+          "maxPerTarget": 2,
+          "cooldown": 0,
+          "critRate": 30,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "slash",
+            "color": "#7b9caf",
+            "accent": "#eff7ff",
+            "durationMs": 780
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 26,
+              "max": 30,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "terre"
+            }
+          ],
+          "critEffects": [
+            {
+              "kind": "damage",
+              "min": 29,
+              "max": 33,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "terre"
+            }
+          ],
+          "icon": "icons/longclaw.png",
+          "score": 61
+        },
+        {
+          "key": "gate",
+          "name": "Tenir la porte",
+          "description": "Réduit les prochaines frappes. Protéger maintenant coûte une attaque.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 0,
+          "rangeMax": 0,
+          "targetMode": "self",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 3,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "shield",
+            "color": "#7b9caf",
+            "accent": "#eff7ff",
+            "durationMs": 780
+          },
+          "effects": [
+            {
+              "kind": "armor",
+              "min": 8,
+              "max": 8,
+              "duration": 2,
+              "zone": "Pa",
+              "target": "self"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/guard.png",
+          "score": 34
+        },
+        {
+          "key": "oath",
+          "name": "Serment de la Garde",
+          "description": "Renforce immédiatement les attaques de Jon ; 2 tours, 4 tours de relance.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 0,
+          "rangeMax": 0,
+          "targetMode": "self",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 4,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "rally",
+            "color": "#7b9caf",
+            "accent": "#eff7ff",
+            "durationMs": 780
+          },
+          "effects": [
+            {
+              "kind": "buffPower",
+              "min": 75,
+              "max": 75,
+              "duration": 2,
+              "zone": "Pa",
+              "target": "self"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/oath.png",
+          "score": 15
+        },
+        {
+          "key": "icebreaker",
+          "name": "Brise-glace",
+          "description": "Une frappe suivie d’une poussée d’une case. Libère le passage ou provoque une collision.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 1,
+          "rangeMax": 1,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": true,
+          "adjustableRange": false,
+          "maxPerTurn": 2,
+          "maxPerTarget": 2,
+          "cooldown": 0,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "shatter",
+            "color": "#66bde6",
+            "accent": "#e3fbff",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 15,
+              "max": 18,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "terre"
+            },
+            {
+              "kind": "push",
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/sweep.png",
+          "score": 56
+        },
+        {
+          "key": "breach",
+          "name": "Ouvrir la brèche",
+          "description": "Retire 12 % de résistance terre pendant un tour. Utile contre le Sonneur, sans annuler son armure.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 2,
+          "rangeMin": 1,
+          "rangeMax": 3,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 3,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "thrust",
+            "color": "#7b9caf",
+            "accent": "#eff7ff",
+            "durationMs": 780
+          },
+          "effects": [
+            {
+              "kind": "resistDebuff",
+              "min": 12,
+              "max": 12,
+              "duration": 1,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "terre"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/knife.png",
+          "score": 17
+        },
+        {
+          "key": "charge",
+          "name": "Par-delà le rempart",
+          "description": "Un bond court pour tenir un passage ou rejoindre une cible. Ne provoque aucun dégât.",
+          "counterplay": "La destination doit être libre ; la relance interdit les bonds successifs.",
+          "pa": 4,
+          "rangeMin": 1,
+          "rangeMax": 4,
+          "targetMode": "freeCell",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 3,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "raven-step",
+            "color": "#7b9caf",
+            "accent": "#eff7ff",
+            "durationMs": 780
+          },
+          "effects": [
+            {
+              "kind": "teleport",
+              "min": 0,
+              "max": 0,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "self"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/charge.png",
+          "score": 33
+        }
+      ],
+      "hp": 2715,
+      "pa": 9,
+      "pm": 4,
+      "stats": {
+        "vitalite": 1665,
+        "force": 451,
+        "intelligence": 101,
+        "chance": 101,
+        "agilite": 101,
+        "sagesse": 181
+      },
+      "outfitScore": 236.3,
+      "spellbook": {
+        "version": 1,
+        "entries": [
+          {
+            "id": 1800000010000001,
+            "name": "Tranchant de Grand-Griffe",
+            "version": 1,
+            "score": 61,
+            "limit": 100,
+            "valid": true,
+            "normal": 58,
+            "critical": 63,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 33
+              }
+            ]
+          },
+          {
+            "id": 1800000010000002,
+            "name": "Tenir la porte",
+            "version": 1,
+            "score": 34,
+            "limit": 100,
+            "valid": true,
+            "normal": 34,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "armor",
+                "units": 21.6
+              }
+            ]
+          },
+          {
+            "id": 1800000010000003,
+            "name": "Serment de la Garde",
+            "version": 1,
+            "score": 15,
+            "limit": 100,
+            "valid": true,
+            "normal": 15,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.75,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "buffPower",
+                "units": 11.3
+              }
+            ]
+          },
+          {
+            "id": 1800000010000004,
+            "name": "Brise-glace",
+            "version": 1,
+            "score": 56,
+            "limit": 100,
+            "valid": true,
+            "normal": 56,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 19.7
+              },
+              {
+                "kind": "push",
+                "units": 3.9
+              }
+            ]
+          },
+          {
+            "id": 1800000010000005,
+            "name": "Ouvrir la brèche",
+            "version": 1,
+            "score": 17,
+            "limit": 100,
+            "valid": true,
+            "normal": 17,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 2,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "resistDebuff",
+                "units": 7.2
+              }
+            ]
+          },
+          {
+            "id": 1800000010000006,
+            "name": "Par-delà le rempart",
+            "version": 1,
+            "score": 33,
+            "limit": 100,
+            "valid": true,
+            "normal": 33,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "teleport",
+                "units": 28
+              }
+            ]
+          }
+        ],
+        "sum": 216,
+        "synergy": 6,
+        "rotation": 0,
+        "score": 222,
+        "limit": 650,
+        "valid": true
+      },
+      "comparisons": [
+        141,
+        158,
+        153,
+        7,
+        142,
+        143
+      ]
+    },
+    {
+      "key": "arya",
+      "name": "Arya Stark",
+      "classId": "SRAM",
+      "sex": 1,
+      "role": "Lame des sans-visage",
+      "stat": "agilite",
+      "base": 150,
+      "color": "#9b93e0",
+      "description": "Atteindre les archers, ouvrir une faiblesse, frapper et repartir. Mobile, mais sans soin ni armure.",
+      "spells": [
+        {
+          "key": "needle",
+          "name": "La pointe d’Aiguille",
+          "description": "Estoc rapide. Deux lancers par cible et par tour.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 1,
+          "rangeMax": 3,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 2,
+          "maxPerTarget": 2,
+          "cooldown": 0,
+          "critRate": 30,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "thrust",
+            "color": "#7b9caf",
+            "accent": "#eff7ff",
+            "durationMs": 780
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "air"
+            }
+          ],
+          "critEffects": [
+            {
+              "kind": "damage",
+              "min": 20,
+              "max": 24,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "air"
+            }
+          ],
+          "icon": "icons/knife.png",
+          "score": 64
+        },
+        {
+          "key": "dragonglass",
+          "name": "Baiser de verredragon",
+          "description": "Une frappe lourde à courte portée ; sa relance laisse une fenêtre à l’ennemi.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 4,
+          "rangeMin": 1,
+          "rangeMax": 2,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 2,
+          "critRate": 30,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "shatter",
+            "color": "#394e75",
+            "accent": "#b1c8fa",
+            "durationMs": 950
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 28,
+              "max": 32,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "air"
+            }
+          ],
+          "critEffects": [
+            {
+              "kind": "damage",
+              "min": 31,
+              "max": 35,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "air"
+            }
+          ],
+          "icon": "icons/dragonglass.png",
+          "score": 51
+        },
+        {
+          "key": "throw",
+          "name": "Couteau dans la neige",
+          "description": "Attaque à distance moins puissante ; impossible au contact.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 2,
+          "rangeMax": 6,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 2,
+          "maxPerTarget": 2,
+          "cooldown": 0,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "arrow",
+            "color": "#7b9caf",
+            "accent": "#eff7ff",
+            "durationMs": 780
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 12,
+              "max": 16,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "air"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/knife.png",
+          "score": 53
+        },
+        {
+          "key": "not-today",
+          "name": "Pas aujourd’hui",
+          "description": "Rejoint une case libre à trois cases au plus. La téléportation ne rend pas invisible.",
+          "counterplay": "La destination doit être libre ; la relance interdit les bonds successifs.",
+          "pa": 3,
+          "rangeMin": 1,
+          "rangeMax": 3,
+          "targetMode": "freeCell",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 3,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "raven-step",
+            "color": "#394e75",
+            "accent": "#b1c8fa",
+            "durationMs": 950
+          },
+          "effects": [
+            {
+              "kind": "teleport",
+              "min": 0,
+              "max": 0,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "self"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/shadow.png",
+          "score": 38
+        },
+        {
+          "key": "opening",
+          "name": "Une faille dans la glace",
+          "description": "Retire 10 % de résistance air pendant un tour. À lancer avant Aiguille.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 2,
+          "rangeMin": 1,
+          "rangeMax": 4,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 3,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "shatter",
+            "color": "#394e75",
+            "accent": "#b1c8fa",
+            "durationMs": 950
+          },
+          "effects": [
+            {
+              "kind": "resistDebuff",
+              "min": 10,
+              "max": 10,
+              "duration": 1,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "air"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/dragonglass.png",
+          "score": 15
+        },
+        {
+          "key": "wolfstep",
+          "name": "Le pas de la louve",
+          "description": "Gagne immédiatement 1 PM. Ne rembourse pas son coût en PA.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 2,
+          "rangeMin": 0,
+          "rangeMax": 0,
+          "targetMode": "self",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 3,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "rally",
+            "color": "#394e75",
+            "accent": "#b1c8fa",
+            "durationMs": 950
+          },
+          "effects": [
+            {
+              "kind": "buffPm",
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "zone": "Pa",
+              "target": "self"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/charge.png",
+          "score": 21
+        }
+      ],
+      "hp": 2715,
+      "pa": 9,
+      "pm": 4,
+      "stats": {
+        "vitalite": 1665,
+        "force": 101,
+        "intelligence": 101,
+        "chance": 101,
+        "agilite": 451,
+        "sagesse": 181
+      },
+      "outfitScore": 238.6,
+      "spellbook": {
+        "version": 1,
+        "entries": [
+          {
+            "id": 1800000010000007,
+            "name": "La pointe d’Aiguille",
+            "version": 1,
+            "score": 64,
+            "limit": 100,
+            "valid": true,
+            "normal": 60,
+            "critical": 67,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 25.6
+              }
+            ]
+          },
+          {
+            "id": 1800000010000008,
+            "name": "Baiser de verredragon",
+            "version": 1,
+            "score": 51,
+            "limit": 100,
+            "valid": true,
+            "normal": 49,
+            "critical": 53,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1.25,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 34.8
+              }
+            ]
+          },
+          {
+            "id": 1800000010000009,
+            "name": "Couteau dans la neige",
+            "version": 1,
+            "score": 53,
+            "limit": 100,
+            "valid": true,
+            "normal": 53,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 22.7
+              }
+            ]
+          },
+          {
+            "id": 1800000010000010,
+            "name": "Pas aujourd’hui",
+            "version": 1,
+            "score": 38,
+            "limit": 100,
+            "valid": true,
+            "normal": 38,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "teleport",
+                "units": 24
+              }
+            ]
+          },
+          {
+            "id": 1800000010000011,
+            "name": "Une faille dans la glace",
+            "version": 1,
+            "score": 15,
+            "limit": 100,
+            "valid": true,
+            "normal": 15,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 2,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "resistDebuff",
+                "units": 6.2
+              }
+            ]
+          },
+          {
+            "id": 1800000010000012,
+            "name": "Le pas de la louve",
+            "version": 1,
+            "score": 21,
+            "limit": 100,
+            "valid": true,
+            "normal": 21,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 2,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "buffPm",
+                "units": 9
+              }
+            ]
+          }
+        ],
+        "sum": 242,
+        "synergy": 4,
+        "rotation": 0,
+        "score": 246,
+        "limit": 650,
+        "valid": true
+      },
+      "comparisons": [
+        68,
+        76,
+        142,
+        64
+      ]
+    },
+    {
+      "key": "melisandre",
+      "name": "Melisandre",
+      "classId": "ENIRIPSA",
+      "sex": 1,
+      "role": "Gardienne de la braise",
+      "stat": "intelligence",
+      "base": 150,
+      "color": "#d75646",
+      "description": "Choisir entre dégâts, soutien et soins. Le feu traverse la faiblesse du Sonneur ; les grandes flammes touchent aussi les alliés.",
+      "spells": [
+        {
+          "key": "ember",
+          "name": "Une braise dans la nuit",
+          "description": "Trait de feu précis. Deux lancers par cible et par tour.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 1,
+          "rangeMax": 6,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 2,
+          "maxPerTarget": 2,
+          "cooldown": 0,
+          "critRate": 30,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "fireball",
+            "color": "#ed672d",
+            "accent": "#ffe3a0",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 15,
+              "max": 19,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "feu"
+            }
+          ],
+          "critEffects": [
+            {
+              "kind": "damage",
+              "min": 18,
+              "max": 22,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "feu"
+            }
+          ],
+          "icon": "icons/ember.png",
+          "score": 64
+        },
+        {
+          "key": "firewave",
+          "name": "La nuit est sombre",
+          "description": "Cercle de feu de rayon 1 : touche AUSSI les alliés. Visez une case vide pour prendre plusieurs morts.",
+          "counterplay": "Écartez les héros ; la zone est montrée au survol avant le lancer.",
+          "pa": 4,
+          "rangeMin": 1,
+          "rangeMax": 4,
+          "targetMode": "cell",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 0,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "fire-wave",
+            "color": "#ed672d",
+            "accent": "#ffe3a0",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 12,
+              "max": 16,
+              "duration": 0,
+              "zone": "Cb",
+              "target": "fighter",
+              "element": "feu"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/firewave.png",
+          "score": 72
+        },
+        {
+          "key": "warmth",
+          "name": "La dernière chaleur",
+          "description": "Soigne un allié ou Melisandre. Un seul soin par tour : impossible de tout réparer.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 0,
+          "rangeMax": 5,
+          "targetMode": "fighter",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 0,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "embers",
+            "color": "#ed672d",
+            "accent": "#ffe3a0",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "heal",
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "ally"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/warmth.png",
+          "score": 46
+        },
+        {
+          "key": "ruby",
+          "name": "Le rubis veille",
+          "description": "Petite armure et +10 % de résistance eau pour un allié, durant deux tours.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 0,
+          "rangeMax": 4,
+          "targetMode": "fighter",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 3,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "shield",
+            "color": "#ed672d",
+            "accent": "#ffe3a0",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "armor",
+              "min": 5,
+              "max": 5,
+              "duration": 2,
+              "zone": "Pa",
+              "target": "ally"
+            },
+            {
+              "kind": "resistBuff",
+              "min": 10,
+              "max": 10,
+              "duration": 2,
+              "zone": "Pa",
+              "target": "ally",
+              "element": "eau"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/ruby.png",
+          "score": 30
+        },
+        {
+          "key": "light",
+          "name": "Rallumer les vivants",
+          "description": "+8 dommages immédiats pour un allié. Choisissez celui qui va attaquer.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 0,
+          "rangeMax": 4,
+          "targetMode": "fighter",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 3,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "rally",
+            "color": "#ed672d",
+            "accent": "#ffe3a0",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "buffDamage",
+              "min": 8,
+              "max": 8,
+              "duration": 1,
+              "zone": "Pa",
+              "target": "ally"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/ruby.png",
+          "score": 5
+        },
+        {
+          "key": "flamewake",
+          "name": "Recule, ombre",
+          "description": "Une flamme repousse d’une case. Utile pour dégager Melisandre ; coûte un soin ou une attaque.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 1,
+          "rangeMax": 3,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": true,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 0,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "fire-wave",
+            "color": "#ed672d",
+            "accent": "#ffe3a0",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 10,
+              "max": 14,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "feu"
+            },
+            {
+              "kind": "push",
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/firewave.png",
+          "score": 45
+        }
+      ],
+      "hp": 2715,
+      "pa": 9,
+      "pm": 4,
+      "stats": {
+        "vitalite": 1665,
+        "force": 101,
+        "intelligence": 451,
+        "chance": 101,
+        "agilite": 101,
+        "sagesse": 181
+      },
+      "outfitScore": 227.9,
+      "spellbook": {
+        "version": 1,
+        "entries": [
+          {
+            "id": 1800000010000013,
+            "name": "Une braise dans la nuit",
+            "version": 1,
+            "score": 64,
+            "limit": 100,
+            "valid": true,
+            "normal": 60,
+            "critical": 67,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 25.7
+              }
+            ]
+          },
+          {
+            "id": 1800000010000014,
+            "name": "La nuit est sombre",
+            "version": 1,
+            "score": 72,
+            "limit": 100,
+            "valid": true,
+            "normal": 72,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1,
+              "limited": 0.9,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 45.3
+              }
+            ]
+          },
+          {
+            "id": 1800000010000015,
+            "name": "La dernière chaleur",
+            "version": 1,
+            "score": 46,
+            "limit": 100,
+            "valid": true,
+            "normal": 46,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 0.9,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "heal",
+                "units": 21.7
+              }
+            ]
+          },
+          {
+            "id": 1800000010000016,
+            "name": "Le rubis veille",
+            "version": 1,
+            "score": 30,
+            "limit": 100,
+            "valid": true,
+            "normal": 30,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "armor",
+                "units": 12.8
+              },
+              {
+                "kind": "resistBuff",
+                "units": 6.4
+              }
+            ]
+          },
+          {
+            "id": 1800000010000017,
+            "name": "Rallumer les vivants",
+            "version": 1,
+            "score": 5,
+            "limit": 100,
+            "valid": true,
+            "normal": 5,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "buffDamage",
+                "units": 3
+              }
+            ]
+          },
+          {
+            "id": 1800000010000018,
+            "name": "Recule, ombre",
+            "version": 1,
+            "score": 45,
+            "limit": 100,
+            "valid": true,
+            "normal": 45,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 0.9,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 17.2
+              },
+              {
+                "kind": "push",
+                "units": 4.2
+              }
+            ]
+          }
+        ],
+        "sum": 262,
+        "synergy": 2,
+        "rotation": 0,
+        "score": 264,
+        "limit": 650,
+        "valid": true
+      },
+      "comparisons": [
+        350,
+        165,
+        121,
+        124,
+        7,
+        128
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "key": "frost-commander",
+      "name": "Le Sonneur de la Longue Nuit",
+      "count": 1,
+      "role": "Commandant et contrôle de zone",
+      "description": "Un lieutenant oublié des Marcheurs blancs. Sa cloche ne réveille personne : elle rappelle aux morts où marchent les vivants.",
+      "counterplay": "Sa résistance terre est élevée ; le feu et l’air sont ses faiblesses. Dispersez-vous contre le glas. Sa mort ne fait pas disparaître son escorte.",
+      "reference": {
+        "monsterId": 173,
+        "grade": 5
+      },
+      "tuning": {
+        "hpPercent": 80,
+        "statsPercent": 150,
+        "paBonus": -2,
+        "pmBonus": -1
+      },
+      "spells": [
+        {
+          "key": "ice-lance",
+          "name": "La lance du silence",
+          "description": "Une forte attaque eau sur une seule cible. Le Sonneur ne peut pas tout faire le même tour.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 5,
+          "rangeMin": 1,
+          "rangeMax": 6,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 2,
+          "maxPerTarget": 2,
+          "cooldown": 0,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "ice-lance",
+            "color": "#66bde6",
+            "accent": "#e3fbff",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 38,
+              "max": 44,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "eau"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/icespear.png",
+          "score": 71
+        },
+        {
+          "key": "toll",
+          "name": "Le glas sous la neige",
+          "description": "Dégâts eau et retrait esquivable de 1 PM en cercle de rayon 1.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 4,
+          "rangeMin": 1,
+          "rangeMax": 5,
+          "targetMode": "cell",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 3,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "bell",
+            "color": "#66bde6",
+            "accent": "#e3fbff",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 12,
+              "max": 16,
+              "duration": 0,
+              "zone": "Cb",
+              "target": "enemy",
+              "element": "eau"
+            },
+            {
+              "kind": "removePm",
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "zone": "Cb",
+              "target": "enemy"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/bell.png",
+          "score": 85
+        },
+        {
+          "key": "silence",
+          "name": "Étouffer la braise",
+          "description": "Retire 1 PA esquivable et 1 portée pendant un tour. Impossible au contact.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 2,
+          "rangeMax": 7,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 3,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "bell",
+            "color": "#66bde6",
+            "accent": "#e3fbff",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "removePa",
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy"
+            },
+            {
+              "kind": "debuffRange",
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "zone": "Pa",
+              "target": "enemy"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/bell.png",
+          "score": 29
+        },
+        {
+          "key": "muster",
+          "name": "Marchez encore",
+          "description": "Renforce les morts regroupés. Aucune invocation ni résurrection : le groupe est fixe.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 4,
+          "rangeMin": 0,
+          "rangeMax": 5,
+          "targetMode": "fighter",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 4,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "rally",
+            "color": "#66bde6",
+            "accent": "#e3fbff",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "buffDamage",
+              "min": 8,
+              "max": 8,
+              "duration": 2,
+              "zone": "Cb",
+              "target": "ally"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/bell.png",
+          "score": 10
+        }
+      ],
+      "hp": 4000,
+      "pa": 10,
+      "pm": 4,
+      "resistances": {
+        "neutre": 53,
+        "terre": 53,
+        "feu": -5,
+        "eau": 53,
+        "air": -5
+      },
+      "spellbook": {
+        "version": 1,
+        "entries": [
+          {
+            "id": 1800000010000019,
+            "name": "La lance du silence",
+            "version": 1,
+            "score": 71,
+            "limit": 100,
+            "valid": true,
+            "normal": 71,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 5,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 50.1
+              }
+            ]
+          },
+          {
+            "id": 1800000010000020,
+            "name": "Le glas sous la neige",
+            "version": 1,
+            "score": 85,
+            "limit": 100,
+            "valid": true,
+            "normal": 85,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 52.1
+              },
+              {
+                "kind": "removePm",
+                "units": 20.6
+              }
+            ]
+          },
+          {
+            "id": 1800000010000021,
+            "name": "Étouffer la braise",
+            "version": 1,
+            "score": 29,
+            "limit": 100,
+            "valid": true,
+            "normal": 29,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "removePa",
+                "units": 12.3
+              },
+              {
+                "kind": "debuffRange",
+                "units": 6.1
+              }
+            ]
+          },
+          {
+            "id": 1800000010000022,
+            "name": "Marchez encore",
+            "version": 1,
+            "score": 10,
+            "limit": 100,
+            "valid": true,
+            "normal": 10,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1.75,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "buffDamage",
+                "units": 9.8
+              }
+            ]
+          }
+        ],
+        "sum": 195,
+        "synergy": 3,
+        "rotation": 0,
+        "score": 198,
+        "limit": 650,
+        "valid": true
+      },
+      "comparisons": [
+        163,
+        84,
+        153
+      ]
+    },
+    {
+      "key": "wight",
+      "name": "Garde enseveli",
+      "count": 2,
+      "role": "Obstacle de mêlée",
+      "description": "Il porte encore l’écusson d’une maison disparue. Il ne sait plus laquelle.",
+      "counterplay": "Il avance lentement et ne frappe qu’au contact. Contournez son bouclier plutôt que de vous regrouper.",
+      "reference": {
+        "monsterId": 181,
+        "grade": 5
+      },
+      "tuning": {
+        "hpPercent": 65,
+        "statsPercent": 150,
+        "paBonus": 1,
+        "pmBonus": -2
+      },
+      "spells": [
+        {
+          "key": "rust",
+          "name": "Acier rouillé",
+          "description": "Acier rouillé",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 4,
+          "rangeMin": 1,
+          "rangeMax": 1,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 2,
+          "maxPerTarget": 2,
+          "cooldown": 0,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "slash",
+            "color": "#9b775b",
+            "accent": "#d7c1ab",
+            "durationMs": 850
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 27,
+              "max": 33,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "terre"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/longclaw.png",
+          "score": 60
+        },
+        {
+          "key": "shield",
+          "name": "Le vieux bouclier",
+          "description": "Le vieux bouclier",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 0,
+          "rangeMax": 0,
+          "targetMode": "self",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 3,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "shield",
+            "color": "#66bde6",
+            "accent": "#e3fbff",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "armor",
+              "min": 8,
+              "max": 8,
+              "duration": 2,
+              "zone": "Pa",
+              "target": "self"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/guard.png",
+          "score": 34
+        }
+      ],
+      "hp": 1300,
+      "pa": 8,
+      "pm": 3,
+      "resistances": {
+        "neutre": 20,
+        "terre": 20,
+        "feu": 20,
+        "eau": -2,
+        "air": -2
+      },
+      "spellbook": {
+        "version": 1,
+        "entries": [
+          {
+            "id": 1800000010000023,
+            "name": "Acier rouillé",
+            "version": 1,
+            "score": 60,
+            "limit": 100,
+            "valid": true,
+            "normal": 60,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 34.2
+              }
+            ]
+          },
+          {
+            "id": 1800000010000024,
+            "name": "Le vieux bouclier",
+            "version": 1,
+            "score": 34,
+            "limit": 100,
+            "valid": true,
+            "normal": 34,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "armor",
+                "units": 21.6
+              }
+            ]
+          }
+        ],
+        "sum": 94,
+        "synergy": 0,
+        "rotation": 0,
+        "score": 94,
+        "limit": 650,
+        "valid": true
+      },
+      "comparisons": [
+        141,
+        158,
+        7
+      ]
+    },
+    {
+      "key": "rime-archer",
+      "name": "Archer du givre",
+      "count": 2,
+      "role": "Tireur et ralentissement",
+      "description": "Chaque flèche est taillée dans l’eau gelée des douves.",
+      "counterplay": "Ses deux tirs ont une portée minimale de trois cases. Arya ou Jon peuvent le gêner en s’approchant.",
+      "reference": {
+        "monsterId": 228,
+        "grade": 5
+      },
+      "tuning": {
+        "hpPercent": 150,
+        "statsPercent": 150,
+        "paBonus": 0,
+        "pmBonus": -1
+      },
+      "spells": [
+        {
+          "key": "rime-arrow",
+          "name": "Flèche de givre",
+          "description": "Flèche de givre",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 3,
+          "rangeMax": 8,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 2,
+          "maxPerTarget": 2,
+          "cooldown": 0,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "arrow",
+            "color": "#66bde6",
+            "accent": "#e3fbff",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 18,
+              "max": 22,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "eau"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/icearrow.png",
+          "score": 64
+        },
+        {
+          "key": "pin",
+          "name": "Cloué par le froid",
+          "description": "Un tir et un retrait esquivable de 1 PM ; pas de piège caché au sol.",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 4,
+          "rangeMin": 3,
+          "rangeMax": 7,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 2,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "ice-lance",
+            "color": "#66bde6",
+            "accent": "#e3fbff",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 12,
+              "max": 16,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "eau"
+            },
+            {
+              "kind": "removePm",
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/icearrow.png",
+          "score": 41
+        }
+      ],
+      "hp": 1050,
+      "pa": 8,
+      "pm": 4,
+      "resistances": {
+        "neutre": 0,
+        "terre": -6,
+        "feu": 0,
+        "eau": 9,
+        "air": 9
+      },
+      "spellbook": {
+        "version": 1,
+        "entries": [
+          {
+            "id": 1800000010000025,
+            "name": "Flèche de givre",
+            "version": 1,
+            "score": 64,
+            "limit": 100,
+            "valid": true,
+            "normal": 64,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 27.1
+              }
+            ]
+          },
+          {
+            "id": 1800000010000026,
+            "name": "Cloué par le froid",
+            "version": 1,
+            "score": 41,
+            "limit": 100,
+            "valid": true,
+            "normal": 41,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1.25,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 20.9
+              },
+              {
+                "kind": "removePm",
+                "units": 8.3
+              }
+            ]
+          }
+        ],
+        "sum": 105,
+        "synergy": 0,
+        "rotation": 0,
+        "score": 105,
+        "limit": 650,
+        "valid": true
+      },
+      "comparisons": [
+        163,
+        84,
+        161
+      ]
+    },
+    {
+      "key": "frost-hound",
+      "name": "Limier des neiges mortes",
+      "count": 1,
+      "role": "Poursuivant mobile",
+      "description": "Le dernier loup que l’on croyait avoir entendu hurler derrière le Mur.",
+      "counterplay": "Repoussez-le ou bloquez son accès à Melisandre. Il est rapide, mais sans attaque à distance ni soin.",
+      "reference": {
+        "monsterId": 102,
+        "grade": 5
+      },
+      "tuning": {
+        "hpPercent": 110,
+        "statsPercent": 150,
+        "paBonus": -2,
+        "pmBonus": 0
+      },
+      "spells": [
+        {
+          "key": "bite",
+          "name": "Morsure de givre",
+          "description": "Morsure de givre",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 1,
+          "rangeMax": 1,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 2,
+          "maxPerTarget": 2,
+          "cooldown": 0,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "fang",
+            "color": "#66bde6",
+            "accent": "#e3fbff",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 18,
+              "max": 23,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "eau"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/frostbite.png",
+          "score": 60
+        },
+        {
+          "key": "scent",
+          "name": "L’odeur des vivants",
+          "description": "L’odeur des vivants",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 2,
+          "rangeMin": 0,
+          "rangeMax": 0,
+          "targetMode": "self",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 3,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "rally",
+            "color": "#66bde6",
+            "accent": "#e3fbff",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "buffPm",
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "zone": "Pa",
+              "target": "self"
+            },
+            {
+              "kind": "buffPower",
+              "min": 60,
+              "max": 60,
+              "duration": 1,
+              "zone": "Pa",
+              "target": "self"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/frostbite.png",
+          "score": 35
+        },
+        {
+          "key": "drag",
+          "name": "À terre dans la neige",
+          "description": "À terre dans la neige",
+          "counterplay": "Respectez la portée et les obstacles ; exploitez les tours de relance.",
+          "pa": 3,
+          "rangeMin": 1,
+          "rangeMax": 1,
+          "targetMode": "enemy",
+          "needsLos": true,
+          "lineOnly": false,
+          "adjustableRange": false,
+          "maxPerTurn": 1,
+          "maxPerTarget": 1,
+          "cooldown": 2,
+          "critRate": 0,
+          "failRate": 0,
+          "endsTurnOnFailure": false,
+          "visualEffect": {
+            "version": 1,
+            "kind": "fang",
+            "color": "#66bde6",
+            "accent": "#e3fbff",
+            "durationMs": 1100
+          },
+          "effects": [
+            {
+              "kind": "damage",
+              "min": 10,
+              "max": 14,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy",
+              "element": "eau"
+            },
+            {
+              "kind": "removePm",
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "zone": "Pa",
+              "target": "enemy"
+            }
+          ],
+          "critEffects": [],
+          "icon": "icons/frostbite.png",
+          "score": 49
+        }
+      ],
+      "hp": 1320,
+      "pa": 8,
+      "pm": 6,
+      "resistances": {
+        "neutre": 24,
+        "terre": -12,
+        "feu": 28,
+        "eau": 0,
+        "air": -5
+      },
+      "spellbook": {
+        "version": 1,
+        "entries": [
+          {
+            "id": 1800000010000027,
+            "name": "Morsure de givre",
+            "version": 1,
+            "score": 60,
+            "limit": 100,
+            "valid": true,
+            "normal": 60,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 25.7
+              }
+            ]
+          },
+          {
+            "id": 1800000010000028,
+            "name": "L’odeur des vivants",
+            "version": 1,
+            "score": 35,
+            "limit": 100,
+            "valid": true,
+            "normal": 35,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 2,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "buffPm",
+                "units": 9
+              },
+              {
+                "kind": "buffPower",
+                "units": 6
+              }
+            ]
+          },
+          {
+            "id": 1800000010000029,
+            "name": "À terre dans la neige",
+            "version": 1,
+            "score": 49,
+            "limit": 100,
+            "valid": true,
+            "normal": 49,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.25,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 18.1
+              },
+              {
+                "kind": "removePm",
+                "units": 7.9
+              }
+            ]
+          }
+        ],
+        "sum": 144,
+        "synergy": 2,
+        "rotation": 0,
+        "score": 146,
+        "limit": 650,
+        "valid": true
+      },
+      "comparisons": [
+        141,
+        158,
+        153
+      ]
+    }
+  ]
+}

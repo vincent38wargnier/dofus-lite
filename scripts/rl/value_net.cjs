@@ -109,12 +109,37 @@ function loadValue(dir) {
   return { shapes, forward };
 }
 
-module.exports = { loadValue };
+// Forward ONNX Runtime (model.onnx via scripts/rl/export_value_onnx.py): binding
+// natif SYNCHRONE (même astuce que bot_net_ort.cjs), 1 thread par process, et
+// forwardBatch(x, n) = n positions en UN appel (crible des après-états, loop 1).
+function loadValueOrt(dir) {
+  const shapes = JSON.parse(fs.readFileSync(path.join(dir, 'shapes.json'), 'utf8'));
+  if (shapes.arch !== 'value-v1') throw new Error(`arch inattendue: ${shapes.arch}`);
+  const ort = require('onnxruntime-node');
+  const { binding, initOrt } = require('onnxruntime-node/dist/binding');
+  initOrt();
+  const session = new binding.InferenceSession();
+  session.loadModel(path.join(dir, 'model.onnx'), {
+    executionProviders: ['cpu'], intraOpNumThreads: 1, interOpNumThreads: 1,
+    graphOptimizationLevel: 'all', executionMode: 'sequential',
+  });
+  const D = shapes.obsDim;
+  const fetches = { v: null };
+  const forwardBatch = (x, n) => {
+    if (x.length < n * D) throw new Error(`lot ${x.length} < ${n}×${D}`);
+    const view = x.length === n * D ? x : x.subarray(0, n * D);
+    return session.run({ obs: new ort.Tensor('float32', view, [n, D]) }, fetches, {}).v.data;
+  };
+  const forward = (obs) => forwardBatch(obs, 1)[0];
+  return { shapes: { ...shapes, runtime: 'ort' }, forward, forwardBatch };
+}
+
+module.exports = { loadValue, loadValueOrt };
 
 if (require.main === module) {
   const [, , mode, dir] = process.argv;
-  if (mode !== 'parity' || !dir) { console.log('usage: parity MODEL_DIR'); process.exit(1); }
-  const model = loadValue(dir);
+  if ((mode !== 'parity' && mode !== 'parity-ort') || !dir) { console.log('usage: parity|parity-ort MODEL_DIR'); process.exit(1); }
+  const model = mode === 'parity-ort' ? loadValueOrt(dir) : loadValue(dir);
   const obsDim = model.shapes.obsDim;
   const raw = fs.readFileSync(path.join(dir, 'parity_obs.bin'));
   const expected = JSON.parse(fs.readFileSync(path.join(dir, 'parity_v.json'), 'utf8'));

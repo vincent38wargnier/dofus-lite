@@ -9,6 +9,7 @@ import ShapeAppearancePicker from './ShapeAppearancePicker';
 import { AtelierExportButton } from './AtelierTransfer';
 import { defaultEquipmentAppearance, EQUIPMENT_SHAPES, equipmentShapeImage } from '../visuals/customShapes';
 import '../styles/equipmentWorkshop.css';
+import WorkshopHelp, { WorkshopStepIntro } from './WorkshopHelp';
 
 const fold = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const MODELS = Object.values(ITEMS).filter(item => item.type !== 23 && equipmentFamily(item) && !item.ethereal
@@ -90,6 +91,7 @@ export default function EquipmentWorkshop({ onEquip, onClose, initialReferenceId
       if (event.target.type === 'number' && event.target.value !== '') event.target.value = String(num(event.target.value));
     }} onSubmit={event => { event.preventDefault(); save(false); }}>
       <div className="equipment-design-identity"><EquipmentIcon item={result.item || ITEMS[draft.referenceId]} /><label className="field">Nom de l’équipement<input required maxLength={80} value={draft.name} onChange={event => patch({ name: event.target.value })} /></label></div>
+      <WorkshopStepIntro number={activeView === 'bonus' ? '1' : activeView === 'appearance' ? '2' : '3'} title={activeView === 'bonus' ? 'Choisissez ses bonus' : activeView === 'appearance' ? 'Choisissez son allure' : 'Réglez sa frappe'}>{activeView === 'bonus' ? 'Une famille, un niveau, quelques bonus. La jauge vous indique ce qui tient dans le budget.' : activeView === 'appearance' ? 'Une forme et une couleur suffisent : votre objet est prêt pour le jeu.' : 'Chaque ligne de dégâts et son coût en PA comptent dans le budget.'}</WorkshopStepIntro>
       <div className="equipment-design-fields"><label className="field">Famille<select value={family.id} onChange={event => {
         const target = EQUIPMENT_FAMILIES.find(value => value.id === event.target.value); pickModel(MODELS.find(item => target.types.includes(item.type)));
       }}>{EQUIPMENT_FAMILIES.map(value => <option key={value.id} value={value.id}>{value.name}</option>)}</select></label>
@@ -99,6 +101,8 @@ export default function EquipmentWorkshop({ onEquip, onClose, initialReferenceId
           <button type="button" key={id} aria-pressed={activeView === id} onClick={() => setView(id)}><Icon size={17} />{label}</button>)}
       </nav>
       <div hidden={activeView !== 'appearance'}>
+      <WorkshopHelp title="Imaginer le design de cet objet" manual="L’apparence jouable se règle avec les formes et couleurs ci-dessous. Une image générée sert de référence artistique : les PNG d’équipement ne sont pas encore importables."
+        prompt={`Propose un design original pour « ${draft.name} », ${family.name}, niveau ${draft.level}. Bonus : ${Object.entries(draft.stats).map(([k,v]) => `${v} ${EQUIPMENT_STAT_RULES[k]?.label || k}`).join(', ')}.\nFais une icône fantasy lisible de 256 × 256 pixels, fond transparent, sans texte, chiffres ni bordure. Propose aussi une couleur principale hexadécimale. Je choisirai la forme et la couleur dans le jeu. L’image PNG reste une référence artistique, pas une apparence importable. Ne change aucun bonus.`} filename="prompt-equipement.txt" />
       <div className="appearance-source" role="group" aria-label="Type de visuel de l’équipement">
         <button type="button" className="btn" aria-pressed={!!draft.appearance} onClick={() => { if (!draft.appearance) patch({ appearance: defaultEquipmentAppearance() }); }}>Forme personnalisée</button>
         <button type="button" className="btn" aria-pressed={!draft.appearance} onClick={() => patch({ appearance: null })}>Visuel Dofus</button>

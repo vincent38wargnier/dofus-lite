@@ -1,0 +1,1146 @@
+{
+  "version": "2.0.0",
+  "title": "Winterfell — La Dernière Braise",
+  "mapId": "custom-winterfell-courtyard",
+  "heroes": [
+    {
+      "name": "Jon Snow",
+      "role": "Rempart du Nord",
+      "hp": 2715,
+      "pa": 9,
+      "pm": 4,
+      "stats": {
+        "vitalite": 1665,
+        "force": 451,
+        "intelligence": 101,
+        "chance": 101,
+        "agilite": 101,
+        "sagesse": 181
+      },
+      "outfitScore": 236.3,
+      "spellbook": {
+        "version": 1,
+        "entries": [
+          {
+            "id": 1800000010000001,
+            "name": "Tranchant de Grand-Griffe",
+            "version": 1,
+            "score": 61,
+            "limit": 100,
+            "valid": true,
+            "normal": 58,
+            "critical": 63,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 33
+              }
+            ]
+          },
+          {
+            "id": 1800000010000002,
+            "name": "Tenir la porte",
+            "version": 1,
+            "score": 34,
+            "limit": 100,
+            "valid": true,
+            "normal": 34,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "armor",
+                "units": 21.6
+              }
+            ]
+          },
+          {
+            "id": 1800000010000003,
+            "name": "Serment de la Garde",
+            "version": 1,
+            "score": 15,
+            "limit": 100,
+            "valid": true,
+            "normal": 15,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.75,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "buffPower",
+                "units": 11.3
+              }
+            ]
+          },
+          {
+            "id": 1800000010000004,
+            "name": "Brise-glace",
+            "version": 1,
+            "score": 56,
+            "limit": 100,
+            "valid": true,
+            "normal": 56,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 19.7
+              },
+              {
+                "kind": "push",
+                "units": 3.9
+              }
+            ]
+          },
+          {
+            "id": 1800000010000005,
+            "name": "Ouvrir la brèche",
+            "version": 1,
+            "score": 17,
+            "limit": 100,
+            "valid": true,
+            "normal": 17,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 2,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "resistDebuff",
+                "units": 7.2
+              }
+            ]
+          },
+          {
+            "id": 1800000010000006,
+            "name": "Par-delà le rempart",
+            "version": 1,
+            "score": 33,
+            "limit": 100,
+            "valid": true,
+            "normal": 33,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "teleport",
+                "units": 28
+              }
+            ]
+          }
+        ],
+        "sum": 216,
+        "synergy": 6,
+        "rotation": 0,
+        "score": 222,
+        "limit": 650,
+        "valid": true
+      },
+      "comparisons": [
+        141,
+        158,
+        153,
+        7,
+        142,
+        143
+      ]
+    },
+    {
+      "name": "Arya Stark",
+      "role": "Lame des sans-visage",
+      "hp": 2715,
+      "pa": 9,
+      "pm": 4,
+      "stats": {
+        "vitalite": 1665,
+        "force": 101,
+        "intelligence": 101,
+        "chance": 101,
+        "agilite": 451,
+        "sagesse": 181
+      },
+      "outfitScore": 238.6,
+      "spellbook": {
+        "version": 1,
+        "entries": [
+          {
+            "id": 1800000010000007,
+            "name": "La pointe d’Aiguille",
+            "version": 1,
+            "score": 64,
+            "limit": 100,
+            "valid": true,
+            "normal": 60,
+            "critical": 67,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 25.6
+              }
+            ]
+          },
+          {
+            "id": 1800000010000008,
+            "name": "Baiser de verredragon",
+            "version": 1,
+            "score": 51,
+            "limit": 100,
+            "valid": true,
+            "normal": 49,
+            "critical": 53,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1.25,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 34.8
+              }
+            ]
+          },
+          {
+            "id": 1800000010000009,
+            "name": "Couteau dans la neige",
+            "version": 1,
+            "score": 53,
+            "limit": 100,
+            "valid": true,
+            "normal": 53,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 22.7
+              }
+            ]
+          },
+          {
+            "id": 1800000010000010,
+            "name": "Pas aujourd’hui",
+            "version": 1,
+            "score": 38,
+            "limit": 100,
+            "valid": true,
+            "normal": 38,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "teleport",
+                "units": 24
+              }
+            ]
+          },
+          {
+            "id": 1800000010000011,
+            "name": "Une faille dans la glace",
+            "version": 1,
+            "score": 15,
+            "limit": 100,
+            "valid": true,
+            "normal": 15,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 2,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "resistDebuff",
+                "units": 6.2
+              }
+            ]
+          },
+          {
+            "id": 1800000010000012,
+            "name": "Le pas de la louve",
+            "version": 1,
+            "score": 21,
+            "limit": 100,
+            "valid": true,
+            "normal": 21,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 2,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "buffPm",
+                "units": 9
+              }
+            ]
+          }
+        ],
+        "sum": 242,
+        "synergy": 4,
+        "rotation": 0,
+        "score": 246,
+        "limit": 650,
+        "valid": true
+      },
+      "comparisons": [
+        68,
+        76,
+        142,
+        64
+      ]
+    },
+    {
+      "name": "Melisandre",
+      "role": "Gardienne de la braise",
+      "hp": 2715,
+      "pa": 9,
+      "pm": 4,
+      "stats": {
+        "vitalite": 1665,
+        "force": 101,
+        "intelligence": 451,
+        "chance": 101,
+        "agilite": 101,
+        "sagesse": 181
+      },
+      "outfitScore": 227.9,
+      "spellbook": {
+        "version": 1,
+        "entries": [
+          {
+            "id": 1800000010000013,
+            "name": "Une braise dans la nuit",
+            "version": 1,
+            "score": 64,
+            "limit": 100,
+            "valid": true,
+            "normal": 60,
+            "critical": 67,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 25.7
+              }
+            ]
+          },
+          {
+            "id": 1800000010000014,
+            "name": "La nuit est sombre",
+            "version": 1,
+            "score": 72,
+            "limit": 100,
+            "valid": true,
+            "normal": 72,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1,
+              "limited": 0.9,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 45.3
+              }
+            ]
+          },
+          {
+            "id": 1800000010000015,
+            "name": "La dernière chaleur",
+            "version": 1,
+            "score": 46,
+            "limit": 100,
+            "valid": true,
+            "normal": 46,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 0.9,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "heal",
+                "units": 21.7
+              }
+            ]
+          },
+          {
+            "id": 1800000010000016,
+            "name": "Le rubis veille",
+            "version": 1,
+            "score": 30,
+            "limit": 100,
+            "valid": true,
+            "normal": 30,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "armor",
+                "units": 12.8
+              },
+              {
+                "kind": "resistBuff",
+                "units": 6.4
+              }
+            ]
+          },
+          {
+            "id": 1800000010000017,
+            "name": "Rallumer les vivants",
+            "version": 1,
+            "score": 5,
+            "limit": 100,
+            "valid": true,
+            "normal": 5,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "buffDamage",
+                "units": 3
+              }
+            ]
+          },
+          {
+            "id": 1800000010000018,
+            "name": "Recule, ombre",
+            "version": 1,
+            "score": 45,
+            "limit": 100,
+            "valid": true,
+            "normal": 45,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 0.9,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 17.2
+              },
+              {
+                "kind": "push",
+                "units": 4.2
+              }
+            ]
+          }
+        ],
+        "sum": 262,
+        "synergy": 2,
+        "rotation": 0,
+        "score": 264,
+        "limit": 650,
+        "valid": true
+      },
+      "comparisons": [
+        350,
+        165,
+        121,
+        124,
+        7,
+        128
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Le Sonneur de la Longue Nuit",
+      "count": 1,
+      "hp": 4000,
+      "pa": 10,
+      "pm": 4,
+      "resistances": {
+        "neutre": 53,
+        "terre": 53,
+        "feu": -5,
+        "eau": 53,
+        "air": -5
+      },
+      "reference": {
+        "monsterId": 173,
+        "grade": 5
+      },
+      "tuning": {
+        "hpPercent": 80,
+        "statsPercent": 150,
+        "paBonus": -2,
+        "pmBonus": -1
+      },
+      "spellbook": {
+        "version": 1,
+        "entries": [
+          {
+            "id": 1800000010000019,
+            "name": "La lance du silence",
+            "version": 1,
+            "score": 71,
+            "limit": 100,
+            "valid": true,
+            "normal": 71,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 5,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 50.1
+              }
+            ]
+          },
+          {
+            "id": 1800000010000020,
+            "name": "Le glas sous la neige",
+            "version": 1,
+            "score": 85,
+            "limit": 100,
+            "valid": true,
+            "normal": 85,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 52.1
+              },
+              {
+                "kind": "removePm",
+                "units": 20.6
+              }
+            ]
+          },
+          {
+            "id": 1800000010000021,
+            "name": "Étouffer la braise",
+            "version": 1,
+            "score": 29,
+            "limit": 100,
+            "valid": true,
+            "normal": 29,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "removePa",
+                "units": 12.3
+              },
+              {
+                "kind": "debuffRange",
+                "units": 6.1
+              }
+            ]
+          },
+          {
+            "id": 1800000010000022,
+            "name": "Marchez encore",
+            "version": 1,
+            "score": 10,
+            "limit": 100,
+            "valid": true,
+            "normal": 10,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1.75,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "buffDamage",
+                "units": 9.8
+              }
+            ]
+          }
+        ],
+        "sum": 195,
+        "synergy": 3,
+        "rotation": 0,
+        "score": 198,
+        "limit": 650,
+        "valid": true
+      },
+      "comparisons": [
+        163,
+        84,
+        153
+      ]
+    },
+    {
+      "name": "Garde enseveli",
+      "count": 2,
+      "hp": 1300,
+      "pa": 8,
+      "pm": 3,
+      "resistances": {
+        "neutre": 20,
+        "terre": 20,
+        "feu": 20,
+        "eau": -2,
+        "air": -2
+      },
+      "reference": {
+        "monsterId": 181,
+        "grade": 5
+      },
+      "tuning": {
+        "hpPercent": 65,
+        "statsPercent": 150,
+        "paBonus": 1,
+        "pmBonus": -2
+      },
+      "spellbook": {
+        "version": 1,
+        "entries": [
+          {
+            "id": 1800000010000023,
+            "name": "Acier rouillé",
+            "version": 1,
+            "score": 60,
+            "limit": 100,
+            "valid": true,
+            "normal": 60,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 34.2
+              }
+            ]
+          },
+          {
+            "id": 1800000010000024,
+            "name": "Le vieux bouclier",
+            "version": 1,
+            "score": 34,
+            "limit": 100,
+            "valid": true,
+            "normal": 34,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "armor",
+                "units": 21.6
+              }
+            ]
+          }
+        ],
+        "sum": 94,
+        "synergy": 0,
+        "rotation": 0,
+        "score": 94,
+        "limit": 650,
+        "valid": true
+      },
+      "comparisons": [
+        141,
+        158,
+        7
+      ]
+    },
+    {
+      "name": "Archer du givre",
+      "count": 2,
+      "hp": 1050,
+      "pa": 8,
+      "pm": 4,
+      "resistances": {
+        "neutre": 0,
+        "terre": -6,
+        "feu": 0,
+        "eau": 9,
+        "air": 9
+      },
+      "reference": {
+        "monsterId": 228,
+        "grade": 5
+      },
+      "tuning": {
+        "hpPercent": 150,
+        "statsPercent": 150,
+        "paBonus": 0,
+        "pmBonus": -1
+      },
+      "spellbook": {
+        "version": 1,
+        "entries": [
+          {
+            "id": 1800000010000025,
+            "name": "Flèche de givre",
+            "version": 1,
+            "score": 64,
+            "limit": 100,
+            "valid": true,
+            "normal": 64,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 27.1
+              }
+            ]
+          },
+          {
+            "id": 1800000010000026,
+            "name": "Cloué par le froid",
+            "version": 1,
+            "score": 41,
+            "limit": 100,
+            "valid": true,
+            "normal": 41,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 4,
+              "cooldownCredit": 1.25,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 20.9
+              },
+              {
+                "kind": "removePm",
+                "units": 8.3
+              }
+            ]
+          }
+        ],
+        "sum": 105,
+        "synergy": 0,
+        "rotation": 0,
+        "score": 105,
+        "limit": 650,
+        "valid": true
+      },
+      "comparisons": [
+        163,
+        84,
+        161
+      ]
+    },
+    {
+      "name": "Limier des neiges mortes",
+      "count": 1,
+      "hp": 1320,
+      "pa": 8,
+      "pm": 6,
+      "resistances": {
+        "neutre": 24,
+        "terre": -12,
+        "feu": 28,
+        "eau": 0,
+        "air": -5
+      },
+      "reference": {
+        "monsterId": 102,
+        "grade": 5
+      },
+      "tuning": {
+        "hpPercent": 110,
+        "statsPercent": 150,
+        "paBonus": -2,
+        "pmBonus": 0
+      },
+      "spellbook": {
+        "version": 1,
+        "entries": [
+          {
+            "id": 1800000010000027,
+            "name": "Morsure de givre",
+            "version": 1,
+            "score": 60,
+            "limit": 100,
+            "valid": true,
+            "normal": 60,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 25.7
+              }
+            ]
+          },
+          {
+            "id": 1800000010000028,
+            "name": "L’odeur des vivants",
+            "version": 1,
+            "score": 35,
+            "limit": 100,
+            "valid": true,
+            "normal": 35,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 2,
+              "cooldownCredit": 1.5,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "buffPm",
+                "units": 9
+              },
+              {
+                "kind": "buffPower",
+                "units": 6
+              }
+            ]
+          },
+          {
+            "id": 1800000010000029,
+            "name": "À terre dans la neige",
+            "version": 1,
+            "score": 49,
+            "limit": 100,
+            "valid": true,
+            "normal": 49,
+            "critical": null,
+            "original": false,
+            "exception": false,
+            "factors": {
+              "pa": 3,
+              "cooldownCredit": 1.25,
+              "limited": 1,
+              "constrained": 1
+            },
+            "effects": [
+              {
+                "kind": "damage",
+                "units": 18.1
+              },
+              {
+                "kind": "removePm",
+                "units": 7.9
+              }
+            ]
+          }
+        ],
+        "sum": 144,
+        "synergy": 2,
+        "rotation": 0,
+        "score": 146,
+        "limit": 650,
+        "valid": true
+      },
+      "comparisons": [
+        141,
+        158,
+        153
+      ]
+    }
+  ],
+  "equipment": [
+    {
+      "name": "Capuche de la Garde",
+      "slot": "hat",
+      "score": 9.1,
+      "limit": 100
+    },
+    {
+      "name": "Manteau du Lord Commandant",
+      "slot": "cape",
+      "score": 18.5,
+      "limit": 100
+    },
+    {
+      "name": "Serment du Nord",
+      "slot": "amulet",
+      "score": 31.2,
+      "limit": 100
+    },
+    {
+      "name": "Anneau du Rempart",
+      "slot": "ring1",
+      "score": 50.7,
+      "limit": 100
+    },
+    {
+      "name": "Anneau du Loup",
+      "slot": "ring2",
+      "score": 39.8,
+      "limit": 100
+    },
+    {
+      "name": "Baudrier de la Garde",
+      "slot": "belt",
+      "score": 14,
+      "limit": 100
+    },
+    {
+      "name": "Bottes du Mur",
+      "slot": "boots",
+      "score": 27.3,
+      "limit": 100
+    },
+    {
+      "name": "Grand-Griffe",
+      "slot": "weapon",
+      "score": 45.8,
+      "limit": 100
+    },
+    {
+      "name": "Capuche de Braavos",
+      "slot": "hat",
+      "score": 9.1,
+      "limit": 100
+    },
+    {
+      "name": "Manteau de personne",
+      "slot": "cape",
+      "score": 18.5,
+      "limit": 100
+    },
+    {
+      "name": "Souvenir de Winterfell",
+      "slot": "amulet",
+      "score": 31.2,
+      "limit": 100
+    },
+    {
+      "name": "Anneau du passage",
+      "slot": "ring1",
+      "score": 50.7,
+      "limit": 100
+    },
+    {
+      "name": "Anneau sans nom",
+      "slot": "ring2",
+      "score": 39.8,
+      "limit": 100
+    },
+    {
+      "name": "Ceinture aux couteaux",
+      "slot": "belt",
+      "score": 14,
+      "limit": 100
+    },
+    {
+      "name": "Pas de la louve",
+      "slot": "boots",
+      "score": 27.3,
+      "limit": 100
+    },
+    {
+      "name": "Aiguille",
+      "slot": "weapon",
+      "score": 48,
+      "limit": 100
+    },
+    {
+      "name": "Voile de la prêtresse",
+      "slot": "hat",
+      "score": 9.1,
+      "limit": 100
+    },
+    {
+      "name": "Manteau de la braise",
+      "slot": "cape",
+      "score": 18.5,
+      "limit": 100
+    },
+    {
+      "name": "Rubis d’Asshaï",
+      "slot": "amulet",
+      "score": 31.2,
+      "limit": 100
+    },
+    {
+      "name": "Anneau des flammes",
+      "slot": "ring1",
+      "score": 50.7,
+      "limit": 100
+    },
+    {
+      "name": "Sceau du brasier",
+      "slot": "ring2",
+      "score": 39.8,
+      "limit": 100
+    },
+    {
+      "name": "Écharpe pourpre",
+      "slot": "belt",
+      "score": 14,
+      "limit": 100
+    },
+    {
+      "name": "Sandales de cendre",
+      "slot": "boots",
+      "score": 27.3,
+      "limit": 100
+    },
+    {
+      "name": "Tison d’Asshaï",
+      "slot": "weapon",
+      "score": 63.9,
+      "limit": 100
+    }
+  ]
+}

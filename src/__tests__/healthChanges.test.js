@@ -159,16 +159,37 @@ test('a newly invisible enemy does not leave a retained number revealing its pos
   expect(container.querySelector('.health-change')).not.toBeInTheDocument();
 });
 
-test('damage and healing over adjacent fighters reserve separate columns', () => {
+test.each([0, 1, 7])('damage and healing keep separate screen-space columns after %i zoom steps', zoomSteps => {
   const state = fight(); state.fighters.B.pos = { x: 6, y: 5 };
   const events = [{ t: 'damage', target: 'B', amount: 128, actionId: 1 }, { t: 'heal', target: 'A', amount: 26, actionId: 1 }];
   const { container } = render(<BoardView state={state} frameEvents={events} frameIdx={1} />);
+  const before = [...container.querySelectorAll('.health-change')];
+  for (let i = 0; i < zoomSteps; i++) fireEvent.click(screen.getByRole('button', { name: 'Zoomer la carte' }));
+  const zoom = 1 / Number(container.querySelector('.board-camera-layer').style.getPropertyValue('--board-ui-scale'));
+  // Zoom repositions existing numbers; it must not replace/restart animations.
+  expect([...container.querySelectorAll('.health-change')]).toEqual(before);
   const columns = [...container.querySelectorAll('.health-change')].map(e => ({
-    left: parseFloat(e.style.left) - parseFloat(e.style.width) / 2,
-    right: parseFloat(e.style.left) + parseFloat(e.style.width) / 2,
+    left: parseFloat(e.style.left) * zoom - parseFloat(e.style.width) / 2,
+    right: parseFloat(e.style.left) * zoom + parseFloat(e.style.width) / 2,
   })).sort((a, b) => a.left - b.left);
   expect(columns).toHaveLength(2);
   expect(columns[0].right + 10).toBeLessThanOrEqual(columns[1].left);
+});
+
+test('zoom preserves vertical spacing and expiry of simultaneous damage and healing', () => {
+  jest.useFakeTimers();
+  try {
+    const state = fight();
+    const events = [{ t: 'damage', target: 'A', amount: 128, actionId: 1 }, { t: 'heal', target: 'A', amount: 26, actionId: 1 }];
+    const { container } = render(<BoardView state={state} frameEvents={events} frameIdx={1} />);
+    act(() => jest.advanceTimersByTime(500));
+    for (let i = 0; i < 7; i++) fireEvent.click(screen.getByRole('button', { name: 'Zoomer la carte' }));
+    const numbers = [...container.querySelectorAll('.health-change')];
+    expect(numbers).toHaveLength(2);
+    expect(Math.abs(parseFloat(numbers[0].style.top) - parseFloat(numbers[1].style.top)) * 4).toBeCloseTo(34);
+    act(() => jest.advanceTimersByTime(HEALTH_FLOAT_MS - 500));
+    expect(container.querySelectorAll('.health-change')).toHaveLength(0);
+  } finally { jest.useRealTimers(); }
 });
 
 test('the compact journal sums the hammer, while details and exported events preserve each calculation', () => {

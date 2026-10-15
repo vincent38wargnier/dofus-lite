@@ -73,8 +73,10 @@ export default function CreationPackageTools({ tab, onImported, compact = false,
       <button type="button" className="btn subtle" onClick={() => download(`prompt-${type}.txt`, prompt, 'text/plain;charset=utf-8')}><Download size={15} />Prompt .txt</button>
       <button type="button" className="btn subtle" onClick={() => download('dofus-lite-content-spec.json', JSON.stringify(packageSpecDocument(), null, 2), 'application/json')}><Download size={15} />Spécification et références</button>
       <a className="btn subtle" href="/templates/custom-class-authoring-kit.zip" download><Download size={15} />Kit de création complet</a>
+      <a className="btn subtle" href="/templates/ai-design/index.html" target="_blank" rel="noreferrer"><Sparkles size={15} />Prompts & gabarits visuels</a>
+      <a className="btn subtle" href="/templates/ai-design/spell-fx/index.html" target="_blank" rel="noreferrer"><Sparkles size={15} />Animations de sorts</a>
       <button type="button" className="btn subtle" onClick={() => download(`exemple-${type}.zip`, writeContentZip(new Map([['content.json', JSON.stringify(packageExample(type), null, 2)]])), 'application/zip')}><Download size={15} />Exemple ZIP jouable</button>
-    </div></details>
+    </div><p className="muted small">Le kit contient aussi les guides des cartes, animations et objets. Les personnages et icônes de sorts sont importables ; les décors de carte, images d’équipement et nouvelles animations de sorts restent des designs préparatoires.</p></details>
     {expanded && <label className="field creator-package-preview">Prompt prêt à copier · {prompt.length.toLocaleString('fr')} caractères<textarea ref={preview} readOnly rows="12" value={prompt} onFocus={event => event.target.select()} /></label>}
     {notice && <p role="status" className={report?.errors ? 'creator-warning' : 'creator-spell-save-notice'}>{notice}</p>}
     {report?.errors && <ul className="creator-package-errors" role="alert">{report.errors.map((error, i) => <li key={i}>{error}</li>)}</ul>}

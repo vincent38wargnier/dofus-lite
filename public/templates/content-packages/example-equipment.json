@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "id": 1000000001,
+  "referenceId": 7143,
+  "name": "Coiffe des braises",
+  "appearance": {
+    "shape": "equipment",
+    "color": "#8964cf"
+  },
+  "level": 200,
+  "stats": {
+    "vitalite": 200,
+    "force": 40,
+    "damage": 5
+  }
+}

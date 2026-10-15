@@ -2,6 +2,7 @@ import React, { useEffect, useId, useRef, useState } from 'react';
 import { MAPS, MAP_IDS } from '../engine/maps';
 import { RETRO_BASE, useRetroAssets } from './RetroAssets';
 import { placementDescription } from './PlacementPanel';
+import { useCharacterArtwork } from './characterArtwork';
 
 function TacticalThumbnail({ map }) {
   const hw = 9, hh = 4.5, top = 6;
@@ -18,9 +19,11 @@ function TacticalThumbnail({ map }) {
 }
 
 export function MapPreview({ map, artwork }) {
-  return <span className="map-preview" style={{ aspectRatio: artwork ? `${artwork.width}/${artwork.height}` : '1.6' }}>
-    {artwork ? artwork.layers.map(layer => <img key={layer.name} loading="lazy" src={RETRO_BASE + layer.image} alt="" />)
-      : <TacticalThumbnail map={map} />}
+  const custom = useCharacterArtwork(map?.background?.artworkId).artwork;
+  const image = custom?.images[map.background.file], dimensions = map?.background || artwork;
+  return <span className="map-preview" style={{ aspectRatio: dimensions ? `${dimensions.width}/${dimensions.height}` : '1.6' }}>
+    {image ? <img src={image} alt="" /> : artwork ? artwork.layers.map(layer => <img key={layer.name} loading="lazy" src={RETRO_BASE + layer.image} alt="" />)
+      : map ? <TacticalThumbnail map={map} /> : null}
   </span>;
 }
 

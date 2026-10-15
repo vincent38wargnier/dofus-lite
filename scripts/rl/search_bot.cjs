@@ -204,14 +204,133 @@ function damagePotential(state, fid, counters) {
 
 // Joue UN tour complet du camp courant avec la politique maison (poids CEM
 // du matchup) — le modèle de rollout des deux côtés.
-function simTurn(s, counters) {
+// Politique des tours SIMULÉS (riposte + quiescence). null = maison (A1, défaut
+// inchangé). setRolloutPolicy(fn): l'adversaire et moi-même sommes simulés par fn
+// (ex. le clone, qui joue comme le calculateur) — le calculateur ne suppose plus
+// que l'adversaire joue comme maison. fn.reset() appelé à chaque tour simulé.
+let rolloutPolicy = null;
+function setRolloutPolicy(fn) { rolloutPolicy = fn || null; }
+// Politique NOMINATRICE optionnelle (A3): son tour complet depuis la racine
+// devient un candidat de plus, toujours finaliste — le jugement (rollouts +
+// juge) reste celui du champion. null = A1 inchangé.
+let nominatorPolicy = null;
+function setNominatorPolicy(fn) { nominatorPolicy = fn || null; }
+// Budget par décision surchargé à chaud (duels à budgets différents dans UN
+// process, calc_duel): null = SB_BUDGET lu au chargement.
+let budgetOverride = null;
+function setBudget(n) { budgetOverride = n == null ? null : Number(n); }
+// Cibles FOCALISÉES = profil du Stratège EN JEU (WORKER_PROFILE, src/bots/
+// api.js: budget 600 + fastCasts). false = banc A1 inchangé.
+let fastCastsOn = false;
+function setFastCasts(on) { fastCastsOn = !!on; }
+// Échantillonnage des finalistes surchargé à chaud: samples = flux de dés par
+// finaliste (défaut 3, audit F03), finalists = taille de la finale (défaut 6).
+let samplesOverride = null;
+let finalistsOverride = null;
+function setSampling({ samples = null, finalists = null } = {}) { samplesOverride = samples; finalistsOverride = finalists; }
+// Horizon de quiescence surchargé (tours simulés avant le juge, défaut 3 =
+// leur riposte, mon tour, leur tour — comme `horizon` du port navigateur).
+let horizonOverride = null;
+function setHorizon(h) { horizonOverride = h == null ? null : Number(h); }
+// Ensemble de RIPOSTES (riposte robuste): chaque politique de l'ensemble joue
+// LEUR tour (null = maison), la suite de l'horizon reste la politique par
+// défaut, et la feuille garde le PIRE score pour moi. null = A1 (maison seule).
+let replySet = null;
+function setReplySet(arr) { replySet = arr && arr.length ? arr : null; }
+// Enregistreur d'APRÈS-ÉTATS (loop 1, auto-jeu): onSample reçoit chaque fin de
+// tour que la recherche évalue DÉJÀ (étape 1: 1 échantillon par nominé; finale:
+// K échantillons) avec SON score — étiquettes gratuites, façon NNUE. onDecision
+// est appelé APRÈS le choix (temps hors counters.ms) pour les étiquettes en
+// plus (fins aléatoires, vérité terrain à K élevé). null = A1 inchangé.
+let afterstateHook = null;
+function setAfterstateHook(h) { afterstateHook = h || null; }
+// Juge d'APRÈS-ÉTATS appris (loop 1): { model (loadValueOrt: forwardBatch),
+// mode: 'prelim' (N0b: V classe les nominés à la place de l'étape 1, la finale
+// garde ses K ripostes réelles) | 'full' (N0a: chaque nominé = moyenne de V sur
+// ses K rejeux — AUCUNE riposte simulée) }. V est entraîné sur EXACTEMENT ces
+// après-états (afterstate_gen.cjs), perspective du joueur au trait → négation.
+// null = A1/C1 inchangé.
+let netJudge = null;
+function setNetJudge(j) { netJudge = j || null; }
+let encV3 = null; // chargé à la demande: le chemin par défaut ne change pas d'un octet
+let netBuf = new Float32Array(0);
+// Scores (perspective du chercheur, ±1000) d'une liste d'après-états, en UN lot.
+function netScores(afters, myTeam, counters) {
+  encV3 ||= require('./encoder.cjs');
+  const D = encV3.OBS_DIM_V3;
+  const live = [];
+  const out = new Array(afters.length);
+  afters.forEach((s, i) => {
+    if (s.over) out[i] = s.winner === myTeam ? 1000 : s.winner ? -1000 : 0; // issue exacte
+    else live.push(i);
+  });
+  if (live.length) {
+    if (netBuf.length < live.length * D) netBuf = new Float32Array(live.length * D * 2);
+    live.forEach((i, j) => {
+      const s = afters[i];
+      const view = getView(s, currentFighter(s).id);
+      encV3.encodeSampleV3({ view, board: view.board }, null, netBuf.subarray(j * D, (j + 1) * D));
+    });
+    const v = netJudge.model.forwardBatch(netBuf, live.length);
+    // Inverse de la cible d'apprentissage (shapes.json): linéaire J/1000, ou
+    // « WDL » tanh(J/L) → J = L·atanh(v). Négation: V est celle du joueur au trait.
+    const sh = netJudge.model.shapes;
+    const tanhK = sh.targetKind === 'tanh';
+    const L = sh.labelScale || 1000;
+    live.forEach((i, j) => {
+      const vj = Math.max(-0.999999, Math.min(0.999999, v[j]));
+      const toMove = tanhK ? L * Math.atanh(vj) : 1000 * vj;
+      out[i] = Math.max(-999, Math.min(999, -toMove));
+    });
+    counters.netEvals = (counters.netEvals || 0) + live.length;
+  }
+  return out;
+}
+// Copie VERBATIM de src/bots/searchBrain.js (candidateCastsFast): cases à ≤2
+// d'un combattant seulement — à garder identique au port navigateur.
+function candidateCastsFast(view, api) {
+  const you = view.you;
+  const castable = (s) => s && (s.pa || 0) <= you.pa && (s.cooldownLeft || 0) <= 0 && (s.usesLeft ?? 99) > 0;
+  const cells = [];
+  const seen = new Set();
+  const push = (x, y) => {
+    if (x < 0 || y < 0 || x >= view.board.width || y >= view.board.height) return;
+    const k = `${x},${y}`;
+    if (seen.has(k)) return;
+    seen.add(k);
+    cells.push({ x, y });
+  };
+  for (const f of [you, ...(view.allies || []), ...(view.enemies || [])]) {
+    if (!f || f.hp <= 0) continue;
+    for (let dy = -2; dy <= 2; dy++) {
+      const span = 2 - Math.abs(dy);
+      for (let dx = -span; dx <= span; dx++) push(f.pos.x + dx, f.pos.y + dy);
+    }
+  }
+  const out = [];
+  const trySpell = (s) => {
+    if (!castable(s)) return;
+    const legal = cells.filter(c => api.canCast(s.key, c).ok);
+    for (const c of effectfulTargets(view, s, legal)) out.push({ type: 'CAST', spell: s.key, target: { x: c.x, y: c.y } });
+  };
+  for (const s of you.spells || []) trySpell(s);
+  if (you.weaponSpell) trySpell(you.weaponSpell);
+  return out;
+}
+
+// `policy` (optionnel): politique de CE tour simulé; undefined = rolloutPolicy,
+// null = maison (utilisé par l'ensemble de ripostes).
+function simTurn(s, counters, policy = rolloutPolicy) {
   const team = currentFighter(s).team;
   let guard = OPP_TURN_GUARD;
+  if (policy && policy.reset) policy.reset();
   while (!s.over && currentFighter(s).team === team && guard-- > 0) {
     const f = currentFighter(s);
     const api = freshApi(s, f.id);
     let action;
-    try { action = maisonDecide(getView(s, f.id), api) || { type: 'PASS' }; } catch { action = { type: 'PASS' }; }
+    try {
+      action = (policy ? policy(getView(s, f.id), api) : maisonDecide(getView(s, f.id), api)) || { type: 'PASS' };
+    } catch { action = { type: 'PASS' }; }
     const r = applyAction(s, action);
     counters.applies++;
     if (!r.ok) { s = applyAction(s, { type: 'PASS' }).state; counters.applies++; continue; }
@@ -226,16 +345,42 @@ function simTurn(s, counters) {
 // supplémentaire en politique maison des deux côtés (quiescence — ne jamais
 // juger au milieu de l'échange: une ligne « passive » révèle ici qu'on se
 // refait tirer dessus au round suivant), et V juge la position CALME.
-function depth2Score(endState, meId, myTeam, counters, judge) {
+function depth2Score(endState, meId, myTeam, counters, judge, capture = null) {
   let s = endState;
   if (!s.over && currentFighter(s).id === meId) {
     const r = applyAction(s, { type: 'PASS' });
     counters.applies++;
     s = r.state;
   }
-  if (!s.over) s = simTurn(s, counters); // leur riposte
-  if (!s.over) s = simTurn(s, counters); // mon tour suivant (politique maison)
-  if (!s.over) s = simTurn(s, counters); // leur tour suivant
+  // Loop 1: l'APRÈS-ÉTAT (mon tour fini, leur tour commencé) que ce score
+  // évalue — lecture seule, n'altère ni l'état ni les dés ni les compteurs.
+  if (capture) capture.after = s;
+  // SB_NET_LEAF: remplace la quiescence (3 rollouts maison ≈ 95% du coût) par
+  // un jugement DIRECT du réseau. '1' = 0 rollout (vitesse max); '1r' = une
+  // seule riposte adverse puis jugement (le réseau doit anticiper le tempo
+  // sans voir l'échange). Pari AlphaZero: V entraîné sur issues a appris à
+  // juger une position « chaude » sans la dérouler. Gardé → inerte par défaut.
+  const netLeaf = process.env.SB_NET_LEAF;
+  if (netLeaf) {
+    if (netLeaf === '1r' && !s.over) s = simTurn(s, counters); // une riposte
+    if (s.over) return s.winner === myTeam ? 1000 : s.winner ? -1000 : 0;
+    const v = (judge || leafEval)(s, meId, myTeam, counters);
+    return Math.max(-999, Math.min(999, v));
+  }
+  // Défaut 3: leur riposte, mon tour suivant (politique maison), leur tour suivant.
+  const H = horizonOverride ?? 3;
+  if (replySet && !s.over) {
+    let worst = Infinity;
+    for (const pol of replySet) {
+      let t = simTurn(s, counters, pol);
+      for (let k = 1; k < H && !t.over; k++) t = simTurn(t, counters);
+      const v = t.over ? (t.winner === myTeam ? 1000 : t.winner ? -1000 : 0)
+        : Math.max(-999, Math.min(999, (judge || leafEval)(t, meId, myTeam, counters)));
+      if (v < worst) worst = v;
+    }
+    return worst;
+  }
+  for (let t = 0; t < H && !s.over; t++) s = simTurn(s, counters);
   // Échelle commune avec V (±1000 = issue certaine): un ancien ±1e6 écrasait
   // la moyenne des échantillons — 1 victoire simulée sur 3 battait n'importe
   // quelle position dominante sans terminaison dans l'horizon.
@@ -316,7 +461,8 @@ function searchDecide(realState, counters, judge) {
     if ((s.hazards || []).length) parts.push(JSON.stringify(s.hazards)); // piège/glyphe posé = effet réel
     return parts.join('|');
   };
-  let budget = PLAN_MAX_APPLIES;
+  const maxApplies = budgetOverride ?? PLAN_MAX_APPLIES;
+  let budget = maxApplies;
   const applies0 = counters.applies; // plafond CPU PAR DÉCISION (pas cumulé match)
   // BFS (file FIFO), pas DFS: avec un budget plafonné, un parcours en
   // profondeur dépense tout dans le sous-arbre des DERNIÈRES cases poussées
@@ -332,7 +478,7 @@ function searchDecide(realState, counters, judge) {
     const view = getView(node.state, meId);
     const api = freshApi(node.state, meId);
     const parentEffectKey = effectKeyOf(node.state);
-    const acts = candidateCasts(view, api);
+    const acts = fastCastsOn ? candidateCastsFast(view, api) : candidateCasts(view, api);
     // Cibles OCCUPÉES d'abord: le budget part en priorité sur les sorts qui
     // touchent quelqu'un, pas sur des centaines de cases vides.
     const occ = new Set(Object.values(node.state.fighters).filter(f => f.hp > 0).map(f => `${f.pos.x},${f.pos.y}`));
@@ -344,7 +490,7 @@ function searchDecide(realState, counters, judge) {
       for (const cell of api.reachable()) acts.push({ type: 'MOVE', to: { x: cell.pos.x, y: cell.pos.y } });
     }
     for (const a of acts) {
-      if (budget <= 0 || counters.applies - applies0 > PLAN_MAX_APPLIES * 3) break;
+      if (budget <= 0 || counters.applies - applies0 > maxApplies * 3) break;
       const r = applyAction(node.state, a);
       counters.applies++;
       if (!r.ok) continue;
@@ -459,6 +605,33 @@ function searchDecide(realState, counters, judge) {
   // feuille est un réseau de valeur qui juge autrement que le tri PV).
   const nomRng = createRng(hashSeed(`nom:${rootKey}`));
   for (let r = 0; r < 3 && moves.length; r++) pick(moves[Math.floor(nomRng.next() * moves.length)]);
+  // Candidat-POLITIQUE (A3, inerte sans setNominatorPolicy): le tour complet de
+  // la politique apprise (clone du prof budget 4000) depuis la racine — des
+  // plans que l'énumération à petit budget ne voit pas. Nommé APRÈS toutes les
+  // nominations A1 et finaliste EN PLUS des 6 (A1 + 1 candidat exactement).
+  let policyNom = null;
+  if (nominatorPolicy) {
+    try {
+      if (nominatorPolicy.reset) nominatorPolicy.reset();
+      let ps = root;
+      const pacts = [];
+      let g = OPP_TURN_GUARD;
+      while (!ps.over && currentFighter(ps).id === meId && g-- > 0) {
+        const a = nominatorPolicy(getView(ps, meId), freshApi(ps, meId)) || { type: 'PASS' };
+        if (a.type === 'PASS') break;
+        const r = applyAction(ps, a);
+        counters.applies++;
+        if (!r.ok) break;
+        ps = r.state;
+        pacts.push(a);
+      }
+      if (pacts.length) {
+        const spells = pacts.filter(a => a.type === 'CAST').map(a => a.spell).sort().join(',');
+        policyNom = { e: { state: ps, first: pacts[0], moved: pacts.some(a => a.type === 'MOVE'), depth: pacts.length, last: pacts[pacts.length - 1].type, spells, acts: pacts }, cheap: hpScore(ps, myTeam) };
+        nominees.push(policyNom);
+      }
+    } catch { policyNom = null; }
+  }
 
   // Dés équitables (audit F03): CHAQUE score rejoue le tour proposé depuis la
   // racine sous un flux frais — plus aucun score ne réutilise l'échantillon
@@ -466,7 +639,8 @@ function searchDecide(realState, counters, judge) {
   // Common random numbers: les MÊMES K flux pour tous les candidats d'une
   // décision — la comparaison reflète les lignes, pas la chance du tirage.
   // Un seul échantillon = malédiction du vainqueur (prouvé: 0% → 31%).
-  const leafSeeds = [0, 1, 2].map((k) => createRng(hashSeed(`leaf:${rootKey}:${k}`)).getState());
+  const K = samplesOverride ?? 3;
+  const leafSeeds = Array.from({ length: K }, (_, k) => createRng(hashSeed(`leaf:${rootKey}:${k}`)).getState());
   const replayed = (x, k) => {
     let st = { ...root, rngState: leafSeeds[k] };
     for (const a of x.e.acts) {
@@ -478,33 +652,89 @@ function searchDecide(realState, counters, judge) {
       // tour forcée), on ne joue JAMAIS la suite du plan pour l'adversaire.
       if (st.over || currentFighter(st).id !== meId) break;
     }
-    return depth2Score(st, meId, myTeam, counters, judge);
+    if (!afterstateHook) return depth2Score(st, meId, myTeam, counters, judge);
+    const cap = {};
+    const v = depth2Score(st, meId, myTeam, counters, judge, cap);
+    afterstateHook.onSample({ x, k, after: cap.after, v, meId, myTeam, rootKey });
+    return v;
   };
+  // Juge appris (loop 1, inerte sans setNetJudge): après-état du plan x sous le
+  // flux k, SANS riposte (même rejeu que `replayed`, puis fin de tour).
+  const afterOf = (x, k) => {
+    let st = { ...root, rngState: leafSeeds[k] };
+    for (const a of x.e.acts) {
+      const r = applyAction(st, a);
+      counters.applies++;
+      if (!r.ok) break;
+      st = r.state;
+      if (st.over || currentFighter(st).id !== meId) break;
+    }
+    if (!st.over && currentFighter(st).id === meId) { st = applyAction(st, { type: 'PASS' }).state; counters.applies++; }
+    return st;
+  };
+  const fullNet = !!netJudge && netJudge.mode === 'full';
   // Étage 1: un échantillon frais commun par candidat (classement préliminaire).
-  const prelim = nominees.map((x) => ({ x, s0: replayed(x, 0) }));
+  let prelim;
+  if (netJudge) {
+    const v0 = netScores(nominees.map((x) => afterOf(x, 0)), myTeam, counters);
+    prelim = nominees.map((x, i) => ({ x, s0: v0[i] }));
+  } else {
+    prelim = nominees.map((x) => ({ x, s0: replayed(x, 0) }));
+  }
   prelim.sort((a, b) => b.s0 - a.s0);
   // Étage 2: les finalistes reçoivent TOUS 3 échantillons complets, et la
   // sélection finale ne considère QUE les finalistes — un candidat à 1
   // échantillon chanceux ne peut plus gagner (ancienne fuite, audit F03).
   // Le plan maison est toujours finaliste (témoin, audit F08).
-  const finalists = prelim.slice(0, 6);
-  if (maisonNom) {
+  // N0a (fullNet): V est assez bon marché pour noter TOUS les nominés.
+  const finalists = fullNet ? prelim.filter((c) => c.x !== policyNom)
+    : prelim.filter((c) => c.x !== policyNom).slice(0, finalistsOverride ?? 6);
+  if (maisonNom && !fullNet) {
     const mc = prelim.find((c) => c.x === maisonNom);
     if (mc && !finalists.includes(mc)) finalists.push(mc);
   }
+  if (policyNom) finalists.push(prelim.find((c) => c.x === policyNom));
+  // Issue terminale (±1000) > toute feuille clampée (±999) — la pénalité de
+  // profondeur est sortie du SCORE (audit F04: −0.5×longueur pouvait faire
+  // préférer une « belle position » à une victoire certaine). À score égal
+  // seulement: plan le plus court (ne gaspille pas de PA).
+  const beats = (score, len, cur) => !cur || score > cur.score + 1e-9
+    || (Math.abs(score - cur.score) <= 1e-9 && len < cur.len);
   let best = null;
+  let bestA1 = null; // meilleur SANS le candidat-politique (diagnostic A3)
+  // N0a: les K−1 rejeux restants de CHAQUE nominé notés par V en un seul lot.
+  let netRest = null;
+  if (fullNet) {
+    const afters = [];
+    for (const c of finalists) for (let k = 1; k < K; k++) afters.push(afterOf(c.x, k));
+    netRest = netScores(afters, myTeam, counters);
+  }
+  let fi = 0;
   for (const c of finalists) {
-    const score = (c.s0 + replayed(c.x, 1) + replayed(c.x, 2)) / 3;
-    // Issue terminale (±1000) > toute feuille clampée (±999) — la pénalité de
-    // profondeur est sortie du SCORE (audit F04: −0.5×longueur pouvait faire
-    // préférer une « belle position » à une victoire certaine). À score égal
-    // seulement: plan le plus court (ne gaspille pas de PA).
-    if (!best || score > best.score + 1e-9
-      || (Math.abs(score - best.score) <= 1e-9 && c.x.e.acts.length < best.len)) {
-      best = { score, len: c.x.e.acts.length, first: c.x.e.first, acts: c.x.e.acts };
+    let sum;
+    if (fullNet) { sum = c.s0; for (let k = 1; k < K; k++) sum += netRest[fi * (K - 1) + (k - 1)]; }
+    else if (netJudge) { sum = replayed(c.x, 0); for (let k = 1; k < K; k++) sum += replayed(c.x, k); } // N0b: finale 100% ripostes réelles
+    else {
+      sum = c.s0; // même ordre d'addition que l'ancien (s0 + r1 + r2) / 3
+      for (let k = 1; k < K; k++) sum += replayed(c.x, k);
     }
+    fi++;
+    const score = sum / K;
+    const cand = { score, len: c.x.e.acts.length, first: c.x.e.first, acts: c.x.e.acts };
+    if (beats(score, cand.len, best)) best = cand;
+    if (c.x !== policyNom && beats(score, cand.len, bestA1)) bestA1 = cand;
+    c.s3 = score; // lecture seule: n'affecte ni l'ordre ni les dés
+  }
+  if (policyNom) {
+    counters.polNom = (counters.polNom || 0) + 1;
+    if (JSON.stringify(best?.first || null) !== JSON.stringify(bestA1?.first || null)) counters.polChanged = (counters.polChanged || 0) + 1;
   }
   counters.planActs = best?.acts || [];
+  // Classement COMPLET du prof (cibles souples pour le clone): première action
+  // de chaque candidat + score 1 échantillon (s0) + score 3 échantillons (s3,
+  // finalistes seulement). Calculé de toute façon — le garder ne coûte rien.
+  // Plan vide = fin de tour = PASS (même convention que le return ci-dessous).
+  counters.candidates = prelim.map((c) => ({ a: c.x.e.first || { type: 'PASS' }, s0: c.s0, s3: c.s3 ?? null }));
   // Valeur de recherche de la RACINE (meilleur plan, moyenne 3 échantillons,
   // échelle V ∈ [−1,1]): cible dense « façon Stockfish-NNUE » pour le
   // générateur — l'issue finale n'enseigne pas le tempo, le verdict de la
@@ -513,7 +743,24 @@ function searchDecide(realState, counters, judge) {
   counters.ms += performance.now() - t0;
   counters.decisions++;
   counters.endsSum += ends.length;
+  if (afterstateHook && afterstateHook.onDecision) {
+    afterstateHook.onDecision({ root, rootKey, meId, myTeam, ends, nominees, prelim, finalists, best, judge, maisonNom });
+  }
   return best?.first || { type: 'PASS' };
+}
+
+// Rejoue un plan depuis `root` sous le flux `rngState` (même règle que
+// `replayed`: arrêt si le tour change) — pour les étiquettes de l'enregistreur.
+function replayPlan(root, acts, rngState, meId, counters) {
+  let st = { ...root, rngState };
+  for (const a of acts) {
+    const r = applyAction(st, a);
+    counters.applies++;
+    if (!r.ok) break;
+    st = r.state;
+    if (st.over || currentFighter(st).id !== meId) break;
+  }
+  return st;
 }
 
 // ---------------------------------------------------------------- matchs
@@ -802,7 +1049,8 @@ function debugGame(cls, lk) {
 }
 
 module.exports = {
-  searchDecide, setLeafEval, useValueModel, makeValueJudge, candidateCasts, makeFighters,
+  searchDecide, setLeafEval, setRolloutPolicy, setNominatorPolicy, setBudget, setFastCasts, setSampling, setHorizon, setReplySet, candidateCastsFast, useValueModel, makeValueJudge, candidateCasts, effectfulTargets, makeFighters,
+  setAfterstateHook, setNetJudge, depth2Score, replayPlan, heuristicLeaf, freshApi,
   LOADOUTS, hpScore, stateKeyOf, playMatch, mirror, duel, MAP, damagePotential,
   SEARCH_VERSION,
 };
