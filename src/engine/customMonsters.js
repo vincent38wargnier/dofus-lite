@@ -2,11 +2,14 @@ import { getMonster } from './monsters';
 import { buildSpell } from './classes';
 import { isCustomSpell } from './customSpells';
 import { spellbookBudgetErrors } from './spellBalance';
+import { validCreatureBase } from './authoringTemplates';
+
+export const customMonsterBase = value => value.base && validCreatureBase(value.base) ? value.base : getMonster(value.reference?.monsterId, value.reference?.grade);
 
 export function validCustomMonster(value, { allowEmpty = false } = {}) {
   const inRange = (v, min, max) => Number.isInteger(v) && v >= min && v <= max;
   return !!value && typeof value.key === 'string' && value.key.length > 0 && typeof value.name === 'string' && !!value.name.trim()
-    && !!getMonster(value.reference?.monsterId, value.reference?.grade)
+    && (value.base ? validCreatureBase(value.base) : !!getMonster(value.reference?.monsterId, value.reference?.grade))
     && inRange(value.tuning?.hpPercent, 25, 150) && inRange(value.tuning?.statsPercent, 25, 150)
     && inRange(value.tuning?.paBonus, -2, 2) && inRange(value.tuning?.pmBonus, -2, 2)
     && Array.isArray(value.spells) && value.spells.length >= (allowEmpty ? 0 : 1) && value.spells.length <= 10
@@ -17,11 +20,14 @@ export function validCustomMonster(value, { allowEmpty = false } = {}) {
 
 export function resolveCustomMonster(value) {
   if (!validCustomMonster(value)) throw new Error('Monstre personnalisé invalide.');
-  const reference = getMonster(value.reference.monsterId, value.reference.grade);
+  const reference = customMonsterBase(value);
   // Native identifiers trigger special mechanics in combat. A visual/stat
   // reference must never secretly inherit those mechanics or its spellbook.
   return { ...reference, name: value.name, monsterId: null, appearanceMonsterId: reference.monsterId,
     behavior: 'custom', artworkId: value.artworkId,
+    initiative: reference.initiative ?? ['force','intelligence','chance','agilite'].reduce((n, s) => n + Math.round(reference.stats[s] * value.tuning.statsPercent / 100), 0),
+    dodgePa: reference.dodgePa ?? Math.floor(reference.stats.sagesse / 4),
+    dodgePm: reference.dodgePm ?? Math.floor(reference.stats.sagesse / 4),
     baseHp: Math.max(1, Math.round(reference.baseHp * value.tuning.hpPercent / 100)),
     basePa: Math.max(0, Math.min(20, reference.basePa + value.tuning.paBonus)),
     basePm: Math.max(0, Math.min(8, reference.basePm + value.tuning.pmBonus)),

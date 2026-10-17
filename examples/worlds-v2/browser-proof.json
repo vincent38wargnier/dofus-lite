@@ -1,0 +1,141 @@
+{
+  "worlds": [
+    {
+      "key": "potter",
+      "import": true,
+      "rooms": 3,
+      "heroes": 3,
+      "spells": 24,
+      "images": true,
+      "manualLaunch": true,
+      "boostCast": true
+    },
+    {
+      "key": "brice",
+      "import": true,
+      "rooms": 3,
+      "heroes": 3,
+      "spells": 24,
+      "images": true,
+      "manualLaunch": true,
+      "boostCast": true
+    },
+    {
+      "key": "asterix",
+      "import": true,
+      "rooms": 3,
+      "heroes": 3,
+      "spells": 24,
+      "images": true,
+      "manualLaunch": true,
+      "boostCast": true
+    },
+    {
+      "key": "kaamelott",
+      "import": true,
+      "rooms": 3,
+      "heroes": 3,
+      "spells": 24,
+      "images": true,
+      "manualLaunch": true,
+      "boostCast": true
+    },
+    {
+      "key": "starwars",
+      "import": true,
+      "rooms": 3,
+      "heroes": 3,
+      "spells": 24,
+      "images": true,
+      "manualLaunch": true,
+      "boostCast": true
+    },
+    {
+      "key": "rings",
+      "import": true,
+      "rooms": 3,
+      "heroes": 3,
+      "spells": 24,
+      "images": true,
+      "manualLaunch": true,
+      "boostCast": true
+    },
+    {
+      "key": "onepiece",
+      "import": true,
+      "rooms": 3,
+      "heroes": 3,
+      "spells": 24,
+      "images": true,
+      "manualLaunch": true,
+      "boostCast": true
+    },
+    {
+      "key": "dragonball",
+      "import": true,
+      "rooms": 3,
+      "heroes": 3,
+      "spells": 24,
+      "images": true,
+      "manualLaunch": true,
+      "boostCast": true
+    },
+    {
+      "key": "pokemon",
+      "import": true,
+      "rooms": 3,
+      "heroes": 3,
+      "spells": 24,
+      "images": true,
+      "manualLaunch": true,
+      "boostCast": true
+    },
+    {
+      "key": "visiteurs",
+      "import": true,
+      "rooms": 3,
+      "heroes": 3,
+      "spells": 24,
+      "images": true,
+      "manualLaunch": true,
+      "boostCast": true
+    },
+    {
+      "key": "naheulbeuk",
+      "import": true,
+      "rooms": 3,
+      "heroes": 3,
+      "spells": 24,
+      "images": true,
+      "manualLaunch": true,
+      "boostCast": true
+    },
+    {
+      "key": "wakfu",
+      "import": true,
+      "rooms": 3,
+      "heroes": 3,
+      "spells": 24,
+      "images": true,
+      "manualLaunch": true,
+      "boostCast": true
+    }
+  ],
+  "errors": [],
+  "browserRestart": true,
+  "campaignsCompleted": 3,
+  "creationAvailable": true,
+  "ratings": {
+    "signedInOnly": true,
+    "persisted": true,
+    "update": true,
+    "delete": true,
+    "mobile": true
+  },
+  "featuredGameOfThrones": {
+    "homePlay": true,
+    "correctAdventure": true,
+    "suppliedHeroes": 6,
+    "browserErrors": 0
+  }
+}

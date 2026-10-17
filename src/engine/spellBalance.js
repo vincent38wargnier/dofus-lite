@@ -1,4 +1,4 @@
-import LIBRARY from './spellLibrary.json';
+import { spellLibrary as LIBRARY } from './gameData';
 
 // A reproducible design budget, not Ankama's (unpublished) balancing formula.
 // Units are raw-damage equivalents at 600 characteristic / +56 fixed damage.

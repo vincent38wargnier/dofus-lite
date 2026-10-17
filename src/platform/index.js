@@ -1,0 +1,10 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import '../styles/global.css';
+import PlatformApp from './PlatformApp';
+import { initializeLibraries } from './localLibraries';
+import './platform.css';
+import './forum.css';
+import './play.css';
+const root = createRoot(document.getElementById('root'));
+initializeLibraries().then(()=>root.render(<PlatformApp/>)).catch(error=>root.render(<main className="af-empty"><h1>Votre bibliothèque nécessite une vérification</h1><p>{error.message}</p><p>Les sauvegardes locales ont été conservées.</p></main>));

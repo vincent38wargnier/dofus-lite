@@ -1,13 +1,15 @@
+import { PLATFORM } from '../platform/config';
 import React, { useEffect, useState } from 'react';
 import { Search, Check, Plus } from 'lucide-react';
 import { UNAVAILABLE_BOSSES, getMonster, monsterGrades } from '../engine/monsters';
-import { DUNGEONS, DUNGEON_BOSSES, UNAVAILABLE_DUNGEONS, dungeonForBoss, dungeonRoster, unavailableDungeonForBoss } from '../engine/dungeons';
+import { DUNGEON_BOSSES, UNAVAILABLE_DUNGEONS, dungeonForBoss, dungeonRoster, unavailableDungeonForBoss } from '../engine/dungeons';
 import { MAPS } from '../engine/maps';
 import { dungeonMap } from '../engine/customMaps';
 import { RetroPortrait, RetroSpellIcon, useRetroAssets } from './RetroAssets';
 import { MapPreview } from './MapPicker';
 import { customDungeonErrors, customDungeonMemberPreview } from '../engine/customDungeons';
 import { opponentSummary } from '../engine/opponentTeam';
+import { useWorlds, WorldFilter } from './WorldsContext';
 
 const normalize = value => value.toLocaleLowerCase('fr').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[’']/g, '');
 const number = value => value.toLocaleString('fr-FR');
@@ -16,13 +18,14 @@ const ELEMENTS = [['neutre', 'Neutre'], ['terre', 'Terre'], ['feu', 'Feu'], ['ea
 export default function BossSetup({ bossId, grade, onBossChange, onGradeChange, seed,
   customDungeons = [], customDungeonId, onCustomChange, onCreate, onEdit, compact = false }) {
   const assets = useRetroAssets();
+  const worlds = useWorlds();
   const [query, setQuery] = useState('');
   const [source, setSource] = useState('all');
   useEffect(() => { if (customDungeonId) setSource(previous => previous === 'dofus' ? 'all' : previous); }, [customDungeonId]);
   const customDungeon = customDungeons.find(entry => entry.id === customDungeonId);
-  const customMatches = source === 'dofus' ? [] : customDungeons.filter(entry => normalize(entry.name).includes(normalize(query)));
-  const matches = source === 'custom' ? [] : DUNGEON_BOSSES.filter(boss => normalize(`${boss.name} ${dungeonForBoss(boss.id).name}`).includes(normalize(query)));
-  const unavailableMatches = UNAVAILABLE_DUNGEONS.filter(boss => normalize(boss.name).includes(normalize(query)));
+  const customMatches = source === 'dofus' ? [] : customDungeons.filter(entry => (!worlds || worlds.matches('dungeons', entry.id, worlds.selected)) && normalize(entry.name).includes(normalize(query)));
+  const matches = source === 'custom' ? [] : DUNGEON_BOSSES.filter(boss => (!worlds || worlds.matches('nativeDungeons', boss.id, worlds.selected)) && normalize(`${boss.name} ${dungeonForBoss(boss.id).name}`).includes(normalize(query)));
+  const unavailableMatches = UNAVAILABLE_DUNGEONS.filter(boss => (!worlds || worlds.matches('monsters', boss.bossId, worlds.selected)) && normalize(boss.name).includes(normalize(query)));
   const monster = getMonster(bossId, grade);
   const grades = monsterGrades(bossId);
   const room = dungeonForBoss(bossId);
@@ -42,11 +45,11 @@ export default function BossSetup({ bossId, grade, onBossChange, onGradeChange, 
       {suggested ? <button type="button" className="btn" onClick={() => onBossChange(suggested.id)}>Choisir {suggested.name}</button>
         : <p>Choisissez une salle dans la liste ci-dessous.</p>}
     </div>}
-    <div className="boss-catalogue-heading"><div><h3>Les donjons <span className="count-badge">{DUNGEONS.length + customDungeons.length} salles</span></h3><p className="muted small">Choisissez une salle complète et son terrain.</p></div>
+    <div className="boss-catalogue-heading"><div><h3>Les donjons <span className="count-badge">{matches.length + customMatches.length} choix</span></h3><p className="muted small">Choisissez une salle complète et son terrain.</p></div>
       {onCreate && <button className="btn primary" type="button" onClick={onCreate}><Plus size={16} />Créer un donjon</button>}
     </div>
     <div className="dungeon-filters">
-      <div className="source-filters" role="group" aria-label="Origine des donjons">{[['all', 'Tous'], ['dofus', 'Dofus'], ['custom', 'Personnalisés']].map(([value, label]) => <button type="button" className="btn" key={value} aria-pressed={source === value} onClick={() => setSource(value)}>{label}</button>)}</div>
+      {worlds?.libraries.length ? <WorldFilter /> : <div className="source-filters" role="group" aria-label="Origine des donjons">{[['all', 'Tous'], ['dofus', PLATFORM ? 'Bibliothèques' : 'Dofus'], ['custom', 'Personnalisés']].map(([value, label]) => <button type="button" className="btn" key={value} aria-pressed={source === value} onClick={() => setSource(value)}>{label}</button>)}</div>}
       <label className="boss-search"><Search size={16} /><input type="search" aria-label="Rechercher un boss" placeholder="Rechercher un donjon…"
         value={query} onChange={event => setQuery(event.target.value)} /></label>
     </div>

@@ -1,0 +1,1 @@
+module.exports = { ...require('../src/platform/libraryFormat'), ...require('../src/platform/libraryCover'), ...require('../src/platform/libraryContents'), ...require('../src/platform/localLibraries'), ...require('../src/content/zip') };

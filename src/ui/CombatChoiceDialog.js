@@ -1,16 +1,18 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, Bot, Castle, Check, Gamepad2, Play, Settings2, Swords, Target, Users, X } from 'lucide-react';
-import { defaultMonsterGrade } from '../engine/monsters';
+import { defaultMonsterGrade, POUTCH_GRADES, KANOJEDO_MAP_ID } from '../engine/monsters';
+import { dungeonMapId } from '../engine/dungeons';
 import { isAutomaticTeam } from '../engine/allyTeam';
-import { AdventureLobby } from './AdventurePanel';
 import { CampaignLobby } from './DungeonCampaign';
 import { dungeonRoom } from '../engine/dungeonCampaign';
 import useDungeonProgress from './dungeonProgress';
-import { adventureEnabled, defaultAdventureChoice } from '../engine/adventures';
 import BossSetup from './BossSetup';
 import DuelComposer from './DuelComposer';
 import CombatMapGallery from './CombatMapGallery';
 import CombatPreview from './CombatPreview';
+import { useWorlds, WorldFilter } from './WorldsContext';
+import { worldCombatChoice } from './worldCatalogue';
+import { encounterCapacity } from '../engine/encounters';
 import '../styles/combatChoice.css';
 
 const MODES = [
@@ -19,23 +21,23 @@ const MODES = [
   { id: 'kanojedo', title: 'Entraînement', description: 'Testez vos combos', Icon: Target },
 ];
 const PANELS = {
-  overview: ['Choisir un combat', 'Votre équipe, votre terrain. À vous de jouer.'],
+  overview: ['Combat libre', 'Choisissez votre combat, composez votre équipe et décidez qui la contrôle.'],
   allies: ['Mon équipe', 'Ajoutez vos compagnons et choisissez qui les contrôle.'],
   opponents: ['Mes adversaires', 'Un profil, un monstre ou tout un groupe : composez votre défi.'],
-  dungeons: ['Choisir un donjon', 'Salles de Dofus et créations personnelles, au même endroit.'],
+  dungeons: ['Choisir un donjon', 'Vos bibliothèques et créations personnelles, au même endroit.'],
   map: ['Choisir une carte', 'Un décor, ses obstacles et un nouveau terrain de jeu.'],
   settings: ['Réglages du combat', 'Choisissez les IA et les tirages aléatoires.'],
 };
 
 export default function CombatChoiceDialog({ playerClass, playerName, botId, allBots,
-  profiles, customCharacters, opponents, onOpponentsChange, onSelectOpponent, opponentSaveError, onCreateProfile,
+  profiles, customCharacters, opponents, onOpponentsChange, onSelectOpponent, opponentSaveError, onCreateProfile, onCreateTeamProfile, onBrowseCharacters,
   allies = [], onAlliesChange, onSelectAlly, allySaveError, initialPanel = 'overview', includePlayer = true, setIncludePlayer,
-  adventureChoice, setAdventureChoice, adventureSaveError,
   controller, setController, playerBotId, setPlayerBotId, onAutomaticStart, onResumeAutomatic,
   customDungeons, customDungeonId, setCustomDungeonId, onOpenCreator, onEditEquipment,
-  mapId, setMapId, mode, setMode, monsterGrade, setMonsterGrade, bossId, setBossId, bossGrade, setBossGrade,
+  mapId, setMapId, battlefield, encounter, onCustomizeEncounter, mode, setMode, monsterGrade, setMonsterGrade, bossId, setBossId, bossGrade, setBossGrade,
   seed, setSeed, equipment, canPlay, validation, selectionLabel, error, settingsError, onStart, onFriends, onClose, embedded = false }) {
   const id = useId();
+  const worlds = useWorlds();
   const ref = useRef(null);
   const backdropDown = useRef(false);
   const returnPanel = useRef(null);
@@ -44,13 +46,23 @@ export default function CombatChoiceDialog({ playerClass, playerName, botId, all
   const sourceDungeon = customDungeons?.find(entry => entry.id === customDungeonId);
   const progress = useDungeonProgress(sourceDungeon);
   const customDungeon = dungeonRoom(sourceDungeon, progress.roomIndex);
-  const prepared = mode === 'boss' && adventureEnabled(customDungeon);
-  const choice = prepared ? adventureChoice || defaultAdventureChoice(customDungeon) : null;
-  const automatic = prepared ? choice.automatic : isAutomaticTeam(controller, allies, includePlayer);
-  const teamCount = prepared ? choice.heroIds.length : allies.length + Number(includePlayer);
+  const automatic = isAutomaticTeam(controller, allies, includePlayer);
+  const teamCount = allies.length + Number(includePlayer);
   const overview = panel === 'overview';
   const leader = includePlayer ? { kind: 'character', classId: playerClass, name: playerName, loadout: equipment.loadouts.A, controller, botId: playerBotId } : null;
   const changePanel = next => { if (next !== 'overview') returnPanel.current = next; setPanel(next); };
+  const chooseWorld = worldId => {
+    worlds.select(worldId);
+    const next = worldCombatChoice(worldId, worlds.libraries, customDungeons || []);
+    setMode(next.mode); setCustomDungeonId(next.customDungeonId);
+    if (next.bossId != null) { setBossId(next.bossId); setBossGrade(defaultMonsterGrade(next.bossId)); }
+    changePanel(next.panel);
+  };
+  const chooseMode = next => {
+    if (next === 'boss' && mode !== 'boss' && worlds && worldCombatChoice(worlds.selected, worlds.libraries, customDungeons || []).mode === 'boss') chooseWorld(worlds.selected);
+    else setMode(next);
+  };
+  const customizeOpponents = () => { onCustomizeEncounter?.(); changePanel('opponents'); };
   const closeOrBack = () => overview ? onClose() : changePanel('overview');
 
   useEffect(() => {
@@ -91,6 +103,7 @@ export default function CombatChoiceDialog({ playerClass, playerName, botId, all
   const removeOpponent = index => onOpponentsChange(opponents.filter((_, i) => i !== index));
   const editOpponent = index => { onSelectOpponent(index); onClose(); onEditEquipment('B'); };
   const editAlly = index => { onSelectAlly(index); onClose(); onEditEquipment('B'); };
+  const editLeader = () => { onClose(); onEditEquipment('A'); };
   const openCreator = (kind, entryId) => { onClose(); onOpenCreator(kind, entryId); };
   const launch = () => { if (automatic && onAutomaticStart) onAutomaticStart(); else onStart(); };
   const keepFocus = event => {
@@ -113,22 +126,19 @@ export default function CombatChoiceDialog({ playerClass, playerName, botId, all
     <div className="combat-choice-layout">
       <header className="combat-choice-heading">
         <div className="combat-heading-copy">{!overview && <button type="button" className="combat-choice-back" onClick={() => changePanel('overview')}><ArrowLeft size={16} />Retour au combat</button>}
-          <h2>{prepared && overview ? 'Jouer l’aventure' : PANELS[panel][0]}</h2><p id={`${id}-description`}>{prepared && overview ? 'Un défi préparé par son auteur. Choisissez, puis jouez.' : PANELS[panel][1]}</p></div>
+          <h2>{PANELS[panel][0]}</h2><p id={`${id}-description`}>{PANELS[panel][1]}</p></div>
         {!embedded && <button type="button" className="btn combat-choice-close" aria-label="Fermer le choix du combat" onClick={onClose}><X size={21} /></button>}
       </header>
       <div className="combat-choice-body">
-        {overview && mode === 'boss' && <CampaignLobby dungeon={sourceDungeon} />}
-        {overview && prepared ? <>
-          <AdventureLobby dungeon={customDungeon} choice={choice} onChange={setAdventureChoice} onOtherDungeon={() => changePanel('dungeons')} />
-          {onFriends && <button type="button" className="peer-entry" disabled={!canPlay} onClick={onFriends}><Users size={24} /><span><strong>Partager l’aventure avec des amis</strong><small>Répartissez les héros fournis entre les joueurs.</small></span><ArrowRight size={20} /></button>}
-          <button type="button" className="btn subtle" onClick={() => setMode('duel')}>Revenir aux combats libres</button>
-        </> : overview ? <>
+        {overview && !!worlds?.libraries.length && <div className="combat-world-toolbar"><WorldFilter onChange={chooseWorld} hint /></div>}
+        {overview ? <>
           {onResumeAutomatic && <div className="combat-resume"><span>Votre dernière simulation est disponible.</span>
             <button type="button" className="btn" onClick={() => { onClose(); onResumeAutomatic(); }}><Play size={15} />Reprendre le combat</button></div>}
-          <div className="combat-choice-modes" role="group" aria-label="Type de combat">{MODES.map(({ id: key, title, description, Icon }) => <button type="button" key={key} data-mode={key}
-            aria-pressed={mode === key} onClick={() => setMode(key)}><span className="combat-mode-icon"><Icon size={24} /></span><span><strong>{title}</strong><small>{description}</small></span><Check className="combat-mode-check" size={17} /></button>)}</div>
-          {onFriends && <button type="button" className="peer-entry" onClick={onFriends}><Users size={24} /><span><strong>Jouer avec des amis</strong><small>Créez un salon, invitez vos amis et composez vos équipes</small></span><ArrowRight size={20} /></button>}
-          <CombatPreview {...{ mode, leader, allies, opponents, automatic, bossId, bossGrade, setBossGrade, customDungeon, monsterGrade, setMonsterGrade, mapId, seed }}
+          <div className="combat-choice-modes" role="group" aria-label="Type de combat">{MODES.filter(m => m.id !== 'kanojedo' || POUTCH_GRADES.length).map(({ id: key, title, description, Icon }) => <button type="button" key={key} data-mode={key}
+            aria-pressed={mode === key} onClick={() => chooseMode(key)}><span className="combat-mode-icon"><Icon size={24} /></span><span><strong>{title}</strong><small>{description}</small></span><Check className="combat-mode-check" size={17} /></button>)}</div>
+          <CombatPreview {...{ mode, leader, allies, opponents, automatic, bossId, bossGrade, setBossGrade, customDungeon, monsterGrade, setMonsterGrade, mapId, battlefield, encounter, seed }}
+            onCustomizeOpponents={onCustomizeEncounter ? customizeOpponents : undefined}
+            onEditLeader={editLeader} onEditAlly={editAlly} onEditOpponent={editOpponent} onBrowseCharacters={onBrowseCharacters}
             onRemoveLeader={removeLeader} onRemoveAlly={removeAlly} onRemoveOpponent={removeOpponent} onOpen={changePanel} />
           {onAutomaticStart && teamCount > 0 && <div className="combat-play-style">
             <div className="combat-control-toggle" role="group" aria-label="Raccourcis de contrôle">
@@ -138,11 +148,14 @@ export default function CombatChoiceDialog({ playerClass, playerName, botId, all
               : [leader, ...allies].some(entry => entry?.controller === 'ai') ? <><strong>Équipe mixte</strong> · Vous jouez les personnages manuels, chacun à son tour.</>
                 : 'Vous jouez chaque membre de votre équipe à son tour.'}</p>
           </div>}
+          {mode === 'boss' && <CampaignLobby dungeon={sourceDungeon} />}
+          {onFriends && <button type="button" className="peer-entry" onClick={onFriends}><Users size={24} /><span><strong>Jouer avec des amis</strong><small>Créez un salon, invitez vos amis et composez vos équipes</small></span><ArrowRight size={20} /></button>}
         </> : panel === 'allies' || panel === 'opponents' ? <DuelComposer key={panel} hideTerrain allied={panel === 'allies'} automatic={automatic} leader={panel === 'allies' ? leader : undefined}
           onLeaderControllerChange={setController} onLeaderBotChange={setPlayerBotId} onRemoveLeader={removeLeader}
-          {...{ profiles, customCharacters, mapId, allBots, onCreateProfile, botId }} opponents={panel === 'allies' ? allies : opponents}
+          onEditLeader={editLeader}
+          {...{ profiles, customCharacters, mapId, allBots, onCreateTeamProfile, botId }} capacity={panel === 'opponents' ? encounterCapacity(encounter) : 8} onCreateProfile={onCreateProfile ? () => onCreateProfile(panel) : undefined} opponents={panel === 'allies' ? allies : opponents}
           onChange={panel === 'allies' ? onAlliesChange : onOpponentsChange} onEditOpponent={panel === 'allies' ? editAlly : editOpponent} />
-          : panel === 'map' ? <CombatMapGallery mapId={mapId} onChoose={next => { setMapId(next); changePanel('overview'); }} />
+          : panel === 'map' ? <CombatMapGallery mapId={mode === 'boss' ? customDungeon?.mapId || dungeonMapId(bossId) : mode === 'kanojedo' ? KANOJEDO_MAP_ID : mapId} onChoose={(next, snapshot) => { if (onCustomizeEncounter) onCustomizeEncounter(next, snapshot); else setMapId(next, snapshot); changePanel('overview'); }} />
           : panel === 'dungeons' ? <BossSetup compact bossId={bossId} grade={bossGrade} customDungeons={customDungeons} customDungeonId={customDungeonId}
             onCustomChange={setCustomDungeonId} onCreate={onOpenCreator ? () => openCreator('dungeons') : undefined}
             onEdit={onOpenCreator ? entry => openCreator('dungeons', entry.id) : undefined}
@@ -155,13 +168,12 @@ export default function CombatChoiceDialog({ playerClass, playerName, botId, all
           </section>}
       </div>
       <footer className="combat-choice-footer">
-        {adventureSaveError && prepared && <p className="loadout-errors" role="alert">{adventureSaveError}</p>}
         {(validation || error) && <p className="loadout-errors" role="alert">{error || validation}</p>}
-        {!prepared && opponentSaveError && <p className="loadout-errors" role="alert">{opponentSaveError}</p>}
-        {!prepared && allySaveError && <p className="loadout-errors" role="alert">{allySaveError}</p>}
+        {opponentSaveError && <p className="loadout-errors" role="alert">{opponentSaveError}</p>}
+        {allySaveError && <p className="loadout-errors" role="alert">{allySaveError}</p>}
         {settingsError && <p className="loadout-errors" role="alert">Impossible de mémoriser ce choix dans ce navigateur.</p>}
         <div className="combat-choice-confirm"><div className="combat-choice-recap"><strong>{teamCount} {teamCount > 1 ? 'alliés' : 'héros'} · {selectionLabel}</strong><small><Check size={13} />Choix mémorisés automatiquement</small></div>
-          <div className="combat-choice-actions">{overview ? <>{!prepared && <button type="button" className="btn combat-settings-button" data-panel-trigger="settings" onClick={() => changePanel('settings')}><Settings2 size={17} />Réglages</button>}
+          <div className="combat-choice-actions">{overview ? <><button type="button" className="btn combat-settings-button" data-panel-trigger="settings" onClick={() => changePanel('settings')}><Settings2 size={17} />Réglages</button>
             <button type="button" className="btn primary combat-choice-launch" disabled={!canPlay} onClick={launch}><Swords size={18} />Lancer le combat</button></>
             : <button type="button" className="btn primary combat-choice-done" onClick={() => changePanel('overview')}><Check size={18} />C’est prêt</button>}
           </div>

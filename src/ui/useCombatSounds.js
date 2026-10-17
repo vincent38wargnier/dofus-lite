@@ -4,6 +4,7 @@ import { useRetroSoundPlayer, getActorId } from './RetroAssets';
 import { facing } from './retroAnimation';
 import { castFallbackSound, criticalSound, movementSounds } from './combatSounds';
 import { createOriginalSoundPlayer } from './originalSounds';
+import { originalCombatVisuals } from '../visuals/spellVisuals';
 
 // Audio belongs to the action, not its damage rows. Movement jobs are scoped
 // per fighter so another fighter's action cannot cut their footsteps off.
@@ -31,7 +32,7 @@ export default function useCombatSounds(frame, events, fighters, assets, appeara
     const play = name => { if (name) window.dofusLiteSound?.(name, scope); };
     for (const event of events || []) {
       const fighter = fighters[event.fighter];
-      if (original || event.visualEffect) {
+      if (!assets || originalCombatVisuals(original, fighter) || event.visualEffect) {
         if (event.t === 'cast') {
           if (event.crit) authoredPlayer.current.play('critical');
           authoredPlayer.current.play(event.visualEffect?.kind || 'slash');

@@ -1,9 +1,11 @@
+import { PLATFORM } from '../platform/config';
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { Plus, X } from 'lucide-react';
 import { CLASSES, CLASS_IDS } from '../engine/classes';
 import { RetroPortrait } from './RetroAssets';
 import { loadoutAtLevel } from './playerSetupState';
 import { profileName } from './profileStore';
+import { useWorlds, WorldFilter } from './WorldsContext';
 
 export function CharacterDialog({ title, description, onClose, children, className = '' }) {
   const ref = useRef(null), close = useRef(onClose), id = useId();
@@ -38,18 +40,24 @@ export function CharacterDialog({ title, description, onClose, children, classNa
   </dialog>;
 }
 
-export function NewCharacterDialog({ customCharacters, roles, onChooseClass, onChooseCustom, onCreateClass, onClose }) {
-  return <CharacterDialog title="Nouveau personnage" description="Choisissez sa classe, puis préparez son équipement et ses sorts." onClose={onClose} className="new-character-dialog">
+export function NewCharacterDialog({ customCharacters = [], roles = {}, onChooseClass, onChooseCustom, onCreateClass, onClose, forClass = false }) {
+  const worlds = useWorlds();
+  const [name, setName] = useState('');
+  const classes = CLASS_IDS.filter(id => !worlds || worlds.matches('classes', id, worlds.selected));
+  const characters = (worlds?.characters || customCharacters).filter(c => !worlds || worlds.matches('characters', c.id, worlds.selected));
+  return <CharacterDialog title={forClass ? 'Partir d’une classe existante' : 'Nouveau personnage'} description={forClass ? 'Créez une copie indépendante. Pour une classe du catalogue, choisissez ensuite jusqu’à dix sorts.' : 'Choisissez une classe : votre personnage sera enregistré dans Mes personnages, avec tous ses sorts.'} onClose={onClose} className="new-character-dialog">
     <div className="character-dialog-body new-profile-classes">
-      <h3>Classes Dofus</h3>
-      <div className="setup-class-grid" aria-label="Classes Dofus">{CLASS_IDS.map(classId => <button type="button" key={classId} className="setup-class"
-        aria-label={`Choisir ${CLASSES[classId].name}`} onClick={() => onChooseClass(classId)}>
+      {!forClass && <label className="field new-character-name">Nom du personnage <input maxLength={80} value={name} onChange={event => setName(event.target.value)} placeholder="Facultatif, vous pourrez le changer ensuite" /></label>}
+      <WorldFilter hint />
+      {!!classes.length && <><h3>{PLATFORM ? 'Classes installées' : 'Classes Dofus'}</h3>
+      <div className="setup-class-grid" aria-label={PLATFORM ? 'Classes installées' : 'Classes Dofus'}>{classes.map(classId => <button type="button" key={classId} className="setup-class"
+        aria-label={`Choisir ${CLASSES[classId].name}`} onClick={() => onChooseClass(classId, profileName(name))}>
         <RetroPortrait classId={classId} appearance="male" fallback={CLASSES[classId].emoji} />
         <strong>{CLASSES[classId].name}</strong><small>{roles[classId]}</small>
-      </button>)}</div>
-      <div className="character-custom-heading"><h3>Mes classes</h3>{onCreateClass && <button type="button" className="btn" onClick={onCreateClass}><Plus size={15} />Créer une classe</button>}</div>
-      {customCharacters.length ? <div className="setup-class-grid" aria-label="Classes personnalisées">{customCharacters.map(character => <button type="button" key={character.id}
-        data-custom-character-id={character.id} className="setup-class" aria-label={`Choisir ${character.name || 'Classe sans nom'} (personnalisée)`} onClick={() => onChooseCustom(character)}>
+      </button>)}</div></>}
+      <div className="character-custom-heading"><h3>Classes et héros personnalisés</h3>{onCreateClass && <button type="button" className="btn" onClick={onCreateClass}><Plus size={15} />Inventer une classe</button>}</div>
+      {characters.length ? <div className="setup-class-grid" aria-label="Classes personnalisées">{characters.map(character => <button type="button" key={character.id}
+        data-custom-character-id={character.id} className="setup-class" aria-label={`Choisir ${character.name || 'Classe sans nom'} (personnalisée)`} onClick={() => onChooseCustom(!forClass && profileName(name) ? { ...character, className: character.className || character.name, name: profileName(name) } : character)}>
         <RetroPortrait classId={character.classId} artworkId={character.loadout.artworkId} appearance={character.loadout.profile?.sex === 1 ? 'female' : 'male'} fallback={CLASSES[character.classId].emoji} />
         <strong>{character.name || 'Classe sans nom'}</strong><small>{character.loadout.spells?.custom?.length || 0} sorts</small>
       </button>)}</div> : <p className="character-dialog-hint">Vos classes créées dans l’Atelier apparaîtront ici.</p>}

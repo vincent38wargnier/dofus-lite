@@ -2,7 +2,9 @@ import { PACKAGE_SCHEMA, PACKAGE_LIMITS } from './packageSchema';
 import { packageExample } from './contentPackage';
 import { EFFECT_TYPES, EFFECT_ZONES } from '../engine/authoredSpells';
 import { SPELL_LIBRARY, CLASSES } from '../engine/classes';
-import MONSTERS from '../engine/monsterData.json';
+import { PLATFORM } from '../platform/config';
+import { neutralAuthoringPrompt } from '../platform/authoringPrompt';
+import { monsterData as MONSTERS } from '../engine/gameData';
 import { MAPS } from '../engine/maps';
 import ARTWORK from '../ui/characterArtworkSpec.json';
 import { visualPromptText, visualPromptCatalogue, VISUAL_SUPPORT } from './visualPrompts';
@@ -79,6 +81,7 @@ If the complete authoring kit is attached, run from its retro-class-designer dir
 `;
 
 export function buildContentPrompt({ type = 'class', theme = '' } = {}) {
+  if (PLATFORM) return neutralAuthoringPrompt({ type, theme });
   const catalogue = packageReferenceCatalogue();
   const compactEffects = effects => effects.map(effect => ({ kind: effect.kind, min: effect.min, max: effect.max, duration: effect.duration,
     zone: effect.zone, element: effect.element, stat: effect.stat, targetMask: effect.targetMask }));
@@ -97,6 +100,7 @@ export function buildContentPrompt({ type = 'class', theme = '' } = {}) {
 }
 
 export function packageSpecDocument() {
+  if (PLATFORM) return { format: 'arena-forge-library', version: 1, instructions: neutralAuthoringPrompt({type:'dungeon'}) };
   return { format: 'dofus-lite-content', schemaVersion: 1, rules: PACKAGE_RULES, limits: PACKAGE_LIMITS,
     balance: { version: SPELL_BALANCE_VERSION, spellLimit: MAX_SPELL_SCORE, kitLimit: MAX_KIT_SCORE, weights: BALANCE_WEIGHTS },
     equipment: equipmentSpecDocument(),

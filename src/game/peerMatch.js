@@ -23,10 +23,10 @@ export function peerSettings(input) {
   check(input && ['duel', 'boss', 'custom', 'kanojedo'].includes(input.mode), 'Mode de combat P2P inconnu.');
   check(Number.isSafeInteger(input.seed) && input.seed >= 0 && input.seed <= 0xffffffff, 'Graine P2P invalide.');
   check(typeof input.mapId === 'string' && (input.battlefield
-    ? input.mode === 'custom' && input.mapId === input.battlefield.id && !customMapErrors(input.battlefield).length
+    ? ['custom', 'duel'].includes(input.mode) && input.mapId === input.battlefield.id && !customMapErrors(input.battlefield).length
     : own(MAPS, input.mapId)), 'Carte P2P inconnue.');
   const value = { mode: input.mode, mapId: input.mapId, seed: input.seed };
-  if (input.encounter != null) { check(input.mode === 'custom' && validCombatEncounter(input.encounter), 'Mode armée invalide.'); value.encounter = JSON.parse(JSON.stringify(input.encounter)); }
+  if (input.encounter != null) { check(['custom', 'duel'].includes(input.mode) && validCombatEncounter(input.encounter), 'Mode armée invalide.'); value.encounter = JSON.parse(JSON.stringify(input.encounter)); }
   if (input.battlefield) value.battlefield = JSON.parse(JSON.stringify(input.battlefield));
   if (input.mode === 'boss') {
     check(BOSSES.some(boss => boss.id === input.bossId) && monsterGrades(input.bossId).some(g => g.grade === input.bossGrade), 'Donjon ou niveau inconnu.');

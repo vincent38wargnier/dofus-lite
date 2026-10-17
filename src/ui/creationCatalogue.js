@@ -1,5 +1,5 @@
 import { CLASSES, SPELL_LIBRARY, buildSpell } from '../engine/classes';
-import MONSTER_DATA from '../engine/monsterData.json';
+import { monsterData as MONSTER_DATA } from '../engine/gameData';
 import { DUNGEONS } from '../engine/dungeons';
 import { isCustomSpell } from '../engine/customSpells';
 
@@ -55,7 +55,7 @@ export function spellFacets(raw) {
     delayed: effects.some(effect => ['poison', 'apPoison', 'trap', 'glyph', 'delayedSpell'].includes(effect.kind)) };
 }
 
-function catalogue() {
+export function creationSpellCatalogue(owners = []) {
   const entries = new Map();
   const add = (raw, source, description = '') => {
     if (!isCustomSpell(raw)) return;
@@ -78,6 +78,7 @@ function catalogue() {
   for (const summon of Object.values(SPELL_LIBRARY.summons)) for (const grade of Object.values(summon.grades)) {
     for (const raw of grade.spells) add(raw, { id: `monster:${summon.monsterId}`, name: summon.name, type: 'monster' });
   }
+  for (const owner of owners) for (const raw of owner.spells) add(raw, owner.source);
   return [...entries.values()].map(entry => {
     entry.grades.sort((a, b) => a.grade - b.grade);
     const raw = entry.grades.at(-1);
@@ -85,7 +86,7 @@ function catalogue() {
     return { ...entry, ...facets, search: fold(`${entry.id} ${entry.name} ${entry.sources.map(source => source.name).join(' ')} ${facets.roles.map(role => ROLE_LABELS[role]).join(' ')} ${facets.actions.map(action => ACTION_LABELS[action]).join(' ')} ${facets.elements.join(' ')}`) };
   }).sort((a, b) => a.name.localeCompare(b.name, 'fr') || a.id - b.id);
 }
-export const CREATION_SPELLS = catalogue();
+export const CREATION_SPELLS = creationSpellCatalogue();
 export const CREATION_SPELLS_BY_ID = Object.fromEntries(CREATION_SPELLS.map(entry => [entry.id, entry]));
 export const SPELL_SOURCES = [...new Map(CREATION_SPELLS.flatMap(entry => entry.sources).map(source => [source.id, source])).values()]
   .sort((a, b) => a.name.localeCompare(b.name, 'fr'));

@@ -1,3 +1,4 @@
+import { PLATFORM } from '../platform/config';
 import React, { useEffect, useId, useState } from 'react';
 import { Brain, Droplets, Flame, Heart, Leaf, Minus, Plus, RotateCcw, Wind } from 'lucide-react';
 import { CLASSES } from '../engine/classes';
@@ -101,7 +102,7 @@ export default function CharacteristicAllocator({ classId, summary, onChange }) 
           <span key={threshold} className={summary.baseStats[stat] >= threshold && (!tiers[index + 1] || summary.baseStats[stat] < tiers[index + 1][0]) ? 'current-tier' : ''}>
             {tiers[index + 1] ? `${threshold}–${tiers[index + 1][0] - 1}` : `${threshold}+`} : {cost} pour +{gain}
           </span>)}</dd></div>)}</dl>
-        <p className="allocation-source">Paliers : <a href="https://dofusretro.cdn.ankama.com/static-data/612/lang/swf/classes_fr_1391.swf" target="_blank" rel="noreferrer">données officielles Dofus Retro</a>.</p>
+        {!PLATFORM && <p className="allocation-source">Paliers : <a href="https://dofusretro.cdn.ankama.com/static-data/612/lang/swf/classes_fr_1391.swf" target="_blank" rel="noreferrer">données officielles Dofus Retro</a>.</p>}
       </details>
     </div>
   </section>;

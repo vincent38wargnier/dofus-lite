@@ -208,6 +208,16 @@ export async function prepareWorkshopFile(file, dependencies = {}) {
 }
 
 export async function importWorkshopFile(file, { commitCreations, importEquipment }, dependencies = {}) {
+  if (process.env.REACT_APP_PLATFORM === '1' && typeof window !== 'undefined' && !dependencies.prepare) {
+    const { readLibrary } = await import('../platform/libraryFormat');
+    let outer;
+    try { outer = await readLibrary(new Uint8Array(await file.arrayBuffer())); } catch (_) { /* Ordinary Atelier archive follows its existing validator. */ }
+    if (outer) {
+      const { stageLibrary } = await import('../platform/localLibraries');
+      await stageLibrary(file); window.location.hash='/workspace'; window.location.reload();
+      return new Promise(() => {});
+    }
+  }
   const prepared = await (dependencies.prepare || prepareWorkshopFile)(file);
   const write = dependencies.write || writeArtworkRecords, remove = dependencies.remove || removeArtworkRecords;
   await write(prepared.records);
@@ -223,7 +233,11 @@ export async function importWorkshopFile(file, { commitCreations, importEquipmen
   return prepared;
 }
 
-export function downloadAtelierArchive(bytes, name) {
+export async function downloadAtelierArchive(bytes, name) {
+  if (process.env.REACT_APP_PLATFORM === '1') {
+    const { exportLibrary } = await import('../platform/libraryExport');
+    bytes = await exportLibrary(bytes,{name:name?.length>=2?name:'Mes créations',description:'Créations partagées depuis mon Atelier.',kind:'mixed'});
+  }
   const filename = String(name || 'mes-creations').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9_-]+/g, '-').replace(/^-|-$/g, '').slice(0, 90) || 'mes-creations';
   const url = URL.createObjectURL(new Blob([bytes], { type: 'application/zip' })), link = document.createElement('a');
   link.href = url; link.download = `${filename}.zip`; document.body.appendChild(link); link.click(); link.remove();

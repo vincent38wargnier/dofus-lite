@@ -1,0 +1,1754 @@
+[
+  {
+    "world": "potter",
+    "images": 35,
+    "anchors": [
+      {
+        "file": "0/idle-front.png",
+        "bounds": {
+          "left": 18,
+          "right": 295,
+          "top": 7,
+          "bottom": 312,
+          "anchor": 180.5
+        }
+      },
+      {
+        "file": "0/idle-back.png",
+        "bounds": {
+          "left": 53,
+          "right": 306,
+          "top": 4,
+          "bottom": 309,
+          "anchor": 158
+        }
+      },
+      {
+        "file": "1/idle-front.png",
+        "bounds": {
+          "left": 67,
+          "right": 286,
+          "top": 9,
+          "bottom": 310,
+          "anchor": 159.5
+        }
+      },
+      {
+        "file": "1/idle-back.png",
+        "bounds": {
+          "left": 71,
+          "right": 259,
+          "top": 4,
+          "bottom": 309,
+          "anchor": 150.5
+        }
+      },
+      {
+        "file": "2/idle-front.png",
+        "bounds": {
+          "left": 32,
+          "right": 257,
+          "top": 7,
+          "bottom": 311,
+          "anchor": 150.5
+        }
+      },
+      {
+        "file": "2/idle-back.png",
+        "bounds": {
+          "left": 52,
+          "right": 285,
+          "top": 3,
+          "bottom": 310,
+          "anchor": 160
+        }
+      },
+      {
+        "file": "3/idle-front.png",
+        "bounds": {
+          "left": 58,
+          "right": 283,
+          "top": 4,
+          "bottom": 313,
+          "anchor": 85.5
+        }
+      },
+      {
+        "file": "3/idle-back.png",
+        "bounds": {
+          "left": 64,
+          "right": 272,
+          "top": 0,
+          "bottom": 312,
+          "anchor": 177
+        }
+      },
+      {
+        "file": "4/idle-front.png",
+        "bounds": {
+          "left": 46,
+          "right": 290,
+          "top": 8,
+          "bottom": 313,
+          "anchor": 158.5
+        }
+      },
+      {
+        "file": "4/idle-back.png",
+        "bounds": {
+          "left": 50,
+          "right": 281,
+          "top": 0,
+          "bottom": 299,
+          "anchor": 173
+        }
+      },
+      {
+        "file": "5/idle-front.png",
+        "bounds": {
+          "left": 26,
+          "right": 290,
+          "top": 2,
+          "bottom": 313,
+          "anchor": 155.5
+        }
+      },
+      {
+        "file": "5/idle-back.png",
+        "bounds": {
+          "left": 45,
+          "right": 288,
+          "top": 0,
+          "bottom": 298,
+          "anchor": 172.5
+        }
+      },
+      {
+        "file": "6/idle-front.png",
+        "bounds": {
+          "left": 12,
+          "right": 313,
+          "top": 2,
+          "bottom": 313,
+          "anchor": 139.5
+        }
+      },
+      {
+        "file": "6/idle-back.png",
+        "bounds": {
+          "left": 30,
+          "right": 313,
+          "top": 0,
+          "bottom": 303,
+          "anchor": 203
+        }
+      }
+    ]
+  },
+  {
+    "world": "brice",
+    "images": 35,
+    "anchors": [
+      {
+        "file": "0/idle-front.png",
+        "bounds": {
+          "left": 63,
+          "right": 254,
+          "top": 10,
+          "bottom": 304,
+          "anchor": 180
+        }
+      },
+      {
+        "file": "0/idle-back.png",
+        "bounds": {
+          "left": 90,
+          "right": 289,
+          "top": 4,
+          "bottom": 302,
+          "anchor": 165
+        }
+      },
+      {
+        "file": "1/idle-front.png",
+        "bounds": {
+          "left": 94,
+          "right": 251,
+          "top": 8,
+          "bottom": 308,
+          "anchor": 183.5
+        }
+      },
+      {
+        "file": "1/idle-back.png",
+        "bounds": {
+          "left": 86,
+          "right": 252,
+          "top": 8,
+          "bottom": 303,
+          "anchor": 163
+        }
+      },
+      {
+        "file": "2/idle-front.png",
+        "bounds": {
+          "left": 41,
+          "right": 258,
+          "top": 8,
+          "bottom": 309,
+          "anchor": 152.5
+        }
+      },
+      {
+        "file": "2/idle-back.png",
+        "bounds": {
+          "left": 47,
+          "right": 266,
+          "top": 6,
+          "bottom": 304,
+          "anchor": 150.5
+        }
+      },
+      {
+        "file": "3/idle-front.png",
+        "bounds": {
+          "left": 57,
+          "right": 253,
+          "top": 8,
+          "bottom": 309,
+          "anchor": 179
+        }
+      },
+      {
+        "file": "3/idle-back.png",
+        "bounds": {
+          "left": 70,
+          "right": 264,
+          "top": 6,
+          "bottom": 304,
+          "anchor": 157.5
+        }
+      },
+      {
+        "file": "4/idle-front.png",
+        "bounds": {
+          "left": 35,
+          "right": 277,
+          "top": 12,
+          "bottom": 313,
+          "anchor": 201
+        }
+      },
+      {
+        "file": "4/idle-back.png",
+        "bounds": {
+          "left": 49,
+          "right": 302,
+          "top": 0,
+          "bottom": 284,
+          "anchor": 75
+        }
+      },
+      {
+        "file": "5/idle-front.png",
+        "bounds": {
+          "left": 32,
+          "right": 270,
+          "top": 6,
+          "bottom": 299,
+          "anchor": 164
+        }
+      },
+      {
+        "file": "5/idle-back.png",
+        "bounds": {
+          "left": 54,
+          "right": 299,
+          "top": 1,
+          "bottom": 292,
+          "anchor": 160.5
+        }
+      },
+      {
+        "file": "6/idle-front.png",
+        "bounds": {
+          "left": 31,
+          "right": 261,
+          "top": 6,
+          "bottom": 313,
+          "anchor": 172
+        }
+      },
+      {
+        "file": "6/idle-back.png",
+        "bounds": {
+          "left": 59,
+          "right": 269,
+          "top": 0,
+          "bottom": 294,
+          "anchor": 140
+        }
+      }
+    ]
+  },
+  {
+    "world": "asterix",
+    "images": 35,
+    "anchors": [
+      {
+        "file": "0/idle-front.png",
+        "bounds": {
+          "left": 63,
+          "right": 277,
+          "top": 7,
+          "bottom": 313,
+          "anchor": 169.5
+        }
+      },
+      {
+        "file": "0/idle-back.png",
+        "bounds": {
+          "left": 64,
+          "right": 288,
+          "top": 0,
+          "bottom": 308,
+          "anchor": 167
+        }
+      },
+      {
+        "file": "1/idle-front.png",
+        "bounds": {
+          "left": 57,
+          "right": 242,
+          "top": 8,
+          "bottom": 310,
+          "anchor": 167.5
+        }
+      },
+      {
+        "file": "1/idle-back.png",
+        "bounds": {
+          "left": 75,
+          "right": 259,
+          "top": 5,
+          "bottom": 307,
+          "anchor": 160.5
+        }
+      },
+      {
+        "file": "2/idle-front.png",
+        "bounds": {
+          "left": 52,
+          "right": 260,
+          "top": 21,
+          "bottom": 312,
+          "anchor": 161
+        }
+      },
+      {
+        "file": "2/idle-back.png",
+        "bounds": {
+          "left": 50,
+          "right": 248,
+          "top": 13,
+          "bottom": 312,
+          "anchor": 139
+        }
+      },
+      {
+        "file": "3/idle-front.png",
+        "bounds": {
+          "left": 47,
+          "right": 248,
+          "top": 9,
+          "bottom": 309,
+          "anchor": 139
+        }
+      },
+      {
+        "file": "3/idle-back.png",
+        "bounds": {
+          "left": 70,
+          "right": 262,
+          "top": 5,
+          "bottom": 311,
+          "anchor": 165.5
+        }
+      },
+      {
+        "file": "4/idle-front.png",
+        "bounds": {
+          "left": 50,
+          "right": 287,
+          "top": 13,
+          "bottom": 311,
+          "anchor": 250.5
+        }
+      },
+      {
+        "file": "4/idle-back.png",
+        "bounds": {
+          "left": 46,
+          "right": 279,
+          "top": 1,
+          "bottom": 295,
+          "anchor": 175.5
+        }
+      },
+      {
+        "file": "5/idle-front.png",
+        "bounds": {
+          "left": 66,
+          "right": 253,
+          "top": 6,
+          "bottom": 310,
+          "anchor": 172.5
+        }
+      },
+      {
+        "file": "5/idle-back.png",
+        "bounds": {
+          "left": 72,
+          "right": 261,
+          "top": 0,
+          "bottom": 294,
+          "anchor": 179.5
+        }
+      },
+      {
+        "file": "6/idle-front.png",
+        "bounds": {
+          "left": 35,
+          "right": 261,
+          "top": 0,
+          "bottom": 310,
+          "anchor": 166.5
+        }
+      },
+      {
+        "file": "6/idle-back.png",
+        "bounds": {
+          "left": 73,
+          "right": 299,
+          "top": 0,
+          "bottom": 296,
+          "anchor": 163.5
+        }
+      }
+    ]
+  },
+  {
+    "world": "kaamelott",
+    "images": 35,
+    "anchors": [
+      {
+        "file": "0/idle-front.png",
+        "bounds": {
+          "left": 37,
+          "right": 309,
+          "top": 6,
+          "bottom": 306,
+          "anchor": 155.5
+        }
+      },
+      {
+        "file": "0/idle-back.png",
+        "bounds": {
+          "left": 8,
+          "right": 310,
+          "top": 2,
+          "bottom": 289,
+          "anchor": 142
+        }
+      },
+      {
+        "file": "1/idle-front.png",
+        "bounds": {
+          "left": 60,
+          "right": 255,
+          "top": 8,
+          "bottom": 304,
+          "anchor": 213
+        }
+      },
+      {
+        "file": "1/idle-back.png",
+        "bounds": {
+          "left": 42,
+          "right": 296,
+          "top": 4,
+          "bottom": 291,
+          "anchor": 166
+        }
+      },
+      {
+        "file": "2/idle-front.png",
+        "bounds": {
+          "left": 76,
+          "right": 274,
+          "top": 18,
+          "bottom": 307,
+          "anchor": 118
+        }
+      },
+      {
+        "file": "2/idle-back.png",
+        "bounds": {
+          "left": 52,
+          "right": 255,
+          "top": 8,
+          "bottom": 312,
+          "anchor": 165
+        }
+      },
+      {
+        "file": "3/idle-front.png",
+        "bounds": {
+          "left": 34,
+          "right": 275,
+          "top": 5,
+          "bottom": 313,
+          "anchor": 208.5
+        }
+      },
+      {
+        "file": "3/idle-back.png",
+        "bounds": {
+          "left": 34,
+          "right": 301,
+          "top": 0,
+          "bottom": 293,
+          "anchor": 169.5
+        }
+      },
+      {
+        "file": "4/idle-front.png",
+        "bounds": {
+          "left": 76,
+          "right": 285,
+          "top": 0,
+          "bottom": 313,
+          "anchor": 206.5
+        }
+      },
+      {
+        "file": "4/idle-back.png",
+        "bounds": {
+          "left": 42,
+          "right": 247,
+          "top": 0,
+          "bottom": 295,
+          "anchor": 221
+        }
+      },
+      {
+        "file": "5/idle-front.png",
+        "bounds": {
+          "left": 88,
+          "right": 247,
+          "top": 0,
+          "bottom": 299,
+          "anchor": 163.5
+        }
+      },
+      {
+        "file": "5/idle-back.png",
+        "bounds": {
+          "left": 83,
+          "right": 225,
+          "top": 1,
+          "bottom": 284,
+          "anchor": 152
+        }
+      },
+      {
+        "file": "6/idle-front.png",
+        "bounds": {
+          "left": 37,
+          "right": 282,
+          "top": 0,
+          "bottom": 313,
+          "anchor": 126.5
+        }
+      },
+      {
+        "file": "6/idle-back.png",
+        "bounds": {
+          "left": 38,
+          "right": 291,
+          "top": 0,
+          "bottom": 294,
+          "anchor": 172
+        }
+      }
+    ]
+  },
+  {
+    "world": "starwars",
+    "images": 35,
+    "anchors": [
+      {
+        "file": "0/idle-front.png",
+        "bounds": {
+          "left": 67,
+          "right": 298,
+          "top": 35,
+          "bottom": 313,
+          "anchor": 160.5
+        }
+      },
+      {
+        "file": "0/idle-back.png",
+        "bounds": {
+          "left": 95,
+          "right": 291,
+          "top": 0,
+          "bottom": 310,
+          "anchor": 157.5
+        }
+      },
+      {
+        "file": "1/idle-front.png",
+        "bounds": {
+          "left": 106,
+          "right": 287,
+          "top": 39,
+          "bottom": 313,
+          "anchor": 177
+        }
+      },
+      {
+        "file": "1/idle-back.png",
+        "bounds": {
+          "left": 95,
+          "right": 257,
+          "top": 0,
+          "bottom": 312,
+          "anchor": 180.5
+        }
+      },
+      {
+        "file": "2/idle-front.png",
+        "bounds": {
+          "left": 64,
+          "right": 262,
+          "top": 63,
+          "bottom": 303,
+          "anchor": 144
+        }
+      },
+      {
+        "file": "2/idle-back.png",
+        "bounds": {
+          "left": 50,
+          "right": 245,
+          "top": 47,
+          "bottom": 302,
+          "anchor": 156.5
+        }
+      },
+      {
+        "file": "3/idle-front.png",
+        "bounds": {
+          "left": 39,
+          "right": 260,
+          "top": 14,
+          "bottom": 313,
+          "anchor": 110.5
+        }
+      },
+      {
+        "file": "3/idle-back.png",
+        "bounds": {
+          "left": 42,
+          "right": 261,
+          "top": 0,
+          "bottom": 312,
+          "anchor": 148
+        }
+      },
+      {
+        "file": "4/idle-front.png",
+        "bounds": {
+          "left": 129,
+          "right": 253,
+          "top": 14,
+          "bottom": 310,
+          "anchor": 191.5
+        }
+      },
+      {
+        "file": "4/idle-back.png",
+        "bounds": {
+          "left": 114,
+          "right": 236,
+          "top": 6,
+          "bottom": 283,
+          "anchor": 177.5
+        }
+      },
+      {
+        "file": "5/idle-front.png",
+        "bounds": {
+          "left": 97,
+          "right": 252,
+          "top": 66,
+          "bottom": 244,
+          "anchor": 149
+        }
+      },
+      {
+        "file": "5/idle-back.png",
+        "bounds": {
+          "left": 104,
+          "right": 244,
+          "top": 41,
+          "bottom": 218,
+          "anchor": 167.5
+        }
+      },
+      {
+        "file": "6/idle-front.png",
+        "bounds": {
+          "left": 63,
+          "right": 256,
+          "top": 5,
+          "bottom": 312,
+          "anchor": 146
+        }
+      },
+      {
+        "file": "6/idle-back.png",
+        "bounds": {
+          "left": 70,
+          "right": 249,
+          "top": 3,
+          "bottom": 293,
+          "anchor": 145
+        }
+      }
+    ]
+  },
+  {
+    "world": "rings",
+    "images": 35,
+    "anchors": [
+      {
+        "file": "0/idle-front.png",
+        "bounds": {
+          "left": 49,
+          "right": 270,
+          "top": 11,
+          "bottom": 312,
+          "anchor": 177.5
+        }
+      },
+      {
+        "file": "0/idle-back.png",
+        "bounds": {
+          "left": 26,
+          "right": 305,
+          "top": 4,
+          "bottom": 304,
+          "anchor": 160
+        }
+      },
+      {
+        "file": "1/idle-front.png",
+        "bounds": {
+          "left": 55,
+          "right": 274,
+          "top": 11,
+          "bottom": 313,
+          "anchor": 164
+        }
+      },
+      {
+        "file": "1/idle-back.png",
+        "bounds": {
+          "left": 66,
+          "right": 284,
+          "top": 0,
+          "bottom": 312,
+          "anchor": 175
+        }
+      },
+      {
+        "file": "2/idle-front.png",
+        "bounds": {
+          "left": 57,
+          "right": 251,
+          "top": 12,
+          "bottom": 309,
+          "anchor": 146
+        }
+      },
+      {
+        "file": "2/idle-back.png",
+        "bounds": {
+          "left": 69,
+          "right": 282,
+          "top": 9,
+          "bottom": 299,
+          "anchor": 154.5
+        }
+      },
+      {
+        "file": "3/idle-front.png",
+        "bounds": {
+          "left": 33,
+          "right": 282,
+          "top": 11,
+          "bottom": 310,
+          "anchor": 211
+        }
+      },
+      {
+        "file": "3/idle-back.png",
+        "bounds": {
+          "left": 22,
+          "right": 296,
+          "top": 6,
+          "bottom": 305,
+          "anchor": 156.5
+        }
+      },
+      {
+        "file": "4/idle-front.png",
+        "bounds": {
+          "left": 53,
+          "right": 313,
+          "top": 12,
+          "bottom": 313,
+          "anchor": 212
+        }
+      },
+      {
+        "file": "4/idle-back.png",
+        "bounds": {
+          "left": 37,
+          "right": 299,
+          "top": 0,
+          "bottom": 297,
+          "anchor": 170
+        }
+      },
+      {
+        "file": "5/idle-front.png",
+        "bounds": {
+          "left": 0,
+          "right": 294,
+          "top": 0,
+          "bottom": 313,
+          "anchor": 159
+        }
+      },
+      {
+        "file": "5/idle-back.png",
+        "bounds": {
+          "left": 44,
+          "right": 293,
+          "top": 0,
+          "bottom": 296,
+          "anchor": 186
+        }
+      },
+      {
+        "file": "6/idle-front.png",
+        "bounds": {
+          "left": 12,
+          "right": 283,
+          "top": 0,
+          "bottom": 313,
+          "anchor": 173.5
+        }
+      },
+      {
+        "file": "6/idle-back.png",
+        "bounds": {
+          "left": 28,
+          "right": 305,
+          "top": 0,
+          "bottom": 296,
+          "anchor": 144
+        }
+      }
+    ]
+  },
+  {
+    "world": "onepiece",
+    "images": 35,
+    "anchors": [
+      {
+        "file": "0/idle-front.png",
+        "bounds": {
+          "left": 89,
+          "right": 275,
+          "top": 9,
+          "bottom": 313,
+          "anchor": 106.5
+        }
+      },
+      {
+        "file": "0/idle-back.png",
+        "bounds": {
+          "left": 61,
+          "right": 247,
+          "top": 0,
+          "bottom": 308,
+          "anchor": 100.5
+        }
+      },
+      {
+        "file": "1/idle-front.png",
+        "bounds": {
+          "left": 60,
+          "right": 256,
+          "top": 11,
+          "bottom": 313,
+          "anchor": 147
+        }
+      },
+      {
+        "file": "1/idle-back.png",
+        "bounds": {
+          "left": 64,
+          "right": 257,
+          "top": 0,
+          "bottom": 303,
+          "anchor": 125.5
+        }
+      },
+      {
+        "file": "2/idle-front.png",
+        "bounds": {
+          "left": 67,
+          "right": 273,
+          "top": 8,
+          "bottom": 313,
+          "anchor": 196
+        }
+      },
+      {
+        "file": "2/idle-back.png",
+        "bounds": {
+          "left": 42,
+          "right": 219,
+          "top": 0,
+          "bottom": 308,
+          "anchor": 130.5
+        }
+      },
+      {
+        "file": "3/idle-front.png",
+        "bounds": {
+          "left": 31,
+          "right": 277,
+          "top": 7,
+          "bottom": 313,
+          "anchor": 149.5
+        }
+      },
+      {
+        "file": "3/idle-back.png",
+        "bounds": {
+          "left": 30,
+          "right": 265,
+          "top": 0,
+          "bottom": 310,
+          "anchor": 144
+        }
+      },
+      {
+        "file": "4/idle-front.png",
+        "bounds": {
+          "left": 63,
+          "right": 305,
+          "top": 11,
+          "bottom": 313,
+          "anchor": 236
+        }
+      },
+      {
+        "file": "4/idle-back.png",
+        "bounds": {
+          "left": 59,
+          "right": 272,
+          "top": 8,
+          "bottom": 299,
+          "anchor": 244.5
+        }
+      },
+      {
+        "file": "5/idle-front.png",
+        "bounds": {
+          "left": 39,
+          "right": 274,
+          "top": 11,
+          "bottom": 308,
+          "anchor": 162.5
+        }
+      },
+      {
+        "file": "5/idle-back.png",
+        "bounds": {
+          "left": 42,
+          "right": 264,
+          "top": 9,
+          "bottom": 300,
+          "anchor": 114
+        }
+      },
+      {
+        "file": "6/idle-front.png",
+        "bounds": {
+          "left": 22,
+          "right": 300,
+          "top": 6,
+          "bottom": 312,
+          "anchor": 198.5
+        }
+      },
+      {
+        "file": "6/idle-back.png",
+        "bounds": {
+          "left": 24,
+          "right": 306,
+          "top": 2,
+          "bottom": 301,
+          "anchor": 125
+        }
+      }
+    ]
+  },
+  {
+    "world": "dragonball",
+    "images": 35,
+    "anchors": [
+      {
+        "file": "0/idle-front.png",
+        "bounds": {
+          "left": 84,
+          "right": 261,
+          "top": 7,
+          "bottom": 313,
+          "anchor": 191
+        }
+      },
+      {
+        "file": "0/idle-back.png",
+        "bounds": {
+          "left": 64,
+          "right": 244,
+          "top": 0,
+          "bottom": 312,
+          "anchor": 124
+        }
+      },
+      {
+        "file": "1/idle-front.png",
+        "bounds": {
+          "left": 77,
+          "right": 255,
+          "top": 5,
+          "bottom": 313,
+          "anchor": 187.5
+        }
+      },
+      {
+        "file": "1/idle-back.png",
+        "bounds": {
+          "left": 55,
+          "right": 257,
+          "top": 0,
+          "bottom": 310,
+          "anchor": 146
+        }
+      },
+      {
+        "file": "2/idle-front.png",
+        "bounds": {
+          "left": 50,
+          "right": 281,
+          "top": 6,
+          "bottom": 313,
+          "anchor": 246
+        }
+      },
+      {
+        "file": "2/idle-back.png",
+        "bounds": {
+          "left": 47,
+          "right": 266,
+          "top": 0,
+          "bottom": 312,
+          "anchor": 129
+        }
+      },
+      {
+        "file": "3/idle-front.png",
+        "bounds": {
+          "left": 61,
+          "right": 249,
+          "top": 6,
+          "bottom": 313,
+          "anchor": 108.5
+        }
+      },
+      {
+        "file": "3/idle-back.png",
+        "bounds": {
+          "left": 59,
+          "right": 237,
+          "top": 0,
+          "bottom": 304,
+          "anchor": 83
+        }
+      },
+      {
+        "file": "4/idle-front.png",
+        "bounds": {
+          "left": 79,
+          "right": 298,
+          "top": 0,
+          "bottom": 313,
+          "anchor": 225.5
+        }
+      },
+      {
+        "file": "4/idle-back.png",
+        "bounds": {
+          "left": 58,
+          "right": 281,
+          "top": 0,
+          "bottom": 298,
+          "anchor": 169
+        }
+      },
+      {
+        "file": "5/idle-front.png",
+        "bounds": {
+          "left": 75,
+          "right": 232,
+          "top": 21,
+          "bottom": 305,
+          "anchor": 121.5
+        }
+      },
+      {
+        "file": "5/idle-back.png",
+        "bounds": {
+          "left": 78,
+          "right": 239,
+          "top": 28,
+          "bottom": 293,
+          "anchor": 134
+        }
+      },
+      {
+        "file": "6/idle-front.png",
+        "bounds": {
+          "left": 51,
+          "right": 279,
+          "top": 0,
+          "bottom": 313,
+          "anchor": 198
+        }
+      },
+      {
+        "file": "6/idle-back.png",
+        "bounds": {
+          "left": 48,
+          "right": 275,
+          "top": 0,
+          "bottom": 299,
+          "anchor": 168
+        }
+      }
+    ]
+  },
+  {
+    "world": "pokemon",
+    "images": 35,
+    "anchors": [
+      {
+        "file": "0/idle-front.png",
+        "bounds": {
+          "left": 32,
+          "right": 313,
+          "top": 18,
+          "bottom": 301,
+          "anchor": 224
+        }
+      },
+      {
+        "file": "0/idle-back.png",
+        "bounds": {
+          "left": 32,
+          "right": 311,
+          "top": 4,
+          "bottom": 312,
+          "anchor": 210.5
+        }
+      },
+      {
+        "file": "1/idle-front.png",
+        "bounds": {
+          "left": 0,
+          "right": 303,
+          "top": 31,
+          "bottom": 297,
+          "anchor": 186
+        }
+      },
+      {
+        "file": "1/idle-back.png",
+        "bounds": {
+          "left": 25,
+          "right": 308,
+          "top": 4,
+          "bottom": 312,
+          "anchor": 176
+        }
+      },
+      {
+        "file": "2/idle-front.png",
+        "bounds": {
+          "left": 7,
+          "right": 298,
+          "top": 67,
+          "bottom": 298,
+          "anchor": 139.5
+        }
+      },
+      {
+        "file": "2/idle-back.png",
+        "bounds": {
+          "left": 33,
+          "right": 305,
+          "top": 37,
+          "bottom": 312,
+          "anchor": 174
+        }
+      },
+      {
+        "file": "3/idle-front.png",
+        "bounds": {
+          "left": 36,
+          "right": 287,
+          "top": 10,
+          "bottom": 306,
+          "anchor": 150.5
+        }
+      },
+      {
+        "file": "3/idle-back.png",
+        "bounds": {
+          "left": 27,
+          "right": 287,
+          "top": 4,
+          "bottom": 281,
+          "anchor": 139
+        }
+      },
+      {
+        "file": "4/idle-front.png",
+        "bounds": {
+          "left": 16,
+          "right": 313,
+          "top": 0,
+          "bottom": 313,
+          "anchor": 194.5
+        }
+      },
+      {
+        "file": "4/idle-back.png",
+        "bounds": {
+          "left": 26,
+          "right": 313,
+          "top": 0,
+          "bottom": 281,
+          "anchor": 234
+        }
+      },
+      {
+        "file": "5/idle-front.png",
+        "bounds": {
+          "left": 0,
+          "right": 305,
+          "top": 0,
+          "bottom": 313,
+          "anchor": 148
+        }
+      },
+      {
+        "file": "5/idle-back.png",
+        "bounds": {
+          "left": 0,
+          "right": 299,
+          "top": 0,
+          "bottom": 272,
+          "anchor": 198
+        }
+      },
+      {
+        "file": "6/idle-front.png",
+        "bounds": {
+          "left": 22,
+          "right": 313,
+          "top": 0,
+          "bottom": 313,
+          "anchor": 169
+        }
+      },
+      {
+        "file": "6/idle-back.png",
+        "bounds": {
+          "left": 6,
+          "right": 307,
+          "top": 0,
+          "bottom": 294,
+          "anchor": 236.5
+        }
+      }
+    ]
+  },
+  {
+    "world": "visiteurs",
+    "images": 35,
+    "anchors": [
+      {
+        "file": "0/idle-front.png",
+        "bounds": {
+          "left": 27,
+          "right": 292,
+          "top": 11,
+          "bottom": 308,
+          "anchor": 133
+        }
+      },
+      {
+        "file": "0/idle-back.png",
+        "bounds": {
+          "left": 71,
+          "right": 308,
+          "top": 7,
+          "bottom": 305,
+          "anchor": 196
+        }
+      },
+      {
+        "file": "1/idle-front.png",
+        "bounds": {
+          "left": 87,
+          "right": 245,
+          "top": 18,
+          "bottom": 303,
+          "anchor": 201
+        }
+      },
+      {
+        "file": "1/idle-back.png",
+        "bounds": {
+          "left": 85,
+          "right": 242,
+          "top": 14,
+          "bottom": 297,
+          "anchor": 181
+        }
+      },
+      {
+        "file": "2/idle-front.png",
+        "bounds": {
+          "left": 66,
+          "right": 236,
+          "top": 15,
+          "bottom": 304,
+          "anchor": 158.5
+        }
+      },
+      {
+        "file": "2/idle-back.png",
+        "bounds": {
+          "left": 71,
+          "right": 242,
+          "top": 14,
+          "bottom": 312,
+          "anchor": 152.5
+        }
+      },
+      {
+        "file": "3/idle-front.png",
+        "bounds": {
+          "left": 54,
+          "right": 249,
+          "top": 13,
+          "bottom": 294,
+          "anchor": 162
+        }
+      },
+      {
+        "file": "3/idle-back.png",
+        "bounds": {
+          "left": 62,
+          "right": 241,
+          "top": 2,
+          "bottom": 298,
+          "anchor": 152.5
+        }
+      },
+      {
+        "file": "4/idle-front.png",
+        "bounds": {
+          "left": 68,
+          "right": 279,
+          "top": 15,
+          "bottom": 301,
+          "anchor": 219.5
+        }
+      },
+      {
+        "file": "4/idle-back.png",
+        "bounds": {
+          "left": 51,
+          "right": 293,
+          "top": 1,
+          "bottom": 289,
+          "anchor": 177
+        }
+      },
+      {
+        "file": "5/idle-front.png",
+        "bounds": {
+          "left": 65,
+          "right": 299,
+          "top": 16,
+          "bottom": 292,
+          "anchor": 181.5
+        }
+      },
+      {
+        "file": "5/idle-back.png",
+        "bounds": {
+          "left": 55,
+          "right": 257,
+          "top": 8,
+          "bottom": 280,
+          "anchor": 133
+        }
+      },
+      {
+        "file": "6/idle-front.png",
+        "bounds": {
+          "left": 41,
+          "right": 313,
+          "top": 0,
+          "bottom": 313,
+          "anchor": 124
+        }
+      },
+      {
+        "file": "6/idle-back.png",
+        "bounds": {
+          "left": 8,
+          "right": 269,
+          "top": 0,
+          "bottom": 293,
+          "anchor": 164
+        }
+      }
+    ]
+  },
+  {
+    "world": "naheulbeuk",
+    "images": 35,
+    "anchors": [
+      {
+        "file": "0/idle-front.png",
+        "bounds": {
+          "left": 30,
+          "right": 312,
+          "top": 1,
+          "bottom": 312,
+          "anchor": 80.5
+        }
+      },
+      {
+        "file": "0/idle-back.png",
+        "bounds": {
+          "left": 25,
+          "right": 270,
+          "top": 5,
+          "bottom": 299,
+          "anchor": 173.5
+        }
+      },
+      {
+        "file": "1/idle-front.png",
+        "bounds": {
+          "left": 53,
+          "right": 292,
+          "top": 24,
+          "bottom": 311,
+          "anchor": 160
+        }
+      },
+      {
+        "file": "1/idle-back.png",
+        "bounds": {
+          "left": 41,
+          "right": 270,
+          "top": 13,
+          "bottom": 307,
+          "anchor": 157
+        }
+      },
+      {
+        "file": "2/idle-front.png",
+        "bounds": {
+          "left": 62,
+          "right": 273,
+          "top": 11,
+          "bottom": 309,
+          "anchor": 164
+        }
+      },
+      {
+        "file": "2/idle-back.png",
+        "bounds": {
+          "left": 64,
+          "right": 290,
+          "top": 5,
+          "bottom": 312,
+          "anchor": 190
+        }
+      },
+      {
+        "file": "3/idle-front.png",
+        "bounds": {
+          "left": 59,
+          "right": 285,
+          "top": 65,
+          "bottom": 312,
+          "anchor": 160
+        }
+      },
+      {
+        "file": "3/idle-back.png",
+        "bounds": {
+          "left": 59,
+          "right": 287,
+          "top": 47,
+          "bottom": 294,
+          "anchor": 170
+        }
+      },
+      {
+        "file": "4/idle-front.png",
+        "bounds": {
+          "left": 59,
+          "right": 312,
+          "top": 23,
+          "bottom": 293,
+          "anchor": 163
+        }
+      },
+      {
+        "file": "4/idle-back.png",
+        "bounds": {
+          "left": 25,
+          "right": 266,
+          "top": 5,
+          "bottom": 278,
+          "anchor": 173.5
+        }
+      },
+      {
+        "file": "5/idle-front.png",
+        "bounds": {
+          "left": 60,
+          "right": 271,
+          "top": 14,
+          "bottom": 313,
+          "anchor": 121.5
+        }
+      },
+      {
+        "file": "5/idle-back.png",
+        "bounds": {
+          "left": 33,
+          "right": 239,
+          "top": 0,
+          "bottom": 280,
+          "anchor": 146
+        }
+      },
+      {
+        "file": "6/idle-front.png",
+        "bounds": {
+          "left": 11,
+          "right": 309,
+          "top": 0,
+          "bottom": 313,
+          "anchor": 103.5
+        }
+      },
+      {
+        "file": "6/idle-back.png",
+        "bounds": {
+          "left": 2,
+          "right": 277,
+          "top": 0,
+          "bottom": 282,
+          "anchor": 171.5
+        }
+      }
+    ]
+  },
+  {
+    "world": "wakfu",
+    "images": 35,
+    "anchors": [
+      {
+        "file": "0/idle-front.png",
+        "bounds": {
+          "left": 25,
+          "right": 264,
+          "top": 2,
+          "bottom": 311,
+          "anchor": 150.5
+        }
+      },
+      {
+        "file": "0/idle-back.png",
+        "bounds": {
+          "left": 67,
+          "right": 308,
+          "top": 7,
+          "bottom": 312,
+          "anchor": 163.5
+        }
+      },
+      {
+        "file": "1/idle-front.png",
+        "bounds": {
+          "left": 42,
+          "right": 270,
+          "top": 20,
+          "bottom": 311,
+          "anchor": 150.5
+        }
+      },
+      {
+        "file": "1/idle-back.png",
+        "bounds": {
+          "left": 32,
+          "right": 274,
+          "top": 7,
+          "bottom": 312,
+          "anchor": 165.5
+        }
+      },
+      {
+        "file": "2/idle-front.png",
+        "bounds": {
+          "left": 29,
+          "right": 254,
+          "top": 9,
+          "bottom": 312,
+          "anchor": 159.5
+        }
+      },
+      {
+        "file": "2/idle-back.png",
+        "bounds": {
+          "left": 58,
+          "right": 279,
+          "top": 8,
+          "bottom": 312,
+          "anchor": 172.5
+        }
+      },
+      {
+        "file": "3/idle-front.png",
+        "bounds": {
+          "left": 27,
+          "right": 288,
+          "top": 4,
+          "bottom": 313,
+          "anchor": 112
+        }
+      },
+      {
+        "file": "3/idle-back.png",
+        "bounds": {
+          "left": 24,
+          "right": 289,
+          "top": 3,
+          "bottom": 312,
+          "anchor": 121.5
+        }
+      },
+      {
+        "file": "4/idle-front.png",
+        "bounds": {
+          "left": 73,
+          "right": 301,
+          "top": 0,
+          "bottom": 313,
+          "anchor": 160
+        }
+      },
+      {
+        "file": "4/idle-back.png",
+        "bounds": {
+          "left": 28,
+          "right": 253,
+          "top": 0,
+          "bottom": 295,
+          "anchor": 147.5
+        }
+      },
+      {
+        "file": "5/idle-front.png",
+        "bounds": {
+          "left": 51,
+          "right": 258,
+          "top": 0,
+          "bottom": 313,
+          "anchor": 114.5
+        }
+      },
+      {
+        "file": "5/idle-back.png",
+        "bounds": {
+          "left": 59,
+          "right": 271,
+          "top": 0,
+          "bottom": 273,
+          "anchor": 145.5
+        }
+      },
+      {
+        "file": "6/idle-front.png",
+        "bounds": {
+          "left": 26,
+          "right": 295,
+          "top": 0,
+          "bottom": 313,
+          "anchor": 142.5
+        }
+      },
+      {
+        "file": "6/idle-back.png",
+        "bounds": {
+          "left": 35,
+          "right": 291,
+          "top": 0,
+          "bottom": 305,
+          "anchor": 172
+        }
+      }
+    ]
+  }
+]

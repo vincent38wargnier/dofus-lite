@@ -1,0 +1,32 @@
+services:
+  app:
+    build: .
+    environment:
+      PUBLIC_ORIGIN: https://${DOMAIN:?Set DOMAIN in your deployment environment}
+      TRUST_PROXY: '1'
+      MONGODB_URI: ${MONGODB_URI:?Set MONGODB_URI in your private deployment environment}
+      MONGODB_DB: arenaforge
+      LIBRARY_FILE_STORE: ${LIBRARY_FILE_STORE:-filesystem}
+    volumes:
+      - community:/data
+    restart: unless-stopped
+    mem_limit: 2g
+    cpus: 2
+  https:
+    image: caddy:2-alpine
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - app
+    restart: unless-stopped
+volumes:
+  community:
+  caddy-data:
+  caddy-config:

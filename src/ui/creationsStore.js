@@ -1,3 +1,4 @@
+import { storageKey } from '../platform/config';
 import { validAdventure } from '../engine/adventures';
 import { CLASSES } from '../engine/classes';
 import { MAPS } from '../engine/maps';
@@ -9,7 +10,7 @@ import { isLoadout } from './loadoutStore';
 import { dungeonCapacity, validDungeonEncounter } from '../engine/encounters';
 import { dungeonRoom, dungeonRooms, validCampaignShape } from '../engine/dungeonCampaign';
 
-export const CREATIONS_STORAGE = 'dofus-lite-creations-v1';
+export const CREATIONS_STORAGE = storageKey('dofus-lite-creations-v1');
 export const emptyCreations = () => ({ version: 1, characters: [], dungeons: [] });
 export const newCreationId = () => window.crypto?.randomUUID?.() || `creation-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 export const cloneCreation = value => JSON.parse(JSON.stringify(value));

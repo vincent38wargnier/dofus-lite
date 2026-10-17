@@ -9,3 +9,7 @@ export function validSpellVisual(value) {
     && ['color', 'accent'].every(k => /^#[0-9a-f]{6}$/i.test(value[k]))
     && Number.isInteger(value.durationMs) && value.durationMs >= 250 && value.durationMs <= 1500;
 }
+// A custom battlefield may host native library fighters in a free encounter.
+// Keep authored visuals for its supplied heroes, without hiding guests' actors.
+export const originalCombatVisuals = (originalBoard, fighter) => !!originalBoard && (!fighter || !!(
+  fighter.customMonster || fighter.artworkId || fighter.loadout?.artworkId));

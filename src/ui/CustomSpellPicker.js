@@ -8,18 +8,28 @@ import SpellBudget from './SpellBudget';
 import { spellBalance, spellbookBalance, spellbookBudgetErrors } from '../engine/spellBalance';
 import { RetroSpellIcon } from './RetroAssets';
 import { sortSpellsByType } from './spellPresentation';
-import { CREATION_SPELLS, CREATION_SPELLS_BY_ID, SPELL_SOURCES, ACTION_LABELS, ROLE_LABELS,
+import { CREATION_SPELLS, creationSpellCatalogue, ACTION_LABELS, ROLE_LABELS,
   filterCreationSpells, spellLimitations } from './creationCatalogue';
+import { useWorlds, WorldFilter } from './WorldsContext';
 
-export default function CustomSpellPicker({ loadout, change, ownerType = 'class' }) {
+export default function CustomSpellPicker({ loadout, change, ownerType = 'class', initialSource = '' }) {
+  const worlds = useWorlds();
+  const characters = worlds?.characters, monsters = worlds?.monsters;
+  const catalogue = useMemo(() => characters ? creationSpellCatalogue([
+    ...characters.map(c => ({ spells: c.loadout.spells?.custom || [], source: { id: `custom-class:${c.id}`, name: c.name, type: 'class' } })),
+    ...(monsters || []).map(m => ({ spells: m.customMonster.spells, source: { id: `custom-monster:${m.id}`, name: m.name, type: 'monster' } })),
+  ]) : CREATION_SPELLS, [characters, monsters]);
+  const byId = useMemo(() => Object.fromEntries(catalogue.map(s => [s.id, s])), [catalogue]);
+  const worldSpells = useMemo(() => catalogue.filter(s => !worlds || worlds.matches('spells', s.id, worlds.selected)), [catalogue, worlds]);
+  const sources = useMemo(() => [...new Map(worldSpells.flatMap(s => s.sources).map(s => [s.id, s])).values()].sort((a,b) => a.name.localeCompare(b.name,'fr')), [worldSpells]);
   const ownerLabel = ownerType === 'monster' ? 'monstre' : 'classe';
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState(initialSource ? { source: initialSource } : {});
   const [inspected, setInspected] = useState(null);
   const [grades, setGrades] = useState({});
   const [dragged, setDragged] = useState(null);
   const [designer, setDesigner] = useState(null);
   const [notice, setNotice] = useState('');
-  const [catalogueOpen, setCatalogueOpen] = useState(false);
+  const [catalogueOpen, setCatalogueOpen] = useState(!!initialSource);
   const [visibleCount, setVisibleCount] = useState(60);
   const selected = loadout.spells?.custom || [];
   const balance = spellbookBalance(selected);
@@ -29,7 +39,8 @@ export default function CustomSpellPicker({ loadout, change, ownerType = 'class'
     return (ai < 0 ? 10000 : ai) - (bi < 0 ? 10000 : bi);
   });
   const selectedIds = new Set(selected.map(spell => spell.id));
-  const results = useMemo(() => filterCreationSpells(CREATION_SPELLS, filters), [filters]);
+  const activeFilters = useMemo(() => filters.source && !sources.some(source => source.id === filters.source) ? { ...filters, source: '' } : filters, [filters, sources]);
+  const results = useMemo(() => filterCreationSpells(worldSpells, activeFilters), [worldSpells, activeFilters]);
   const filter = (key, value) => { setFilters(previous => ({ ...previous, [key]: value })); setVisibleCount(60); };
   const update = (custom, order = custom.map(spell => spell.id)) => change(current => ({ ...current,
     spells: { ...current.spells, custom, order } }));
@@ -62,10 +73,10 @@ export default function CustomSpellPicker({ loadout, change, ownerType = 'class'
     if (index < 0 || target < 0 || target >= next.length) return;
     next.splice(target, 0, next.splice(index, 1)[0]); update(next);
   };
-  const entry = CREATION_SPELLS_BY_ID[inspected];
+  const entry = byId[inspected];
   const raw = entry && rawFor(entry);
   const limitations = raw ? spellLimitations(raw) : [];
-  const availableActions = [...new Set(CREATION_SPELLS.flatMap(spell => spell.actions))]
+  const availableActions = [...new Set(worldSpells.flatMap(spell => spell.actions))]
     .sort((a, b) => ACTION_LABELS[a].localeCompare(ACTION_LABELS[b], 'fr'));
   return <section className="custom-spell-picker" aria-label="Sorts personnalisés">
     <div className="creator-section-heading"><div><h3>Composez votre grimoire</h3><p>Créez un sort ou piochez dans le catalogue. {MAX_CUSTOM_SPELLS} sorts maximum{ownerType === 'class' ? ', plus votre arme' : ''}.</p></div>
@@ -90,8 +101,8 @@ export default function CustomSpellPicker({ loadout, change, ownerType = 'class'
           onDrop={event => { event.preventDefault(); if (dragged !== null) move(dragged, index - ordered.findIndex(value => value.id === dragged)); setDragged(null); }}>
           <button type="button" className="creator-spell-inspect" disabled={!!designer} onClick={() => isAuthoredSpell(spell) ? openDesigner(spell, true) : setInspected(spell.id)}><RetroSpellIcon spell={spell} /><span><strong>{spell.name}</strong><small>{spell.pa} PA · {spell.rangeMin}–{spell.rangeMax} PO</small></span></button>
           <div className="creator-selected-actions">{isAuthoredSpell(spell) ? <span className="creator-authored-label">Créé · niv. {spell.requiredLevel}</span> : <label>Grade<select aria-label={`Grade de ${spell.name}`} value={spell.grade}
-            onChange={event => update(ordered.map(value => value.id === spell.id ? CREATION_SPELLS_BY_ID[spell.id]?.grades.find(grade => grade.grade === Number(event.target.value)) || value : value))}>
-            {(CREATION_SPELLS_BY_ID[spell.id]?.grades || [spell]).map(grade => <option key={grade.grade} value={grade.grade}>{grade.grade}</option>)}</select></label>}
+            onChange={event => update(ordered.map(value => value.id === spell.id ? byId[spell.id]?.grades.find(grade => grade.grade === Number(event.target.value)) || value : value))}>
+            {(byId[spell.id]?.grades || [spell]).map(grade => <option key={grade.grade} value={grade.grade}>{grade.grade}</option>)}</select></label>}
             <button type="button" className="btn" aria-label={`Monter ${spell.name}`} disabled={!index} onClick={() => move(spell.id, -1)}>↑</button>
             <button type="button" className="btn" aria-label={`Descendre ${spell.name}`} disabled={index === ordered.length - 1} onClick={() => move(spell.id, 1)}>↓</button>
             <button type="button" className="btn" disabled={designer?.raw.id === spell.id} aria-label={`Retirer ${spell.name}`} onClick={() => update(ordered.filter(value => value.id !== spell.id))}>×</button></div>
@@ -101,17 +112,17 @@ export default function CustomSpellPicker({ loadout, change, ownerType = 'class'
         </li>)}</ol>
       </aside>
       {designer ? <SpellDesigner key={designer.raw.id} initialSpell={designer.raw} editing={designer.editing} existingSpells={selected}
-        onSave={saveSpell} onCancel={() => setDesigner(null)} /> : !catalogueOpen ? <button type="button" className="btn workshop-open-catalogue" onClick={() => setCatalogueOpen(true)}>Ajouter un sort du catalogue · {CREATION_SPELLS.length} sorts</button> : <div className="creator-spell-catalogue">
-        <div className="creator-section-heading"><h4>Catalogue des sorts</h4><button type="button" className="btn" onClick={() => setCatalogueOpen(false)}>Fermer le catalogue</button></div>
-        <label className="field creator-search">Rechercher<input type="search" placeholder="Furie, Iop, Bouftou Royal, soin…" aria-label="Rechercher dans tous les sorts" value={filters.query || ''} onChange={event => filter('query', event.target.value)} /></label>
+        onSave={saveSpell} onCancel={() => setDesigner(null)} /> : !catalogueOpen ? <button type="button" className="btn workshop-open-catalogue" onClick={() => setCatalogueOpen(true)}>Ajouter un sort du catalogue · {catalogue.length} sorts</button> : <div className="creator-spell-catalogue">
+        <WorldFilter onChange={id => { worlds.select(id); setFilters({}); setVisibleCount(60); }} /><div className="creator-section-heading"><h4>Catalogue des sorts</h4><button type="button" className="btn" onClick={() => setCatalogueOpen(false)}>Fermer le catalogue</button></div>
+        <label className="field creator-search">Rechercher<input type="search" placeholder="Nom, classe, créature, soin…" aria-label="Rechercher dans tous les sorts" value={filters.query || ''} onChange={event => filter('query', event.target.value)} /></label>
         <div className="studio-quick-filters" role="group" aria-label="Types de sorts">{[['', 'Tous'], ['damage', 'Attaque'], ['boost', 'Boost'], ['heal', 'Soin'], ['placement', 'Placement'], ['summon', 'Invocation'], ['debuff', 'Retrait']].map(([id, label]) =>
           <button type="button" key={id} aria-pressed={(filters.role || '') === id} onClick={() => filter('role', id)}>{label}</button>)}</div>
         <details className="studio-advanced-filters"><summary>Filtres avancés{Object.entries(filters).filter(([key, value]) => value && !['query', 'role'].includes(key)).length > 0 ? ' · actifs' : ''}</summary><div className="creator-filters">
           <label className="field">Origine<select value={filters.origin || ''} onChange={event => setFilters(previous => ({ ...previous, origin: event.target.value, source: '' }))}>
             <option value="">Classes et monstres</option><option value="class">Personnages</option><option value="monster">Monstres et invocations</option></select></label>
-          <label className="field">Classe ou monstre<select value={filters.source || ''} onChange={event => filter('source', event.target.value)}>
+          <label className="field">Classe ou monstre<select value={activeFilters.source || ''} onChange={event => filter('source', event.target.value)}>
             <option value="">Toutes les origines</option>{['class', 'monster'].filter(type => !filters.origin || type === filters.origin).map(type => <optgroup key={type} label={type === 'class' ? 'Classes' : 'Monstres et invocations'}>
-              {SPELL_SOURCES.filter(source => source.type === type).map(source => <option key={source.id} value={source.id}>{source.name}</option>)}</optgroup>)}</select></label>
+              {sources.filter(source => source.type === type).map(source => <option key={source.id} value={source.id}>{source.name}</option>)}</optgroup>)}</select></label>
           <label className="field">Type de sort<select value={filters.role || ''} onChange={event => filter('role', event.target.value)}>
             <option value="">Tous les types</option>{Object.entries(ROLE_LABELS).map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
           <label className="field">Action<select value={filters.action || ''} onChange={event => filter('action', event.target.value)}>

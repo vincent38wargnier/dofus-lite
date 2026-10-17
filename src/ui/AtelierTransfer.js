@@ -25,7 +25,7 @@ export function AtelierExportButton({ selection, name, label = 'Exporter', iconO
     setBusy(true); setError(''); setMessage('');
     try {
       const archive = await buildAtelierArchive(selection);
-      downloadAtelierArchive(archive.bytes, name);
+      await downloadAtelierArchive(archive.bytes, name);
       setMessage('ZIP prêt.');
     } catch (e) { setError(e.message); }
     finally { setBusy(false); }
@@ -63,7 +63,7 @@ export function AtelierExportDialog({ onClose }) {
     try {
       const result = await buildAtelierArchive(selection);
       const only = GROUPS.flatMap(({ key }) => selection[key])[0];
-      downloadAtelierArchive(result.bytes, count === 1 ? only.name : `atelier-${count}-creations`);
+      await downloadAtelierArchive(result.bytes, count === 1 ? only.name : `atelier-${count}-creations`);
       setDone(`${atelierCounts(selection)} dans votre ZIP. Prêt à partager ou à réimporter.`);
     } catch (e) { setError(e.message); }
     finally { setBusy(false); }

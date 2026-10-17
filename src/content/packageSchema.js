@@ -1,8 +1,7 @@
 import { EFFECT_TYPES, EFFECT_ZONES, ELEMENTS, EFFECT_STATS, SPELL_TARGETS } from '../engine/authoredSpells';
 import { ORIGINAL_EFFECTS } from '../visuals/spellVisuals';
 
-export const PACKAGE_LIMITS = { zipBytes: 32 * 1024 * 1024, expandedBytes: 48 * 1024 * 1024,
-  jsonBytes: 512 * 1024, pngBytes: 2 * 1024 * 1024, files: 180, spells: 10, monsters: 8 };
+export { PACKAGE_LIMITS } from './packageLimits';
 const integer = (minimum, maximum) => ({ type: 'integer', minimum, maximum });
 const text = (maxLength = 800) => ({ type: 'string', minLength: 1, maxLength });
 const choice = values => ({ enum: values });

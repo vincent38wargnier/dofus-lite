@@ -1,3 +1,4 @@
+import { storageKey } from '../platform/config';
 import { equipmentItem } from '../engine/customEquipment';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Anvil, FlaskConical, Gem, History, Sparkles } from 'lucide-react';
@@ -17,7 +18,7 @@ const outcomeLabel = entry => entry.neutralized ? 'Neutre sans effet'
   : entry.outcome === 'EC' && !Object.keys(entry.deltas).length && entry.puitsBefore === entry.puitsAfter
     ? 'Échec sans perte' : OUTCOMES[entry.outcome];
 const observedStats = snapshot => Object.fromEntries(Object.entries(FM_STATS).map(([s, d]) => [s, (snapshot?.[d.effect] || 0) - (snapshot?.[d.negativeEffect] || 0)]));
-const GUARANTEED_KEY = 'dofus-lite-forge-guaranteed-v1';
+const GUARANTEED_KEY = storageKey('dofus-lite-forge-guaranteed-v1');
 
 function StartingValue({ value, min, max, disabled, name, onCommit }) {
   const [text, setText] = useState(String(value));

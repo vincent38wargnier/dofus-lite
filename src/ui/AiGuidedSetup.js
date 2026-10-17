@@ -8,19 +8,26 @@ import { DEFAULT_WEIGHTS } from '../bots/utilityBrain';
 import TUNED from '../bots/cortexWeights.json';
 import { maisonWeightsFor } from '../bots/maison';
 import { RetroPortrait } from './RetroAssets';
+import { useWorlds, WorldFilter } from './WorldsContext';
+import { characterMatchesWorld } from './worldCatalogue';
+
+export const aiFighterMatchesWorld = (worlds, fighter) => !worlds || (fighter.loadout
+  ? characterMatchesWorld(worlds, { ...fighter, id: fighter.id.replace(/^(profile|creation):/, '') })
+  : worlds.matches('classes', fighter.classId, worlds.selected));
 
 export function AiFighterPortrait({ fighter }) {
   return <span className="ai-fighter-portrait" aria-hidden="true"><RetroPortrait classId={fighter.classId} artworkId={fighter.loadout?.artworkId} appearance={fighter.loadout?.profile?.sex === 1 ? 'female' : 'male'} fallback={CLASSES[fighter.classId]?.emoji || '♟'}/></span>;
 }
 
 export function AiFighterStep({ choices, fighter, snapshot, error, onChoose, onNext }) {
+  const worlds = useWorlds();
   const [query, setQuery] = useState('');
   const fold = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  const filtered = choices.filter(c => fold(`${c.name} ${CLASSES[c.classId]?.name}`).includes(fold(query)));
+  const filtered = choices.filter(c => aiFighterMatchesWorld(worlds, c) && fold(`${c.name} ${CLASSES[c.classId]?.name}`).includes(fold(query)));
   return <section className="ai-guided-panel" aria-label="Choisir mon combattant">
     <header className="ai-step-heading"><span className="ai-eyebrow">01 / LE COMBATTANT</span><h2>Qui allez-vous rendre imbattable ?</h2><p>Votre IA suivra vos priorités. Choisissez le personnage dont elle devra tirer le meilleur.</p></header>
     <div className="ai-fighter-picker">
-      <div><label className="ai-search"><Search size={17}/><input aria-label="Rechercher un combattant" placeholder="Un personnage, une classe…" value={query} onChange={e => setQuery(e.target.value)}/></label>
+      <div><WorldFilter /><label className="ai-search"><Search size={17}/><input aria-label="Rechercher un combattant" placeholder="Un personnage, une classe…" value={query} onChange={e => setQuery(e.target.value)}/></label>
         <div className="ai-fighter-collection">{['Mes personnages', 'Mes créations', 'Classes du jeu'].map(group => {
           const list = filtered.filter(c => c.group === group);
           return list.length ? <section key={group}><h3>{group}{group === 'Classes du jeu' && <small>Base niveau 100</small>}</h3><div className="ai-fighter-grid">{list.map(c => <button type="button" key={c.id} aria-pressed={fighter.id === c.id} onClick={() => onChoose(c.id)}><AiFighterPortrait fighter={c}/><span><strong>{c.name}</strong><small>{c.loadout ? `Niveau ${c.loadout.level || 100} · équipement conservé` : CLASSES[c.classId]?.role}</small></span>{fighter.id === c.id && <Check size={16}/>}</button>)}</div></section> : null;

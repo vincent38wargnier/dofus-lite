@@ -1,6 +1,6 @@
 // Original client templates + pure, deterministic pre-match loadout rules.
 // Permanent equipment bonuses are never stored as dispellable combat buffs.
-import DATA from './equipmentData.json';
+import { equipmentData as DATA } from './gameData';
 import { effectDefinition, WEAPON_EFFECTS } from './equipmentEffects';
 import { equipmentItem, validateCustomEquipment } from './customEquipment';
 import { equipmentKitBalance } from './equipmentBalance';
@@ -33,13 +33,14 @@ export const EQUIPMENT_SLOTS = [
   { id: 'boots', name: 'Bottes', types: [11], icon: '♟' },
   { id: 'shield', name: 'Bouclier', types: [82], icon: '⬡' },
   { id: 'pet', name: 'Familier / Monture', types: [18, 97], icon: '♞' },
-  ...Array.from({ length: 6 }, (_, i) => ({ id: `dofus${i + 1}`, name: `Dofus ${i + 1}`, types: [23], icon: '◒' })),
+  ...Array.from({ length: 6 }, (_, i) => ({ id: `dofus${i + 1}`, name: `${process.env.REACT_APP_PLATFORM === '1' ? 'Artefact' : 'Dofus'} ${i + 1}`, types: [23], icon: '◒' })),
 ];
 
 
 export function itemIcon(item) {
+  if (item?.creatorTemplate) return equipmentShapeImage(item.type, { shape: 'item', color: '#8cccb5' });
   if (item?.customEquipment?.appearance) return equipmentShapeImage(item.type, item.customEquipment.appearance);
-  return item && !item.missingIcon ? `/dofus-local/equipment/icons/${item.type}_${item.gfx}.png` : null;
+  return item && item.gfx > 0 && !item.missingIcon ? `/dofus-local/equipment/icons/${item.type}_${item.gfx}.png` : null;
 }
 
 export function rollEffect(row, mode = 'max', rng = createRng(1)) {

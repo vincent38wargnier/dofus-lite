@@ -1,3 +1,5 @@
+import { storageKey } from '../platform/config';
+import { DEFAULT_CLASS_ID, DEFAULT_OPPONENT_ID } from '../engine/classes';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { BrainCircuit, Plus, Save, Copy, Code2, Workflow, Undo2, Redo2, Upload, Download, Swords, X, Check, Trash2, ArrowRight, ArrowLeft, Trophy, UserRound } from 'lucide-react';
 import { createGame, getView } from '../engine/engine';
@@ -11,6 +13,7 @@ import AiNodeInspector from './AiNodeInspector';
 import AiDecisionInspector from './AiDecisionInspector';
 import AiLab from './AiLab';
 import { useProfiles } from './ProfilesContext';
+import { useWorlds } from './WorldsContext';
 import { useCreations } from './CreationsContext';
 import { aiFighterChoices, aiFighterSnapshot } from '../bots/aiAuthoring';
 import { AiFighterStep, AiStrategyStep, AiPromptDialog } from './AiGuidedSetup';
@@ -18,14 +21,14 @@ import AiCodeDialog from './AiCodeDialog';
 import '../styles/aiStudio.css';
 import '../styles/aiStudioGuide.css';
 
-const KEY='koliseum.ai-studio.v1';
+const KEY=storageKey('koliseum.ai-studio.v1');
 const newId=()=>`node-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
 const jsTemplate='// Une action par appel. Le combat est relu après chaque action.\nfunction decide(view, api) {\n  return api.maison();\n}';
 function baseDraft(bot, saved) {
   let graph=bot.flow||null;
   if(!graph&&bot.id==='maison')graph=makeMaisonFlow();
   if(!graph&&['cortex'].includes(bot.id))graph={...makeFlow(),nodes:makeFlow().nodes.map(n=>n.type==='plan'?{...n,label:bot.name,config:{...n.config,base:bot.id==='cortex'?'cortex':'maison'}}:n)};
-  return {id:bot.id,name:bot.name,graph,code:bot.code,fighterId:bot.fighterId||bot.classId||'IOP',starter:bot.starter||null,promptBriefs:saved?.promptBriefs};
+  return {id:bot.id,name:bot.name,graph,code:bot.code,fighterId:bot.fighterId||bot.classId||DEFAULT_CLASS_ID,starter:bot.starter||null,promptBriefs:saved?.promptBriefs};
 }
 function readWorkspace() {try {const v=JSON.parse(localStorage.getItem(KEY));return v&&typeof v==='object'&&v.drafts&&typeof v.drafts==='object'?v:{drafts:{},active:null};}catch{return {drafts:{},active:null};}}
 function usableDraft(d) {return d&&typeof d.id==='string'&&typeof d.name==='string'&&typeof d.code==='string'&&(!d.graph||flowErrors(d.graph).every(e=>/reliez la sortie|choisissez un sort|condition invalide|valeur invalide/.test(e)));}
@@ -34,14 +37,15 @@ function download(name,text,type='application/json') {const url=URL.createObject
 export default function AiStudio({customBots,allBots,addBot,updateBot,deleteBot,onWatch,onTournament}) {
   const [initial]=useState(readWorkspace),workspace=useRef(initial),fileInput=useRef(null),lab=useRef(null);
   const profiles=useProfiles(),creations=useCreations();
-  const choices=useMemo(()=>aiFighterChoices(profiles?.profiles,creations?.characters),[profiles?.profiles,creations?.characters]);
+  const worldCharacters=useWorlds()?.characters;
+  const choices=useMemo(()=>aiFighterChoices(profiles?.profiles,worldCharacters||creations?.characters),[profiles?.profiles,worldCharacters,creations?.characters]);
   const initialBot=allBots.find(b=>b.id===initial.active)||allBots.find(b=>b.id==='maison')||allBots[0];
-  const [draft,setDraft]=useState(()=>!initial.active?{id:`draft-${newId()}`,name:'Mon IA',graph:makeFlow(),code:jsTemplate,starter:'maison',fighterId:profiles?.activeId?`profile:${profiles.activeId}`:'IOP'}:(initialBot.custom||!allBots.some(b=>b.id===initial.active))&&usableDraft(initial.drafts[initial.active])?initial.drafts[initial.active]:baseDraft(initialBot,initial.drafts[initial.active]));
+  const [draft,setDraft]=useState(()=>!initial.active?{id:`draft-${newId()}`,name:'Mon IA',graph:makeFlow(),code:jsTemplate,starter:'maison',fighterId:profiles?.activeId?`profile:${profiles.activeId}`:DEFAULT_CLASS_ID}:(initialBot.custom||!allBots.some(b=>b.id===initial.active))&&usableDraft(initial.drafts[initial.active])?initial.drafts[initial.active]:baseDraft(initialBot,initial.drafts[initial.active]));
   const [selected,setSelected]=useState('brain'),[mode,setMode]=useState(draft.graph?'flow':'code'),[adding,setAdding]=useState(false),[notice,setNotice]=useState(null);
   const [history,setHistory]=useState([]),[future,setFuture]=useState([]),[reset,setReset]=useState(0),[revision,setRevision]=useState(0);
   const [entry,setEntry]=useState(null),[traceGraph,setTraceGraph]=useState(null),[step,setStep]=useState(-1);
-  const [page,setPage]=useState(initial.active?1:0),[assistant,setAssistant]=useState(false),[codeFiles,setCodeFiles]=useState(false),[report,setReport]=useState(null),[session,setSession]=useState(0),[opponent,setOpponent]=useState({classId:'IOP'});
-  const mine=choices.find(c=>c.id===draft.fighterId)||choices.find(c=>c.id==='IOP');
+  const [page,setPage]=useState(initial.active?1:0),[assistant,setAssistant]=useState(false),[codeFiles,setCodeFiles]=useState(false),[report,setReport]=useState(null),[session,setSession]=useState(0),[opponent,setOpponent]=useState({classId:DEFAULT_CLASS_ID});
+  const mine=choices.find(c=>c.id===draft.fighterId)||choices.find(c=>c.id===DEFAULT_CLASS_ID);
   const context={mine,opponent};
   const resolved=useMemo(()=>{try{return {snapshot:aiFighterSnapshot(mine),error:''};}catch(e){return {snapshot:null,error:e.message};}},[mine]);
   const bot=allBots.find(b=>b.id===draft.id),builtin=!!bot&&!bot.custom;
@@ -62,7 +66,7 @@ export default function AiStudio({customBots,allBots,addBot,updateBot,deleteBot,
   const verify=()=>{
     if(errors.length){setNotice({ok:false,text:errors[0]});return false;}
     let view;
-    try {const {state}=createGame({mapId:'arene',seed:1,fighters:[{id:'A',...mine},{id:'B',classId:'CRA'}].map((f,i)=>({...f,id:i?'B':'A'}))});view=getView(state,'A');}
+    try {const {state}=createGame({mapId:'arene',seed:1,fighters:[{id:'A',...mine},{id:'B',classId:DEFAULT_OPPONENT_ID}].map((f,i)=>({...f,id:i?'B':'A'}))});view=getView(state,'A');}
     catch(e){setNotice({ok:false,text:e.message});return false;}
     try {
       const syntax=inspectAiSource(code);if(!syntax.ok)throw new Error(syntax.error);
@@ -75,7 +79,7 @@ export default function AiStudio({customBots,allBots,addBot,updateBot,deleteBot,
     if(builtin||!verify())return;
     if(!draft.name.trim()){setNotice({ok:false,text:'Donnez un nom à votre IA.'});return;}
     try{
-      const record={name:draft.name.trim(),code,flow:draft.graph||null,classId:context.mine.classId||'IOP',fighterId:mine.id,starter:draft.starter||null,emoji:'🧠'};
+      const record={name:draft.name.trim(),code,flow:draft.graph||null,classId:context.mine.classId||DEFAULT_CLASS_ID,fighterId:mine.id,starter:draft.starter||null,emoji:'🧠'};
       if(bot?.custom)updateBot(bot.id,record);
       else{const id=addBot(record);delete workspace.current.drafts[draft.id];setDraft({...draft,id,name:record.name});}
       setNotice({ok:true,text:'IA enregistrée. Elle est disponible pour chaque combattant dans Combat et dans le Tournoi.'});
@@ -130,7 +134,7 @@ export default function AiStudio({customBots,allBots,addBot,updateBot,deleteBot,
   return <section className="ai-studio ai-guided-studio" aria-label="Studio IA">
     <header className="ai-studio-heading">
       <div className="ai-studio-title"><span><BrainCircuit size={29}/></span><div><span className="ai-eyebrow">L’ARÈNE DES STRATÈGES</span><h1>Studio IA</h1><p>Votre personnage. Votre intelligence de combat.</p></div></div>
-      <div className="ai-heading-actions"><button type="button" className="ai-button" onClick={()=>setCodeFiles(true)}><Code2 size={15}/> Code & fichiers</button><button type="button" className="ai-button" onClick={()=>fileInput.current.click()}><Upload size={15}/> Importer une IA</button><button type="button" className="ai-button" onClick={exportFile}><Download size={15}/> Partager mon IA</button><input type="file" accept="application/json,.json,text/javascript,.js" ref={fileInput} aria-label="Importer une IA visuelle ou JavaScript" hidden onChange={importFile}/></div>
+      <div className="ai-heading-actions">{process.env.REACT_APP_PLATFORM !== '1' && <button type="button" className="ai-button" onClick={()=>setCodeFiles(true)}><Code2 size={15}/> Code & fichiers</button>}<button type="button" className="ai-button" onClick={()=>fileInput.current.click()}><Upload size={15}/> Importer une IA</button><button type="button" className="ai-button" onClick={exportFile}><Download size={15}/> Partager mon IA</button><input type="file" accept="application/json,.json,text/javascript,.js" ref={fileInput} aria-label="Importer une IA visuelle ou JavaScript" hidden onChange={importFile}/></div>
     </header>
     <div className={`ai-mission${page!==0?' compact':''}`}><div><span className="ai-eyebrow"><Trophy size={15}/> LE DÉFI</span><h2>Et si la meilleure IA,<br/>{' '}c’était la vôtre ?</h2><p>Donnez-lui une stratégie, faites-la combattre et améliorez ce qui fait la différence. Aucun code requis pour commencer.</p></div><div className="ai-mission-loop" aria-hidden="true"><span><BrainCircuit size={25}/><b>Imaginer</b></span><ArrowRight/><span><Swords size={25}/><b>Affronter</b></span><ArrowRight/><span><Trophy size={25}/><b>Progresser</b></span></div></div>
     <nav className="ai-collection" aria-label="Ma bibliothèque d’IA"><div className="ai-collection-title"><strong>Mes IA</strong><button type="button" className="ai-button" onClick={()=>fresh()}><Plus size={15}/> Créer mon IA</button></div>

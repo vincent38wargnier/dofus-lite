@@ -154,6 +154,8 @@ test('a creator navigation request makes one draft and returns the completed roo
   expect(JSON.parse(localStorage.getItem(CREATIONS_STORAGE)).dungeons).toHaveLength(3);
   expect(screen.getByRole('button', { name: 'Choisir ce donjon' })).toBeDisabled();
   fireEvent.change(screen.getByLabelText('Nom du donjon'), { target: { value: 'Ma nouvelle salle' } });
+  fireEvent.click(screen.getByRole('button', { name: /2\. Créatures/ }));
+  fireEvent.click(screen.getByRole('button', { name: /Bestiaire du jeu/ }));
   fireEvent.click(screen.getByRole('button', { name: 'Ajouter Poutch Ingball' }));
   fireEvent.click(screen.getByRole('button', { name: 'Choisir ce donjon' }));
   expect(onDone).toHaveBeenCalledWith('dungeons', expect.objectContaining({ name: 'Ma nouvelle salle', members: [{ monsterId: 494, grade: 5, count: 1 }] }));
@@ -231,7 +233,7 @@ test('sidebar plus opens a cancellable class picker and creates a profile; setti
   fireEvent.change(within(screen.getByRole('dialog')).getByLabelText('Nom du personnage'), { target: { value: 'Annulé' } });
   fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Annuler' }));
   expect(current().name).toBe('Crâ feu');
-  fireEvent.click(plus); fireEvent.click(screen.getByRole('button', { name: 'Créer une classe' }));
+  fireEvent.click(plus); fireEvent.click(screen.getByRole('button', { name: 'Inventer une classe' }));
   expect(openCreator).toHaveBeenCalledWith('characters'); expect(screen.queryByRole('dialog')).toBeNull();
 });
 

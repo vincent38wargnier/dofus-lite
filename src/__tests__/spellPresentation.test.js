@@ -34,3 +34,17 @@ test('manual reordering preserves the weapon slot and still works without a weap
   expect(moveCombatSpell([0, 141, 153], 0, 153)).toEqual([0, 141, 153]);
   expect(moveCombatSpell([141, 153, 142], 142, 141)).toEqual([142, 141, 153]);
 });
+
+test('new spells remain readable with no installed library or icon palette', () => {
+  const palette = SPELL_LIBRARY.iconPalette;
+  try {
+    delete SPELL_LIBRARY.iconPalette;
+    for (const element of ['feu', 'eau', 'air', 'terre', 'neutre']) {
+      const result = spellPresentation({ id: 999999, effects: [{ kind: 'damage', element }] });
+      expect(result.category).toBe(element);
+      expect(result.color).toMatch(/^#[0-9a-f]{6}$/i);
+    }
+    expect(spellPresentation({ effects: [{ kind: 'heal' }] }).category).toBe('heal');
+    expect(spellPresentation({ effects: [] }).color).toMatch(/^#[0-9a-f]{6}$/i);
+  } finally { SPELL_LIBRARY.iconPalette = palette; }
+});

@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Backpack, Check, Copy, Plus, Save, Scale, Search, Trash2, Wand2, Palette, Swords, SlidersHorizontal } from 'lucide-react';
-import { ITEMS } from '../engine/equipment';
+import { EQUIPMENT_MODELS as ITEMS } from '../engine/customEquipment';
+import { PLATFORM } from '../platform/config';
+import { useWorlds, WorldFilter } from './WorldsContext';
 import { MAX_EQUIPMENT_SCORE, EQUIPMENT_CENSUS, EQUIPMENT_FAMILIES, EQUIPMENT_STAT_RULES, equipmentFamily, equipmentStats } from '../engine/equipmentBalance';
 import { newCustomEquipment, newEquipmentId, customEquipmentItem, validateCustomEquipment, fitEquipmentBudget } from '../engine/customEquipment';
 import { useCustomEquipment } from './CustomEquipmentContext';
@@ -33,16 +35,17 @@ export function EquipmentBudgetCard({ result }) {
       <p>Le score retient le budget le plus sollicité. Chaque bonus a aussi son propre plafond.</p>
       <details><summary>Détail des contributions</summary><ul className="equipment-budget-contributions">{b.contributions.map(row => <li key={row.stat}><span>{row.label} × {row.value}</span><b>{Math.round(row.points * 10) / 10}</b></li>)}
         {b.synergy > 0 && <li><span>Cumul PA / PM</span><b>{b.synergy}</b></li>}{b.attack > 0 && <li><span>Profil de frappe</span><b>{Math.round(b.attack)}</b></li>}</ul><p>Poids bruts, avant normalisation par famille et niveau.</p></details>
-      <details className="equipment-budget-references"><summary>Comparer aux objets Dofus</summary><p>{b.limits.sample} références pour ce niveau et cette famille.</p>{b.comparisons.map(ref => <div key={ref.id}><EquipmentIcon item={ITEMS[ref.id]} /><span>{ref.name}<small>Niv. {ref.level}</small></span><b>{ref.score}</b></div>)}</details>
-      <p className="equipment-budget-note">Repères de puissance combinée. Les objets Dofus d’origine peuvent dépasser le budget de création.</p></>}
-    <details className="equipment-budget-method"><summary>Comment ce budget est calculé</summary><p>{EQUIPMENT_CENSUS.items.toLocaleString('fr-FR')} objets analysés, {EQUIPMENT_CENSUS.references.toLocaleString('fr-FR')} références retenues, hors Dofus. Le niveau requis et la famille déterminent la puissance disponible. Budget du stuff complet : {MAX_EQUIPMENT_SCORE.toLocaleString('fr-FR')} points.</p></details>
-    <a href="/dofus-local/equipment-balance-audit.json" target="_blank" rel="noreferrer">Consulter l’analyse complète ↗</a>
+      <details className="equipment-budget-references"><summary>Repères du budget</summary><p>{b.limits.sample} références pour ce niveau et cette famille.</p>{b.comparisons.map(ref => <div key={ref.id}><EquipmentIcon item={ITEMS[ref.id]} /><span>{ref.name}<small>Niv. {ref.level}</small></span><b>{ref.score}</b></div>)}</details>
+      <p className="equipment-budget-note">Repères de puissance combinée. Les bibliothèques ne modifient pas ces limites.</p></>}
+    <details className="equipment-budget-method"><summary>Comment ce budget est calculé</summary><p>{EQUIPMENT_CENSUS.items.toLocaleString('fr-FR')} objets analysés, {EQUIPMENT_CENSUS.references.toLocaleString('fr-FR')} références retenues, hors artefacts. Le niveau requis et la famille déterminent la puissance disponible. Budget du stuff complet : {MAX_EQUIPMENT_SCORE.toLocaleString('fr-FR')} points.</p></details>
+    {!PLATFORM && <a href="/dofus-local/equipment-balance-audit.json" target="_blank" rel="noreferrer">Consulter l’analyse complète ↗</a>}
   </aside>;
 }
 
 export default function EquipmentWorkshop({ onEquip, onClose, initialReferenceId, embedded = false, importedEquipment }) {
   const library = useCustomEquipment();
-  const [draft, setDraft] = useState(() => newCustomEquipment(MODELS.some(item => item.id === initialReferenceId) ? initialReferenceId : 7143));
+  const worlds = useWorlds();
+  const [draft, setDraft] = useState(() => newCustomEquipment(MODELS.some(item => item.id === initialReferenceId) ? initialReferenceId : (PLATFORM ? -100016 : 7143)));
   const [editingId, setEditingId] = useState(null);
   const [query, setQuery] = useState('');
   const [libraryQuery, setLibraryQuery] = useState('');
@@ -56,8 +59,8 @@ export default function EquipmentWorkshop({ onEquip, onClose, initialReferenceId
   const activeView = view === 'weapon' && !draft.weapon ? 'bonus' : view;
   const result = useMemo(() => validateCustomEquipment(draft), [draft]);
   const family = equipmentFamily(ITEMS[draft.referenceId]);
-  const models = useMemo(() => MODELS.filter(item => family.types.includes(item.type) && fold(item.name).includes(fold(query))), [family, query]);
-  const saved = (library?.items || []).filter(item => fold(item.name).includes(fold(libraryQuery)));
+  const models = useMemo(() => MODELS.filter(item => (!worlds || worlds.matches('equipment', item.id, worlds.selected)) && family.types.includes(item.type) && fold(item.name).includes(fold(query))), [family, query, worlds]);
+  const saved = (worlds?.equipment || library?.items || []).filter(item => (!worlds || worlds.matches('equipment', item.id, worlds.selected)) && fold(item.name).includes(fold(libraryQuery)));
   const patch = changes => { setDraft(previous => ({ ...previous, ...changes })); setMessage(''); setError(''); };
   const stat = (key, value) => patch({ stats: { ...draft.stats, [key]: num(value) } });
   const pickModel = item => {
@@ -70,15 +73,17 @@ export default function EquipmentWorkshop({ onEquip, onClose, initialReferenceId
     try {
       const next = { ...draft, id: newEquipmentId(), name: draft.name.trim() };
       library.save(next, editingId);
+      worlds?.select('all');
       setDraft(next); setEditingId(next.id); setMessage('Équipement enregistré. Disponible dans Équipement → Mes équipements.'); setError('');
       if (equip) onEquip?.(next);
     } catch (e) { setError(e.message || 'Sauvegarde impossible.'); }
   };
   return <section className="equipment-workshop" aria-label="Créateur d’équipements">
-    {!embedded && <header className="equipment-workshop-heading"><div><span className="eyebrow"><Backpack size={17} /> MES ÉQUIPEMENTS</span><h2>Une pièce à votre image</h2><p>Choisissez une apparence, composez les bonus et gardez un budget cohérent avec Retro.</p></div>
+    {!embedded && <header className="equipment-workshop-heading"><div><span className="eyebrow"><Backpack size={17} /> MES ÉQUIPEMENTS</span><h2>Une pièce à votre image</h2><p>Choisissez une apparence, composez les bonus et gardez un budget cohérent avec les règles du jeu.</p></div>
       {onClose && <button type="button" className="btn" onClick={onClose}>← Retour au stuff</button>}</header>}
     {library?.error && <p className="creator-warning" role="alert">{library.error}</p>}
     <div className="equipment-workshop-layout"><aside className="equipment-design-library"><div className="equipment-design-library-title"><button type="button" className="btn primary" aria-label="Nouvel équipement" onClick={() => { setDraft(newCustomEquipment(draft.referenceId)); setEditingId(null); setMessage(''); setError(''); setView('bonus'); }}><Plus size={16} />Nouvel équipement</button></div>
+      <WorldFilter />
       <label className="equipment-design-search"><Search size={16} /><input type="search" aria-label="Rechercher mes équipements" placeholder="Rechercher…" value={libraryQuery} onChange={event => setLibraryQuery(event.target.value)} /></label>
       <div className="equipment-design-saved">{saved.map(item => <button type="button" className={`equipment-design-saved-card${editingId === item.id ? ' selected' : ''}`} key={item.id} onClick={() => { setDraft(JSON.parse(JSON.stringify(item))); setEditingId(item.id); setMessage(''); setError(''); setQuery(''); }}>
         <EquipmentIcon item={customEquipmentItem(item)} /><span><strong>{item.name}</strong><small>Niv. {item.level} · {equipmentFamily(ITEMS[item.referenceId])?.name}</small></span></button>)}
@@ -105,11 +110,12 @@ export default function EquipmentWorkshop({ onEquip, onClose, initialReferenceId
         prompt={`Propose un design original pour « ${draft.name} », ${family.name}, niveau ${draft.level}. Bonus : ${Object.entries(draft.stats).map(([k,v]) => `${v} ${EQUIPMENT_STAT_RULES[k]?.label || k}`).join(', ')}.\nFais une icône fantasy lisible de 256 × 256 pixels, fond transparent, sans texte, chiffres ni bordure. Propose aussi une couleur principale hexadécimale. Je choisirai la forme et la couleur dans le jeu. L’image PNG reste une référence artistique, pas une apparence importable. Ne change aucun bonus.`} filename="prompt-equipement.txt" />
       <div className="appearance-source" role="group" aria-label="Type de visuel de l’équipement">
         <button type="button" className="btn" aria-pressed={!!draft.appearance} onClick={() => { if (!draft.appearance) patch({ appearance: defaultEquipmentAppearance() }); }}>Forme personnalisée</button>
-        <button type="button" className="btn" aria-pressed={!draft.appearance} onClick={() => patch({ appearance: null })}>Visuel Dofus</button>
+        <button type="button" className="btn" disabled={PLATFORM && ITEMS[draft.referenceId]?.creatorTemplate} aria-pressed={!draft.appearance} onClick={() => patch({ appearance: null })}>{PLATFORM ? 'Visuel de la bibliothèque' : 'Visuel Dofus'}</button>
       </div>
       {draft.appearance && <ShapeAppearancePicker shapes={EQUIPMENT_SHAPES} value={draft.appearance} onChange={appearance => patch({ appearance })}
         image={(shape, color) => equipmentShapeImage(ITEMS[draft.referenceId].type, { shape, color })} />}
       <details className="equipment-design-model"><summary>{!draft.appearance && <EquipmentIcon item={ITEMS[draft.referenceId]} />}<span>{draft.appearance ? 'Référence des règles' : 'Apparence'} : {ITEMS[draft.referenceId].name}<small>{draft.appearance ? 'Options du modèle de référence' : 'Changer le modèle'}</small></span></summary>
+        <WorldFilter />
         <input type="search" aria-label="Rechercher une apparence" placeholder="Rechercher une apparence…" value={query} onChange={event => setQuery(event.target.value)} />
         <div className="equipment-design-models">{models.map(item => <button type="button" className={draft.referenceId === item.id ? 'selected' : ''} key={item.id} onClick={() => pickModel(item)}><EquipmentIcon item={item} /><span>{item.name}<small>Niv. {item.level}</small></span></button>)}</div>
         <p>{draft.appearance ? 'La forme choisie sert d’icône dans le stuff et la barre d’armes. Elle n’ajoute pas d’accessoire au personnage.' : 'Les coiffes, capes et familiers reprennent aussi ce visuel en combat.'} Aucun bonus de panoplie n’est copié.</p>

@@ -25,6 +25,7 @@ import useCreatureMode from './useCreatureMode';
 import { creatureActorId } from './creatureMode';
 import '../styles/tacticalMode.css';
 import '../styles/creatureMode.css';
+import { originalCombatVisuals } from '../visuals/spellVisuals';
 import '../styles/placement.css';
 
 // ---------------------------------------------------------------- projection
@@ -469,7 +470,7 @@ function SpellEffects({ state, frameEvents, frameIdx, assets, L }) {
   useEffect(() => {
     const next = (frameEvents || []).filter(e => e.t === 'cast' || e.t === 'hazard_effect').map((e, i) => {
       if (e.visualEffect) return { id: `${frameIdx}-${i}`, event: e, authored: true };
-      if (state.board.originalVisuals) return null;
+      if (originalCombatVisuals(state.board.originalVisuals, state.fighters[e.fighter])) return null;
       const info = assets?.spells[e.visualSpellId ?? e.spellId];
       return info?.effect ? { id: `${frameIdx}-${i}`, event: e, info } : null;
     }).filter(Boolean);
@@ -608,7 +609,7 @@ export default function BoardView({
       const caster = state.fighters[e.fighter];
       const spell = caster ? spellsOf(caster)[e.spell] : null;
       const effectInfo = assets?.spells[e.visualSpellId ?? e.spellId ?? spell?.visualSpellId ?? spell?.id];
-      const originalEffect = e.visualEffect || state.board.originalVisuals || effectInfo?.effect || effectInfo?.playEffect === false;
+      const originalEffect = e.visualEffect || originalCombatVisuals(state.board.originalVisuals, caster) || effectInfo?.effect || effectInfo?.playEffect === false;
       // Projectile du lanceur vers la cible + coût en PA
       const from = L.chest(e.from);
       const to = aim(e.target);
@@ -850,7 +851,7 @@ export default function BoardView({
             inlineInspection={!!inspectionController}
             isInspected={f.id === inspectedFighter?.id}
             onInspect={inspection.open} onInspectLeave={inspection.closeSoon}
-            creatureMode={creatureMode} viewerTeam={viewerTeam} turnPosition={turnPositions[f.id]} originalVisuals={!!state.board.originalVisuals}
+            creatureMode={creatureMode} viewerTeam={viewerTeam} turnPosition={turnPositions[f.id]} originalVisuals={originalCombatVisuals(state.board.originalVisuals, f)}
           />
         ))}
 

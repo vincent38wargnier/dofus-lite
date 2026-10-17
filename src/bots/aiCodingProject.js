@@ -1,3 +1,4 @@
+import { DEFAULT_CLASS_ID } from '../engine/classes';
 import { createGame, getView } from '../engine/engine';
 import { aiFighterReference } from './aiFighterReference';
 import { aiFighterSnapshot } from './aiAuthoring';
@@ -101,7 +102,7 @@ export function codingProjectFiles({ name, code, fighter, goal = '', graph, orig
   const check = inspectAiSource(code); if (!check.ok) throw new Error(check.error);
   const snapshot = aiFighterSnapshot(fighter), reference = aiFighterReference(snapshot);
   const { state } = createGame({ mapId: 'arene', seed: 12000, fighters: [
-    { ...fighter, id: 'A' }, { id: 'B', classId: 'IOP' },
+    { ...fighter, id: 'A' }, { id: 'B', classId: DEFAULT_CLASS_ID },
   ] });
   const json = value => JSON.stringify(value, null, 2) + '\n';
   const files = new Map([

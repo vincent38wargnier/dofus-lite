@@ -1,0 +1,14 @@
+{
+  "name": "arena-forge-server",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "express": "4.22.3",
+    "mongodb": "7.7.0",
+    "pngjs": "7.0.0",
+    "quickjs-emscripten": "0.32.0"
+  }
+}

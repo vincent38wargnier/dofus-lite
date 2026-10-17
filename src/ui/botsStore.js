@@ -1,13 +1,14 @@
+import { storageKey } from '../platform/config';
 import { useCallback, useRef, useState } from 'react';
 import { BUILTIN_BOTS } from '../bots/builtins';
 import { ensureNeuralLoading } from '../bots/neural';
 
 // Précharge les poids de Synapse dès que l'app liste les bots — sinon le
 // premier tour contre lui jouerait en repli IA Maison le temps du fetch.
-if (process.env.NODE_ENV !== 'test') ensureNeuralLoading();
+if (process.env.NODE_ENV !== 'test') if (process.env.REACT_APP_PLATFORM !== '1') ensureNeuralLoading();
 
 // Custom bots live in localStorage — the Koliséum is a local playground.
-const STORAGE_KEY = 'koliseum.bots.v1';
+const STORAGE_KEY = storageKey('koliseum.bots.v1');
 
 function load() {
   try {

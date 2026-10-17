@@ -29,6 +29,8 @@ function* matchSteps({
   bots,            // Per-fighter { A: {name, decide}, B: {...}, B2: {...}, ... }
   classes,         // { A: 'IOP', B: 'CRA' }
   mapId = 'arene',
+  battlefield,
+  encounter,
   seed = 1,
   collectFrames = true,
   loadouts = {},
@@ -45,21 +47,21 @@ function* matchSteps({
   const sourceDungeon = dungeon;
   if (mode === 'custom' && dungeon?.rooms) { const errors = customDungeonErrors(dungeon); if (errors.length) throw new Error(errors.join(' ')); }
   if (mode === 'custom') dungeon = dungeonRoom(dungeon, roomIndex);
-  if (mode === 'custom' && adventureEnabled(dungeon)) {
+  if (team == null && mode === 'custom' && adventureEnabled(dungeon)) {
     team = adventureTeam(dungeon, { ...defaultAdventureChoice(dungeon), ...adventureChoice, automatic: true });
-    // A packaged encounter owns both camps; callers cannot replace its enemies.
-    opponents = undefined;
   }
+  // A dungeon supplies its enemy group; editing that group creates a free fight.
+  if (mode === 'custom') opponents = undefined;
   if (mode === 'boss') mapId = dungeonMapId(bossId);
   if (mode === 'custom') mapId = dungeon?.mapId;
   const init = createGame({
     mapId,
-    battlefield: mode === 'custom' ? dungeon?.battlefield : undefined,
-    encounter: mode === 'custom' ? dungeonEncounter(dungeon) : undefined,
+    battlefield: mode === 'custom' ? dungeon?.battlefield : mode === 'duel' ? battlefield : undefined,
+    encounter: mode === 'custom' ? dungeonEncounter(dungeon) : mode === 'duel' ? encounter : undefined,
     seed,
     fighters: [
       ...(team ? teamRoster(team) : [{ id: 'A', name: bots.A.name, botName: bots.A.name, classId: classes.A, loadout: loadouts.A }, ...allyRoster(allies)]),
-      ...(opponents ? opponentRoster(opponents) : mode === 'custom' ? customDungeonRoster(dungeon) : mode === 'boss' ? dungeonRoster(bossId, bossGrade, seed)
+      ...(opponents ? opponentRoster(opponents, encounter) : mode === 'custom' ? customDungeonRoster(dungeon) : mode === 'boss' ? dungeonRoster(bossId, bossGrade, seed)
         : [{ id: 'B', name: bots.B.name, botName: bots.B.name, classId: classes.B, loadout: loadouts.B }]),
     ],
   });
@@ -204,6 +206,8 @@ function* matchSteps({
 
   return {
     config: { mapId, seed, classes, loadouts: JSON.parse(JSON.stringify(loadouts)),
+      ...(mode === 'duel' && battlefield ? { battlefield: JSON.parse(JSON.stringify(battlefield)) } : {}),
+      ...(mode === 'duel' && encounter ? { encounter: JSON.parse(JSON.stringify(encounter)) } : {}),
       ...(team ? { team: JSON.parse(JSON.stringify(team)) } : {}),
       ...(allies.length ? { allies: JSON.parse(JSON.stringify(allies)) } : {}),
       ...(opponents ? { opponents: JSON.parse(JSON.stringify(opponents)) } : {}),

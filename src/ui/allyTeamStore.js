@@ -1,7 +1,8 @@
+import { storageKey } from '../platform/config';
 import { isAllyEntry } from '../engine/allyTeam';
 import { isLoadout } from './loadoutStore';
 
-export const ALLIES_STORAGE = 'dofus-lite-ally-team-v1';
+export const ALLIES_STORAGE = storageKey('dofus-lite-ally-team-v1');
 const valid = (entries, includePlayer) => typeof includePlayer === 'boolean' && Array.isArray(entries) && entries.length <= (includePlayer ? 7 : 8)
   && entries.every(entry => isAllyEntry(entry) && (entry.kind === 'monster' || isLoadout(entry.loadout)));
 

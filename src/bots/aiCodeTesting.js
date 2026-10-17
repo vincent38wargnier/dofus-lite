@@ -1,3 +1,4 @@
+import { DEFAULT_CLASS_ID, DEFAULT_OPPONENT_ID } from '../engine/classes';
 // Shared by Studio imports and the portable Node test kit. No browser storage.
 import { parse } from 'acorn';
 import { compileBot } from './compile';
@@ -49,8 +50,8 @@ function portableApi(api) {
 export function aiTestCases(fighter) {
   const make = (mapId = 'arene', allies = false) => {
     const { state } = createGame({ seed: 12000, mapId, fighters: [
-      { ...fighter, id: 'A', team: 'A' }, { id: 'B', team: 'B', classId: 'CRA' },
-      ...(allies ? [{ id: 'A2', team: 'A', classId: 'IOP', name: 'Allié blessé' }] : []),
+      { ...fighter, id: 'A', team: 'A' }, { id: 'B', team: 'B', classId: DEFAULT_OPPONENT_ID },
+      ...(allies ? [{ id: 'A2', team: 'A', classId: DEFAULT_CLASS_ID, name: 'Allié blessé' }] : []),
     ] });
     state.currentIndex = state.order.indexOf('A');
     return state;

@@ -1,4 +1,6 @@
+import { PLATFORM } from '../platform/config';
 import EquipmentWorkshop from './EquipmentWorkshop';
+import { useWorlds, WorldFilter } from './WorldsContext';
 import { customEquipmentItem, equipmentItem, validateCustomEquipment, equipCustomItem } from '../engine/customEquipment';
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Anvil, Backpack, BookOpen, Check, ChartNoAxesColumnIncreasing } from 'lucide-react';
@@ -72,6 +74,7 @@ function EffectList({ item, loadout, slot }) {
 export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Adversaire' }, loadouts, update, summaries, saveError,
   embedded = false, fixedSide, activeView, onViewChange, hideNavigation = false, equipmentLibrary, inventoryKey }) {
   const tabId = useId();
+  const worlds = useWorlds();
   const [creatingEquipment, setCreatingEquipment] = useState(false);
   const [personalSelection, setPersonalSelection] = useState(null);
   const [localView, setLocalView] = useState('equipment');
@@ -90,7 +93,7 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
   const [withinLevel, setWithinLevel] = useState(true);
   const [page, setPage] = useState(0);
   const [inspectId, setInspectId] = useState(null);
-  const [setId, setSetId] = useState('1');
+  const [setId, setSetId] = useState(() => ITEM_SETS[1] ? '1' : String(SETS[0]?.id || ''));
   const drag = useRef(null);
   const suppressClick = useRef(false);
   const [dragged, setDragged] = useState(null);
@@ -102,9 +105,10 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
   const personal = usePersonalEquipment(loadout, inventoryKey || `${side}:${classId}`, names[side]);
   const summary = summaries[side];
   const level = summary.level;
-  const selectedSet = ITEM_SETS[setId];
-  const setMissing = selectedSet.items.filter(id => !ITEMS[id]);
-  const setLevel = Math.max(...selectedSet.items.map(id => ITEMS[id]?.level || 0));
+  const worldSets = SETS.filter(set => !worlds || worlds.matches('equipmentSets', set.id, worlds.selected));
+  const selectedSet = worldSets.find(set => String(set.id) === setId) || worldSets[0];
+  const setMissing = (selectedSet?.items || []).filter(id => !ITEMS[id]);
+  const setLevel = Math.max(0, ...(selectedSet?.items || []).map(id => ITEMS[id]?.level || 0));
   const slot = EQUIPMENT_SLOTS.find(s => s.id === slotId);
   const selected = equipmentItem(loadout.slots[slotId], loadout);
   const inspected = personalSelection?.item || equipmentItem(inspectId, loadout) || selected;
@@ -114,7 +118,7 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
   const change = next => update(side, next);
   const filtered = useMemo(() => {
     const words = fold(search).split(/\s+/).filter(Boolean);
-    return ALL_ITEMS.filter(item => slot.types.includes(item.type) && (!withinLevel || item.level <= level)
+    return ALL_ITEMS.filter(item => (!worlds || worlds.matches('equipment', item.id, worlds.selected)) && slot.types.includes(item.type) && (!withinLevel || item.level <= level)
       && (slot.id !== 'pet' || !companionFilter || (companionFilter === 'mount' ? !!item.mount
         : companionFilter === 'cosmetic' ? item.pet?.kind === 'cosmetic' : item.type === 18 && item.pet?.kind !== 'cosmetic'))
       && (!minLevel || item.level >= Number(minLevel)) && (!maxLevel || item.level <= Number(maxLevel))
@@ -122,7 +126,7 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
       && (!statFilter || availableItemEffects(item).some(([id]) => effectDefinition(id).stat === statFilter && effectDefinition(id).sign === 1)))
       .sort((a, b) => sort === 'name' ? a.name.localeCompare(b.name, 'fr')
         : (sort === 'level-asc' ? a.level - b.level : b.level - a.level) || a.name.localeCompare(b.name, 'fr'));
-  }, [slot, withinLevel, search, statFilter, companionFilter, level, minLevel, maxLevel, sort]);
+  }, [slot, withinLevel, search, statFilter, companionFilter, level, minLevel, maxLevel, sort, worlds]);
   const pageCount = Math.max(1, Math.ceil(filtered.length / 24));
   const actualPage = Math.min(page, pageCount - 1);
   const shown = filtered.slice(actualPage * 24, (actualPage + 1) * 24);
@@ -209,7 +213,7 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
     onClickCapture={event => { if (suppressClick.current) { event.preventDefault(); event.stopPropagation(); suppressClick.current = false; } }}>
     {!embedded && <><div className="loadout-heading">
       <div><p className="eyebrow">ATELIER D’ÉQUIPEMENT</p><h2>Préparez votre prochain combat</h2></div>
-      <span className="loadout-save">Dofus Retro · {ALL_ITEMS.length.toLocaleString('fr-FR')} objets · {SETS.length} panoplies</span>
+      <span className="loadout-save">{PLATFORM ? 'Bibliothèques installées' : 'Dofus Retro'} · {ALL_ITEMS.length.toLocaleString('fr-FR')} objets · {SETS.length} panoplies</span>
     </div>
     <div className="loadout-sides" role="tablist" aria-label="Combattant à équiper">
       {['A', 'B'].map(s => <button key={s} type="button" role="tab" aria-selected={side === s}
@@ -259,13 +263,14 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
       {loadout.rollMode === 'random' ? <button className="btn" type="button" onClick={() => change({ ...loadout, rollSeed: (loadout.rollSeed || 1) + 1 })}>Relancer les jets</button> : null}
     </div>
     <div className="builder-set-tools loadout-toolbar">
-      <label>Panoplie <select aria-label="Panoplie à équiper" value={setId} onChange={e => setSetId(e.target.value)}>
-        {SETS.map(set => <option key={set.id} value={set.id}>{set.name}{set.items.some(id => !ITEMS[id]) ? ' · données incomplètes' : ` · niv. ${Math.max(...set.items.map(id => ITEMS[id].level))}`}</option>)}
-      </select></label>
-      <button type="button" className="btn" disabled={setMissing.length > 0 || setLevel > level} onClick={() => { change(current => equipSet(current, setId)); setInspectId(null); }}>Équiper la panoplie</button>
+      <WorldFilter onChange={id => { worlds.select(id); setPage(0); }} />
+      {worldSets.length > 0 && <label>Panoplie <select aria-label="Panoplie à équiper" value={selectedSet.id} onChange={e => setSetId(e.target.value)}>
+        {worldSets.map(set => <option key={set.id} value={set.id}>{set.name}{set.items.some(id => !ITEMS[id]) ? ' · données incomplètes' : ` · niv. ${Math.max(...set.items.map(id => ITEMS[id].level))}`}</option>)}
+      </select></label>}
+      {selectedSet && <button type="button" className="btn" disabled={setMissing.length > 0 || setLevel > level} onClick={() => { change(current => equipSet(current, selectedSet.id)); setInspectId(null); }}>Équiper la panoplie</button>}
       <button className="btn subtle" type="button" onClick={() => { change({ ...loadout, slots: {}, ...(loadout.forgedItems ? { forgedItems: {} } : {}), ...(loadout.rollOrigins ? { rollOrigins: {} } : {}) }); setInspectId(null); }}>Tout retirer</button>
     </div>
-    <details className="set-composition"><summary>{selectedSet.name} · {selectedSet.items.length} pièces · niveau {setLevel}{setMissing.length ? ` · ${setMissing.length} pièces absentes des données client` : ''}</summary>
+    {selectedSet && <details className="set-composition"><summary>{selectedSet.name} · {selectedSet.items.length} pièces · niveau {setLevel}{setMissing.length ? ` · ${setMissing.length} pièces absentes des données client` : ''}</summary>
       <div className="set-piece-list">{selectedSet.items.map(id => {
         const item = ITEMS[id];
         return item ? <button type="button" className="btn" key={id} onClick={() => {
@@ -275,7 +280,7 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
           : <span className="penalty" key={id}>Pièce #{id} : absente du fichier d’objets installé</span>;
       })}</div>
       {setMissing.length ? <p className="penalty small">Cette référence de panoplie existe dans le client, mais ses objets ne sont pas définis. Elle ne peut pas être équipée tant que leurs données ne sont pas disponibles.</p> : null}
-    </details>
+    </details>}
     {setLevel > level ? <p className="muted small">Cette panoplie complète nécessite le niveau {setLevel}. Ses pièces restent consultables ci-dessus.</p> : null}
     </details>
     <div className="loadout-workbench">
@@ -295,9 +300,10 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
         <button type="button" className="btn builder-stats-link" onClick={() => setView('stats')}>Répartir les points et voir tous les bonus →</button>
       </div>
       <div className="equipment-inventory">
+        <WorldFilter onChange={id => { worlds.select(id); setPage(0); setInspectId(null); setPersonalSelection(null); }} />
         <PersonalEquipment {...personal} loadout={loadout} selected={personalSelection} onSelect={selectPersonal} onEquip={equipPersonal}
           onDrag={(event, entry) => beginDrag(event, entry.item, null, entry)} onDragEnd={clearDrag} onCreate={() => setCreatingEquipment(true)} />
-        <div className="equipment-inventory-heading"><div><span className="eyebrow">CATALOGUE DOFUS</span><h3>{slot.name}</h3></div><span>{filtered.length} objets</span></div>
+        <div className="equipment-inventory-heading"><div><span className="eyebrow">{PLATFORM ? 'BIBLIOTHÈQUES INSTALLÉES' : 'CATALOGUE DOFUS'}</span><h3>{slot.name}</h3></div><span>{filtered.length} objets</span></div>
         <p className="equipment-drag-hint" role="status">{dragged
           ? 'Déposez l’objet sur un emplacement en surbrillance.'
           : 'Glissez un objet vers son emplacement pour l’équiper.'}</p>
@@ -393,9 +399,9 @@ export default function LoadoutPicker({ classes, names = { A: 'Vous', B: 'Advers
     <div className="loadout-sets" aria-label="Bonus de panoplie">
       {summary.sets.map(set => <div key={set.id}><strong>{set.name} <span>{set.count}/{set.total}</span></strong><p>{set.effects.length ? set.effects.map(row => effectText(row, row[1])).join(' · ') : 'Prochain bonus à 2 objets.'}</p></div>)}
     </div>
-    {summary.equipmentBudget && <details className={`equipment-outfit-budget${summary.equipmentBudget.valid ? '' : ' invalid'}`} open={(summary.equipmentBudget.enforced && !summary.equipmentBudget.valid) || undefined}><summary><strong>Budget du stuff : {summary.equipmentBudget.score} / {summary.equipmentBudget.max}</strong> · hors Dofus</summary>
-      <small>{summary.equipmentBudget.enforced ? 'Objets créés présents : plafond appliqué au lancement du combat.' : 'Indicateur de création. Les équipements Dofus d’origine restent jouables.'} Panoplies et cumul de PA / PM / portée inclus.</small></details>}
-    <p className="equipment-catalog-note">Glissez un objet sur un emplacement pour l’équiper. Glissez un anneau ou un Dofus entre ses emplacements pour les échanger. Le double-clic permet aussi d’équiper un objet. <a href="/dofus-local/equipment-audit.json" target="_blank" rel="noreferrer">Audit du catalogue</a></p>
+    {summary.equipmentBudget && <details className={`equipment-outfit-budget${summary.equipmentBudget.valid ? '' : ' invalid'}`} open={(summary.equipmentBudget.enforced && !summary.equipmentBudget.valid) || undefined}><summary><strong>Budget du stuff : {summary.equipmentBudget.score} / {summary.equipmentBudget.max}</strong> · hors artefacts</summary>
+      <small>{summary.equipmentBudget.enforced ? 'Objets créés présents : plafond appliqué au lancement du combat.' : 'Indicateur de création. Les objets des bibliothèques restent jouables.'} Panoplies et cumul de PA / PM / portée inclus.</small></details>}
+    <p className="equipment-catalog-note">Glissez un objet sur un emplacement pour l’équiper. Glissez un anneau ou un artefact entre ses emplacements pour les échanger. Le double-clic permet aussi d’équiper un objet. {!PLATFORM && <a href="/dofus-local/equipment-audit.json" target="_blank" rel="noreferrer">Audit du catalogue</a>}</p>
     </div>
     <div id={`${tabId}-forge`} role="tabpanel" aria-labelledby={`${tabId}-forge-tab`} hidden={view !== 'forge'}>
       {view === 'forge' ? <ForgemagieWorkshop key={`${side}:${classId}`} loadout={loadout} change={change} initialSlot={slotId} saveError={saveError} /> : null}

@@ -1,3 +1,4 @@
+import { DEFAULT_CLASS_ID } from '../engine/classes';
 import { dungeonCapacity, isArmy, removeDungeonMember } from '../engine/encounters';
 import { AdventureEditor } from './AdventurePanel';
 import { DungeonRoomEditor } from './DungeonCampaign';
@@ -14,13 +15,15 @@ import { addCustomDungeonMonster, addCustomDungeonCharacter, customDungeonErrors
 import { MAX_CUSTOM_SPELLS } from '../engine/customSpells';
 import { useCreations } from './CreationsContext';
 import { useProfiles } from './ProfilesContext';
+import { useWorlds, WorldFilter } from './WorldsContext';
+import { characterMatchesWorld } from './worldCatalogue';
 import { cloneCreation, newCreationId } from './creationsStore';
 import { MONSTER_CATALOGUE, fold } from './creationCatalogue';
 import LoadoutPicker from './LoadoutPicker';
 import { MapPreview } from './MapPicker';
 import CombatMapGallery, { combatMapName } from './CombatMapGallery';
 import { RetroPortrait, useRetroAssets } from './RetroAssets';
-import { CharacterDialog } from './CharacterDialog';
+import { CharacterDialog, NewCharacterDialog } from './CharacterDialog';
 import CharacterArtworkEditor from './CharacterArtworkEditor';
 import CreationPackageTools from './CreationPackageTools';
 import { AtelierExportButton, AtelierExportDialog, AtelierImportDialog } from './AtelierTransfer';
@@ -37,16 +40,17 @@ import { WorkshopStepIntro } from './WorkshopHelp';
 import { dungeonRooms } from '../engine/dungeonCampaign';
 
 const MONSTER_DRAG_TYPE = 'application/x-dofus-dungeon-monster';
-const TRAINING_ROOM = { name: 'Essai au Kanojedo', mapId: KANOJEDO_MAP_ID,
+const TRAINING_ROOM = process.env.REACT_APP_PLATFORM === '1' ? { name: 'Salle vide', mapId: 'arene', members: [] } : { name: 'Essai au Kanojedo', mapId: KANOJEDO_MAP_ID,
   members: [{ monsterId: POUTCH_ID, grade: 1, count: 1 }] };
 const fromRoom = room => ({ name: `${room.name} — ma version`, mapId: room.combatMapId,
   members: room.members.map(member => ({ ...member, grade: defaultMonsterGrade(member.monsterId) })) });
-export function newCustomCharacter(classId = 'IOP') {
+export function newCustomCharacter(classId = DEFAULT_CLASS_ID) {
   return { id: newCreationId(), name: 'Ma classe', classId,
     loadout: { ...emptyLoadout(classId), level: 200, artworkId: characterShapeId(), spells: { custom: [], order: [] } } };
 }
 
 function DungeonEditor({ dungeon, change, archiveDungeon = dungeon }) {
+  const worlds = useWorlds();
   const [view, setView] = useState(dungeon.members.length ? 'group' : 'map');
   const [catalogue, setCatalogue] = useState('create');
   const [drawingMap, setDrawingMap] = useState(false);
@@ -66,19 +70,25 @@ function DungeonEditor({ dungeon, change, archiveDungeon = dungeon }) {
   const capacity = dungeonCapacity(dungeon);
   const full = count >= capacity;
   const savedCreatures = useMemo(() => {
+    if (worlds) return worlds.monsters.filter(monster => worlds.matches('customMonsters', monster.id, worlds.selected)).map(monster => monster.customMonster);
     const seen = new Set();
     return creations.dungeons.flatMap(d => dungeonRooms(d).flatMap(r => r.members.flatMap(m => m.customMonster ? [m.customMonster] : [])))
       .filter(m => !seen.has(m.key) && seen.add(m.key));
-  }, [creations.dungeons]);
+  }, [creations.dungeons, worlds]);
+  const classCatalogue = worlds?.characters || creations.characters;
+  const sourceCharacters = (catalogue === 'profiles' ? profiles?.profiles || [] : classCatalogue)
+    .filter(character => characterMatchesWorld(worlds, character));
+  const worldRooms = DUNGEONS.filter(room => !worlds || worlds.matches('monsterRooms', room.id, worlds.selected));
+  const activeRoomId = worldRooms.some(room => room.id === roomId) ? roomId : '';
   const addCreature = creature => {
     if (full) return;
     const next = { ...cloneCreation(creature), key: `creature-${newCreationId()}` };
     change({ ...dungeon, members: [...dungeon.members, { customMonster: next, count: 1 }] });
     setEditingMonster(dungeon.members.length); setView('group');
   };
-  const monsters = useMemo(() => MONSTER_CATALOGUE.filter(monster => (!bossOnly || monster.boss)
-    && (!roomId || monster.rooms.some(room => room.id === roomId))
-    && fold(`${monster.name} ${monster.rooms.map(room => room.name).join(' ')}`).includes(fold(query))), [query, roomId, bossOnly]);
+  const monsters = useMemo(() => MONSTER_CATALOGUE.filter(monster => (!worlds || worlds.matches('monsters', monster.id, worlds.selected)) && (!bossOnly || monster.boss)
+    && (!activeRoomId || monster.rooms.some(room => room.id === activeRoomId))
+    && fold(`${monster.name} ${monster.rooms.map(room => room.name).join(' ')}`).includes(fold(query))), [query, activeRoomId, bossOnly, worlds]);
   const updateMember = (index, patch) => change({ ...dungeon, members: dungeon.members.map((member, i) => i === index ? { ...member, ...patch, ...(index === dungeon.encounter?.commander ? { count: 1 } : {}) } : member) });
   const add = member => {
     const next = addCustomDungeonMonster(dungeon, member);
@@ -104,7 +114,7 @@ function DungeonEditor({ dungeon, change, archiveDungeon = dungeon }) {
     try {
       if (Array.from(event.dataTransfer.types).includes(DUNGEON_CHARACTER_DRAG)) {
         const payload = JSON.parse(event.dataTransfer.getData(DUNGEON_CHARACTER_DRAG));
-        const source = payload?.source === 'profiles' ? profiles?.profiles : payload?.source === 'classes' ? creations.characters : [];
+        const source = payload?.source === 'profiles' ? profiles?.profiles : payload?.source === 'classes' ? classCatalogue : [];
         const character = source?.find(entry => entry.id === payload.id);
         if (character) addCharacter(character);
       } else {
@@ -125,7 +135,7 @@ function DungeonEditor({ dungeon, change, archiveDungeon = dungeon }) {
       <WorkshopStepIntro number="1" title="Où se déroule le combat ?">Créez votre propre terrain en peignant ses cases, ou choisissez une carte existante. Aucun fichier n’est nécessaire.</WorkshopStepIntro>
       <div className="workshop-map-choice"><button type="button" className="workshop-start-card" onClick={() => setDrawingMap(true)}><Map size={30}/><strong>{dungeon.battlefield ? 'Modifier mon terrain' : 'Dessiner mon terrain'}</strong><span>Sol, obstacles, départs · aperçu immédiat</span></button>
         <button type="button" className="studio-terrain-card" onClick={() => setView('group')}><MapPreview map={dungeonMap(dungeon)} artwork={assets?.imagesReady && assets.maps[dungeon.mapId]} /><span><small>TERRAIN ACTUEL</small><strong>{combatMapName(dungeonMap(dungeon))}</strong><span>Garder et passer aux créatures →</span></span></button></div>
-      <details className="workshop-native-maps" open={nativeMapsOpen}><summary onClick={e => { e.preventDefault(); setNativeMapsOpen(!nativeMapsOpen); }}>Choisir dans les cartes du jeu</summary>{nativeMapsOpen && <CombatMapGallery mapId={dungeon.mapId} onChoose={mapId => { const { battlefield, ...next } = dungeon; change({ ...next, mapId }); setView('group'); }} />}</details>
+      <details className="workshop-native-maps" open={nativeMapsOpen}><summary onClick={e => { e.preventDefault(); setNativeMapsOpen(!nativeMapsOpen); }}>Choisir dans les cartes du jeu</summary>{nativeMapsOpen && <CombatMapGallery mapId={dungeon.mapId} onChoose={(mapId, selectedMap) => { const { battlefield, ...next } = dungeon; change({ ...next, mapId, ...(selectedMap ? { battlefield: cloneCreation(selectedMap) } : {}) }); setView('group'); }} />}</details>
     </>)}</div>
     <div hidden={view !== 'group'} className="creator-dungeon-layout">
     <aside className="creator-dungeon-summary">
@@ -168,10 +178,11 @@ function DungeonEditor({ dungeon, change, archiveDungeon = dungeon }) {
         {!count && <div className="creator-empty creator-drop-placeholder"><Plus size={24} /><span>Déposez votre premier combattant</span></div>}
         <p className="creator-drag-feedback" role="status">{announcement}</p>
         <details className="creator-copy-room"><summary>Partir d’une salle existante</summary>
+          <WorldFilter />
           <label className="field">Salle à copier<select aria-label="Copier une salle de donjon" value="" onChange={event => {
           const room = DUNGEONS.find(value => value.id === event.target.value);
           if (room) { const { battlefield, encounter, ...rest } = dungeon; change({ ...rest, ...fromRoom(room) }); }
-        }}><option value="">Choisir une salle à copier…</option>{DUNGEONS.map(room => <option key={room.id} value={room.id}>{room.name}</option>)}</select></label>
+        }}><option value="">Choisir une salle à copier…</option>{worldRooms.map(room => <option key={room.id} value={room.id}>{room.name}</option>)}</select></label>
           <p className="muted small">Copier une salle remplace le groupe et la carte.</p>
         </details>
       </section>
@@ -184,17 +195,18 @@ function DungeonEditor({ dungeon, change, archiveDungeon = dungeon }) {
       onChange={customMonster => updateMember(editingMonster, { customMonster })} onClose={() => setEditingMonster(null)} />
     : <section className="creator-card creator-monster-catalogue"><WorkshopStepIntro number="2" title="Qui les héros vont-ils affronter ?">Créez une créature en partant d’un rôle, puis ajoutez plusieurs exemplaires avec +. Deux ou trois ennemis suffisent pour une première salle.</WorkshopStepIntro>
       <nav className="dungeon-catalogue-tabs" aria-label="Catalogue du donjon">
-        {[['create', 'Mes créatures', savedCreatures.length], ['monsters', 'Bestiaire du jeu', MONSTER_CATALOGUE.length], ['profiles', 'Mes personnages', profiles?.profiles.length || 0], ['classes', 'Mes classes', creations.characters.length]].map(([id, label, size]) =>
+        {[['create', 'Mes créatures', savedCreatures.length], ['monsters', 'Bestiaire du jeu', MONSTER_CATALOGUE.filter(m => !worlds || worlds.matches('monsters', m.id, worlds.selected)).length], ['profiles', 'Mes personnages', (profiles?.profiles || []).filter(c => characterMatchesWorld(worlds, c)).length], ['classes', 'Mes classes', classCatalogue.filter(c => characterMatchesWorld(worlds, c)).length]].map(([id, label, size]) =>
           <button key={id} type="button" aria-pressed={catalogue === id} onClick={() => { setCatalogue(id); setQuery(''); }}><span>{label}</span><span>{size}</span></button>)}
       </nav>
+      <WorldFilter onChange={id => { setRoomId(''); worlds.select(id); }} />
       {catalogue === 'create' ? <>
         <div className="workshop-role-cards">{Object.entries(CREATURE_ROLES).map(([id, role]) => <button type="button" className="workshop-start-card" key={id} disabled={full} onClick={() => addCreature(newWorkshopCreature(id))}><RetroPortrait artworkId={characterShapeId(id === 'guard' ? 'warden' : id === 'support' ? 'mystic' : 'wanderer',role.color)} /><strong>Créer un {role.label.toLowerCase()}</strong><span>{role.description}</span><small>2 sorts prêts · tout est modifiable</small></button>)}</div>
         {!!savedCreatures.length && <><h4>Réutiliser une créature</h4><div className="workshop-creature-library">{savedCreatures.map(m => <article key={m.key}><RetroPortrait artworkId={m.artworkId} monsterId={m.reference.monsterId}/><div><strong>{m.name}</strong><small>{m.spells.length} sorts · copie indépendante</small></div><button type="button" className="btn" disabled={full} onClick={() => addCreature(m)} aria-label={`Ajouter une copie de ${m.name}`}><Plus size={16}/></button></article>)}</div></>}
       </> : catalogue !== 'monsters' ? <>
         <label className="field dungeon-character-search">Rechercher un personnage<input type="search" placeholder="Nom du personnage ou de sa classe…" value={query} onChange={event => setQuery(event.target.value)} /></label>
-        <DungeonCharacterCatalogue entries={catalogue === 'profiles' ? profiles?.profiles || [] : creations.characters} source={catalogue} query={query} full={full} dragged={dragged} onAdd={addCharacter} onDrag={setDragged} onDragEnd={clearDrag} />
-      </> : <><div className="creator-monster-filters"><label className="field creator-search">Rechercher un monstre<input type="search" placeholder="Bouftou, Blop, Nowel…" value={query} onChange={event => setQuery(event.target.value)} /></label>
-        <label className="field">Donjon d’origine<select value={roomId} onChange={event => setRoomId(event.target.value)}><option value="">Tous les donjons et monstres</option>{DUNGEONS.map(room => <option key={room.id} value={room.id}>{room.name}</option>)}</select></label>
+        <DungeonCharacterCatalogue entries={sourceCharacters} source={catalogue} query={query} full={full} dragged={dragged} onAdd={addCharacter} onDrag={setDragged} onDragEnd={clearDrag} />
+      </> : <><div className="creator-monster-filters"><label className="field creator-search">Rechercher un monstre<input type="search" placeholder="Rechercher par nom…" value={query} onChange={event => setQuery(event.target.value)} /></label>
+        <label className="field">Donjon d’origine<select value={activeRoomId} onChange={event => setRoomId(event.target.value)}><option value="">Tous les donjons et monstres</option>{worldRooms.map(room => <option key={room.id} value={room.id}>{room.name}</option>)}</select></label>
         <label className="creator-check"><input type="checkbox" checked={bossOnly} onChange={event => setBossOnly(event.target.checked)} /> Boss uniquement</label></div>
       <div className="creator-monster-results">{monsters.map(monster => {
         const available = monsterGrades(monster.id);
@@ -223,6 +235,7 @@ function DungeonEditor({ dungeon, change, archiveDungeon = dungeon }) {
 }
 
 function CharacterEditor({ character, change }) {
+  const worlds = useWorlds();
   const [view, setView] = useState('spells');
   const [visited, setVisited] = useState({ spells: true });
   const summary = useMemo(() => resolveLoadout(character.classId, character.loadout), [character]);
@@ -239,7 +252,8 @@ function CharacterEditor({ character, change }) {
         const spells=[];presets.forEach(preset=>{const spell=starterSpell(preset,spells);spell.name={attack:'Frappe précise',boost:'Concentration',heal:'Soin',debuff:'Entrave',teleport:'Bond arcanique'}[preset];spells.push(spell);});
         update('A',loadout=>({...loadout,spells:{...loadout.spells,custom:spells,order:spells.map(s=>s.id)}}));
       }}><BookOpen size={23}/><strong>{label}</strong><span>3 sorts modifiables · visuels originaux</span></button>)}</div>}
-      <CustomSpellPicker loadout={character.loadout} change={next => update('A', next)} /></div>
+      {character.templateSource && <p className="class-template-help">Votre nouvelle classe garde ce modèle comme référence. Choisissez jusqu’à dix sorts ; les budgets restent vérifiés.</p>}
+      <CustomSpellPicker initialSource={character.templateSource || ''} loadout={character.loadout} change={next => update('A', next)} /></div>
     <div hidden={view !== 'appearance'}>{visited.appearance && <>
       <CharacterArtworkEditor artworkId={character.loadout.artworkId} name={character.name}
         onChange={artworkId => update('A', loadout => ({ ...loadout, artworkId }))} />
@@ -247,10 +261,10 @@ function CharacterEditor({ character, change }) {
         <option value="0">Masculine</option><option value="1">Féminine</option></select></label>}
     </>}</div>
     <div hidden={!['equipment', 'forge', 'stats'].includes(view)}>
-      {view === 'stats' && <div className="studio-reference-class"><label className="field">Classe de référence<select value={character.classId} onChange={event => {
+      {view === 'stats' && <div className="studio-reference-class"><WorldFilter /><label className="field">Classe de référence<select value={character.classId} onChange={event => {
         const classId = event.target.value;
         change({ ...character, classId, loadout: { ...character.loadout, base: emptyLoadout(classId).base } });
-      }}>{CLASS_IDS.map(id => <option key={id} value={id}>{CLASSES[id].name}</option>)}</select></label><p>Détermine le coût des caractéristiques et l’apparence Dofus. Vos sorts restent libres.</p></div>}
+      }}>{worlds && !worlds.matches('classes', character.classId, worlds.selected) && <option value={character.classId}>{CLASSES[character.classId].name} · modèle actuel</option>}{CLASS_IDS.filter(id => !worlds || worlds.matches('classes', id, worlds.selected)).map(id => <option key={id} value={id}>{CLASSES[id].name}</option>)}</select></label><p>Détermine le coût des caractéristiques et l’apparence de référence. Vos sorts restent libres.</p></div>}
       {(visited.equipment || visited.stats) && <LoadoutPicker embedded hideNavigation fixedSide="A" inventoryKey={`creation:${character.id}`}
         classes={{ A: character.classId }} names={{ A: character.name }} loadouts={{ A: character.loadout }} summaries={{ A: summary }} update={update}
         activeView={['equipment', 'forge', 'stats'].includes(view) ? view : 'equipment'} onViewChange={navigate} />}
@@ -268,13 +282,15 @@ const creationCount = (entry, type) => type === 'characters'
   ? `${entry.loadout.spells?.custom?.length || 0} / ${MAX_CUSTOM_SPELLS} sorts`
   : `${entry.rooms?.length > 1 ? `${entry.rooms.length} salles` : `${entry.members.reduce((sum, member) => sum + member.count, 0)} / ${dungeonCapacity(entry)} combattants`}${entry.adventure ? ' · Prêt à jouer' : ''}`;
 const CATEGORIES = [
-  { id: 'characters', label: 'Mes classes', detail: 'Un héros, vos propres sorts', icon: UserRound },
+  { id: 'characters', label: 'Mes personnages', detail: 'Équipement, sorts et classes', icon: UserRound },
   { id: 'dungeons', label: 'Mes donjons', detail: 'Vos salles, votre bestiaire', icon: Castle },
   { id: 'equipment', label: 'Mes équipements', detail: 'Une allure, les bons bonus', icon: Hammer },
 ];
 
 export default function WorkshopScreen({ allBots, onLaunch, onTestDungeon, active = true, error: launchError, editorRequest, onDone }) {
   const creations = useCreations();
+  const worlds = useWorlds();
+  const profiles = useProfiles();
   const equipmentLibrary = useCustomEquipment();
   const [tab, setTab] = useState('dungeons');
   const [selectedIds, setSelectedIds] = useState({});
@@ -283,15 +299,26 @@ export default function WorkshopScreen({ allBots, onLaunch, onTestDungeon, activ
   const [botId, setBotId] = useState('maison');
   const [error, setError] = useState('');
   const [dialog, setDialog] = useState(null);
+  const [browsingCharacters, setBrowsingCharacters] = useState(false);
+  const copyClass = source => {
+    worlds?.select('all');
+    const entry = { ...cloneCreation(source), id: newCreationId(), name: `${source.name} · ma version`.slice(0, 80) };
+    creations.update(previous => ({ ...previous, characters: [...previous.characters, entry] }));
+    setTab('characters'); setBrowsingCharacters(false); setSelectedIds(previous => ({ ...previous, characters: entry.id })); setLibraryQuery(''); setDialog(null);
+  };
   const [libraryQuery, setLibraryQuery] = useState('');
   const [equipmentVisited, setEquipmentVisited] = useState(false);
   const [packageThemes, setPackageThemes] = useState({});
   const [importedEquipment, setImportedEquipment] = useState(null);
   const entries = creations[tab] || [];
-  const selected = entries.find(entry => entry.id === selectedIds[tab]) || entries[0];
+  const visibleEntries = entries.filter(entry => (!worlds || worlds.matches(tab, entry.id, worlds.selected)) && fold(entry.name).includes(fold(libraryQuery)));
+  const visibleProfiles = (profiles?.profiles || []).filter(profile => characterMatchesWorld(worlds, profile));
+  const selected = tab === 'characters' && browsingCharacters ? null : entries.find(entry => entry.id === selectedIds[tab]) || entries[0];
   const update = next => creations.update(previous => ({ ...previous, [tab]: previous[tab].map(entry => entry.id === next.id ? next : entry) }));
   const add = (target = tab) => {
-    const entry = target === 'characters' ? newCustomCharacter() : { id: newCreationId(), name: 'Mon donjon', mapId: KANOJEDO_MAP_ID, members: [] };
+    worlds?.select('all');
+    setBrowsingCharacters(false);
+    const entry = target === 'characters' ? newCustomCharacter() : { id: newCreationId(), name: 'Mon donjon', mapId: process.env.REACT_APP_PLATFORM === '1' ? 'arene' : KANOJEDO_MAP_ID, members: [] };
     creations.update(previous => ({ ...previous, [target]: [...previous[target], entry] }));
     setSelectedIds(previous => ({ ...previous, [target]: entry.id })); setError('');
   };
@@ -299,9 +326,9 @@ export default function WorkshopScreen({ allBots, onLaunch, onTestDungeon, activ
   useEffect(() => {
     if (!editorRequest || handledRequest.current === editorRequest.id) return;
     handledRequest.current = editorRequest.id;
-    setTab(editorRequest.tab); setError('');
+    setTab(editorRequest.tab); setError(''); setBrowsingCharacters(!!editorRequest.browse);
     if (editorRequest.entryId) setSelectedIds(previous => ({ ...previous, [editorRequest.tab]: editorRequest.entryId }));
-    else add(editorRequest.tab);
+    else if (!editorRequest.browse) add(editorRequest.tab);
     // A navigation request creates at most one draft, including under StrictMode.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editorRequest]);
@@ -318,9 +345,9 @@ export default function WorkshopScreen({ allBots, onLaunch, onTestDungeon, activ
   };
   if (!active) return null;
   return <main className="workshop-screen workshop-studio">
-    {editorRequest && <div className="creator-return-bar"><button type="button" className="btn" onClick={() => onDone(editorRequest.tab)}>← Retour {editorRequest.returnTo === 'arena' ? 'au combat' : tab === 'characters' ? 'aux personnages' : 'aux donjons'}</button>
+    {editorRequest && <div className="creator-return-bar"><button type="button" className="btn" onClick={() => onDone(editorRequest.browse ? 'combat' : editorRequest.tab)}>← Retour {editorRequest.browse || editorRequest.returnTo === 'arena' ? 'au combat' : tab === 'characters' ? 'aux personnages' : 'aux donjons'}</button>
       {selected && tab !== 'equipment' && <button type="button" className="btn primary" disabled={!!creations.error || (tab === 'dungeons' ? customDungeonErrors(selected).length > 0 : !selected.name.trim() || !resolveLoadout(selected.classId, selected.loadout).valid)}
-        onClick={() => onDone(tab, cloneCreation(selected))}>{tab === 'characters' ? 'Créer un profil avec cette classe' : 'Choisir ce donjon'}</button>}</div>}
+        onClick={() => onDone(tab, cloneCreation(selected))}>{tab === 'characters' ? 'Créer un personnage avec cette classe' : 'Choisir ce donjon'}</button>}</div>}
     <header className="studio-heading"><div><span className="studio-eyebrow"><Sparkles size={15} /> VOTRE JEU, VOS RÈGLES</span><h1>L’Atelier<span>.</span></h1><p>Créez à la main. L’aide IA reste à portée de chaque étape.</p></div>
       <div className="studio-transfer-tools"><div><button type="button" className="btn" onClick={() => setDialog('import-archive')}><Upload size={17} />Importer un ZIP</button>
         <button type="button" className="btn" onClick={() => setDialog('export')}><Download size={17} />Exporter</button></div>
@@ -328,10 +355,10 @@ export default function WorkshopScreen({ allBots, onLaunch, onTestDungeon, activ
     {creations.error && <p className="creator-warning" role="alert">{creations.error}</p>}
     {launchError && <p className="creator-warning" role="alert">{launchError}</p>}
     <div className="studio-categories" role="tablist" aria-label="Atelier de création">{CATEGORIES.map(({ id, label, detail, icon: Icon }) => <button key={id} type="button" role="tab" aria-selected={tab === id} tabIndex={tab === id ? 0 : -1}
-      className={`studio-category ${id}${tab === id ? ' selected' : ''}`} onClick={() => { setTab(id); setLibraryQuery(''); setError(''); if (id === 'equipment') setEquipmentVisited(true); }}
+      className={`studio-category ${id}${tab === id ? ' selected' : ''}`} onClick={() => { setTab(id); setLibraryQuery(''); setError(''); if (id === 'characters' && profiles) setBrowsingCharacters(true); if (id === 'equipment') setEquipmentVisited(true); }}
       onKeyDown={event => { if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) { event.preventDefault(); const index = CATEGORIES.findIndex(category => category.id === id); const next = event.key === 'Home' ? 0 : event.key === 'End' ? CATEGORIES.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + CATEGORIES.length) % CATEGORIES.length; const buttons = event.currentTarget.parentElement.querySelectorAll('[role="tab"]'); buttons[next].click(); buttons[next].focus(); } }}>
       <span className="studio-category-icon"><Icon size={25} strokeWidth={1.7} /></span><span className="studio-category-label"><strong>{label}</strong><small>{detail}</small></span>
-      <span className="studio-category-count">{id === 'equipment' ? equipmentLibrary?.items.length || 0 : creations[id].length}</span></button>)}</div>
+      <span className="studio-category-count">{id === 'equipment' ? equipmentLibrary?.items.length || 0 : id === 'characters' && profiles ? profiles.profiles.length : creations[id].length}</span></button>)}</div>
     {(equipmentVisited || tab === 'equipment') && <div hidden={tab !== 'equipment'}><EquipmentWorkshop embedded importedEquipment={importedEquipment} /></div>}
     {tab !== 'equipment' && <>
       {removed?.tab === tab && <div className="creator-undo" role="status">« {removed.entry.name} » supprimé.<button type="button" className="btn" onClick={() => {
@@ -340,30 +367,44 @@ export default function WorkshopScreen({ allBots, onLaunch, onTestDungeon, activ
       }}>Annuler</button></div>}
       <div className="studio-workspace">
         <aside className="studio-library" aria-label={tab === 'characters' ? 'Mes classes enregistrées' : 'Mes donjons enregistrés'}>
+          <WorldFilter />
+          {tab === 'characters' && profiles && <section className="studio-saved-characters" aria-label="Mes personnages sauvegardés">
+            <h3>Mes personnages <span>{visibleProfiles.length}</span></h3>
+            <p>Choisissez un personnage pour modifier son équipement, ses caractéristiques ou ses sorts.</p>
+            <button type="button" className="btn primary studio-new" onClick={() => setDialog('new-profile')}><Plus size={16} />Nouveau personnage</button>
+            <div className="studio-saved-list">{visibleProfiles.map(profile => <button type="button" className="studio-library-card" key={profile.id} data-saved-profile-id={profile.id}
+              aria-label={`Personnaliser ${profile.name}`} onClick={() => { profiles.select(profile.id); onDone?.('profiles', profile); }}>
+              <RetroPortrait classId={profile.classId} artworkId={profile.loadout.artworkId} appearance={profile.loadout.profile?.sex === 1 ? 'female' : 'male'} />
+              <span><strong>{profile.name}</strong><small>{profile.className} · Niv. {profile.loadout.level || 200}</small><small>Personnaliser <ChevronRight size={12} /></small></span>
+            </button>)}</div>
+          </section>}
+          {tab === 'characters' && <div className="studio-class-heading"><h3>Créer une classe originale</h3><p>Définissez son apparence et jusqu’à 10 sorts, puis créez un personnage avec cette classe.</p></div>}
           <button type="button" className="btn primary studio-new" onClick={() => { add(); setLibraryQuery(''); }}><Plus size={18} />{tab === 'dungeons' ? 'Nouveau donjon' : 'Nouvelle classe'}</button>
+          {tab === 'characters' && <button type="button" className="btn" onClick={() => setDialog('class-template')}><Copy size={16} />Partir d’une classe existante</button>}
           <label className="studio-library-search"><Search size={16} /><input type="search" aria-label="Rechercher mes créations" placeholder="Rechercher…" value={libraryQuery} onChange={event => setLibraryQuery(event.target.value)} /></label>
-          <div className="studio-library-items">{entries.filter(entry => fold(entry.name).includes(fold(libraryQuery))).map(entry => <button type="button" key={entry.id}
+          <div className="studio-library-items">{visibleEntries.map(entry => <button type="button" key={entry.id}
             className={`studio-library-card${selected?.id === entry.id ? ' selected' : ''}`} aria-pressed={selected?.id === entry.id} aria-label={`Modifier ${entry.name || 'Sans nom'}`}
-            onClick={() => setSelectedIds(previous => ({ ...previous, [tab]: entry.id }))}>
+            onClick={() => { setBrowsingCharacters(false); setSelectedIds(previous => ({ ...previous, [tab]: entry.id })); }}>
             <span className={`studio-library-art ${tab}`}><CreationThumbnail entry={entry} type={tab} /></span><span><strong>{entry.name || 'Sans nom'}</strong><small>{creationCount(entry, tab)}</small></span>
           </button>)}</div>
           {!entries.length && <p className="studio-library-hint">Votre première création commence ici.</p>}
-          {entries.length > 0 && !entries.some(entry => fold(entry.name).includes(fold(libraryQuery))) && <p className="studio-library-hint">Aucune création trouvée.</p>}
+          {entries.length > 0 && !visibleEntries.length && <p className="studio-library-hint">Aucune création pour ces filtres. Essayez « Tous mes mondes ».</p>}
           <button type="button" className="studio-import-button" onClick={() => setDialog('import')}><Sparkles size={18} /><span><strong>Créer avec une IA</strong><small>Prompt & import ZIP</small></span><ChevronRight size={16} /></button>
         </aside>
         <section className="studio-editor" aria-label={tab === 'characters' ? 'Éditeur de classe' : 'Éditeur de donjon'}>
           {!selected ? <div className="studio-empty"><span className={`studio-category-icon ${tab}`}>{tab === 'dungeons' ? <Castle size={38} /> : <UserRound size={38} />}</span>
-            <h2>{tab === 'dungeons' ? 'Votre prochaine aventure commence ici' : 'Un héros qui ne ressemble qu’à vous'}</h2>
-            <p>{tab === 'dungeons' ? `Mélangez vos personnages et ${MONSTER_CATALOGUE.length} monstres, puis choisissez leur terrain.` : `Inventez jusqu’à ${MAX_CUSTOM_SPELLS} sorts, choisissez son apparence et donnez vie à votre classe.`}</p>
-            <button type="button" className="btn primary" onClick={() => add()}><Plus size={18} />{tab === 'dungeons' ? 'Créer mon premier donjon' : 'Créer ma première classe'}</button>
-            <button type="button" className="btn subtle" onClick={() => setDialog('import-archive')}>Ou importer une création ZIP</button></div>
+            <h2>{browsingCharacters && tab === 'characters' ? 'Quel personnage voulez-vous préparer ?' : tab === 'dungeons' ? 'Votre prochaine aventure commence ici' : 'Un héros qui ne ressemble qu’à vous'}</h2>
+            <p>{browsingCharacters && tab === 'characters' ? 'Sélectionnez un personnage enregistré pour ouvrir sa fiche : équipement, caractéristiques et sorts. Vous retrouverez ensuite votre combat avec le bouton Retour au combat.' : tab === 'dungeons' ? (MONSTER_CATALOGUE.length ? `Mélangez vos personnages et ${MONSTER_CATALOGUE.length} monstres, puis choisissez leur terrain.` : 'Créez vos créatures, composez votre équipe et dessinez le terrain. Vous pouvez aussi importer une bibliothèque.') : `Inventez jusqu’à ${MAX_CUSTOM_SPELLS} sorts, choisissez son apparence et donnez vie à votre classe.`}</p>
+            {browsingCharacters && tab === 'characters' && profiles ? <button type="button" className="btn primary" onClick={() => onDone?.('profiles', profiles.active)}>Continuer avec {profiles.active.name}<ChevronRight size={16} /></button>
+              : <><button type="button" className="btn primary" onClick={() => add()}><Plus size={18} />{tab === 'dungeons' ? 'Créer mon premier donjon' : 'Créer ma première classe'}</button>
+                <button type="button" className="btn subtle" onClick={() => setDialog('import-archive')}>Ou importer une création ZIP</button></>}</div>
             : <><header className="studio-editor-heading creator-name-row">
               <span className={`studio-editor-portrait ${tab}`}><CreationThumbnail entry={selected} type={tab} /></span>
               <label className="field">{tab === 'dungeons' ? 'Nom du donjon' : 'Nom de la classe'}<input type="text" aria-label={tab === 'dungeons' ? 'Nom du donjon' : 'Nom de la classe'} maxLength={80} required placeholder={tab === 'dungeons' ? 'Ex. La tanière des rois' : 'Ex. Gardien des flammes'} value={selected.name} onChange={event => update({ ...selected, name: event.target.value })} />
                 <small>{creationCount(selected, tab)}{tab === 'characters' ? ' · arme en plus' : ' · des salles sur mesure'}</small></label>
               <div className="studio-editor-actions"><AtelierExportButton selection={{ [tab]: [selected] }} name={selected.name} label="Exporter la création" iconOnly /><button type="button" className="btn studio-icon-button" title="Dupliquer" aria-label="Dupliquer la création" onClick={() => {
                 const copy = { ...cloneCreation(selected), id: newCreationId(), name: `${selected.name} — copie` };
-                creations.update(previous => ({ ...previous, [tab]: [...previous[tab], copy] })); setSelectedIds(previous => ({ ...previous, [tab]: copy.id })); setLibraryQuery('');
+                creations.update(previous => ({ ...previous, [tab]: [...previous[tab], copy] })); worlds?.select('all'); setSelectedIds(previous => ({ ...previous, [tab]: copy.id })); setLibraryQuery('');
               }}><Copy size={17} /></button><button type="button" className="btn studio-icon-button" title="Supprimer" aria-label="Supprimer la création" onClick={() => {
                 setRemoved({ entry: selected, tab }); creations.update(previous => ({ ...previous, [tab]: previous[tab].filter(entry => entry.id !== selected.id) }));
               }}><Trash2 size={17} /></button><button type="button" className="btn primary" onClick={() => {
@@ -378,18 +419,26 @@ export default function WorkshopScreen({ allBots, onLaunch, onTestDungeon, activ
         </section>
       </div>
     </>}
+    {dialog === 'new-profile' && <NewCharacterDialog customCharacters={creations.characters} onClose={() => setDialog(null)}
+      onChooseClass={(classId, name) => { const profile = profiles.create(classId, name ? { name, className: CLASSES[classId].name } : undefined); setDialog(null); onDone?.('profiles', profile); }}
+      onChooseCustom={entry => { const profile = profiles.create(entry.classId, entry); setDialog(null); onDone?.('profiles', profile); }}
+      onCreateClass={() => { setDialog(null); add('characters'); }} />}
+    {dialog === 'class-template' && <NewCharacterDialog forClass customCharacters={creations.characters} onClose={() => setDialog(null)} onChooseCustom={copyClass} onChooseClass={classId => {
+      const entry = newCustomCharacter(classId); delete entry.loadout.artworkId;
+      copyClass({ ...entry, name: CLASSES[classId].name, templateSource: `class:${classId}` });
+    }} />}
     {dialog === 'export' && <AtelierExportDialog onClose={() => setDialog(null)} />}
     {dialog === 'import-archive' && <AtelierImportDialog onPlay={dungeon => { setDialog(null); onTestDungeon?.(cloneCreation(dungeon)); }} onClose={() => setDialog(null)} onImported={(nextTab, entry) => {
-      setTab(nextTab); setLibraryQuery(''); setSelectedIds(previous => ({ ...previous, [nextTab]: entry.id })); setError(''); setDialog(null);
+      setTab(nextTab); setBrowsingCharacters(false); setLibraryQuery(''); setSelectedIds(previous => ({ ...previous, [nextTab]: entry.id })); setError(''); setDialog(null);
       if (nextTab === 'equipment') { setEquipmentVisited(true); setImportedEquipment(entry); }
     }} />}
     {dialog === 'import' && <CharacterDialog title="Créer avec une IA" description="Décrivez votre idée, copiez le prompt, puis importez le ZIP obtenu." onClose={() => setDialog(null)} className="studio-dialog">
-      <div className="character-dialog-body"><CreationPackageTools compact themes={packageThemes} onThemesChange={setPackageThemes} tab={tab} onImported={(nextTab, id) => { setTab(nextTab); setLibraryQuery(''); setSelectedIds(previous => ({ ...previous, [nextTab]: id })); setError(''); }} /></div>
+      <div className="character-dialog-body"><CreationPackageTools compact themes={packageThemes} onThemesChange={setPackageThemes} tab={tab} onImported={(nextTab, id) => { setTab(nextTab); setBrowsingCharacters(false); setLibraryQuery(''); setSelectedIds(previous => ({ ...previous, [nextTab]: id })); setError(''); }} /></div>
       <footer><button type="button" className="btn primary" onClick={() => setDialog(null)}>Retour à l’éditeur</button></footer>
     </CharacterDialog>}
     {dialog === 'test' && tab === 'characters' && selected && <CharacterDialog title={`Tester ${selected.name || 'votre création'}`} description="Essayez vous-même, ou regardez l’IA jouer." onClose={() => setDialog(null)} className="studio-dialog studio-test-dialog">
       <section className="creator-launch creator-card" aria-label="Tester la création"><div><h3><Swords size={19} /> À vous de jouer</h3><p>Contrôlez votre personnage ou confiez le combat à une IA.</p></div>
-        <label className="field">Salle d’essai<select value={trialRoom} onChange={event => setTrialRoom(event.target.value)}><option value="training">Kanojedo · Poutch niveau 1</option>{creations.dungeons.filter(entry => !entry.adventure).map(entry => <option key={entry.id} value={entry.id}>{entry.name}</option>)}</select></label>
+        <label className="field">Salle d’essai<select value={trialRoom} onChange={event => setTrialRoom(event.target.value)}><option value="training">{process.env.REACT_APP_PLATFORM === '1' ? 'Terrain d’essai vide' : 'Kanojedo · Poutch niveau 1'}</option>{creations.dungeons.filter(entry => !entry.adventure).map(entry => <option key={entry.id} value={entry.id}>{entry.name}</option>)}</select></label>
         <label className="field">IA du personnage<select value={botId} onChange={event => setBotId(event.target.value)}>{allBots.map(bot => <option key={bot.id} value={bot.id}>{bot.name}</option>)}</select></label>
         <div className="creator-launch-buttons"><button type="button" className="btn primary" disabled={!!launchErrors.length} onClick={() => launch(false)}>Jouer cette création</button>
           <button type="button" className="btn" disabled={!!launchErrors.length} onClick={() => launch(true)}>Tester avec l’IA</button></div>

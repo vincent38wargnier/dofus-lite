@@ -1,4 +1,4 @@
-import DATA from './forgemagieData.json';
+import { forgemagieData as DATA } from './gameData';
 import { createRng } from './rng';
 import { FM_STATS, FORGE_MODEL, naturalBounds, extraWeight, statLimit, validateForgedItem } from './forgedItems';
 

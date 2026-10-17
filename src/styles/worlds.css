@@ -1,0 +1,12 @@
+.world-filter{display:flex;align-items:center;flex-wrap:wrap;gap:10px 18px;margin:0 0 18px}
+.world-filter label{display:flex;align-items:center;gap:10px;min-width:0;max-width:100%;font-size:13px;font-weight:650}
+.world-filter select{min-width:0;max-width:100%;width:340px;padding:10px 12px;border:1px solid var(--border,#d4dbc6);border-radius:9px;background:var(--surface,#fafaf4);color:inherit;font:inherit}
+.world-filter small{font-size:12px;color:var(--muted,#728065);line-height:1.5;max-width:440px}
+.combat-world-toolbar{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--border,#d4dbc6);padding-bottom:14px;margin-bottom:20px}
+.combat-world-toolbar .world-filter{flex:1;margin:0}.combat-world-toolbar>.btn{flex-shrink:0}
+.class-template-help{margin:0 0 16px;color:var(--muted,#728065);font-size:13px}
+.studio-library .world-filter label,.equipment-design-library .world-filter label,.creator-monster-catalogue .world-filter label,.creator-copy-room .world-filter label{flex-direction:column;align-items:stretch;width:100%;gap:6px}
+.studio-library .world-filter select,.equipment-design-library .world-filter select,.creator-monster-catalogue .world-filter select,.creator-copy-room .world-filter select{width:100%}
+.equipment-inventory>.world-filter{padding-bottom:12px;border-bottom:1px solid var(--border,#d4dbc6)}
+.adventure-catalogue-controls>.world-filter{flex-basis:100%;margin-bottom:0}
+@media(max-width:600px){.world-filter label{width:100%;align-items:flex-start;flex-direction:column;gap:6px}.world-filter select{width:100%}.world-filter{width:100%}.combat-world-toolbar>.btn{width:100%}}

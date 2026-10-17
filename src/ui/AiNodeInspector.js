@@ -20,7 +20,7 @@ export default function AiNodeInspector({graph,node,onChange,onDelete,onConnect,
   const config=node.config||{}, update=patch=>onChange({...node,...patch}), configure=patch=>update({config:{...config,...patch}});
   const weights={...DEFAULT_WEIGHTS,...TUNED,...(config.base==='cortex'?{}:maisonWeightsFor(myClass,opponentClass)),...config.weights};
   return <aside className="ai-inspector"><header><span className="ai-eyebrow">{readOnly?'RÉFÉRENCE · LECTURE':'RÉGLAGES DU BLOC'}</span><h3>{flowTitle(node)}</h3></header>
-    {stage&&<div className="ai-stage-intro"><span className="ai-stage-number">ÉTAPE {MAISON_STAGES.indexOf(stage)+1} / 7 · EXÉCUTABLE</span><p>{stage.description}</p><dl><dt>Entrée</dt><dd>{stage.input}</dd><dt>Résultat</dt><dd>{stage.output}</dd></dl><button type="button" className="ai-button" onClick={()=>setSource(stage.id)}><Code2 size={15}/> Code de cette étape</button></div>}
+    {stage&&<div className="ai-stage-intro"><span className="ai-stage-number">ÉTAPE {MAISON_STAGES.indexOf(stage)+1} / 7 · EXÉCUTABLE</span><p>{stage.description}</p><dl><dt>Entrée</dt><dd>{stage.input}</dd><dt>Résultat</dt><dd>{stage.output}</dd></dl>{process.env.REACT_APP_PLATFORM !== '1' && <button type="button" className="ai-button" onClick={()=>setSource(stage.id)}><Code2 size={15}/> Code de cette étape</button>}</div>}
     {node.type==='plan'&&!['advance','retreat'].includes(config.kind)&&<button type="button" className="ai-button ai-expand-maison" onClick={()=>onExpand(node.id)}><UnfoldVertical size={16}/> Déplier le cerveau</button>}
     <fieldset disabled={readOnly}>
       <label className="ai-field">Nom du bloc<input value={node.label||''} maxLength={80} placeholder={flowTitle(node)} onChange={e=>update({label:e.target.value})}/></label>

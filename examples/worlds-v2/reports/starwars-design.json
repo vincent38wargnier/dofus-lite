@@ -1,0 +1,1731 @@
+{
+  "world": "starwars",
+  "heroes": [
+    {
+      "name": "Kara, sentinelle de l’aube",
+      "role": "Front et placement",
+      "hp": 2299,
+      "pa": 9,
+      "pm": 4,
+      "stats": {
+        "vitalite": 1249,
+        "force": 101,
+        "intelligence": 101,
+        "chance": 101,
+        "agilite": 521,
+        "sagesse": 181
+      },
+      "outfit": 222.5,
+      "spells": [
+        {
+          "name": "Taille lumineuse",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 20,
+              "max": 24,
+              "duration": 0,
+              "chance": 0,
+              "p1": 20,
+              "p2": 24,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Poussée cinétique",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 12,
+              "max": 16,
+              "duration": 0,
+              "chance": 0,
+              "p1": 12,
+              "p2": 16,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Arc de garde",
+          "pa": 4,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Xb",
+              "targetMask": 0,
+              "min": 14,
+              "max": 18,
+              "duration": 0,
+              "chance": 0,
+              "p1": 14,
+              "p2": 18,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Fente du cristal",
+          "pa": 5,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 35,
+              "max": 39,
+              "duration": 0,
+              "chance": 0,
+              "p1": 35,
+              "p2": 39,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Concentration",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "buffPower",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 70,
+              "max": 70,
+              "duration": 2,
+              "chance": 0,
+              "p1": 70,
+              "p2": 70,
+              "p3": 0
+            }
+          ],
+          "cooldown": 4
+        },
+        {
+          "name": "Déviation",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "armor",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 8,
+              "max": 8,
+              "duration": 2,
+              "chance": 0,
+              "p1": 8,
+              "p2": 8,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Bond de la sentinelle",
+          "pa": 2,
+          "effects": [
+            {
+              "kind": "buffPm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Sabotage ionique",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "removePa",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            },
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        }
+      ]
+    },
+    {
+      "name": "Vex, pilote du convoi",
+      "role": "Distance et mobilité",
+      "hp": 2299,
+      "pa": 9,
+      "pm": 4,
+      "stats": {
+        "vitalite": 1249,
+        "force": 101,
+        "intelligence": 101,
+        "chance": 101,
+        "agilite": 521,
+        "sagesse": 181
+      },
+      "outfit": 214.8,
+      "spells": [
+        {
+          "name": "Tir de blaster",
+          "pa": 4,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 12,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 12,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 12,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 12,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Rafale du couloir",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 13,
+              "max": 17,
+              "duration": 0,
+              "chance": 0,
+              "p1": 13,
+              "p2": 17,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Grenade dispersante",
+          "pa": 4,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Cb",
+              "targetMask": 0,
+              "min": 12,
+              "max": 16,
+              "duration": 0,
+              "chance": 0,
+              "p1": 12,
+              "p2": 16,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Tir de précision",
+          "pa": 5,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 27,
+              "max": 33,
+              "duration": 0,
+              "chance": 0,
+              "p1": 27,
+              "p2": 33,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Verrouillage",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "buffPower",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 60,
+              "max": 60,
+              "duration": 2,
+              "chance": 0,
+              "p1": 60,
+              "p2": 60,
+              "p3": 0
+            }
+          ],
+          "cooldown": 4
+        },
+        {
+          "name": "Gilet de vol",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "resistBuff",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 18,
+              "max": 18,
+              "duration": 2,
+              "chance": 0,
+              "p1": 18,
+              "p2": 18,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 4
+        },
+        {
+          "name": "Propulseur latéral",
+          "pa": 4,
+          "effects": [
+            {
+              "kind": "teleport",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 0,
+              "max": 0,
+              "duration": 0,
+              "chance": 0,
+              "p1": 3,
+              "p2": 0,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Filet magnétique",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 9,
+              "max": 12,
+              "duration": 0,
+              "chance": 0,
+              "p1": 9,
+              "p2": 12,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        }
+      ]
+    },
+    {
+      "name": "R0-M, technicien de bord",
+      "role": "Soin et soutien",
+      "hp": 2299,
+      "pa": 9,
+      "pm": 4,
+      "stats": {
+        "vitalite": 1249,
+        "force": 101,
+        "intelligence": 521,
+        "chance": 101,
+        "agilite": 101,
+        "sagesse": 181
+      },
+      "outfit": 214.6,
+      "spells": [
+        {
+          "name": "Arc de soudure",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 15,
+              "max": 19,
+              "duration": 0,
+              "chance": 0,
+              "p1": 15,
+              "p2": 19,
+              "p3": 0,
+              "element": "feu"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Charge thermique",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 14,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 14,
+              "p3": 0,
+              "element": "feu"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Décharge du relais",
+          "pa": 4,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Cb",
+              "targetMask": 0,
+              "min": 12,
+              "max": 16,
+              "duration": 0,
+              "chance": 0,
+              "p1": 12,
+              "p2": 16,
+              "p3": 0,
+              "element": "feu"
+            }
+          ],
+          "cooldown": 1
+        },
+        {
+          "name": "Réparation de terrain",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "heal",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 4,
+              "min": 20,
+              "max": 24,
+              "duration": 0,
+              "chance": 0,
+              "p1": 20,
+              "p2": 24,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Surcharge alliée",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "buffDamage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 4,
+              "min": 6,
+              "max": 6,
+              "duration": 1,
+              "chance": 0,
+              "p1": 6,
+              "p2": 6,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Champ de maintenance",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "armor",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 4,
+              "min": 6,
+              "max": 6,
+              "duration": 2,
+              "chance": 0,
+              "p1": 6,
+              "p2": 6,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Transfert d’urgence",
+          "pa": 4,
+          "effects": [
+            {
+              "kind": "teleport",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 0,
+              "max": 0,
+              "duration": 0,
+              "chance": 0,
+              "p1": 3,
+              "p2": 0,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Brouilleur de visée",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "removePa",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            },
+            {
+              "kind": "debuffRange",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 2,
+              "max": 2,
+              "duration": 1,
+              "chance": 0,
+              "p1": 2,
+              "p2": 2,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Fantassin du relais",
+      "chapter": 1,
+      "hp": 340,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Impact de sentinelle",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Blindage actif",
+          "effects": [
+            {
+              "kind": "armor",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 6,
+              "max": 6,
+              "duration": 2,
+              "chance": 0,
+              "p1": 6,
+              "p2": 6,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Câble aux jambes",
+          "effects": [
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Refoulement du sas",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 13,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 13,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        }
+      ]
+    },
+    {
+      "name": "Tireur de coursive",
+      "chapter": 1,
+      "hp": 265,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Tir de guetteur",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Optique calibrée",
+          "effects": [
+            {
+              "kind": "buffPower",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 50,
+              "max": 50,
+              "duration": 2,
+              "chance": 0,
+              "p1": 50,
+              "p2": 50,
+              "p3": 0
+            }
+          ],
+          "cooldown": 4
+        },
+        {
+          "name": "Charge entravante",
+          "effects": [
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Crosse de service",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 13,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 13,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        }
+      ]
+    },
+    {
+      "name": "Fantassin du relais",
+      "chapter": 2,
+      "hp": 470,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Impact de sentinelle",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Blindage actif",
+          "effects": [
+            {
+              "kind": "armor",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 6,
+              "max": 6,
+              "duration": 2,
+              "chance": 0,
+              "p1": 6,
+              "p2": 6,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Câble aux jambes",
+          "effects": [
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Refoulement du sas",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 13,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 13,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        }
+      ]
+    },
+    {
+      "name": "Tireur de coursive",
+      "chapter": 2,
+      "hp": 366,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Tir de guetteur",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Optique calibrée",
+          "effects": [
+            {
+              "kind": "buffPower",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 50,
+              "max": 50,
+              "duration": 2,
+              "chance": 0,
+              "p1": 50,
+              "p2": 50,
+              "p3": 0
+            }
+          ],
+          "cooldown": 4
+        },
+        {
+          "name": "Charge entravante",
+          "effects": [
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Crosse de service",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 13,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 13,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        }
+      ]
+    },
+    {
+      "name": "Droïde réparateur",
+      "chapter": 2,
+      "hp": 338,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Arc de maintenance",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "feu"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Réparation de terrain",
+          "effects": [
+            {
+              "kind": "heal",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 4,
+              "min": 18,
+              "max": 22,
+              "duration": 0,
+              "chance": 0,
+              "p1": 18,
+              "p2": 22,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Bouclier désaccordé",
+          "effects": [
+            {
+              "kind": "resistDebuff",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 10,
+              "duration": 1,
+              "chance": 0,
+              "p1": 10,
+              "p2": 10,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Surcharge alliée",
+          "effects": [
+            {
+              "kind": "buffDamage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 4,
+              "min": 5,
+              "max": 5,
+              "duration": 1,
+              "chance": 0,
+              "p1": 5,
+              "p2": 5,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        }
+      ]
+    },
+    {
+      "name": "Officier des transmissions",
+      "chapter": 3,
+      "hp": 1403,
+      "pa": 9,
+      "spells": [
+        {
+          "name": "Salve du relais",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 24,
+              "max": 29,
+              "duration": 0,
+              "chance": 0,
+              "p1": 24,
+              "p2": 29,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Déflecteur de commandement",
+          "effects": [
+            {
+              "kind": "armor",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 10,
+              "max": 10,
+              "duration": 2,
+              "chance": 0,
+              "p1": 10,
+              "p2": 10,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Ancrage magnétique",
+          "effects": [
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Poussée du sas",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 13,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 13,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Barrage circulaire",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Cb",
+              "targetMask": 0,
+              "min": 16,
+              "max": 20,
+              "duration": 0,
+              "chance": 0,
+              "p1": 16,
+              "p2": 20,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Priorité au signal",
+          "effects": [
+            {
+              "kind": "buffPower",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 70,
+              "max": 70,
+              "duration": 2,
+              "chance": 0,
+              "p1": 70,
+              "p2": 70,
+              "p3": 0
+            }
+          ],
+          "cooldown": 4
+        }
+      ]
+    },
+    {
+      "name": "Fantassin du relais",
+      "chapter": 3,
+      "hp": 610,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Impact de sentinelle",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Blindage actif",
+          "effects": [
+            {
+              "kind": "armor",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 6,
+              "max": 6,
+              "duration": 2,
+              "chance": 0,
+              "p1": 6,
+              "p2": 6,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Câble aux jambes",
+          "effects": [
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Refoulement du sas",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 13,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 13,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        }
+      ]
+    },
+    {
+      "name": "Tireur de coursive",
+      "chapter": 3,
+      "hp": 475,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Tir de guetteur",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Optique calibrée",
+          "effects": [
+            {
+              "kind": "buffPower",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 50,
+              "max": 50,
+              "duration": 2,
+              "chance": 0,
+              "p1": 50,
+              "p2": 50,
+              "p3": 0
+            }
+          ],
+          "cooldown": 4
+        },
+        {
+          "name": "Charge entravante",
+          "effects": [
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Crosse de service",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 13,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 13,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        }
+      ]
+    },
+    {
+      "name": "Droïde réparateur",
+      "chapter": 3,
+      "hp": 439,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Arc de maintenance",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "feu"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Réparation de terrain",
+          "effects": [
+            {
+              "kind": "heal",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 4,
+              "min": 18,
+              "max": 22,
+              "duration": 0,
+              "chance": 0,
+              "p1": 18,
+              "p2": 22,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Bouclier désaccordé",
+          "effects": [
+            {
+              "kind": "resistDebuff",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 10,
+              "duration": 1,
+              "chance": 0,
+              "p1": 10,
+              "p2": 10,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Surcharge alliée",
+          "effects": [
+            {
+              "kind": "buffDamage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 4,
+              "min": 5,
+              "max": 5,
+              "duration": 1,
+              "chance": 0,
+              "p1": 5,
+              "p2": 5,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        }
+      ]
+    }
+  ],
+  "equipment": [
+    {
+      "name": "Coiffe : Kara",
+      "score": 8.4
+    },
+    {
+      "name": "Manteau : Kara",
+      "score": 17.4
+    },
+    {
+      "name": "Emblème : Kara",
+      "score": 30.2
+    },
+    {
+      "name": "Anneau du départ : Kara",
+      "score": 49
+    },
+    {
+      "name": "Anneau du retour : Kara",
+      "score": 38
+    },
+    {
+      "name": "Ceinture : Kara",
+      "score": 10.5
+    },
+    {
+      "name": "Bottes : Kara",
+      "score": 26.4
+    },
+    {
+      "name": "Arme de garde : Kara",
+      "score": 42.6
+    },
+    {
+      "name": "Coiffe : Vex",
+      "score": 8.4
+    },
+    {
+      "name": "Manteau : Vex",
+      "score": 17.4
+    },
+    {
+      "name": "Emblème : Vex",
+      "score": 30.2
+    },
+    {
+      "name": "Anneau du départ : Vex",
+      "score": 49
+    },
+    {
+      "name": "Anneau du retour : Vex",
+      "score": 38
+    },
+    {
+      "name": "Ceinture : Vex",
+      "score": 10.5
+    },
+    {
+      "name": "Bottes : Vex",
+      "score": 26.4
+    },
+    {
+      "name": "Arme de précision : Vex",
+      "score": 66
+    },
+    {
+      "name": "Coiffe : R0-M",
+      "score": 8.4
+    },
+    {
+      "name": "Manteau : R0-M",
+      "score": 17.4
+    },
+    {
+      "name": "Emblème : R0-M",
+      "score": 30.2
+    },
+    {
+      "name": "Anneau du départ : R0-M",
+      "score": 49
+    },
+    {
+      "name": "Anneau du retour : R0-M",
+      "score": 38
+    },
+    {
+      "name": "Ceinture : R0-M",
+      "score": 10.5
+    },
+    {
+      "name": "Bottes : R0-M",
+      "score": 26.4
+    },
+    {
+      "name": "Catalyseur : R0-M",
+      "score": 58.2
+    }
+  ],
+  "comparisons": {
+    "strike": [
+      141,
+      158
+    ],
+    "area": [
+      160,
+      179
+    ],
+    "burst": [
+      76,
+      156
+    ],
+    "heal": [
+      121,
+      124
+    ],
+    "guard": [
+      7,
+      153
+    ],
+    "control": [
+      84,
+      161
+    ],
+    "movement": [
+      142,
+      128
+    ]
+  },
+  "combos": [
+    {
+      "hero": "Kara, sentinelle de l’aube",
+      "ap": 9,
+      "unprepared": [
+        "Taille lumineuse",
+        "Taille lumineuse"
+      ],
+      "prepared": [
+        "Concentration",
+        "Fente du cristal"
+      ],
+      "recovery": [
+        "Déviation",
+        "Bond de la sentinelle"
+      ],
+      "counterplay": "Distance et obstacles ; aucun soin."
+    },
+    {
+      "hero": "Vex, pilote du convoi",
+      "ap": 9,
+      "unprepared": [
+        "Tir de blaster",
+        "Tir de blaster"
+      ],
+      "prepared": [
+        "Verrouillage",
+        "Tir de précision"
+      ],
+      "recovery": [
+        "Gilet de vol",
+        "Propulseur latéral"
+      ],
+      "counterplay": "Contact et angles fermés ; protection limitée à un élément."
+    },
+    {
+      "hero": "R0-M, technicien de bord",
+      "ap": 9,
+      "unprepared": [
+        "Arc de soudure",
+        "Arc de soudure"
+      ],
+      "prepared": [
+        "Surcharge alliée",
+        "Arc de soudure"
+      ],
+      "recovery": [
+        "Réparation de terrain",
+        "Champ de maintenance"
+      ],
+      "counterplay": "Pression répartie sur plusieurs alliés ; un seul soin par tour."
+    }
+  ]
+}

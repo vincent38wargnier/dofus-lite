@@ -1,0 +1,75 @@
+{
+  "tool": "image_gen",
+  "covers": [
+    {
+      "id": "thrones",
+      "prompt": "Use case: illustration-story. Asset type: a polished illustrated world cover for the Arena Forge game library. Create ONE finished landscape raster illustration, wide 2:1 composition, full bleed. Scene: Game of Thrones, the last brazier of Winterfell. A wolf-bannered medieval fortress above a snowy courtyard, a bright amber brazier with three small defender silhouettes, an icy army and blue northern mist in the far distance. Dramatic deep teal and ember palette. Style: premium hand-painted game key art with expressive shapes, rich atmospheric light, clear central silhouette and beautiful material detail, readable as a small website card. Keep all essential subject matter in the central 75 percent so it crops well on mobile. No text, no lettering, no logo, no watermarks, no border, no UI, no abstract icon. This is actual artwork, not a website mockup.",
+      "file": "thrones.png"
+    },
+    {
+      "id": "potter",
+      "prompt": "Use case: illustration-story. Create one original, family-friendly landscape game cover, 2:1 aspect ratio. An enchanting botanical greenhouse at midnight, entirely unoccupied. Rich green curling vines, glowing golden flowers in ceramic pots, a small open illustrated botanical book on a stone table, blue moonlight through glass panes, tiny suspended lamps. Outside the greenhouse is the silhouette of an old stone school in the distance. Elegant hand-painted adventure key art, rich emerald and plum tones, warm golden illumination, beautiful glass and leaf details. Full-bleed picture, all important details in the central 75 percent. No characters, no letters, no text, no logos, no borders, no UI.",
+      "file": "potter.png"
+    },
+    {
+      "id": "brice",
+      "prompt": "Use case: illustration-story. Asset type: a polished illustrated world cover for the Arena Forge game library. Create ONE finished landscape raster illustration, wide 2:1 composition, full bleed. Scene: Brice de Nice, the wave that never comes. A cheerful sunlit Mediterranean beach in Nice, a cocky blonde adult surfer in a bright yellow shirt carrying a yellow surfboard, comically tiny waves, striped parasols and pastel Riviera buildings. Playful French adventure comedy, turquoise and golden sunshine. Style: premium hand-painted game key art with expressive shapes, rich atmospheric light, clear central silhouette and beautiful material detail, readable as a small website card. Keep all essential subject matter in the central 75 percent so it crops well on mobile. No text, no lettering, no logo, no watermarks, no border, no UI, no abstract icon. This is actual artwork, not a website mockup.",
+      "file": "brice.png"
+    },
+    {
+      "id": "asterix",
+      "prompt": "Use case: illustration-story. Asset type: a polished illustrated world cover for the Arena Forge game library. Create ONE finished landscape raster illustration, wide 2:1 composition, full bleed. Scene: Asterix, an extra Roman patrol. A whimsical ancient Gaul village with round thatched houses and a wooden palisade, two small Gaul warriors with a winged helmet and striped trousers watching bewildered Roman soldiers from a forest path. Emerald woods, warm ochre, humorous adventure. Style: premium hand-painted game key art with expressive shapes, rich atmospheric light, clear central silhouette and beautiful material detail, readable as a small website card. Keep all essential subject matter in the central 75 percent so it crops well on mobile. No text, no lettering, no logo, no watermarks, no border, no UI, no abstract icon. This is actual artwork, not a website mockup.",
+      "file": "asterix.png"
+    },
+    {
+      "id": "kaamelott",
+      "prompt": "Use case: illustration-story. Asset type: a polished illustrated world cover for the Arena Forge game library. Create ONE finished landscape raster illustration, wide 2:1 composition, full bleed. Scene: Kaamelott, an almost official quest. Two slightly disorganized medieval knights beside a round table map, a crooked goblet and scattered dice, a damp stone castle courtyard beyond, a goose strolling through. Wry French medieval comedy, antique gold, moss and warm torchlight. Style: premium hand-painted game key art with expressive shapes, rich atmospheric light, clear central silhouette and beautiful material detail, readable as a small website card. Keep all essential subject matter in the central 75 percent so it crops well on mobile. No text, no lettering, no logo, no watermarks, no border, no UI, no abstract icon. This is actual artwork, not a website mockup.",
+      "file": "kaamelott.png"
+    },
+    {
+      "id": "starwars",
+      "prompt": "Use case: illustration-story. Asset type: a polished illustrated world cover for the Arena Forge game library. Create ONE finished landscape raster illustration, wide 2:1 composition, full bleed. Scene: Star Wars, the Kessel relay. A scavenged communication beacon on an alien desert cliff, two small rebels and a round companion droid in the foreground, starships against a violet dusk sky, distant industrial towers. Cinematic violet, dusty orange and electric cyan. Style: premium hand-painted game key art with expressive shapes, rich atmospheric light, clear central silhouette and beautiful material detail, readable as a small website card. Keep all essential subject matter in the central 75 percent so it crops well on mobile. No text, no lettering, no logo, no watermarks, no border, no UI, no abstract icon. This is actual artwork, not a website mockup.",
+      "file": "starwars.png"
+    },
+    {
+      "id": "rings",
+      "prompt": "Use case: illustration-story. Asset type: a polished illustrated world cover for the Arena Forge game library. Create ONE finished landscape raster illustration, wide 2:1 composition, full bleed. Scene: The Lord of the Rings, the watch at the old bridge. A small band of cloaked travellers on a weathered stone bridge over a deep valley, a round golden ring glinting beside a map in foreground, distant mountain fortress and storm clouds. Epic painted fantasy, forest green and burnished gold. Style: premium hand-painted game key art with expressive shapes, rich atmospheric light, clear central silhouette and beautiful material detail, readable as a small website card. Keep all essential subject matter in the central 75 percent so it crops well on mobile. No text, no lettering, no logo, no watermarks, no border, no UI, no abstract icon. This is actual artwork, not a website mockup.",
+      "file": "rings.png"
+    },
+    {
+      "id": "dofus",
+      "prompt": "Use case: illustration-story. Asset type: a polished illustrated world cover for the Arena Forge game library. Create ONE finished landscape raster illustration, wide 2:1 composition, full bleed. Scene: Dofus Retro tactical fantasy. A colorful pastoral fantasy kingdom, an adventuring swordsman and mage facing a woolly horned creature near a stone dungeon doorway, a mysterious turquoise dragon egg on a rock in the foreground. Charming expressive painted game illustration, lush teal, soft sunshine and ochre, original composition. Style: premium hand-painted game key art with expressive shapes, rich atmospheric light, clear central silhouette and beautiful material detail, readable as a small website card. Keep all essential subject matter in the central 75 percent so it crops well on mobile. No text, no lettering, no logo, no watermarks, no border, no UI, no abstract icon. This is actual artwork, not a website mockup.",
+      "file": "dofus.png"
+    },
+    {
+      "id": "onepiece",
+      "prompt": "Use case: illustration-story. Asset type: a polished illustrated world cover for the Arena Forge game library. Create ONE finished landscape raster illustration, wide 2:1 composition, full bleed. Scene: One Piece pirate adventure, the stolen compass. A lively pirate ship approaching a tropical harbour, a small straw-hatted pirate on the bow, a glowing brass compass and rolled treasure chart in foreground, gulls and turquoise surf. Saturated ocean blue, coral and gold, playful adventure. Style: premium hand-painted game key art with expressive shapes, rich atmospheric light, clear central silhouette and beautiful material detail, readable as a small website card. Keep all essential subject matter in the central 75 percent so it crops well on mobile. No text, no lettering, no logo, no watermarks, no border, no UI, no abstract icon. This is actual artwork, not a website mockup.",
+      "file": "onepiece.png"
+    },
+    {
+      "id": "dragonball",
+      "prompt": "Use case: illustration-story. Asset type: a polished illustrated world cover for the Arena Forge game library. Create ONE finished landscape raster illustration, wide 2:1 composition, full bleed. Scene: Dragon Ball martial arts challenge. A rocky tournament arena under a huge blue sky, two adult martial artists in orange and blue training outfits facing each other with energetic golden auras, small orange star-studded dragon spheres on a foreground rock. Dynamic hand painted adventure, electric blue and warm orange. Style: premium hand-painted game key art with expressive shapes, rich atmospheric light, clear central silhouette and beautiful material detail, readable as a small website card. Keep all essential subject matter in the central 75 percent so it crops well on mobile. No text, no lettering, no logo, no watermarks, no border, no UI, no abstract icon. This is actual artwork, not a website mockup.",
+      "file": "dragonball.png"
+    },
+    {
+      "id": "pokemon",
+      "prompt": "Use case: illustration-story. Asset type: a polished illustrated world cover for the Arena Forge game library. Create ONE finished landscape raster illustration, wide 2:1 composition, full bleed. Scene: Pokemon, a friendly trainer challenge at the old garden. Two small travelling trainers on a lush garden path with a cheerful yellow electric mouse, a small blue turtle and orange fire-tailed lizard, ancient vine-covered stone ruins, dappled sunshine. Welcoming collectible-creature adventure, fresh green, lemon and sky blue. Style: premium hand-painted game key art with expressive shapes, rich atmospheric light, clear central silhouette and beautiful material detail, readable as a small website card. Keep all essential subject matter in the central 75 percent so it crops well on mobile. No text, no lettering, no logo, no watermarks, no border, no UI, no abstract icon. This is actual artwork, not a website mockup.",
+      "file": "pokemon.png"
+    },
+    {
+      "id": "visiteurs",
+      "prompt": "Use case: illustration-story. Asset type: a polished illustrated world cover for the Arena Forge game library. Create ONE finished landscape raster illustration, wide 2:1 composition, full bleed. Scene: Les Visiteurs French time travel comedy. Two bewildered medieval travellers in chainmail and rough tunic, one noble knight and his scruffy servant, standing beside a tiny modern red car on a country lane, a ruined castle and sleepy French village beyond, a cracked glowing hourglass. Warm blue-hour slapstick adventure. Style: premium hand-painted game key art with expressive shapes, rich atmospheric light, clear central silhouette and beautiful material detail, readable as a small website card. Keep all essential subject matter in the central 75 percent so it crops well on mobile. No text, no lettering, no logo, no watermarks, no border, no UI, no abstract icon. This is actual artwork, not a website mockup.",
+      "file": "visiteurs.png"
+    },
+    {
+      "id": "naheulbeuk",
+      "prompt": "Use case: illustration-story. Asset type: a polished illustrated world cover for the Arena Forge game library. Create ONE finished landscape raster illustration, wide 2:1 composition, full bleed. Scene: Le Donjon de Naheulbeuk fantasy comedy. A mismatched party of adventurers including a short helmeted dwarf, a tall elf archer, a robed wizard and a barbarian arguing outside a crooked dungeon gate, a wooden sign tilted askew without readable writing. Torchlight, rainy mossy stone, expressive humorous silhouettes, copper and dark emerald. Style: premium hand-painted game key art with expressive shapes, rich atmospheric light, clear central silhouette and beautiful material detail, readable as a small website card. Keep all essential subject matter in the central 75 percent so it crops well on mobile. No text, no lettering, no logo, no watermarks, no border, no UI, no abstract icon. This is actual artwork, not a website mockup.",
+      "file": "naheulbeuk.png"
+    },
+    {
+      "id": "wakfu",
+      "prompt": "Use case: illustration-story. Asset type: a polished illustrated world cover for the Arena Forge game library. Create ONE finished landscape raster illustration, wide 2:1 composition, full bleed. Scene: Wakfu, protecting the living world. A young caped fantasy traveller and small mechanical companion on a floating grassy island, an enormous ancient tree and glowing blue energy streams, distant whimsical villages and waterfalls falling into clouds. Luminous turquoise, lush green and golden sunlight, poetic adventure. Style: premium hand-painted game key art with expressive shapes, rich atmospheric light, clear central silhouette and beautiful material detail, readable as a small website card. Keep all essential subject matter in the central 75 percent so it crops well on mobile. No text, no lettering, no logo, no watermarks, no border, no UI, no abstract icon. This is actual artwork, not a website mockup.",
+      "file": "wakfu.png"
+    }
+  ]
+}

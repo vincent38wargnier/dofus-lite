@@ -1,3 +1,4 @@
+import { DEFAULT_CLASS_ID } from '../engine/classes';
 import { createGame, getView } from '../engine/engine';
 import { CLASSES, CLASS_IDS } from '../engine/classes';
 import { makeFlow, visualBotPackage, parseVisualBot, flowErrors, FLOW_METRICS, FLOW_OPERATORS, FLOW_WEIGHTS, PLAN_KINDS } from './visualGraph';
@@ -11,7 +12,7 @@ export const AI_STARTERS = [
 ];
 export function aiFighterChoices(profiles = [], characters = []) {
   return [
-    ...profiles.map(p => ({ id: `profile:${p.id}`, name: p.name, classId: p.classId, loadout: p.loadout, group: 'Mes personnages' })),
+    ...profiles.map(p => ({ id: `profile:${p.id}`, customCharacterId: p.customCharacterId, name: p.name, classId: p.classId, loadout: p.loadout, group: 'Mes personnages' })),
     ...characters.map(p => ({ id: `creation:${p.id}`, name: p.name, classId: p.classId, loadout: p.loadout, group: 'Mes créations' })),
     ...CLASS_IDS.map(id => ({ id, name: CLASSES[id].name, classId: id, group: 'Classes du jeu' })),
   ];
@@ -22,7 +23,7 @@ export function aiFighterChoices(profiles = [], characters = []) {
 export function aiFighterSnapshot(fighter) {
   const { state } = createGame({ seed: 1, mapId: 'arene', fighters: [
     { id: 'A', name: fighter.name, classId: fighter.classId, loadout: fighter.loadout },
-    { id: 'B', name: 'Référence', classId: 'IOP' },
+    { id: 'B', name: 'Référence', classId: DEFAULT_CLASS_ID },
   ] });
   return getView(state, 'A').you;
 }
@@ -47,7 +48,7 @@ export function buildAiPrompt({ fighter, snapshot, goal = '', graph, name = 'Mon
   if (!snapshot?.spells?.length) throw new Error('Choisissez un combattant valide avec des sorts.');
   const character = reference || aiFighterReference(snapshot);
   const json = v => JSON.stringify(v, null, 2);
-  return `Tu es le concepteur de mon IA de combat pour le Koliséum. Aide-moi à battre d'autres IA avec ${fighter.name} (${CLASSES[fighter.classId]?.name || fighter.classId}).
+  return `Tu es le concepteur de mon IA de combat pour ${process.env.REACT_APP_PLATFORM === '1' ? 'Arena Forge' : 'le Koliséum'}. Aide-moi à battre d'autres IA avec ${fighter.name} (${CLASSES[fighter.classId]?.name || fighter.classId}).
 OBJECTIF PERSONNEL : ${goal.trim() || 'Construire une stratégie polyvalente, efficace en dégâts et prudente dans ses placements.'}
 
 MON COMPORTEMENT SOUHAITÉ
@@ -56,7 +57,7 @@ Traduis mon objectif en priorités observables : ouverture, cible prioritaire, p
 LIVRABLE FINAL : retourne uniquement un objet JSON complet au format koliseum-visual-ai ci-dessous, sans JavaScript ni commentaire. Le jeu compile ce graphe en code exécutable ; ce parcours crée une stratégie visuelle, pas un nouvel algorithme JavaScript libre. Je le collerai dans « Importer la réponse » du Studio IA. Donne un nom court et descriptif à la stratégie et des labels lisibles aux blocs. La validation confirme sa structure, pas sa force : je la testerai en combat.
 
 PÉRIMÈTRE DES DONNÉES
-Ce dossier décrit uniquement le combattant sélectionné, au niveau et aux grades réellement utilisés, avec son arme et ses sorts communs ou personnalisés équipés. Il ne contient pas les douze classes ni tous les grades. Les classes de référence du Studio sont niveau 100 ; un personnage sauvegardé fournit son vrai niveau et son équipement. N’ajoute pas un sort connu d’une autre version de DOFUS ou un sort absent du grimoire ci-dessous.
+Ce dossier décrit uniquement le combattant sélectionné, au niveau et aux grades réellement utilisés, avec son arme et ses sorts communs ou personnalisés équipés. Il ne contient pas les douze classes ni tous les grades. Les classes de référence du Studio sont niveau 100 ; un personnage sauvegardé fournit son vrai niveau et son équipement. N’ajoute pas de sort absent du grimoire ci-dessous, quelle que soit sa présence dans un autre jeu ou une autre bibliothèque.
 Les caractéristiques incluent déjà l’équipement et la forgemagie : ne les additionne pas une seconde fois. Les adversaires, leurs sorts visibles, obstacles et positions sont consultés par Maison pendant le combat ; un ennemi invisible ne révèle pas sa position réelle. Ce dossier n’est pas le scénario d’un match fixé.
 
 COMBATTANT RÉEL

@@ -1,4 +1,18 @@
 /* A quiet parchment palette, with the character kept beside the active panel. */
+.setup-editor-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 22px; }
+.setup-editor-heading h2 { margin: 5px 0 6px; font-size: 24px; overflow-wrap: anywhere; }
+.setup-editor-heading p { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); margin: 0; }
+.setup-editor-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.setup-editor-actions .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; }
+.summary-library { display: flex; align-items: center; gap: 7px; width: 100%; min-height: 38px; margin-top: 10px; border: 1px solid #839367; border-radius: 8px; padding: 7px 10px; font: inherit; font-size: 12px; cursor: pointer; background: #ffffff12; color: #e6eddb; }
+.summary-library span { margin-left: auto; }
+.summary-library:hover { background: #ffffff22; }
+.new-character-name { margin: 0 0 18px; }
+@media (max-width: 900px) { .summary-character .summary-library { grid-column: 1/-1; } }
+@media (max-width: 600px) {
+  .setup-editor-heading { padding-top: 10px; }.setup-editor-heading h2 { font-size: 20px; }
+  .setup-editor-actions { width: 100%; }.setup-editor-actions .btn { flex: 1; font-size: 12px; }
+}
 :root {
   --bg: #eeede5; --bg-soft: #f2f1e9; --panel: #faf9f3; --panel-2: #e9e9dc;
   --border: #d4d6c6; --border-soft: #e2e3d7; --text: #303a2c; --muted: #686e61;

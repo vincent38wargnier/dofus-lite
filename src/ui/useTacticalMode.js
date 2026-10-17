@@ -1,6 +1,7 @@
+import { storageKey } from '../platform/config';
 import { useSyncExternalStore } from 'react';
 
-const STORAGE_KEY = 'dofus-lite-tactical-mode-v1';
+const STORAGE_KEY = storageKey('dofus-lite-tactical-mode-v1');
 const CHANGE_EVENT = 'dofus-lite-tactical-mode-change';
 let memoryValue = null;
 

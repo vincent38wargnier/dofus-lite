@@ -1,6 +1,6 @@
 // Item-instance storage shared by the equipment resolver and the FM engine.
 // This module deliberately does not import equipment.js (no circular resolver).
-import DATA from './forgemagieData.json';
+import { forgemagieData as DATA } from './gameData';
 
 export const FM_STATS = DATA.stats;
 export const FORGE_MODEL = 'retro-reconstruction-v3';

@@ -1,7 +1,8 @@
+import { storageKey } from '../platform/config';
 import { useState } from 'react';
 import { defaultAdventureChoice } from '../engine/adventures';
 
-export const ADVENTURE_CHOICES_STORAGE = 'dofus-lite-adventure-choices-v1';
+export const ADVENTURE_CHOICES_STORAGE = storageKey('dofus-lite-adventure-choices-v1');
 const signature = rules => JSON.stringify([rules.mode, rules.partySize, rules.allowAI, rules.heroes.map(h => h.id)]);
 export default function useAdventureChoice(dungeon) {
   const [saved, setSaved] = useState(() => {

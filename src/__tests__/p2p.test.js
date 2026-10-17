@@ -122,8 +122,8 @@ test('a congested channel waits for backpressure and cancels a pending transfer 
 
 const rooms = [];
 afterEach(() => { rooms.splice(0).forEach(room => room.close()); });
-async function salon(settings = config, count = 2, dungeon = null, contentDependencies = {}) {
-  const events = [], host = new PeerRoom({ role: 'host', character: character('Hôte'), settings, dungeon, contentDependencies, build: 'test', onEvents: e => events.push(...e) });
+async function salon(settings = config, count = 2, dungeon = null, contentDependencies = {}, composition = {}) {
+  const events = [], host = new PeerRoom({ role: 'host', character: character('Hôte'), settings, dungeon, contentDependencies, ...composition, build: 'test', onEvents: e => events.push(...e) });
   rooms.push(host); await host.prepare();
   const guests = [];
   for (let i = 0; i < count; i++) {
@@ -311,6 +311,41 @@ test('version mismatch and connection loss never silently substitute AI or decla
   expect(host.submit({ kind: 'ready' }).ok).toBe(false);
 });
 
+
+test('an explicit free team keeps mixed controls in a shared world and stays editable', async () => {
+  const adventure = addAdventureHero(newAdventure(), character('Héros du paquet'), 'h1'); adventure.allowAI = false;
+  const members = [{ monsterId: POUTCH_ID, grade: 1, count: 1 }];
+  const dungeon = withDungeonRooms({ id: 'free-world', name: 'Mon monde', adventure }, [
+    { id: 'first', name: 'Première', mapId: 'arene', members }, { id: 'second', name: 'Seconde', mapId: 'arene', members },
+  ]);
+  const team = [{ ...character('Mon Iop'), kind: 'character', controller: 'player' }, { ...character('Mon Crâ', 'CRA'), kind: 'character', controller: 'ai' }];
+  const { host, guests } = await salon({ ...config, mode: 'custom' }, 1, dungeon, {}, { team });
+  expect(host.settings.adventure).toBeUndefined();
+  expect(host.units.filter(u => u.team === 'A').map(u => u.member.character.name)).toEqual(['Mon Iop', 'Mon Crâ', 'Invité 1']);
+  expect(host.units.find(u => u.member.character?.name === 'Mon Crâ').controller).toBe('ai');
+  await start(host, guests);
+  expect(host.match.state.fighters.A.name).toBe('Mon Iop');
+  expect(host.match.state.fighters.A2.name).toBe('Mon Crâ');
+  expect(host.match.humanIds.has('A2')).toBe(false);
+  const state = JSON.parse(JSON.stringify(host.match.state)); state.over = true; state.endReason = 'ko'; state.winner = 'A';
+  Object.values(state.fighters).filter(f => f.team === 'B').forEach(f => { f.hp = 0; });
+  host.commit({ state, events: [] }, 'host'); await settled(host, guests);
+  await host.nextCampaignRoom(); await until(() => guests[0].status === 'lobby' && host.links.get(guests[0].selfId).loaded === host.revision);
+  expect(host.settings.adventure).toBeUndefined();
+  expect(guests[0].settings.adventure).toBeUndefined();
+  const scout = host.units.find(u => u.member.character?.name === 'Mon Crâ');
+  await host.edit({ kind: 'configure', id: scout.id, team: 'A', controller: 'player' });
+});
+
+test('a customized shared encounter keeps the chosen enemies and army objective', async () => {
+  const team = [{ ...character('Chef'), kind: 'character', controller: 'player' }];
+  const opponents = [{ kind: 'monster', monsterId: POUTCH_ID, grade: 2 }, { kind: 'monster', monsterId: POUTCH_ID, grade: 1 }];
+  const { host, guests } = await salon({ ...config, encounter: { version: 1, mode: 'army', commanderId: 'B' } }, 1, null, {}, { team, opponents });
+  expect(host.units.filter(u => u.team === 'B' && u.owner === 'host').map(u => u.member.grade)).toEqual([2, 1]);
+  await start(host, guests);
+  expect(host.match.state.fighters.B2.defeatWith).toBe('B');
+  expect(guests[0].match.state).toEqual(host.match.state);
+});
 
 test('a shared adventure distributes supplied heroes without adding guest profiles or allowing roster overrides', async () => {
   let rules = addAdventureHero(newAdventure(), character('Gardien fourni'), 'h1');

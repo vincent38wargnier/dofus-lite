@@ -25,7 +25,9 @@ for (const mf of metas) {
   if (roots.length !== decs.length) throw new Error(`${base}: ${roots.length} racines pour ${decs.length} décisions`);
   // z (i8, par record) = issue pour le joueur AU TRAIT de l'après-état = l'adversaire du
   // chercheur; d (u32, par record) = indice de décision → issue du chercheur = −z.
-  const z = new Int8Array(fs.readFileSync(`${base}.z.i8`).buffer.slice(0));
+  // byteOffset obligatoire: un petit fichier peut être lu dans le pool partagé de Buffer.
+  const zRaw = fs.readFileSync(`${base}.z.i8`);
+  const z = new Int8Array(zRaw.buffer, zRaw.byteOffset, zRaw.length);
   const dRaw = fs.readFileSync(`${base}.d.u32`);
   const d = new Uint32Array(dRaw.buffer, dRaw.byteOffset, dRaw.length / 4);
   const zOf = new Map();

@@ -6,6 +6,7 @@ import { EQUIPMENT_SLOTS, resolveLoadout } from '../engine/equipment';
 import EquipmentIcon from './EquipmentIcon';
 import { useLoadoutLibrary } from './LoadoutsContext';
 import { applySavedEquipment, sameEquipment } from './loadoutStore';
+import { useWorlds, WorldFilter } from './WorldsContext';
 
 const fold = value => String(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const newId = () => window.crypto?.randomUUID?.() || `stuff-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -13,6 +14,7 @@ const snapshot = value => JSON.parse(JSON.stringify(value));
 
 export default function LoadoutLibrary({ side, classId, draftKey, loadout, update, saveError, compact = false, expanded, onExpandedChange }) {
   const { library, commit, libraryError } = useLoadoutLibrary();
+  const worlds = useWorlds();
   const [localOpen, setLocalOpen] = useState(false);
   const open = expanded ?? localOpen;
   const setOpen = onExpandedChange || setLocalOpen;
@@ -24,11 +26,16 @@ export default function LoadoutLibrary({ side, classId, draftKey, loadout, updat
   const key = draftKey || `${side}:${classId}`;
   const active = library.builds.find(b => b.id === library.active[key]);
   const dirty = active && !sameEquipment(active.loadout, loadout);
-  const builds = useMemo(() => library.builds
+  const worldBuilds = useMemo(() => library.builds.filter(build => {
+    if (!worlds || worlds.selected === 'all') return true;
+    const ids = Object.values(build.loadout.slots).filter(Boolean);
+    return ids.length ? ids.some(id => worlds.matches('equipment', id, worlds.selected)) : worlds.selected === 'personal';
+  }), [library.builds, worlds]);
+  const builds = useMemo(() => worldBuilds
     .filter(b => fold(b.name).includes(fold(query)))
     .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))
     .map(b => ({ ...b, summary: resolveLoadout(classId, applySavedEquipment(loadout, b.loadout)),
-      minimumLevel: Math.max(1, ...Object.values(b.loadout.slots).map(id => equipmentItem(id, b.loadout)?.level || 1)) })), [library.builds, classId, loadout, query]);
+      minimumLevel: Math.max(1, ...Object.values(b.loadout.slots).map(id => equipmentItem(id, b.loadout)?.level || 1)) })), [worldBuilds, classId, loadout, query]);
   useEffect(() => { setForm(null); setNotice(null); }, [key]);
   useEffect(() => { if (editingName) { input.current?.focus(); input.current?.select(); } }, [editingName]);
 
@@ -76,8 +83,9 @@ export default function LoadoutLibrary({ side, classId, draftKey, loadout, updat
         </button>
       </div>
     </div>
-    {library.builds.length > 0 ? <div className="stuff-shortcuts" role="group" aria-label="Mes stuffs enregistrés">
-      {library.builds.map(build => {
+    {library.builds.length > 0 && <WorldFilter />}
+    {worldBuilds.length > 0 ? <div className="stuff-shortcuts" role="group" aria-label="Mes stuffs enregistrés">
+      {worldBuilds.map(build => {
         const items = EQUIPMENT_SLOTS.map(slot => equipmentItem(build.loadout.slots[slot.id], build.loadout)).filter(Boolean);
         const current = active?.id === build.id;
         return <button type="button" key={build.id} className={`stuff-shortcut${current ? ' selected' : ''}`} data-stuff-id={build.id}
@@ -87,7 +95,7 @@ export default function LoadoutLibrary({ side, classId, draftKey, loadout, updat
           <strong>{build.name}</strong>
         </button>;
       })}
-    </div> : null}
+    </div> : library.builds.length > 0 ? <p className="muted small">Aucun stuff ne contient d’objet de ce monde. Choisissez « Tous mes mondes » pour retrouver vos ensembles.</p> : null}
     {form ? <form className="stuff-name-form" onSubmit={e => {
       e.preventDefault();
       if (form.type === 'save') save(form.name);
@@ -120,7 +128,7 @@ export default function LoadoutLibrary({ side, classId, draftKey, loadout, updat
           <button type="button" className="penalty" onClick={() => remove(build)}>Supprimer</button></div>
       </article>)}</div>
       {!builds.length ? <div className="stuff-library-empty"><strong>{library.builds.length ? 'Aucun stuff pour ces filtres' : 'Votre première collection commence ici'}</strong>
-        <p>{library.builds.length ? 'Essayez un autre nom.' : 'Équipez votre personnage, puis cliquez sur « Enregistrer ce stuff ». Vous pourrez garder autant de variantes que nécessaire.'}</p></div> : null}
+        <p>{library.builds.length ? 'Essayez un autre nom ou un autre monde.' : 'Équipez votre personnage, puis cliquez sur « Enregistrer ce stuff ». Vous pourrez garder autant de variantes que nécessaire.'}</p></div> : null}
       <p className="stuff-library-note">Sauvegarde locale dans ce navigateur · disponible dans Jouer et Arène.</p>
     </section> : null}
   </div>;

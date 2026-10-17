@@ -1,7 +1,10 @@
-import DATA from './equipmentData.json';
+import { equipmentData as DATA } from './gameData';
 import { equipmentBalance, equipmentFamily, EQUIPMENT_STAT_RULES, WEAPON_TYPES } from './equipmentBalance';
 import { defaultEquipmentAppearance, validEquipmentAppearance } from '../visuals/customShapes';
 import { validSpellVisual } from '../visuals/spellVisuals';
+import { EQUIPMENT_TEMPLATES } from './authoringTemplates';
+import { PLATFORM } from '../platform/config';
+export const EQUIPMENT_MODELS = { ...EQUIPMENT_TEMPLATES, ...DATA.items };
 
 export const CUSTOM_ITEM_MIN_ID = 1000000000;
 const record = value => !!value && typeof value === 'object' && !Array.isArray(value);
@@ -32,7 +35,7 @@ export function customEquipmentShape(value) {
 // a pet capacity, conditions, arbitrary effects, type, GFX or a weapon zone.
 export function customEquipmentItem(definition) {
   if (!customEquipmentShape(definition)) return null;
-  const base = DATA.items[definition.referenceId];
+  const base = EQUIPMENT_MODELS[definition.referenceId];
   if (!base || base.type === 23 || !equipmentFamily(base)) return null;
   const effects = Object.entries(definition.stats).flatMap(([stat, value]) => {
     const rule = EQUIPMENT_STAT_RULES[stat], effect = value < 0 ? rule.negativeEffect : rule.effect;
@@ -53,7 +56,7 @@ export function customEquipmentItem(definition) {
 
 export function validateCustomEquipment(definition) {
   if (!customEquipmentShape(definition)) return { valid: false, errors: ['Définition d’équipement invalide.'], item: null, balance: null };
-  const errors = [], base = DATA.items[definition.referenceId];
+  const errors = [], base = EQUIPMENT_MODELS[definition.referenceId];
   if (!definition.name.trim()) errors.push('Donnez un nom à cet équipement.');
   if (definition.level < 1 || definition.level > 200) errors.push('Niveau requis : de 1 à 200.');
   if (!base || !equipmentFamily(base) || base.type === 23) errors.push('Choisissez un modèle d’équipement hors Dofus.');
@@ -87,8 +90,8 @@ export function validateCustomEquipment(definition) {
   return { valid: !errors.length && !!balance?.valid, errors: [...new Set(errors)], item, balance };
 }
 
-export function newCustomEquipment(referenceId = 7143) {
-  const base = DATA.items[referenceId];
+export function newCustomEquipment(referenceId = PLATFORM ? -100016 : 7143) {
+  const base = EQUIPMENT_MODELS[referenceId];
   if (!equipmentFamily(base) || base.type === 23) throw new Error('Modèle non pris en charge.');
   return { version: 1, id: newEquipmentId(), referenceId, name: 'Mon équipement', appearance: defaultEquipmentAppearance(), level: Math.min(200, Math.max(base.level, base.type === 97 ? 60 : 1)), stats: {},
     ...(WEAPON_TYPES.includes(base.type) && base.weapon ? { weapon: { pa: base.weapon.pa, range: [...base.weapon.range],

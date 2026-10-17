@@ -1,0 +1,1706 @@
+{
+  "world": "asterix",
+  "heroes": [
+    {
+      "name": "Brennix, porteur de menhir",
+      "role": "Front et placement",
+      "hp": 2299,
+      "pa": 9,
+      "pm": 4,
+      "stats": {
+        "vitalite": 1249,
+        "force": 521,
+        "intelligence": 101,
+        "chance": 101,
+        "agilite": 101,
+        "sagesse": 181
+      },
+      "outfit": 222.5,
+      "spells": [
+        {
+          "name": "Salut gaulois",
+          "pa": 4,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 27,
+              "max": 31,
+              "duration": 0,
+              "chance": 0,
+              "p1": 27,
+              "p2": 31,
+              "p3": 0,
+              "element": "terre"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Menhir roulant",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 12,
+              "max": 16,
+              "duration": 0,
+              "chance": 0,
+              "p1": 12,
+              "p2": 16,
+              "p3": 0,
+              "element": "terre"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Balayage du banquet",
+          "pa": 4,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Xb",
+              "targetMask": 0,
+              "min": 14,
+              "max": 18,
+              "duration": 0,
+              "chance": 0,
+              "p1": 14,
+              "p2": 18,
+              "p3": 0,
+              "element": "terre"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Distribution de baffes",
+          "pa": 5,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 35,
+              "max": 39,
+              "duration": 0,
+              "chance": 0,
+              "p1": 35,
+              "p2": 39,
+              "p3": 0,
+              "element": "terre"
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Petite gorgée",
+          "pa": 2,
+          "effects": [
+            {
+              "kind": "buffPower",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 85,
+              "max": 85,
+              "duration": 1,
+              "chance": 0,
+              "p1": 85,
+              "p2": 85,
+              "p3": 0
+            }
+          ],
+          "cooldown": 4
+        },
+        {
+          "name": "Bouclier du village",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "armor",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 8,
+              "max": 8,
+              "duration": 2,
+              "chance": 0,
+              "p1": 8,
+              "p2": 8,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Bond de sanglier",
+          "pa": 4,
+          "effects": [
+            {
+              "kind": "teleport",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 0,
+              "max": 0,
+              "duration": 0,
+              "chance": 0,
+              "p1": 3,
+              "p2": 0,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Lacet romain",
+          "pa": 2,
+          "effects": [
+            {
+              "kind": "resistDebuff",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 12,
+              "max": 12,
+              "duration": 1,
+              "chance": 0,
+              "p1": 12,
+              "p2": 12,
+              "p3": 0,
+              "element": "terre"
+            }
+          ],
+          "cooldown": 3
+        }
+      ]
+    },
+    {
+      "name": "Alix, éclaireuse du bocage",
+      "role": "Distance et mobilité",
+      "hp": 2299,
+      "pa": 9,
+      "pm": 4,
+      "stats": {
+        "vitalite": 1249,
+        "force": 101,
+        "intelligence": 101,
+        "chance": 101,
+        "agilite": 521,
+        "sagesse": 181
+      },
+      "outfit": 214.8,
+      "spells": [
+        {
+          "name": "Caillou de la lisière",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Fronde du sentier",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 13,
+              "max": 17,
+              "duration": 0,
+              "chance": 0,
+              "p1": 13,
+              "p2": 17,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Pluie de glands",
+          "pa": 4,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Cb",
+              "targetMask": 0,
+              "min": 12,
+              "max": 16,
+              "duration": 0,
+              "chance": 0,
+              "p1": 12,
+              "p2": 16,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Tir du dolmen",
+          "pa": 5,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 27,
+              "max": 33,
+              "duration": 0,
+              "chance": 0,
+              "p1": 27,
+              "p2": 33,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Œil du bocage",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "buffPower",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 60,
+              "max": 60,
+              "duration": 2,
+              "chance": 0,
+              "p1": 60,
+              "p2": 60,
+              "p3": 0
+            }
+          ],
+          "cooldown": 4
+        },
+        {
+          "name": "Cape de feuilles",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "resistBuff",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 18,
+              "max": 18,
+              "duration": 2,
+              "chance": 0,
+              "p1": 18,
+              "p2": 18,
+              "p3": 0,
+              "element": "terre"
+            }
+          ],
+          "cooldown": 4
+        },
+        {
+          "name": "Raccourci gaulois",
+          "pa": 4,
+          "effects": [
+            {
+              "kind": "teleport",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 0,
+              "max": 0,
+              "duration": 0,
+              "chance": 0,
+              "p1": 3,
+              "p2": 0,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Ronces du village",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 9,
+              "max": 12,
+              "duration": 0,
+              "chance": 0,
+              "p1": 9,
+              "p2": 12,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        }
+      ]
+    },
+    {
+      "name": "Mélodrix, druide du festin",
+      "role": "Soin et soutien",
+      "hp": 2299,
+      "pa": 9,
+      "pm": 4,
+      "stats": {
+        "vitalite": 1249,
+        "force": 101,
+        "intelligence": 521,
+        "chance": 101,
+        "agilite": 101,
+        "sagesse": 181
+      },
+      "outfit": 214.6,
+      "spells": [
+        {
+          "name": "Tison du chaudron",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 15,
+              "max": 19,
+              "duration": 0,
+              "chance": 0,
+              "p1": 15,
+              "p2": 19,
+              "p3": 0,
+              "element": "feu"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Louche brûlante",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 14,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 14,
+              "p3": 0,
+              "element": "feu"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Vapeur de potion",
+          "pa": 4,
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Cb",
+              "targetMask": 0,
+              "min": 12,
+              "max": 16,
+              "duration": 0,
+              "chance": 0,
+              "p1": 12,
+              "p2": 16,
+              "p3": 0,
+              "element": "feu"
+            }
+          ],
+          "cooldown": 1
+        },
+        {
+          "name": "Bouillon réparateur",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "heal",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 4,
+              "min": 20,
+              "max": 24,
+              "duration": 0,
+              "chance": 0,
+              "p1": 20,
+              "p2": 24,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Potion bien dosée",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "buffDamage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 4,
+              "min": 6,
+              "max": 6,
+              "duration": 1,
+              "chance": 0,
+              "p1": 6,
+              "p2": 6,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Écorce du druide",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "armor",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 4,
+              "min": 6,
+              "max": 6,
+              "duration": 2,
+              "chance": 0,
+              "p1": 6,
+              "p2": 6,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Brume de gui",
+          "pa": 4,
+          "effects": [
+            {
+              "kind": "teleport",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 0,
+              "max": 0,
+              "duration": 0,
+              "chance": 0,
+              "p1": 3,
+              "p2": 0,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Serpe désarmante",
+          "pa": 3,
+          "effects": [
+            {
+              "kind": "resistDebuff",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 10,
+              "duration": 1,
+              "chance": 0,
+              "p1": 10,
+              "p2": 10,
+              "p3": 0,
+              "element": "terre"
+            },
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Légionnaire du gué",
+      "chapter": 1,
+      "hp": 340,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Coup de pilum",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "terre"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Formation tortue",
+          "effects": [
+            {
+              "kind": "armor",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 6,
+              "max": 6,
+              "duration": 2,
+              "chance": 0,
+              "p1": 6,
+              "p2": 6,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Sandales emmêlées",
+          "effects": [
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Bouclier en avant",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 13,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 13,
+              "p3": 0,
+              "element": "terre"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        }
+      ]
+    },
+    {
+      "name": "Frondeur romain",
+      "chapter": 1,
+      "hp": 265,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Pierre de fronde",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Visée de légion",
+          "effects": [
+            {
+              "kind": "buffPower",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 50,
+              "max": 50,
+              "duration": 2,
+              "chance": 0,
+              "p1": 50,
+              "p2": 50,
+              "p3": 0
+            }
+          ],
+          "cooldown": 4
+        },
+        {
+          "name": "Lacet romain",
+          "effects": [
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Dégagement réglementaire",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 13,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 13,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        }
+      ]
+    },
+    {
+      "name": "Légionnaire du gué",
+      "chapter": 2,
+      "hp": 470,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Coup de pilum",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "terre"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Formation tortue",
+          "effects": [
+            {
+              "kind": "armor",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 6,
+              "max": 6,
+              "duration": 2,
+              "chance": 0,
+              "p1": 6,
+              "p2": 6,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Sandales emmêlées",
+          "effects": [
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Bouclier en avant",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 13,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 13,
+              "p3": 0,
+              "element": "terre"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        }
+      ]
+    },
+    {
+      "name": "Frondeur romain",
+      "chapter": 2,
+      "hp": 366,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Pierre de fronde",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Visée de légion",
+          "effects": [
+            {
+              "kind": "buffPower",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 50,
+              "max": 50,
+              "duration": 2,
+              "chance": 0,
+              "p1": 50,
+              "p2": 50,
+              "p3": 0
+            }
+          ],
+          "cooldown": 4
+        },
+        {
+          "name": "Lacet romain",
+          "effects": [
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Dégagement réglementaire",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 13,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 13,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        }
+      ]
+    },
+    {
+      "name": "Médecin de cohorte",
+      "chapter": 2,
+      "hp": 338,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Tison du camp",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "feu"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Onguent de campagne",
+          "effects": [
+            {
+              "kind": "heal",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 4,
+              "min": 18,
+              "max": 22,
+              "duration": 0,
+              "chance": 0,
+              "p1": 18,
+              "p2": 22,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Armure desserrée",
+          "effects": [
+            {
+              "kind": "resistDebuff",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 10,
+              "duration": 1,
+              "chance": 0,
+              "p1": 10,
+              "p2": 10,
+              "p3": 0,
+              "element": "terre"
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Ordre du centurion",
+          "effects": [
+            {
+              "kind": "buffDamage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 4,
+              "min": 5,
+              "max": 5,
+              "duration": 1,
+              "chance": 0,
+              "p1": 5,
+              "p2": 5,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        }
+      ]
+    },
+    {
+      "name": "Centurion Lessivus",
+      "chapter": 3,
+      "hp": 1403,
+      "pa": 9,
+      "spells": [
+        {
+          "name": "Colère de Lessivus",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 24,
+              "max": 29,
+              "duration": 0,
+              "chance": 0,
+              "p1": 24,
+              "p2": 29,
+              "p3": 0,
+              "element": "terre"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Casque de parade",
+          "effects": [
+            {
+              "kind": "armor",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 10,
+              "max": 10,
+              "duration": 2,
+              "chance": 0,
+              "p1": 10,
+              "p2": 10,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Linge aux pieds",
+          "effects": [
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Dehors les Gaulois",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 13,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 13,
+              "p3": 0,
+              "element": "terre"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Lessive générale",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Cb",
+              "targetMask": 0,
+              "min": 16,
+              "max": 20,
+              "duration": 0,
+              "chance": 0,
+              "p1": 16,
+              "p2": 20,
+              "p3": 0,
+              "element": "terre"
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Dernier ordre",
+          "effects": [
+            {
+              "kind": "buffPower",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 70,
+              "max": 70,
+              "duration": 2,
+              "chance": 0,
+              "p1": 70,
+              "p2": 70,
+              "p3": 0
+            }
+          ],
+          "cooldown": 4
+        }
+      ]
+    },
+    {
+      "name": "Légionnaire du gué",
+      "chapter": 3,
+      "hp": 610,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Coup de pilum",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "terre"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Formation tortue",
+          "effects": [
+            {
+              "kind": "armor",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 6,
+              "max": 6,
+              "duration": 2,
+              "chance": 0,
+              "p1": 6,
+              "p2": 6,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        },
+        {
+          "name": "Sandales emmêlées",
+          "effects": [
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Bouclier en avant",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 13,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 13,
+              "p3": 0,
+              "element": "terre"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        }
+      ]
+    },
+    {
+      "name": "Frondeur romain",
+      "chapter": 3,
+      "hp": 475,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Pierre de fronde",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "air"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Visée de légion",
+          "effects": [
+            {
+              "kind": "buffPower",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 32,
+              "min": 50,
+              "max": 50,
+              "duration": 2,
+              "chance": 0,
+              "p1": 50,
+              "p2": 50,
+              "p3": 0
+            }
+          ],
+          "cooldown": 4
+        },
+        {
+          "name": "Lacet romain",
+          "effects": [
+            {
+              "kind": "removePm",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 1,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Dégagement réglementaire",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 13,
+              "duration": 0,
+              "chance": 0,
+              "p1": 10,
+              "p2": 13,
+              "p3": 0,
+              "element": "air"
+            },
+            {
+              "kind": "push",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 1,
+              "max": 1,
+              "duration": 0,
+              "chance": 0,
+              "p1": 1,
+              "p2": 1,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        }
+      ]
+    },
+    {
+      "name": "Médecin de cohorte",
+      "chapter": 3,
+      "hp": 439,
+      "pa": 6,
+      "spells": [
+        {
+          "name": "Tison du camp",
+          "effects": [
+            {
+              "kind": "damage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 17,
+              "max": 21,
+              "duration": 0,
+              "chance": 0,
+              "p1": 17,
+              "p2": 21,
+              "p3": 0,
+              "element": "feu"
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Onguent de campagne",
+          "effects": [
+            {
+              "kind": "heal",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 4,
+              "min": 18,
+              "max": 22,
+              "duration": 0,
+              "chance": 0,
+              "p1": 18,
+              "p2": 22,
+              "p3": 0
+            }
+          ],
+          "cooldown": 0
+        },
+        {
+          "name": "Armure desserrée",
+          "effects": [
+            {
+              "kind": "resistDebuff",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 1,
+              "min": 10,
+              "max": 10,
+              "duration": 1,
+              "chance": 0,
+              "p1": 10,
+              "p2": 10,
+              "p3": 0,
+              "element": "terre"
+            }
+          ],
+          "cooldown": 2
+        },
+        {
+          "name": "Ordre du centurion",
+          "effects": [
+            {
+              "kind": "buffDamage",
+              "id": 0,
+              "zone": "Pa",
+              "targetMask": 4,
+              "min": 5,
+              "max": 5,
+              "duration": 1,
+              "chance": 0,
+              "p1": 5,
+              "p2": 5,
+              "p3": 0
+            }
+          ],
+          "cooldown": 3
+        }
+      ]
+    }
+  ],
+  "equipment": [
+    {
+      "name": "Coiffe : Brennix",
+      "score": 8.4
+    },
+    {
+      "name": "Manteau : Brennix",
+      "score": 17.4
+    },
+    {
+      "name": "Emblème : Brennix",
+      "score": 30.2
+    },
+    {
+      "name": "Anneau du départ : Brennix",
+      "score": 49
+    },
+    {
+      "name": "Anneau du retour : Brennix",
+      "score": 38
+    },
+    {
+      "name": "Ceinture : Brennix",
+      "score": 10.5
+    },
+    {
+      "name": "Bottes : Brennix",
+      "score": 26.4
+    },
+    {
+      "name": "Arme de garde : Brennix",
+      "score": 42.6
+    },
+    {
+      "name": "Coiffe : Alix",
+      "score": 8.4
+    },
+    {
+      "name": "Manteau : Alix",
+      "score": 17.4
+    },
+    {
+      "name": "Emblème : Alix",
+      "score": 30.2
+    },
+    {
+      "name": "Anneau du départ : Alix",
+      "score": 49
+    },
+    {
+      "name": "Anneau du retour : Alix",
+      "score": 38
+    },
+    {
+      "name": "Ceinture : Alix",
+      "score": 10.5
+    },
+    {
+      "name": "Bottes : Alix",
+      "score": 26.4
+    },
+    {
+      "name": "Arme de précision : Alix",
+      "score": 66
+    },
+    {
+      "name": "Coiffe : Mélodrix",
+      "score": 8.4
+    },
+    {
+      "name": "Manteau : Mélodrix",
+      "score": 17.4
+    },
+    {
+      "name": "Emblème : Mélodrix",
+      "score": 30.2
+    },
+    {
+      "name": "Anneau du départ : Mélodrix",
+      "score": 49
+    },
+    {
+      "name": "Anneau du retour : Mélodrix",
+      "score": 38
+    },
+    {
+      "name": "Ceinture : Mélodrix",
+      "score": 10.5
+    },
+    {
+      "name": "Bottes : Mélodrix",
+      "score": 26.4
+    },
+    {
+      "name": "Catalyseur : Mélodrix",
+      "score": 58.2
+    }
+  ],
+  "comparisons": {
+    "strike": [
+      141,
+      158
+    ],
+    "area": [
+      160,
+      179
+    ],
+    "burst": [
+      76,
+      156
+    ],
+    "heal": [
+      121,
+      124
+    ],
+    "guard": [
+      7,
+      153
+    ],
+    "control": [
+      84,
+      161
+    ],
+    "movement": [
+      142,
+      128
+    ]
+  },
+  "combos": [
+    {
+      "hero": "Brennix, porteur de menhir",
+      "ap": 9,
+      "unprepared": [
+        "Salut gaulois",
+        "Salut gaulois"
+      ],
+      "prepared": [
+        "Petite gorgée",
+        "Distribution de baffes"
+      ],
+      "recovery": [
+        "Bouclier du village",
+        "Bond de sanglier"
+      ],
+      "counterplay": "Distance et obstacles ; aucun soin."
+    },
+    {
+      "hero": "Alix, éclaireuse du bocage",
+      "ap": 9,
+      "unprepared": [
+        "Caillou de la lisière",
+        "Caillou de la lisière"
+      ],
+      "prepared": [
+        "Œil du bocage",
+        "Tir du dolmen"
+      ],
+      "recovery": [
+        "Cape de feuilles",
+        "Raccourci gaulois"
+      ],
+      "counterplay": "Contact et angles fermés ; protection limitée à un élément."
+    },
+    {
+      "hero": "Mélodrix, druide du festin",
+      "ap": 9,
+      "unprepared": [
+        "Tison du chaudron",
+        "Tison du chaudron"
+      ],
+      "prepared": [
+        "Potion bien dosée",
+        "Tison du chaudron"
+      ],
+      "recovery": [
+        "Bouillon réparateur",
+        "Écorce du druide"
+      ],
+      "counterplay": "Pression répartie sur plusieurs alliés ; un seul soin par tour."
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+/* global globalThis */
 import React, { createContext, useCallback, useContext, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { createSoundPlayer, readSoundSettings, saveSoundSettings } from './RetroSound';
@@ -57,6 +58,7 @@ export function RetroAssetsProvider({ children }) {
   }, [settings, soundPlayer]);
   useEffect(() => {
     let alive = true;
+    if (process.env.REACT_APP_PLATFORM === '1' && !globalThis.__ARENA_NATIVE_ASSETS__) return () => { alive = false; };
     fetch(`${RETRO_BASE}manifest.json`).then(r => r.ok ? r.json() : null)
       .then(data => { if (alive && data?.version === 1) setAssets(data); }).catch(() => {});
     return () => { alive = false; };
@@ -148,7 +150,18 @@ export function RetroMovie({ url, animation, restart = 0, className = '', style,
           // Ruffle then reloads older actors, briefly hiding/resetting them.
           // Render the same native timelines with Canvas without that quota.
           preferredRenderer: 'canvas',
-          allowScriptAccess: scriptAccess, allowNetworking: 'all', openUrlMode: 'deny',
+          // The platform vendor build replaces ExternalInterface's eval with
+          // a sound-only bridge and restricts registered callback names.
+          // Timelines still need callbacks for orientation, casts and gear.
+          allowScriptAccess: scriptAccess,
+          // Ruffle's "internal" mode also disables animation callbacks.
+          // Permit those with the restricted vendor bridge, and confine movie
+          // resource requests to installed media. Page navigation stays denied.
+          allowNetworking: 'all', openUrlMode: 'deny',
+          ...(process.env.REACT_APP_PLATFORM === '1' ? { urlRewriteRules: [[
+            new RegExp(`^(?!${new URL(RETRO_BASE, window.location.href).href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:[a-zA-Z0-9_-]+/)*[a-zA-Z0-9_.-]+\\.(?:swf|png|jpg|webp|mp3|ogg|json)$).*$`),
+            'about:blank',
+          ]] } : {}),
           letterbox: 'off', logLevel: 'error', frameRate,
           parameters: { ...parametersRef.current, ...accessories?.parameters, soundScope },
         });
@@ -157,7 +170,7 @@ export function RetroMovie({ url, animation, restart = 0, className = '', style,
         let attempts = 0;
         const ready = () => {
           if (disposed) return;
-          if (player.ruffle().readyState === 2 && (!scriptAccess || typeof player.animate === 'function')) {
+          if (player.ruffle().readyState === 2 && (!scriptAccess || !desired.current.animation || Object.hasOwn(player, 'animate'))) {
             playerRef.current = player;
             if (desired.current.animation) player.ruffle().callExternalInterface('animate', desired.current.animation, desired.current.mirrored);
             readyRef.current?.();
@@ -225,7 +238,8 @@ export function RetroPortrait({ classId, monsterId, side = 'A', appearance, artw
   const id = monsterId ? assets?.monsters[monsterId] : assets?.classes[classId]?.[appearance || appearances[side]];
   const [failed, setFailed] = useState(null);
   if (artwork) return <img className={`retro-portrait ${className}`} src={artwork.images['portrait.png']} alt="" draggable={false} />;
-  return assets?.imagesReady && id && failed !== id
+  const installedPortrait = process.env.REACT_APP_PLATFORM !== '1' || !globalThis.__ARENA_NATIVE_PORTRAITS__ || globalThis.__ARENA_NATIVE_PORTRAITS__.has(String(id));
+  return assets?.imagesReady && id && failed !== id && installedPortrait
     ? <img className={`retro-portrait ${className}`} src={`${RETRO_BASE}portraits/${id}.png`} alt="" onError={() => setFailed(id)} />
     : <span>{fallback}</span>;
 }

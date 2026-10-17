@@ -11,6 +11,8 @@ import { MapPreview } from './MapPicker';
 import EquipmentIcon from './EquipmentIcon';
 import { useProfiles } from './ProfilesContext';
 import { useCreations } from './CreationsContext';
+import { useWorlds, WorldFilter } from './WorldsContext';
+import { characterMatchesWorld } from './worldCatalogue';
 import { newCreationId } from './creationsStore';
 import { fold } from './creationCatalogue';
 import { AtelierExportButton } from './AtelierTransfer';
@@ -36,13 +38,14 @@ export function AdventureHero({ character, selected, onChoose, onRemove, action 
 
 export function AdventureEditor({ dungeon, onChange, archiveDungeon = dungeon }) {
   const profiles = useProfiles(), creations = useCreations();
+  const worlds = useWorlds();
   const [query, setQuery] = useState(''), [source, setSource] = useState('profiles');
   const [adding, setAdding] = useState(true);
   const rules = dungeon.adventure;
   const update = next => onChange({ ...dungeon, adventure: next });
   const errors = adventureErrors(dungeon);
-  const catalogue = (source === 'profiles' ? profiles?.profiles || [] : creations.characters)
-    .filter(character => fold(`${character.name} ${CLASSES[character.classId].name}`).includes(fold(query)));
+  const catalogue = (source === 'profiles' ? profiles?.profiles || [] : worlds?.characters || creations.characters)
+    .filter(character => characterMatchesWorld(worlds, character) && fold(`${character.name} ${CLASSES[character.classId].name}`).includes(fold(query)));
   return <section className="adventure-editor" aria-label="Aventure prête à jouer">
     <div className="adventure-intro"><span className="adventure-emblem"><PackageCheck size={30} /></span><div><h3>Votre donjon, prêt à jouer.</h3>
       <p>Fournissez les héros et leur équipement. Vos amis importent le ZIP et jouent avec vos règles.</p></div>
@@ -60,6 +63,7 @@ export function AdventureEditor({ dungeon, onChange, archiveDungeon = dungeon })
       {!rules.heroes.length && <p className="adventure-empty">Ajoutez vos premiers héros ci-dessous. Leur équipement, leurs sorts et leurs images seront inclus.</p>}
       <p className="adventure-note">Chaque héros est une copie indépendante. Préparez son stuff dans Jouer, puis ajoutez-le ici. Pour actualiser une copie, retirez-la et ajoutez la nouvelle version.</p>
       <details className="adventure-add" open={adding} onToggle={e => setAdding(e.currentTarget.open)}><summary><Plus size={17} />Ajouter un héros équipé</summary><div className="adventure-catalogue-controls">
+        <WorldFilter />
         <div className="adventure-source" role="group" aria-label="Origine des héros"><button type="button" aria-pressed={source === 'profiles'} onClick={() => setSource('profiles')}>Mes personnages</button><button type="button" aria-pressed={source === 'classes'} onClick={() => setSource('classes')}>Mes classes</button></div>
         <label className="studio-library-search"><Search size={16} /><input type="search" aria-label="Rechercher un héros" value={query} placeholder="Trouver un héros…" onChange={e => setQuery(e.target.value)} /></label></div>
         <div className="adventure-heroes">{catalogue.map(character => <AdventureHero key={character.id} character={character} action="Ajouter ce héros" onChoose={rules.heroes.length < MAX_ADVENTURE_HEROES ? () => update(addAdventureHero(rules, character, newCreationId())) : undefined} />)}</div>

@@ -1,4 +1,5 @@
-const SETTINGS_KEY = 'dofus-lite-sound';
+import { storageKey } from '../platform/config';
+const SETTINGS_KEY = storageKey('dofus-lite-sound');
 
 export function readSoundSettings() {
   try {

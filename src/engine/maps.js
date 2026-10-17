@@ -1,6 +1,6 @@
 import { key } from './geometry';
-import { DOFUS_MAPS_RAW } from './dofusMaps';
-import DUNGEON_MAPS_RAW from './dungeonMaps.json';
+import { outdoorMaps as DOFUS_MAPS_RAW } from './gameData';
+import { dungeonMaps as DUNGEON_MAPS_RAW } from './gameData';
 
 // Obstacle types:
 //   WALL / ROCK  block movement and line of sight

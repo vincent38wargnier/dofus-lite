@@ -8,15 +8,19 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "acorn": "^8.17.0",
+    "express": "4.22.3",
     "lucide-react": "^0.468.0",
+    "mongodb": "7.7.0",
+    "pngjs": "7.0.0",
+    "quickjs-emscripten": "0.32.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "node scripts/build_maison_source.cjs && node scripts/build_ai_coding_kit.cjs && node scripts/prepare_ruffle.cjs && react-scripts start",
-    "build": "node scripts/build_maison_source.cjs && node scripts/build_ai_coding_kit.cjs && node scripts/prepare_ruffle.cjs && react-scripts build",
+    "start": "node server/app.cjs",
+    "build": "node scripts/build_platform_runtime.cjs && node scripts/build_platform.cjs",
     "import:client": "node scripts/prepare_ruffle.cjs && python3 scripts/import_dungeon_maps.py && python3 scripts/import_retro_client.py && python3 scripts/import_client_spells.py && python3 scripts/import_client_monsters.py && node scripts/render_retro_assets.cjs --force",
     "render:client": "node scripts/prepare_ruffle.cjs && node scripts/render_retro_assets.cjs --force",
     "test:client": "python3 -m unittest discover -s scripts -p 'test_retro_swf.py'",
@@ -73,7 +77,20 @@
     "proof:combat-lobby": "node scripts/proof_combat_lobby.cjs",
     "proof:duel-composer": "node scripts/proof_duel_composer.cjs",
     "audit:equipment-balance": "node scripts/audit_equipment_balance.cjs",
-    "proof:custom-equipment": "node scripts/proof_custom_equipment.cjs"
+    "proof:custom-equipment": "node scripts/proof_custom_equipment.cjs",
+    "build:legacy": "node scripts/build_maison_source.cjs && node scripts/build_ai_coding_kit.cjs && node scripts/prepare_ruffle.cjs && react-scripts build",
+    "start:legacy": "node scripts/build_maison_source.cjs && node scripts/build_ai_coding_kit.cjs && node scripts/prepare_ruffle.cjs && react-scripts start",
+    "test:platform": "node --test scripts/platform/test_platform.cjs",
+    "library:legacy": "python3 scripts/platform/package_legacy_library.py",
+    "demo:build": "node scripts/platform/build_demo_libraries.cjs && node scripts/platform/verify_demo_campaign.cjs",
+    "demo:seed": "node scripts/platform/seed_demo_community.cjs",
+    "test:community": "node --test scripts/platform/test_community.cjs scripts/platform/test_demo.cjs scripts/platform/test_demo_text.cjs scripts/platform/test_library_covers.cjs scripts/platform/test_library_discovery.cjs scripts/platform/test_forum.cjs",
+    "demo:decorate": "node scripts/platform/decorate_demo_libraries.cjs",
+    "library:reindex": "node scripts/platform/reindex_libraries.cjs",
+    "test:ratings": "node --test scripts/platform/test_ratings.cjs",
+    "worlds:build": "node examples/worlds-v2/prepare-art.cjs && node examples/worlds-v2/prepare-props.cjs && node examples/worlds-v2/package.cjs",
+    "worlds:simulate": "node examples/worlds-v2/simulate.cjs --all --validation",
+    "proof:worlds": "node scripts/platform/play_worlds_browser_proof.cjs"
   },
   "eslintConfig": {
     "extends": [

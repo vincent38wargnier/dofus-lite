@@ -1,3 +1,4 @@
+/* global globalThis */
 // Turns bot source code into a decide(view, api) function.
 // User code runs in the page (this is a local playground, like a JS console):
 // the sandbox here is about protecting the MATCH (cloned views, validated
@@ -62,6 +63,10 @@ function buildFactory(code) {
 }
 
 export function compileBot(code) {
+  if (process.env.REACT_APP_PLATFORM === '1') {
+    if (!globalThis.__ARENA_COMPILE_BOT__) throw new Error('Environnement IA non initialisé.');
+    return globalThis.__ARENA_COMPILE_BOT__(code);
+  }
   let ops = 0;
   const guard = () => {
     ops += 1;

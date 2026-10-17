@@ -1,3 +1,5 @@
+import { PLATFORM } from '../platform/config';
+import { creatureBase } from '../engine/authoringTemplates';
 import { newAuthoredSpell, normalizeAuthoredSpell } from '../engine/authoredSpells';
 import { characterShapeId } from '../visuals/customShapes';
 import { newCreationId } from './creationsStore';
@@ -23,6 +25,6 @@ export function newWorkshopCreature(role = 'guard') {
   utility.name = role === 'support' ? 'Soin bienveillant' : role === 'archer' ? 'Flèche entravante' : 'Rallier ses forces';
   return { key: `creature-${newCreationId()}`, name: `Mon ${model.label.toLowerCase()}`, role: model.description,
     counterplay: role === 'archer' ? 'Se rapprocher à couvert.' : role === 'support' ? 'L’isoler de ses alliés.' : 'Garder ses distances.',
-    reference: { monsterId: model.reference, grade: 1 }, tuning: { hpPercent: 100, statsPercent: 100, paBonus: 1, pmBonus: 0 },
+    ...(PLATFORM ? { base: creatureBase(role), reference: {} } : { reference: { monsterId: model.reference, grade: 1 } }), tuning: { hpPercent: 100, statsPercent: 100, paBonus: 1, pmBonus: 0 },
     artworkId: characterShapeId(role === 'guard' ? 'warden' : role === 'support' ? 'mystic' : 'wanderer', model.color), spells: [attack, utility].map(normalizeAuthoredSpell) };
 }

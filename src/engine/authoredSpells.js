@@ -1,6 +1,7 @@
 /* global globalThis */
-import LIBRARY from './spellLibrary.json';
+import { spellLibrary as LIBRARY } from './gameData';
 import { validSpellVisual } from '../visuals/spellVisuals';
+import { PLATFORM } from '../platform/config';
 import { spellBalance, spellBudgetErrors, MAX_SPELL_SCORE } from './spellBalance';
 
 // Version one deliberately uses declarative effects already handled by combat
@@ -72,6 +73,7 @@ export function newAuthoredSpell(existingIds = [], preset = 'attack') {
   if (preset === 'debuff') Object.assign(spell, { pa: 2, maxPerTurn: 1, maxPerTarget: 1, visualSpellId: 50, effects: [newAuthoredEffect('removePm')] });
   if (preset === 'teleport') Object.assign(spell, { pa: 4, rangeMax: 4, targetMode: 'freeCell', emptyCellOnly: true,
     maxPerTurn: 1, maxPerTarget: 1, cooldown: 3, visualSpellId: 142, effects: [newAuthoredEffect('teleport')] });
+  if (PLATFORM) { delete spell.visualSpellId; spell.visualEffect = { version: 1, kind: preset === 'boost' ? 'rally' : preset === 'teleport' ? 'raven-step' : 'embers', color: '#66e0b7', accent: '#eefdf6', durationMs: 750 }; }
   return normalizeAuthoredSpell(spell);
 }
 

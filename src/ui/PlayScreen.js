@@ -11,8 +11,6 @@ import BoardView from './BoardView';
 import CombatStatsPanel from './CombatStatsPanel';
 import useFighterInspection from './useFighterInspection';
 import LogPanel from './LogPanel';
-import { adventureEnabled, adventureTeam } from '../engine/adventures';
-import useAdventureChoice from './useAdventureChoice';
 import { CampaignBrief, CampaignResult, PeerCampaignResult } from './DungeonCampaign';
 import useDungeonProgress, { readDungeonProgress } from './dungeonProgress';
 import PlayerSetup from './PlayerSetup';
@@ -21,6 +19,9 @@ import CombatSpellBar from './CombatSpellBar';
 import CombatTimeline, { timelineFighterVisible } from './CombatTimeline';
 import CombatSpellbook, { SpellbookButton } from './CombatSpellbook';
 import { readPlayerSetup, SETUP_STORAGE } from './playerSetupState';
+import { dungeonRoom } from '../engine/dungeonCampaign';
+import { combatPreset, updatedCommander } from './combatPreset';
+import { useWorlds } from './WorldsContext';
 import { combatAnimationMs, useRetroAssets, useAppearances } from './RetroAssets';
 import { weaponTargetPlans, weaponZoneLabel } from './weaponTargeting';
 import { spellTargetPreview } from './spellTargeting';
@@ -48,12 +49,13 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const [standardPlayerClass, setStandardPlayerClass] = useState(initial.playerClass);
   const [customCharacterId, setCustomCharacterId] = useState(initial.customCharacterId);
   const creations = useCreations();
+  const worlds = useWorlds();
   const profiles = useProfiles();
   const profile = profiles?.active;
   const customCharacter = useMemo(() => profile ? (profile.loadout.spells?.custom ? { ...profile, name: profile.className } : null)
     : creations?.characters.find(character => character.id === customCharacterId), [profile, creations?.characters, customCharacterId]);
   const playerClass = profile?.classId || customCharacter?.classId || standardPlayerClass;
-  const setPlayerClass = classId => { if (profiles) profiles.create(classId); else { setStandardPlayerClass(classId); setCustomCharacterId(null); } };
+  const setPlayerClass = (classId, name) => { if (profiles) profiles.create(classId, name ? { name, className: CLASSES[classId].name } : undefined); else { setStandardPlayerClass(classId); setCustomCharacterId(null); } };
   const selectCustomCharacter = character => {
     if (profiles) profiles.create(character.classId, character);
     else { setStandardPlayerClass(character.classId); setCustomCharacterId(character.id); }
@@ -67,6 +69,7 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const [legacyBotClass, setLegacyBotClass] = useState(initial.botClass);
   const [savedOpponents] = useState(() => readOpponentTeam(localStorage, botId));
   const [opponentDraft, setOpponentDraft] = useState(savedOpponents.entries);
+  const [encounter, setEncounter] = useState(savedOpponents.encounter || null);
   const [opponentSaveError, setOpponentSaveError] = useState(savedOpponents.error);
   const [savedAllies] = useState(() => readAllyTeam(localStorage));
   const [allies, setAllies] = useState(savedAllies.entries);
@@ -75,6 +78,36 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const [editingTeam, setEditingTeam] = useState('opponents');
   const [editingOpponentIndex, setEditingOpponentIndex] = useState(0);
   const editingOpponent = (editingTeam === 'allies' ? allies : opponentDraft)?.[editingOpponentIndex];
+  const createTeamProfile = entry => {
+    if (!profiles) return entry;
+    const saved = profiles.create(entry.classId, { ...entry,
+      className: entry.className || entry.name || CLASSES[entry.classId].name,
+      customCharacterId: entry.customCharacterId || (entry.loadout.spells?.custom ? entry.sourceId : null),
+    }, { activate: false });
+    return { ...entry, name: saved.name, editableProfileId: saved.id };
+  };
+  const saveTeamCharacter = () => {
+    if (editingOpponent?.kind !== 'character') return;
+    const entry = createTeamProfile(editingOpponent);
+    (editingTeam === 'allies' ? setAllies : setOpponentDraft)(previous => previous.map((value, i) => i === editingOpponentIndex ? entry : value));
+  };
+  // Only characters created for a team are linked to their own saved version.
+  // Adding an existing profile remains a separate combat copy.
+  const savedProfiles = profiles?.profiles;
+  useEffect(() => {
+    if (!savedProfiles) return;
+    const sync = previous => {
+      if (!previous) return previous;
+      let changed = false;
+      const next = previous.map(entry => {
+        const saved = entry.editableProfileId && savedProfiles.find(p => p.id === entry.editableProfileId);
+        if (!saved || (saved.name === entry.name && JSON.stringify(saved.loadout) === JSON.stringify(entry.loadout))) return entry;
+        changed = true; return { ...entry, name: saved.name, loadout: saved.loadout };
+      });
+      return changed ? next : previous;
+    };
+    setAllies(sync); setOpponentDraft(sync);
+  }, [savedProfiles]);
   const botClass = editingOpponent?.kind === 'character' ? editingOpponent.classId : legacyBotClass;
   const setBotClass = classId => { setLegacyBotClass(classId); setOpponentDraft(null); };
   const standardEquipment = useLoadouts(playerClass, botClass);
@@ -106,25 +139,34 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
     summaries: { ...playerEquipment.summaries, B: opponentSummary },
     update: (side, change, targetClass) => {
       if (side !== 'B') { playerEquipment.update(side, change, targetClass); return; }
+      const loadout = typeof change === 'function' ? change(editingOpponent.loadout) : change;
+      if (editingOpponent.editableProfileId) profiles?.updateById(editingOpponent.editableProfileId, entry => ({ ...entry, loadout }));
       (editingTeam === 'allies' ? setAllies : setOpponentDraft)(previous => previous.map((entry, index) => index === editingOpponentIndex
-        ? { ...entry, loadout: typeof change === 'function' ? change(entry.loadout) : change } : entry));
+        ? { ...entry, loadout } : entry));
     },
   } : playerEquipment;
   const opponents = useMemo(() => opponentDraft || [{ kind: 'character', name: CLASSES[legacyBotClass].name,
     classId: legacyBotClass, loadout: standardEquipment.loadouts.B, botId }], [opponentDraft, legacyBotClass, standardEquipment.loadouts.B, botId]);
-  const freeTeam = [...(includePlayer ? [{ kind: 'character', classId: playerClass, name: profile?.name || customCharacter?.name || CLASSES[playerClass].name,
+  const team = [...(includePlayer ? [{ kind: 'character', classId: playerClass, name: profile?.name || customCharacter?.name || CLASSES[playerClass].name,
     loadout: equipment.loadouts.A, controller, botId: playerBotId }] : []), ...allies];
   useEffect(() => {
     if (opponentDraft === null) return;
-    try { persistOpponentTeam(localStorage, opponentDraft); setOpponentSaveError(''); }
+    try { persistOpponentTeam(localStorage, opponentDraft, encounter); setOpponentSaveError(''); }
     catch (_) { setOpponentSaveError('Le groupe n’a pas pu être sauvegardé dans ce navigateur.'); }
-  }, [opponentDraft]);
+  }, [opponentDraft, encounter]);
+  const changeOpponents = next => {
+    const entries = typeof next === 'function' ? next(opponents) : next;
+    setEncounter(updatedCommander(encounter, opponents, entries));
+    setOpponentDraft(entries);
+  };
   useEffect(() => {
     if (savedAllies.error && allies === savedAllies.entries && includePlayer === savedAllies.includePlayer) return;
     try { persistAllyTeam(localStorage, allies, includePlayer); setAllySaveError(''); }
     catch (_) { setAllySaveError('Votre équipe n’a pas pu être sauvegardée dans ce navigateur.'); }
   }, [allies, includePlayer, savedAllies]);
-  const [mapId, setMapId] = useState(initial.mapId);
+  const [mapId, changeMapId] = useState(initial.mapId);
+  const [battlefield, setBattlefield] = useState(initial.battlefield);
+  const setMapId = (next, snapshot) => { changeMapId(next); setBattlefield(snapshot || worlds?.maps.find(map => map.id === next)?.battlefield || null); };
   const [mode, setMode] = useState(initial.mode);
   const [monsterGrade, setMonsterGrade] = useState(initial.monsterGrade);
   const [bossId, setBossId] = useState(initial.bossId);
@@ -132,12 +174,14 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const [customDungeonId, setCustomDungeonId] = useState(initial.customDungeonId);
   const customDungeon = creations?.dungeons.find(entry => entry.id === customDungeonId);
   const campaignProgress = useDungeonProgress(customDungeon);
-  const preparedAdventure = mode === 'boss' && adventureEnabled(customDungeon);
-  const [adventureChoice, setAdventureChoice, adventureSaveError] = useAdventureChoice(preparedAdventure ? customDungeon : null);
-  let team = freeTeam;
-  if (preparedAdventure) {
-    try { team = adventureTeam(customDungeon, adventureChoice); } catch (_) { team = []; }
-  }
+  const customizeEncounter = (nextMapId, nextBattlefield) => {
+    if (mode === 'duel') { if (nextMapId) setMapId(nextMapId, nextBattlefield); return; }
+    const preset = combatPreset({ mode, customDungeon: dungeonRoom(customDungeon, campaignProgress.roomIndex), bossId, bossGrade, monsterGrade, seed });
+    setOpponentDraft(preset.opponents); setEncounter(preset.encounter);
+    changeMapId(nextMapId || preset.mapId);
+    setBattlefield(nextMapId ? nextBattlefield || worlds?.maps.find(map => map.id === nextMapId)?.battlefield || null : preset.battlefield);
+    setMode('duel'); setCustomDungeonId(null);
+  };
   useEffect(() => { if (customDungeonId && !customDungeon) setCustomDungeonId(null); }, [customDungeonId, customDungeon]);
   const handledSelection = useRef(null);
   const [externalSession, setExternalSession] = useState(null);
@@ -147,9 +191,9 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   useEffect(() => { setError(null); }, [mode, controller, botId, playerBotId, bossId, bossGrade, customDungeonId, opponents, allies, includePlayer]);
   const [settingsError, setSettingsError] = useState(false);
   useEffect(() => {
-    try { localStorage.setItem(SETUP_STORAGE, JSON.stringify({ playerClass, customCharacterId: profile?.customCharacterId || customCharacter?.id || null, botClass, botId, playerBotId, controller, mapId, mode, monsterGrade, bossId, bossGrade, customDungeonId })); setSettingsError(false); }
+    try { localStorage.setItem(SETUP_STORAGE, JSON.stringify({ playerClass, customCharacterId: profile?.customCharacterId || customCharacter?.id || null, botClass, botId, playerBotId, controller, mapId, battlefield, mode, monsterGrade, bossId, bossGrade, customDungeonId })); setSettingsError(false); }
     catch (_) { setSettingsError(true); }
-  }, [playerClass, profile?.customCharacterId, customCharacter?.id, botClass, botId, playerBotId, controller, mapId, mode, monsterGrade, bossId, bossGrade, customDungeonId]);
+  }, [playerClass, profile?.customCharacterId, customCharacter?.id, botClass, botId, playerBotId, controller, mapId, battlefield, mode, monsterGrade, bossId, bossGrade, customDungeonId]);
   const playerSex = (externalSession?.character.loadout || equipment.loadouts.A).profile?.sex || 0;
   const botSex = equipment.loadouts.B.profile?.sex || 0;
   useEffect(() => {
@@ -213,7 +257,15 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   useEffect(() => {
     if (!selectionRequest || handledSelection.current === selectionRequest.id) return;
     handledSelection.current = selectionRequest.id;
-    if (selectionRequest.entry && selectionRequest.tab === 'characters') selectCustomCharacter(selectionRequest.entry);
+    if (selectionRequest.mode) setMode(selectionRequest.mode);
+    if (Object.hasOwn(selectionRequest, 'customDungeonId')) setCustomDungeonId(selectionRequest.customDungeonId);
+    if (selectionRequest.bossId != null) { setBossId(selectionRequest.bossId); setBossGrade(1); }
+    if (selectionRequest.entry && selectionRequest.tab === 'characters') {
+      const existing = selectionRequest.reuseProfile && profiles?.profiles.find(entry => entry.customCharacterId === selectionRequest.entry.id);
+      if (existing) profiles.select(existing.id);
+      else selectCustomCharacter(selectionRequest.entry);
+    }
+    if (selectionRequest.tab === 'profiles' && selectionRequest.entry) profiles?.select(selectionRequest.entry.id);
     if (selectionRequest.tab === 'dungeons') {
       setMode('boss');
       if (selectionRequest.entry) setCustomDungeonId(selectionRequest.entry.id);
@@ -244,7 +296,10 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const createPeerRoom = ({ role, character }) => {
     closePeer();
     const room = new PeerRoom({ role, character,
-      settings: { mode: mode === 'boss' && customDungeon ? 'custom' : mode, mapId, seed: (Number(seed) || 1) >>> 0, bossId, bossGrade, monsterGrade }, dungeon: customDungeon, roomIndex: campaignProgress.roomIndex, adventureChoice,
+      settings: { mode: mode === 'boss' && customDungeon ? 'custom' : mode, mapId, battlefield: mode === 'duel' ? battlefield : undefined, encounter: mode === 'duel' ? encounter : undefined, seed: (Number(seed) || 1) >>> 0, bossId, bossGrade, monsterGrade }, dungeon: customDungeon, roomIndex: campaignProgress.roomIndex,
+      team: role === 'host' ? team.length ? team.map((entry, index) => includePlayer && index === 0 ? { ...entry, ...character } : entry)
+        : [{ ...character, kind: 'character', controller: 'player' }] : undefined,
+      opponents: role === 'host' && mode === 'duel' ? opponents : undefined,
       onChange: () => { if (peerRef.current === room) {
         if (room.status === 'lobby' && matchRef.current?.network && matchRef.current.over) {
           matchRef.current = null; setPhase('setup'); setPeerOpen(true); setRoomBrief(false);
@@ -271,17 +326,17 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
     try {
       const config = previousConfig ? { ...previousConfig, seed: s, roomIndex: nextRoom ?? previousConfig.roomIndex } : { playerClass, playerName: profile?.name || customCharacter?.name || 'Vous', botClass, mapId: mode === 'kanojedo' ? KANOJEDO_MAP_ID : mapId,
         mode: mode === 'boss' && customDungeon ? 'custom' : mode, dungeon: customDungeon,
-        opponents: mode === 'duel' ? opponents : undefined,
-        opponentBots: mode === 'duel' ? compileOpponentBots(opponents, allBots, botId) : {},
-        team, adventureChoice, allyBots: compileCompleteTeamBots(team, allBots),
+        opponents: mode === 'duel' ? opponents : undefined, battlefield: mode === 'duel' ? battlefield : undefined, encounter: mode === 'duel' ? encounter : undefined,
+        opponentBots: mode === 'duel' ? compileOpponentBots(opponents, allBots, botId, encounter) : {},
+        team, allyBots: compileCompleteTeamBots(team, allBots),
         monsterGrade, bossId, bossGrade, seed: s, loadouts: equipment.loadouts, roomIndex: campaignProgress.roomIndex };
       if (config.dungeon?.rooms && config.roomIndex > readDungeonProgress(config.dungeon).unlocked) throw new Error('Battez la salle précédente pour continuer.');
       m = new LiveMatch(config); m.launchConfig = config;
     } catch (e) { setError(e.message); return; }
     matchRef.current = m;
     setRoomBrief(!!m.campaign);
-    m.includeProfile = !preparedAdventure && includePlayer;
-    m.adventure = preparedAdventure;
+    m.includeProfile = includePlayer;
+    m.adventure = false;
     setPlacementId('A');
     setBotName(m.state.fighters.B.name);
     setLog(m.initialEvents);
@@ -297,16 +352,16 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
   const startAutomatic = () => {
     // Only a fully automatic team uses the replay runner. A manual companion
     // must keep its controls even when the principal character has an AI.
-    if (!(preparedAdventure ? adventureChoice.automatic : isAutomaticTeam(controller, allies, includePlayer))) { start(); return false; }
+    if (!isAutomaticTeam(controller, allies, includePlayer)) { start(); return false; }
     try {
       compileCompleteTeamBots(team, allBots);
-      if (mode === 'duel') compileOpponentBots(opponents, allBots, botId);
+      if (mode === 'duel') compileOpponentBots(opponents, allBots, botId, encounter);
       onAutomaticLaunch(cloneCreation({ id: newCreationId(), mode: mode === 'kanojedo' ? 'duel' : mode === 'boss' && customDungeon ? 'custom' : mode,
         character: team[0]?.kind === 'character' ? { classId: team[0].classId, name: team[0].name, loadout: team[0].loadout }
           : { classId: playerClass, name: profile?.name || customCharacter?.name || CLASSES[playerClass].name, loadout: equipment.loadouts.A },
         opponent: { classId: botClass, name: CLASSES[botClass].name, loadout: equipment.loadouts.B },
         opponents: mode === 'kanojedo' ? [{ kind: 'monster', monsterId: POUTCH_ID, grade: monsterGrade }] : mode === 'duel' ? opponents : undefined,
-        allies, team, adventureChoice,
+        allies, team, battlefield: mode === 'duel' ? battlefield : undefined, encounter: mode === 'duel' ? encounter : undefined,
         botId: team[0]?.botId || playerBotId, botB: botId, mapId: mode === 'kanojedo' ? KANOJEDO_MAP_ID : mapId, bossId, bossGrade, dungeon: mode === 'boss' ? customDungeon || null : null,
         seed: Number(seed) || 1, roomIndex: campaignProgress.roomIndex }));
       setError(null);
@@ -543,6 +598,8 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
     mm.state = { ...mm.state, fighters: { ...mm.state.fighters, [fighter.id]: { ...fighter, loadout: withOrder(fighter.loadout) } } };
     if (mm.adventure) { setStep(value => value + 1); return; }
     if (fighter.id !== 'A' || mm.includeProfile === false) {
+      const member = allies.find((entry, index) => (mm.includeProfile === false ? teamFighterId(index) : allyFighterId(index)) === fighter.id);
+      if (member?.editableProfileId) profiles?.updateById(member.editableProfileId, entry => ({ ...entry, loadout: withOrder(entry.loadout) }));
       setAllies(previous => previous.map((entry, index) => (mm.includeProfile === false ? teamFighterId(index) : allyFighterId(index)) === fighter.id ? { ...entry, loadout: withOrder(entry.loadout) } : entry));
       setStep(value => value + 1);
     } else if (externalSession) {
@@ -596,10 +653,12 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
     <div className={phase === 'fight' ? 'play-screen fight-screen' : 'play-screen'}>
       {phase !== 'fight' ? (
         <PlayerSetup {...{ playerClass, setPlayerClass, customCharacter, selectCustomCharacter, botClass, setBotClass, botId, allBots, mapId, setMapId, mode, setMode, monsterGrade, setMonsterGrade, bossId, setBossId, bossGrade, setBossGrade, seed, setSeed, equipment, error, settingsError,
-          profiles, onOpenCreator, selectionRequest, customDungeonId, setCustomDungeonId, adventureChoice, setAdventureChoice, adventureSaveError, active, controller, setController, playerBotId, setPlayerBotId,
-          opponents, opponentSaveError, editingOpponentIndex, editingTeam, allies, allySaveError, includePlayer, setIncludePlayer }}
+          profiles, onOpenCreator, selectionRequest, customDungeonId, setCustomDungeonId, active, controller, setController, playerBotId, setPlayerBotId,
+          opponents, opponentSaveError, editingOpponentIndex, editingTeam, allies, allySaveError, includePlayer, setIncludePlayer, encounter, battlefield }}
+          onCustomizeEncounter={customizeEncounter}
+          onCreateTeamProfile={createTeamProfile} onSaveTeamCharacter={saveTeamCharacter}
           onAlliesChange={setAllies} onSelectAlly={index => { setEditingTeam('allies'); setEditingOpponentIndex(index); }}
-          onOpponentsChange={setOpponentDraft} onSelectOpponent={index => { setEditingTeam('opponents'); setEditingOpponentIndex(index); }}
+          onOpponentsChange={changeOpponents} onSelectOpponent={index => { setEditingTeam('opponents'); setEditingOpponentIndex(index); }}
           onAutomaticStart={onAutomaticLaunch ? startAutomatic : undefined} onResumeAutomatic={onResumeAutomatic}
           onFriends={() => { setPeerInput(''); setPeerOpen(true); }}
           customDungeons={creations?.dungeons} customCharacters={creations?.characters} onStart={() => start()} />
@@ -674,8 +733,8 @@ export default function PlayScreen({ allBots, active = true, onFightChange, cust
       )}
       {phase === 'fight' && spellbook && <CombatSpellbook state={m.state} viewerTeam={viewerTeam} initialFighterId={spellbook.fighterId}
         initialSpellKey={spellbook.spellKey} live={!!m.network} onClose={() => setSpellbook(null)} />}
-      {peerOpen && phase === 'setup' && <PeerLobby adventure={preparedAdventure ? customDungeon.adventure : null} profiles={preparedAdventure ? team : profiles?.profiles} customCharacters={creations?.characters} customDungeons={creations?.dungeons}
-        character={(preparedAdventure && team[0]) || profile || { id: 'current', name: customCharacter?.name || CLASSES[playerClass].name, classId: playerClass, loadout: equipment.loadouts.A }}
+      {peerOpen && phase === 'setup' && <PeerLobby profiles={profiles?.profiles} customCharacters={worlds?.characters || creations?.characters} customDungeons={creations?.dungeons}
+        character={profile || { id: 'current', name: customCharacter?.name || CLASSES[playerClass].name, classId: playerClass, loadout: equipment.loadouts.A }}
         settings={{ mode: mode === 'boss' && customDungeon ? 'custom' : mode }}
         encounterName={mode === 'boss' ? customDungeon?.name || 'Le donjon sélectionné dans Combat' : mode === 'kanojedo' ? 'Kanojedo · Poutchs' : MAPS[mapId]?.name}
         initialCode={peerInput} room={peerRoom} createRoom={createPeerRoom} onReset={closePeer}

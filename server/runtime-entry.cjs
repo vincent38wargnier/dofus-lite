@@ -1,0 +1,18 @@
+module.exports = {
+  ...require('../src/engine/engine'),
+  ...require('../src/engine/rng'),
+  ...require('../src/bots/api'),
+  ...require('../src/bots/visualGraph'),
+  ...require('../src/platform/libraryFormat'),
+  ...require('../src/ui/atelierArchive'),
+  ...require('../src/engine/equipment'),
+  ...require('../src/engine/customDungeons'),
+  ...require('../src/arena/runner'),
+  ...require('../src/bots/aiCodeTesting'),
+  ...require('../src/engine/authoredSpells'),
+  ...require('../src/engine/customEquipment'),
+  ...require('../src/engine/classes'),
+  ...require('../src/engine/authoringTemplates'),
+  ...require('../src/engine/customMaps'),
+  ...require('../src/visuals/customShapes'),
+};

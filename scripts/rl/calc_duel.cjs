@@ -48,7 +48,7 @@ if (!fs.readFileSync(require.resolve('../../src/bots/api.js'), 'utf8').includes(
 let ingameBrain = null;
 
 function parseSpec(spec) {
-  const o = { roll: null, nom: null, b: null, fc: null, rv: null, k: null, f: null, h: null, rs: null, net: null, nm: null, ingame: false };
+  const o = { roll: null, nom: null, b: null, fc: null, rv: null, k: null, f: null, h: null, rs: null, net: null, nm: null, jw: null, ingame: false };
   if (spec === 'maison' || spec === 'a1') return o;
   if (spec === 'ingame') { o.ingame = true; return o; }
   if (!spec.includes('=')) { o.roll = spec; return o; }
@@ -65,11 +65,15 @@ const mkSide = (spec) => {
   const o = parseSpec(spec);
   if (o.ingame) ingameBrain ||= makeSearchBrain({ makeBotApi });
   if (o.nm && !['prelim', 'full'].includes(o.nm)) { console.error(`nm=${o.nm}: prelim|full`); process.exit(1); }
+  // jw=hp:thr:lm:lt → poids du juge main (setJudgeWeights de search_bot.cjs); absent = juge historique.
+  const jwv = o.jw ? o.jw.split(':').map(Number) : null;
+  if (jwv && (jwv.length !== 4 || !jwv.every(Number.isFinite))) { console.error(`jw=${o.jw}: hp:thr:lm:lt`); process.exit(1); }
   const net = o.net ? { model: (netModels[o.net] ||= require('./value_net.cjs').loadValueOrt(o.net)), mode: o.nm || 'prelim' } : null;
   return { roll: o.roll ? makePolicyBot(o.roll) : null, nom: o.nom ? makePolicyBot(o.nom) : null,
     b: o.b == null ? null : Number(o.b), fc: o.fc === '1', rv: o.rv === '1',
     k: o.k == null ? null : Number(o.k), f: o.f == null ? null : Number(o.f),
-    h: o.h == null ? null : Number(o.h), rs: o.rs ? [null, makePolicyBot(o.rs)] : null, net, ingame: o.ingame };
+    h: o.h == null ? null : Number(o.h), rs: o.rs ? [null, makePolicyBot(o.rs)] : null, net, ingame: o.ingame,
+    jw: jwv && { hp: jwv[0], thr: jwv[1], lm: jwv[2], lt: jwv[3] } };
 };
 const cfg = { A: mkSide(specA), B: mkSide(specB) };
 
@@ -95,10 +99,10 @@ for (let i = 0; i < N; i++) {
       counters[side].decisions++;
     } else {
       sb.setRolloutPolicy(P.roll); sb.setNominatorPolicy(P.nom); sb.setBudget(P.b); sb.setFastCasts(P.fc);
-      sb.setSampling({ samples: P.k, finalists: P.f }); sb.setHorizon(P.h); sb.setReplySet(P.rs); sb.setNetJudge(P.net);
+      sb.setSampling({ samples: P.k, finalists: P.f }); sb.setHorizon(P.h); sb.setReplySet(P.rs); sb.setNetJudge(P.net); sb.setJudgeWeights(P.jw);
       action = sb.searchDecide(P.rv ? stateFromView(getView(state, actor.id)) : state, counters[side]) || { type: 'PASS' };
       sb.setRolloutPolicy(null); sb.setNominatorPolicy(null); sb.setBudget(null); sb.setFastCasts(false);
-      sb.setSampling(); sb.setHorizon(null); sb.setReplySet(null); sb.setNetJudge(null);
+      sb.setSampling(); sb.setHorizon(null); sb.setReplySet(null); sb.setNetJudge(null); sb.setJudgeWeights(null);
     }
     ms[side] += Date.now() - t0; dec[side]++; gms[side] += Date.now() - t0;
     const r = applyAction(state, action);

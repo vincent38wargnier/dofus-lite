@@ -8,7 +8,7 @@ import { CHARACTER_SHAPES, characterShapeId, parseCharacterShape, characterShape
 
 export default function CharacterArtworkEditor({ artworkId, name, onChange }) {
   const shape = parseCharacterShape(artworkId);
-  const [mode, setMode] = useState(shape ? 'shape' : artworkId ? 'images' : 'client');
+  const [mode, setMode] = useState(shape ? 'shape' : artworkId ? 'images' : process.env.REACT_APP_PLATFORM === '1' ? 'shape' : 'client');
   const previousShape = useRef(shape || { shape: 'wanderer', color: DEFAULT_CUSTOM_COLOR });
   const previousImages = useRef(!shape && artworkId ? artworkId : null);
   const [pose, setPose] = useState('static');
@@ -19,7 +19,7 @@ export default function CharacterArtworkEditor({ artworkId, name, onChange }) {
     <div className="appearance-source" role="group" aria-label="Type d’apparence de la classe">
       <button type="button" className="btn" aria-pressed={mode === 'shape'} onClick={() => { setMode('shape'); pickShape(previousShape.current); }}>Forme personnalisée</button>
       <button type="button" className="btn" aria-pressed={mode === 'images'} onClick={() => { setMode('images'); if (previousImages.current) onChange(previousImages.current); }}>Mes images</button>
-      <button type="button" className="btn" aria-pressed={mode === 'client'} onClick={() => { setMode('client'); onChange(null); }}>Visuel Dofus</button>
+      {process.env.REACT_APP_PLATFORM !== '1' && <button type="button" className="btn" aria-pressed={mode === 'client'} onClick={() => { setMode('client'); onChange(null); }}>{process.env.REACT_APP_PLATFORM === '1' ? 'Visuel de la bibliothèque' : 'Visuel Dofus'}</button>}
     </div>
     {mode === 'shape' && <div className="character-shape-layout">
       <ShapeAppearancePicker shapes={CHARACTER_SHAPES} value={shape || previousShape.current} onChange={pickShape}

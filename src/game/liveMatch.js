@@ -28,22 +28,24 @@ export const TURN_SECONDS = 30; // comme en 1.29
 const MAX_SAYS_PER_TURN = 200;
 
 export class LiveMatch {
-  constructor({ playerClass, botClass, mapId, seed, botName, botDecide, playerName = 'Vous', playerController = 'player', loadouts = {}, mode = 'duel', monsterGrade = 5, bossId = DEFAULT_BOSS_ID, bossGrade = defaultMonsterGrade(bossId), dungeon, roomIndex = 0, opponents, opponentBots = {}, allies = [], allyBots = {}, team, adventureChoice }) {
+  constructor({ playerClass, botClass, mapId, battlefield, encounter, seed, botName, botDecide, playerName = 'Vous', playerController = 'player', loadouts = {}, mode = 'duel', monsterGrade = 5, bossId = DEFAULT_BOSS_ID, bossGrade = defaultMonsterGrade(bossId), dungeon, roomIndex = 0, opponents, opponentBots = {}, allies = [], allyBots = {}, team, adventureChoice }) {
     if (mode === 'custom' && dungeon?.rooms) { const errors = customDungeonErrors(dungeon); if (errors.length) throw new Error(errors.join(' ')); }
     this.campaign = mode === 'custom' && dungeon?.rooms ? { dungeon: JSON.parse(JSON.stringify(dungeon)), roomIndex } : null;
     if (mode === 'custom') dungeon = dungeonRoom(dungeon, roomIndex);
-    const prepared = mode === 'custom' && adventureEnabled(dungeon);
+    // A supplied team is the player's composition. Packaged heroes are a
+    // default only for callers that did not choose a team of their own.
+    const prepared = team == null && mode === 'custom' && adventureEnabled(dungeon);
     if (prepared) team = adventureTeam(dungeon, adventureChoice);
     if (mode === 'boss' && !BOSSES.some(boss => boss.id === bossId)) throw new Error('Boss inconnu.');
     const init = createGame({
       mapId: mode === 'custom' ? dungeon?.mapId : mode === 'kanojedo' ? KANOJEDO_MAP_ID : mode === 'boss' ? dungeonMapId(bossId) : mapId,
-      battlefield: mode === 'custom' ? dungeon?.battlefield : undefined,
-    encounter: mode === 'custom' ? dungeonEncounter(dungeon) : undefined,
+      battlefield: mode === 'custom' ? dungeon?.battlefield : mode === 'duel' ? battlefield : undefined,
+      encounter: mode === 'custom' ? dungeonEncounter(dungeon) : mode === 'duel' ? encounter : undefined,
       seed,
       placement: true,
       fighters: [
         ...(team ? teamRoster(team) : [{ id: 'A', name: playerName, botName: playerName, classId: playerClass, loadout: loadouts.A }, ...allyRoster(allies)]),
-        ...(mode === 'duel' && opponents ? opponentRoster(opponents) : mode === 'custom' ? customDungeonRoster(dungeon)
+        ...(mode === 'duel' && opponents ? opponentRoster(opponents, encounter) : mode === 'custom' ? customDungeonRoster(dungeon)
           : mode === 'kanojedo' ? [{ id: 'B', monsterId: POUTCH_ID, monsterGrade }]
           : mode === 'boss' ? dungeonRoster(bossId, bossGrade, seed)
           : [{ id: 'B', name: botName, botName, classId: botClass, loadout: loadouts.B }]),

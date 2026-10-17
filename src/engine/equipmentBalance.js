@@ -1,8 +1,10 @@
 // Local, versioned design budget. This is not Ankama's balancing formula.
 // Calibrated against native items only; a custom library can never move the limits.
-import DATA from './equipmentData.json';
-import FM from './forgemagieData.json';
+import { equipmentData as DATA } from './gameData';
+import { forgemagieData as FM } from './gameData';
 import { effectDefinition, WEAPON_EFFECTS, STAT_LABELS } from './equipmentEffects';
+import BUDGETS from '../platform/equipmentBudgets.json';
+import { PLATFORM } from '../platform/config';
 
 export const EQUIPMENT_BUDGET_VERSION = 2;
 export const MAX_ITEM_SCORE = 100;
@@ -133,6 +135,7 @@ export const EQUIPMENT_CENSUS = {
 
 const bands = new Map();
 function limitsAt(family, level) {
+  if (PLATFORM) return { ...BUDGETS[family.id][level - 1], references: [] };
   const cacheKey = `${family.id}:${level}`;
   if (bands.has(cacheKey)) return bands.get(cacheKey);
   const flat = ['pet', 'mount', 'shield'].includes(family.id);

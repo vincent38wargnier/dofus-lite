@@ -1,0 +1,39 @@
+[
+  {
+    "key": "potter",
+    "file": "/Users/vincent/Documents/code/dofus/dofus-lite/var/demo-libraries/potter-v2.zip",
+    "bytes": 9416390,
+    "images": 34,
+    "release": "2.0.0",
+    "counts": {
+      "characters": 3,
+      "dungeons": 1,
+      "equipment": 24,
+      "monsters": 9,
+      "maps": 3,
+      "spells": 42,
+      "images": 9,
+      "rooms": 3
+    },
+    "arena": [
+      {
+        "index": 0,
+        "name": "Elias, duelliste de la tour",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 1,
+        "name": "Maëlle, botaniste de garde",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 2,
+        "name": "Robin, maître des potions",
+        "spells": 8,
+        "level": 200
+      }
+    ]
+  }
+]

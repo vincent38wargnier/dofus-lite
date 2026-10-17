@@ -1,0 +1,148 @@
+[
+  {
+    "world": "potter",
+    "images": 35,
+    "anchors": [
+      {
+        "file": "0/idle-front.png",
+        "bounds": {
+          "left": 18,
+          "right": 295,
+          "top": 7,
+          "bottom": 312,
+          "anchor": 180.5
+        }
+      },
+      {
+        "file": "0/idle-back.png",
+        "bounds": {
+          "left": 53,
+          "right": 306,
+          "top": 4,
+          "bottom": 309,
+          "anchor": 158
+        }
+      },
+      {
+        "file": "1/idle-front.png",
+        "bounds": {
+          "left": 67,
+          "right": 286,
+          "top": 9,
+          "bottom": 310,
+          "anchor": 159.5
+        }
+      },
+      {
+        "file": "1/idle-back.png",
+        "bounds": {
+          "left": 71,
+          "right": 259,
+          "top": 4,
+          "bottom": 309,
+          "anchor": 150.5
+        }
+      },
+      {
+        "file": "2/idle-front.png",
+        "bounds": {
+          "left": 32,
+          "right": 257,
+          "top": 7,
+          "bottom": 311,
+          "anchor": 150.5
+        }
+      },
+      {
+        "file": "2/idle-back.png",
+        "bounds": {
+          "left": 52,
+          "right": 285,
+          "top": 3,
+          "bottom": 310,
+          "anchor": 160
+        }
+      },
+      {
+        "file": "3/idle-front.png",
+        "bounds": {
+          "left": 58,
+          "right": 283,
+          "top": 4,
+          "bottom": 313,
+          "anchor": 85.5
+        }
+      },
+      {
+        "file": "3/idle-back.png",
+        "bounds": {
+          "left": 64,
+          "right": 272,
+          "top": 0,
+          "bottom": 312,
+          "anchor": 177
+        }
+      },
+      {
+        "file": "4/idle-front.png",
+        "bounds": {
+          "left": 46,
+          "right": 290,
+          "top": 8,
+          "bottom": 313,
+          "anchor": 158.5
+        }
+      },
+      {
+        "file": "4/idle-back.png",
+        "bounds": {
+          "left": 50,
+          "right": 281,
+          "top": 0,
+          "bottom": 299,
+          "anchor": 173
+        }
+      },
+      {
+        "file": "5/idle-front.png",
+        "bounds": {
+          "left": 26,
+          "right": 290,
+          "top": 2,
+          "bottom": 313,
+          "anchor": 155.5
+        }
+      },
+      {
+        "file": "5/idle-back.png",
+        "bounds": {
+          "left": 45,
+          "right": 288,
+          "top": 0,
+          "bottom": 298,
+          "anchor": 172.5
+        }
+      },
+      {
+        "file": "6/idle-front.png",
+        "bounds": {
+          "left": 12,
+          "right": 313,
+          "top": 2,
+          "bottom": 313,
+          "anchor": 139.5
+        }
+      },
+      {
+        "file": "6/idle-back.png",
+        "bounds": {
+          "left": 30,
+          "right": 313,
+          "top": 0,
+          "bottom": 303,
+          "anchor": 203
+        }
+      }
+    ]
+  }
+]

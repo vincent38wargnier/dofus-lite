@@ -92,6 +92,9 @@ dialog.combat-choice:not([open]) { display: none; }
 .combat-versus-medal { display: grid; place-items: center; gap: 2px; width: 44px; height: 54px; justify-self: center; color: #a99772; font-size: 11px; font-weight: 800; letter-spacing: .1em; }
 .combat-members { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; gap: 10px 7px; list-style: none; padding: 0; margin: 0 0 8px; }
 .combat-member { display: grid; justify-items: center; min-width: 0; text-align: center; gap: 4px; }
+.combat-member-edit { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 3px; max-width: 100%; min-height: 32px; padding: 5px 6px; border: 1px solid #c9d5b5; border-radius: 7px; background: #f7f9ee; color: #4b6236; font: inherit; font-size: 10px; cursor: pointer; }
+.combat-member-edit:hover { background: #e5edda; }.combat-member-edit:focus-visible { outline: 2px solid #617944; outline-offset: 2px; }
+.combat-team-caption:has(button) { flex-wrap: wrap; gap: 8px; }
 .combat-member-art { display: grid; place-items: center; width: 64px; height: 68px; max-width: 100%; border-radius: 13px; background: #e4eaca91; }
 .enemies .combat-member-art { background: #eedfc580; }
 .combat-member-art { position: relative; }

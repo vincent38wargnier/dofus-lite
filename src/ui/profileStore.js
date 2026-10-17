@@ -1,10 +1,12 @@
+import { storageKey } from '../platform/config';
+import { DEFAULT_CLASS_ID } from '../engine/classes';
 import { CLASSES } from '../engine/classes';
 import { emptyLoadout, equipSet } from '../engine/equipment';
 import { DRAFT_STORAGE, isLoadout } from './loadoutStore';
 import { readCreations, cloneCreation, newCreationId } from './creationsStore';
 import { readPlayerSetup } from './playerSetupState';
 
-export const PROFILES_STORAGE = 'dofus-lite-profiles-v1';
+export const PROFILES_STORAGE = storageKey('dofus-lite-profiles-v1');
 const ownsClass = id => Object.prototype.hasOwnProperty.call(CLASSES, id);
 export const profileName = name => String(name || '').trim().replace(/\s+/g, ' ').slice(0, 80);
 
@@ -50,7 +52,7 @@ export function readProfiles(storage) {
       .map(([key, loadout]) => makeProfile(key.slice(2), { loadout }));
     return { value: { version: 1, profiles: [profile, ...previousProfiles], activeId: profile.id }, error: '' };
   } catch (_) {
-    const profile = makeProfile('IOP');
+    const profile = makeProfile(DEFAULT_CLASS_ID);
     return { value: { version: 1, profiles: [profile], activeId: profile.id },
       error: 'Impossible de lire les profils. La sauvegarde existante est conservée.' };
   }

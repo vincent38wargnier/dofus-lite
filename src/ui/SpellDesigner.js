@@ -1,3 +1,4 @@
+import { PLATFORM } from '../platform/config';
 import React, { useMemo, useState } from 'react';
 import { buildSpell } from '../engine/classes';
 import { spellZoneCells } from '../engine/geometry';
@@ -155,7 +156,7 @@ export default function SpellDesigner({ initialSpell, existingSpells = [], editi
         }} /></label>{imageError && <p className="creator-warning" role="alert">{imageError}</p>}
         <SelectField label="Source de l’animation" value={draft.visualEffect ? 'original' : 'client'} onChange={value => patch(value === 'original'
           ? { visualSpellId: undefined, visualEffect: { version: 1, kind: 'fireball', color: '#ed672d', accent: '#ffe3a0', durationMs: 1000 } }
-          : { visualEffect: undefined, visualSpellId: 161 })}><option value="original">Animation originale</option><option value="client">Catalogue Dofus</option></SelectField>
+          : { visualEffect: undefined, visualSpellId: visuals[0]?.id || 161 })}><option value="original">Animation originale</option><option value="client" disabled={!visuals.length}>{PLATFORM ? 'Bibliothèques installées' : 'Catalogue Dofus'}</option></SelectField>
         {draft.visualEffect ? <div className="spell-designer-fields">
           <SelectField label="Effet visuel" value={draft.visualEffect.kind} onChange={kind => patch({ visualEffect: { ...draft.visualEffect, kind } })}>
             {Object.entries({ slash: 'Lame', thrust: 'Estoc', arrow: 'Flèche', 'ice-lance': 'Lance de glace', shatter: 'Éclats', fireball: 'Projectile de feu', 'fire-wave': 'Vague de feu', shield: 'Bouclier', embers: 'Braises', 'raven-step': 'Envol de corbeaux', fang: 'Morsure', rally: 'Ralliement', bell: 'Glas' }).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
@@ -189,7 +190,7 @@ export default function SpellDesigner({ initialSpell, existingSpells = [], editi
         <ZonePreview zone={effect.zone} self={effect.targetMask === 32} />
       </li>)}</ol><p className="muted small">Bleu : lanceur. Point sombre : case visée. Les valeurs sont brutes, avant caractéristiques, résistances et coefficients de zone.</p>
       <div className="spell-designer-balance"><h4>Repères d’équilibrage</h4>
-        <p>Plafonds fondés sur les 264 sorts des 12 classes au grade 6. Un budget respecté reste à tester en combat, avec et sans équipement.</p>
+        <p>{PLATFORM ? 'Les plafonds utilisent les règles numériques du moteur. ' : 'Plafonds fondés sur les 264 sorts des 12 classes au grade 6. '}Un budget respecté reste à tester en combat, avec et sans équipement.</p>
         {!!warnings.length && <ul>{warnings.map(message => <li key={message}>{message}</li>)}</ul>}
         {!!reference.length && <details><summary>Comparer aux sorts existants</summary><table><thead><tr><th>Grade 6</th><th>PA / PO</th><th>Effet brut</th></tr></thead><tbody>{reference.map(({ entry, raw: value }) => {
           const effect = value.effects.find(e => e.kind === raw.effects[0].kind);

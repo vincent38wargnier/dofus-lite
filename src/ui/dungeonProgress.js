@@ -1,7 +1,8 @@
+import { storageKey } from '../platform/config';
 import { useEffect, useMemo, useState } from 'react';
 import { advanceCampaign, campaignProgress } from '../engine/dungeonCampaign';
 
-export const DUNGEON_PROGRESS_STORAGE = 'dofus-lite-dungeon-progress-v1';
+export const DUNGEON_PROGRESS_STORAGE = storageKey('dofus-lite-dungeon-progress-v1');
 const changed = 'dofus-dungeon-progress';
 function readAll(storage = localStorage) {
   try { const value = JSON.parse(storage.getItem(DUNGEON_PROGRESS_STORAGE)); return value && typeof value === 'object' && !Array.isArray(value) ? value : {}; }

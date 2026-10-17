@@ -5,6 +5,7 @@ import { matchingForge, naturalBounds } from '../engine/forgedItems';
 import { canDropEquipment } from './equipmentDrag';
 import { personalEquipmentDrag, personalEquipmentKey } from './personalEquipmentStore';
 import EquipmentIcon from './EquipmentIcon';
+import { useWorlds } from './WorldsContext';
 
 const fold = value => String(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 export function personalEquipmentLabel(entry) {
@@ -19,11 +20,13 @@ export function personalEquipmentLabel(entry) {
 
 export default function PersonalEquipment({ entries, error, loadout, selected, onSelect, onEquip, onDrag, onDragEnd, onCreate }) {
   const [search, setSearch] = useState('');
-  const shown = useMemo(() => entries.filter(entry => fold(`${entry.item.name} ${personalEquipmentLabel(entry)}`).includes(fold(search))), [entries, search]);
+  const worlds = useWorlds();
+  const worldEntries = useMemo(() => entries.filter(entry => !worlds || worlds.matches('equipment', entry.item.id, worlds.selected)), [entries, worlds]);
+  const shown = useMemo(() => worldEntries.filter(entry => fold(`${entry.item.name} ${personalEquipmentLabel(entry)}`).includes(fold(search))), [worldEntries, search]);
   return <section className="personal-equipment" aria-label="Mes équipements personnalisés">
-    <header className="personal-equipment-heading"><div><h3>Mes équipements <span className="collection-count">{entries.length}</span></h3><p>Créations et objets FM · jets conservés</p></div>
+    <header className="personal-equipment-heading"><div><h3>Mes équipements <span className="collection-count">{worldEntries.length}</span></h3><p>Créations et objets FM · jets conservés</p></div>
       <button type="button" className="btn" onClick={onCreate}><Plus size={14} /> Créer un équipement</button></header>
-    {(entries.length > 8 || search) && <label className="personal-equipment-search"><Search size={14} /><input type="search" aria-label="Rechercher dans mes équipements" placeholder="Retrouver un objet…" value={search} onChange={event => setSearch(event.target.value)} /></label>}
+    {(worldEntries.length > 8 || search) && <label className="personal-equipment-search"><Search size={14} /><input type="search" aria-label="Rechercher dans mes équipements" placeholder="Retrouver un objet…" value={search} onChange={event => setSearch(event.target.value)} /></label>}
     {entries.length ? <>
       <div className="personal-equipment-grid">{shown.map(entry => {
         const usable = EQUIPMENT_SLOTS.some(slot => canDropEquipment(loadout, personalEquipmentDrag(entry), slot.id));

@@ -1,5 +1,7 @@
 import { dungeonEncounter, encounterCapacity } from '../engine/encounters';
 import { adventureEnabled, adventureTeam } from '../engine/adventures';
+import { allyTeamErrors } from '../engine/allyTeam';
+import { opponentTeamErrors } from '../engine/opponentTeam';
 import { customDungeonErrors } from '../engine/customDungeons';
 import { dungeonRoom, roomVictory } from '../engine/dungeonCampaign';
 import { COMBAT_RULES_VERSION } from '../engine/engine';
@@ -23,10 +25,14 @@ const control = value => check(['player', 'ai'].includes(value), 'Contrôle inco
 // Star topology: guests have ONE link to the host. Only that host mutates the
 // combat. Each connection is bound to a participant, never a claimed actor ID.
 export class PeerRoom {
-  constructor({ role, character, settings, dungeon, roomIndex = 0, adventureChoice, build = peerBuildId(), onChange = () => {}, onStart = () => {}, onEvents = () => {}, contentDependencies = {} }) {
+  constructor({ role, character, settings, dungeon, roomIndex = 0, adventureChoice, team, opponents, build = peerBuildId(), onChange = () => {}, onStart = () => {}, onEvents = () => {}, contentDependencies = {} }) {
     this.role = role; this.selfId = role === 'host' ? 'host' : null; this.character = character;
-    if (role === 'host' && dungeon?.rooms) { const errors = customDungeonErrors(dungeon); check(!errors.length, errors.join(' ')); }
-    this.campaign = role === 'host' && dungeon?.rooms ? { dungeon: JSON.parse(JSON.stringify(dungeon)), roomIndex } : null;
+    if (role === 'host' && team != null) { const errors = allyTeamErrors(team, false); check(!errors.length, errors.join(' ')); }
+    this.initialTeam = team == null ? null : JSON.parse(JSON.stringify(team));
+    if (role === 'host' && settings?.mode === 'duel' && opponents?.length) { const errors = opponentTeamErrors(opponents, settings.encounter); check(!errors.length, errors.join(' ')); }
+    this.initialOpponents = opponents == null ? null : JSON.parse(JSON.stringify(opponents));
+    if (role === 'host' && settings?.mode === 'custom' && dungeon?.rooms) { const errors = customDungeonErrors(dungeon); check(!errors.length, errors.join(' ')); }
+    this.campaign = role === 'host' && settings?.mode === 'custom' && dungeon?.rooms ? { dungeon: JSON.parse(JSON.stringify(dungeon)), roomIndex } : null;
     if (this.campaign) dungeon = dungeonRoom(dungeon, roomIndex);
     this.settings = role === 'host' ? peerSettings(dungeon && settings?.mode === 'custom'
       ? { ...settings, mapId: dungeon.mapId, battlefield: dungeon.battlefield, encounter: dungeonEncounter(dungeon) } : settings) : null; this.dungeon = dungeon; this.adventureChoice = adventureChoice; this.build = build;
@@ -65,15 +71,18 @@ export class PeerRoom {
     if (mode === 'boss') this.settings.mapId = dungeonMapId(this.settings.bossId);
     if (mode === 'kanojedo') this.settings.mapId = KANOJEDO_MAP_ID;
     if (mode === 'custom') this.settings.mapId = this.dungeon?.mapId;
-    if (mode === 'custom' && this.dungeon?.battlefield) {
-      const archive = await packPeerUnit({ monsterId: POUTCH_ID, grade: 1 }, this.dungeon.battlefield);
+    const battlefield = mode === 'custom' ? this.dungeon?.battlefield : mode === 'duel' ? this.settings.battlefield : null;
+    if (battlefield) {
+      const archive = await packPeerUnit(this.character, battlefield);
       const content = await unpackPeerUnit(archive, 'u0', this.contentDependencies);
       check(!this.closed, 'Salon fermé.');
       this.mapAsset = { ...content, archive, cleanup: stagePeerContent(content) };
       this.settings.battlefield = content.battlefield;
     }
     this.settings = peerSettings(this.settings);
-    if (mode === 'custom' && adventureEnabled(this.dungeon)) {
+    if (this.initialTeam) {
+      for (const member of this.initialTeam) await this.addArchive(await packPeerUnit(member), 'host', 'A', member.controller);
+    } else if (mode === 'custom' && adventureEnabled(this.dungeon)) {
       const errors = customDungeonErrors(this.dungeon); check(!errors.length, errors.join(' '));
       const team = adventureTeam(this.dungeon, this.adventureChoice);
       this.settings.adventure = { name: this.dungeon.name, allowAI: this.dungeon.adventure.allowAI };
@@ -81,7 +90,7 @@ export class PeerRoom {
     } else await this.addArchive(await packPeerUnit(this.character), 'host', 'A', 'player');
     const enemies = mode === 'custom' ? this.dungeon.members.flatMap(m => Array.from({ length: m.count }, () => ({ ...m, count: 1 })))
       : mode === 'boss' ? dungeonRoster(this.settings.bossId, this.settings.bossGrade, this.settings.seed)
-        : mode === 'kanojedo' ? [{ monsterId: POUTCH_ID, grade: this.settings.monsterGrade }] : [];
+        : mode === 'kanojedo' ? [{ monsterId: POUTCH_ID, grade: this.settings.monsterGrade }] : this.initialOpponents || [];
     for (const entry of enemies) await this.addArchive(await packPeerUnit(entry), 'host', 'B', 'ai');
     if (this.settings.encounter?.commanderId) {
       const index = this.settings.encounter.commanderId === 'B' ? 0 : Number(this.settings.encounter.commanderId.slice(1)) - 1;
@@ -367,9 +376,9 @@ export class PeerRoom {
       this.units = this.units.filter(u => u.team === 'A'); this.pruneAssets(); this.mapAsset?.cleanup(); this.mapAsset = null;
       this.settings = peerSettings({ mode: 'custom', mapId: this.dungeon.mapId, battlefield: this.dungeon.battlefield,
         encounter: dungeonEncounter(this.dungeon), seed: (this.settings.seed + 1) >>> 0, campaign: this.campaignInfo(),
-        ...(this.dungeon.adventure ? { adventure: { name: this.campaign.dungeon.name, allowAI: this.dungeon.adventure.allowAI } } : {}) });
+        ...(this.initialTeam == null && this.dungeon.adventure ? { adventure: { name: this.campaign.dungeon.name, allowAI: this.dungeon.adventure.allowAI } } : {}) });
       if (this.dungeon.battlefield) {
-        const archive = await packPeerUnit({ monsterId: POUTCH_ID, grade: 1 }, this.dungeon.battlefield);
+        const archive = await packPeerUnit(this.character, this.dungeon.battlefield);
         const content = await unpackPeerUnit(archive, 'u0', this.contentDependencies);
         check(!this.closed, 'Salon fermé.'); this.mapAsset = { ...content, archive, cleanup: stagePeerContent(content) }; this.settings.battlefield = content.battlefield;
       }

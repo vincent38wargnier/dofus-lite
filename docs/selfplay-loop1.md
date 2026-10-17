@@ -493,3 +493,111 @@ a per-cell head). It was present in every learned *leaf* judge so far (V3–V5, 
 so their "never beats the hand judge" verdict was reached with that flaw. Next: loop 2's first
 item (§9), the net at the leaf seat after the simulated reply, where it does not have to guess
 the reply.
+
+### Base audit B2 — the hand judge's weights against real game outcomes (Texel method)
+
+The ceiling is C1's leaf judge (`heuristicLeaf`):
+
+> 1000 · HP-fraction difference + 350 · threat + 300 if I have lethal − 300 if they do
+
+Threat = my damage potential / their max HP − theirs / mine. The weights were set by hand, and
+no learned judge has beaten them so far. B2 asks whether game outcomes support those weights.
+
+**Data.** `scripts/rl/texel_probe.cjs` reads all 531 loop-1 games: 30,965 decision roots, each
+with the real result for the searcher. A root is the start of the searcher's turn, the same
+kind of state C1's leaf judges after the simulated reply.
+
+Checks:
+- every (game, side) has one result;
+- all 328 games with both sides recorded have opposite results;
+- the recomposed judge equals `heuristicLeaf` exactly.
+
+**Fit.** `scripts/rl/texel_fit.py`: logistic regression on the result, 5-fold cross-validation
+by game, bootstrap over games.
+
+| model | CV log-loss | minus current (95% CI) |
+|---|---|---|
+| M0: current judge, only its scale fitted | 0.57108 | — |
+| M1: same 4 terms, free weights | 0.56597 | −0.0051 (−0.0070 to −0.0033) |
+| M2: M1 per level | 0.56594 | −0.0051 (−0.0092 to −0.0008) |
+| M3: M1 + distance, turn | 0.56535 | −0.0057 (−0.0083 to −0.0030) |
+
+M1's weights in judge units (HP = 1000), each against the current value:
+
+| term | fitted (95% CI) | current |
+|---|---|---|
+| threat | 2,195 (1,853 to 2,650) | 350 |
+| "I have lethal" | 1,384 (1,088 to 1,843) | 300 |
+| "they have lethal" | +34 (−52 to +118) | −300 |
+
+Both levels agree:
+- l100: 2,098 / 1,191 / +57;
+- l200gear: 2,580 / 1,840 / −20.
+
+Fitting per level, or adding distance and turn, gains little beyond M1.
+
+**Reading.** In C1's own games:
+- the side that threatens more wins much more often than the current weights imply;
+- so does the side that has lethal on its own turn;
+- "they have lethal next turn" predicts nothing once the rest is known, because at the start
+  of my turn I act first.
+
+Predicting outcomes better is not the same as playing better. Only an online test can show
+that.
+
+### Test T1 (pre-registered before it runs) — C1 with outcome-fitted judge weights
+
+**Matchup.**
+- Challenger: C1 + `jw=1038:2278:1437:36`, i.e. M1 rescaled to the current judge's
+  calibration. A judge point is worth the same logit as before, so the ±999 clamp and the
+  ±1000 outcomes keep their meaning.
+- Opponent: C1 at the same budget. The judge's cost is identical.
+
+**Stages.**
+- Stage 1: l100, bounds [0, 40] nElo, offset **600000** (never used). α = β = 0.05, cap 600
+  pairs, `loop1_sprt.sh` v2, 3 workers (max 4).
+- Stage 2, only if stage 1 passes: l200gear, [0, 40], offset **610000**.
+- Promotion = H1 at both stages, which makes a new champion. Shipping it in the game needs
+  Vincent's go-ahead (`src/bots/searchBrain.js`). The time rule (VOID-TIME at a ratio > 1.10)
+  is unchanged.
+
+**Order.**
+- A3 was paused at 17:37:11 (16 pairs: 2 / 12 / 2; next block 4, seeds 410100+) to free the
+  CPU. It resumes after T1 stage 1 if T1 fails, or after stage 2.
+- A3's later blocks load the new `search_bot.cjs`, whose default path is unchanged (proved
+  below).
+
+**Code.** `setJudgeWeights` (search_bot.cjs) and the `jw=` key (calc_duel.cjs); null = the
+historical lines, untouched. Proof on 3,431 roots (6 shards, l100 + l200):
+- the default judge is bit-identical to the extracted values;
+- `jw` with the historical weights is within 1.1e-13;
+- the fitted weights change the value on 96% of roots;
+- a 2-game smoke (throwaway seeds 995000) runs, and a bad `jw` is rejected.
+
+**Caveat.** The weights were fitted on positions C1 reaches. Playing with them changes those
+positions (Texel's known limit). If T1 passes, the next step is to refit on T1's own games
+and test again, the self-play tuning loop.
+
+### 2026-10-15 — Test T1 stage 1 (l100, [0, 40]): **H0 — failed**
+
+`loop1_sprt.sh T1-s1-l100` ran 17:42:36–18:00:41, on git d7dbec5 + working-tree changes (the
+`jw` switch).
+- Workers: 3, then 4 from 17:52 (10 cool minutes). Heat level 0 or 1, no guard event.
+- Result after 53 pairs: 7 won / 28 split / 18 lost, score 0.396, **−73 Elo (naive 95% CI
+  −141 to −11), −78 nElo**. LLR −3.438 ≤ −2.944 → H0.
+- Thinking time 0.996× (same cost, as expected).
+- Files: `local-observations/rl/loop1/sprt/T1-s1-l100/`.
+
+The outcome-fitted weights predict results better but play worse. The early stop overstates
+the size, but the direction is clear. Likely reason (*not verified*): a leaf judge has to rank
+siblings, not predict outcomes. Weighting the threat 6× makes C1 chase "threat" positions that
+the 1-reply search cannot hold. Per the rule, A3 resumed at 18:01 (block 4, seeds 410100+).
+
+**Direction change (Vincent, 2026-10-15 ~18:00).** The goal is RL networks trained by
+self-play on rewards, which act fast. The next work is a PPO self-play league:
+- start from the spatial policy clone of the calculator;
+- give the value head a positional readout (B1's fix; the old PPO net's value head is
+  mean-pooled, `train_ppo.py` `t.mean(dim=(2, 3))`);
+- gate each round against its previous version, IA Maison and C1.
+
+A new protocol document will hold it before any run.

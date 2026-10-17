@@ -1,9 +1,9 @@
-import DATA from './monsterData.json';
+import { monsterData as DATA } from './gameData';
 import { buildSpell } from './classes';
 
 export const KANOJEDO_MAP_ID = 'amakna_534';
 export const POUTCH_ID = 494;
-export const POUTCH_GRADES = Object.values(DATA.monsters[POUTCH_ID].grades);
+export const POUTCH_GRADES = Object.values(DATA.monsters[POUTCH_ID]?.grades || {});
 export const DEFAULT_BOSS_ID = 147;
 export const BOSSES = DATA.bosses.map(id => DATA.monsters[id])
   .sort((a, b) => a.name.localeCompare(b.name, 'fr') || a.id - b.id);

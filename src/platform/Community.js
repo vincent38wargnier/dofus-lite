@@ -1,0 +1,14 @@
+import React, { useEffect, useState } from 'react';
+import { ArrowLeft, ArrowRight, Bell, Check, MessageCircle } from 'lucide-react';
+import { DemoBadge, fullDate as date } from './ForumShared';
+import { ThreadList } from './ForumFeed';
+export { FORUM_CATEGORIES as CATEGORIES } from './forumModel';
+export { Author, DemoBadge, DemoNotice } from './ForumShared';
+export { ForumHome, ThreadList } from './ForumFeed';
+export { ThreadPage } from './ForumThread';
+
+export function PlayerPage({id,api,act,go,session}){const [player,setPlayer]=useState(null),[bio,setBio]=useState('');useEffect(()=>{act(async()=>{const p=await api('/players/'+id);setPlayer(p);setBio(p.bio);});},[id]); // eslint-disable-line react-hooks/exhaustive-deps
+ if(!player)return <p className="af-loading">Chargement du profil…</p>;
+ return <><button className="af-back" onClick={()=>go('community')}><ArrowLeft size={16}/>La communauté</button><header className="af-profile-heading"><div className="af-profile-avatar">{player.handle.slice(0,2).toUpperCase()}</div><div>{player.isDemo&&<DemoBadge profile/>}<h1>{player.handle}</h1><p>{player.isDemo?'Profil fictif, inscription simulée le':'Inscrit le'} {date(player.created)}</p><p>{player.bio}</p></div></header>{session.user?.id===id&&<form className="af-form" onSubmit={e=>{e.preventDefault();act(async()=>{await api('/account',{method:'PATCH',body:JSON.stringify({bio})});setPlayer({...player,bio});});}}><label>Votre présentation<textarea maxLength={600} value={bio} onChange={e=>setBio(e.target.value)}/></label><button className="af-button">Enregistrer</button></form>}<h2>Ses bibliothèques</h2><div className="af-chips">{player.libraries.map(l=><button key={l.id} className="af-button" onClick={()=>go('library/'+l.id)}>{l.name}<ArrowRight size={15}/></button>)}{!player.libraries.length&&<p className="af-muted">Aucune publication.</p>}</div><h2>Ses discussions</h2><ThreadList topics={player.topics} go={go}/></>;}
+export function InboxPage({api,act,go}){const [items,setItems]=useState([]);useEffect(()=>{act(async()=>{setItems((await api('/notifications')).notifications);await api('/notifications/read',{method:'POST'});});},[]); // eslint-disable-line react-hooks/exhaustive-deps
+ return <><header className="af-page-heading"><div className="af-eyebrow"><Bell size={16}/>VOS DISCUSSIONS</div><h1>On vous a répondu.</h1><p>Suivez un sujet pour retrouver ses nouvelles réponses ici.</p></header>{items.length?items.map(n=><button className="af-notification" key={n.id} onClick={()=>go('topic/'+n.topic_id)}><MessageCircle size={20}/><span><strong>{n.author}</strong> a répondu dans <strong>{n.title}</strong><small>{date(n.created)}</small></span>{n.seen?<Check size={16}/>:<i/>}</button>):<div className="af-empty"><Bell size={28}/><h3>Tout est à jour.</h3><p>Les réponses aux discussions que vous suivez s’afficheront ici.</p></div>}</>;}

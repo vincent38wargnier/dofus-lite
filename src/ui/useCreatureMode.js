@@ -1,6 +1,7 @@
+import { storageKey } from '../platform/config';
 import { useSyncExternalStore } from 'react';
 
-export const CREATURE_MODE_STORAGE = 'dofus-lite-creature-mode-v1';
+export const CREATURE_MODE_STORAGE = storageKey('dofus-lite-creature-mode-v1');
 const CHANGE_EVENT = 'dofus-lite-creature-mode-change';
 let fallback = false;
 const read = () => {

@@ -44,7 +44,7 @@ test.each([false, true])('Tester forwards the current dungeon to the shared comb
 test('name a new class, select ten spells, replace one, and keep the chosen name and spells after reload', () => {
   const onLaunch = jest.fn();
   const view = render(app(onLaunch));
-  fireEvent.click(screen.getByRole('tab', { name: /Mes classes/ }));
+  fireEvent.click(screen.getByRole('tab', { name: /Mes personnages/ }));
   fireEvent.click(screen.getByRole('button', { name: 'Nouvelle classe' }));
   expect(saved().characters[0].loadout.spells.custom).toEqual([]);
   fireEvent.change(screen.getByRole('textbox', { name: 'Nom de la classe' }), { target: { value: '   ' } });
@@ -80,7 +80,7 @@ test('name a new class, select ten spells, replace one, and keep the chosen name
   expect(onLaunch).toHaveBeenCalledWith(expect.objectContaining({ character, automatic: false }));
   view.unmount();
   render(app(onLaunch));
-  fireEvent.click(screen.getByRole('tab', { name: /Mes classes/ }));
+  fireEvent.click(screen.getByRole('tab', { name: /Mes personnages/ }));
   expect(screen.getByRole('textbox', { name: 'Nom de la classe' })).toHaveValue(character.name);
   section('Apparence');
   expect(screen.getByRole('button', { name: 'Forme Gardien' })).toHaveAttribute('aria-pressed', 'true');
@@ -93,7 +93,7 @@ test('an older oversized class can remove spells and save without losing the res
     loadout: { ...emptyLoadout('IOP'), level: 200, spells: { custom: modestSpells.map(entry => entry.grades.at(-1)) } } }] };
   localStorage.setItem(CREATIONS_STORAGE, JSON.stringify(value));
   render(app(jest.fn()));
-  fireEvent.click(screen.getByRole('tab', { name: /Mes classes/ }));
+  fireEvent.click(screen.getByRole('tab', { name: /Mes personnages/ }));
   expect(screen.getByText(/Cette ancienne création contient/)).toHaveTextContent('11 sorts');
   openTest();
   expect(screen.getByRole('button', { name: 'Jouer cette création' })).toBeDisabled();

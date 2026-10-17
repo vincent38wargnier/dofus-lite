@@ -405,6 +405,11 @@ function heuristicLeaf(s, meId, myTeam, counters) {
     else { oppHp = f.hp; oppMax = f.maxHp; theirs = theirs ?? damagePotential(s, f.id, counters); }
   }
   mine = mine || 0; theirs = theirs || 0;
+  if (judgeWeights) {
+    const w = judgeWeights;
+    return w.hp * hpScore(s, myTeam) / 1000 + w.thr * (mine / oppMax - theirs / myMax)
+      + (mine >= oppHp ? w.lm : 0) + (theirs >= myHp ? w.lt : 0);
+  }
   let score = hpScore(s, myTeam) + (mine / oppMax - theirs / myMax) * 1000 * 0.35;
   if (mine >= oppHp) score += 300; // létale visible à mon prochain tour
   if (theirs >= myHp) score -= 300;
@@ -412,6 +417,11 @@ function heuristicLeaf(s, meId, myTeam, counters) {
 }
 let leafEval = heuristicLeaf;
 function setLeafEval(fn) { leafEval = fn || heuristicLeaf; }
+// Poids du juge main (audit B2, méthode Texel — docs/selfplay-loop1.md). null = juge
+// historique ci-dessus, inchangé. Sinon { hp, thr, lm, lt }: hp × hpScore/1000 + thr ×
+// menace + lm si létale à moi + lt si létale à eux (historique = 1000, 350, 300, −300).
+let judgeWeights = null;
+function setJudgeWeights(w) { judgeWeights = w || null; }
 
 // Plan complet du tour depuis l'état réel; retourne la 1re action de la
 // meilleure ligne (ou PASS). stats: applies, ends, ms.
@@ -1051,7 +1061,7 @@ function debugGame(cls, lk) {
 module.exports = {
   searchDecide, setLeafEval, setRolloutPolicy, setNominatorPolicy, setBudget, setFastCasts, setSampling, setHorizon, setReplySet, candidateCastsFast, useValueModel, makeValueJudge, candidateCasts, effectfulTargets, makeFighters,
   setAfterstateHook, setNetJudge, depth2Score, replayPlan, heuristicLeaf, freshApi,
-  LOADOUTS, hpScore, stateKeyOf, playMatch, mirror, duel, MAP, damagePotential,
+  LOADOUTS, hpScore, stateKeyOf, playMatch, mirror, duel, MAP, damagePotential, setJudgeWeights,
   SEARCH_VERSION,
 };
 

@@ -2,8 +2,8 @@ import { compileBot } from '../bots/compile';
 import { opponentFighterId, opponentSummary, opponentTeamErrors } from '../engine/opponentTeam';
 import { findBot } from './botsStore';
 
-export function compileOpponentBots(opponents, allBots, defaultBotId = 'maison') {
-  const errors = opponentTeamErrors(opponents);
+export function compileOpponentBots(opponents, allBots, defaultBotId = 'maison', encounter) {
+  const errors = opponentTeamErrors(opponents, encounter);
   if (errors.length) throw new Error(errors.join(' '));
   return Object.fromEntries(opponents.flatMap((entry, index) => {
     // An unconfigured monster keeps the native monster AI. Characters from

@@ -1,0 +1,74 @@
+[
+  {
+    "key": "potter",
+    "sha256": "e97587fa234b9ad93d2a9e0f4627b45aab5bfd0c4c643dbf1282c62175df30d8",
+    "download": true,
+    "themedEnemySpells": true
+  },
+  {
+    "key": "brice",
+    "sha256": "3ff52929b85ca96d34ab9f4780f03afee441acddf60364049b36faab66d1e651",
+    "download": true,
+    "themedEnemySpells": true
+  },
+  {
+    "key": "asterix",
+    "sha256": "2c916c9201728fa4e78407d0160a79db2f42521c76a742c303c7db800cc57587",
+    "download": true,
+    "themedEnemySpells": true
+  },
+  {
+    "key": "kaamelott",
+    "sha256": "34478af5c206070b04c016614b839f2455101ca626edd5aa4af1a00741f0bffc",
+    "download": true,
+    "themedEnemySpells": true
+  },
+  {
+    "key": "starwars",
+    "sha256": "6c83b1a739aab8d9b8a81a50154e32284526cd45a47e02956ba3c7a422e923b6",
+    "download": true,
+    "themedEnemySpells": true
+  },
+  {
+    "key": "rings",
+    "sha256": "eb88e56a09bfdb695f5ba2b8a2074cfb4fb70904d08aefe16ae21b349064d0f0",
+    "download": true,
+    "themedEnemySpells": true
+  },
+  {
+    "key": "onepiece",
+    "sha256": "cf6ce80fda744a7346e024362862c432f800a515f0f250393b786acca8178b23",
+    "download": true,
+    "themedEnemySpells": true
+  },
+  {
+    "key": "dragonball",
+    "sha256": "d4ba11895ee642db41fd139253c3ec7bd408e2e468b7c479811b4759c8dcf436",
+    "download": true,
+    "themedEnemySpells": true
+  },
+  {
+    "key": "pokemon",
+    "sha256": "2b4ff41264d5e5a8f075cd11113b64a51aa2c4a7aef93262832711eb26d3fa40",
+    "download": true,
+    "themedEnemySpells": true
+  },
+  {
+    "key": "visiteurs",
+    "sha256": "6620b73a4d2a86146a5ed8c4d88e254fc465c61e6e078face9136cd8cd26e0a8",
+    "download": true,
+    "themedEnemySpells": true
+  },
+  {
+    "key": "naheulbeuk",
+    "sha256": "e48afd6b6727a7a5b3c670e17fd17213fd5df825eb0d5472b943ca5084212234",
+    "download": true,
+    "themedEnemySpells": true
+  },
+  {
+    "key": "wakfu",
+    "sha256": "9d35ec4cbca8a8fa2138602f1b6aa5f473a6642df6d9c111052709f1cf104f4c",
+    "download": true,
+    "themedEnemySpells": true
+  }
+]

@@ -18,3 +18,16 @@ scripts/__pycache__/
 
 # Private local client research and network observations.
 local-observations/
+
+# Hosted platform build and private database; never serve these directories.
+build-platform/
+server/generated/
+var/
+web-public/vendor/
+web-public/ruffle/
+web-public/templates/
+.env
+.env.local
+.env.platform
+.env.production
+scripts/platform/__pycache__/

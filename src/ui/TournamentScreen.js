@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { CLASSES, CLASS_IDS } from '../engine/classes';
+import { CLASSES, CLASS_IDS, DEFAULT_CLASS_ID } from '../engine/classes';
 import { MAPS } from '../engine/maps';
 import { compileBot } from '../bots/compile';
 import { runTournament } from '../arena/tournament';
+import { useWorlds, WorldFilter } from './WorldsContext';
 
 export default function TournamentScreen({ allBots, onReplay }) {
+  const worlds = useWorlds();
+  const worldClasses = CLASS_IDS.filter(id => !worlds || worlds.matches('classes', id, worlds.selected));
   const [config, setConfig] = useState(() => {
     const init = {};
     for (const b of allBots) {
-      init[b.id] = { included: !b.custom, classId: b.recommendedClass || b.classId || 'IOP' };
+      init[b.id] = { included: !b.custom, classId: (CLASSES[b.recommendedClass || b.classId] ? b.recommendedClass || b.classId : DEFAULT_CLASS_ID) };
     }
     return init;
   });
@@ -16,7 +19,7 @@ export default function TournamentScreen({ allBots, onReplay }) {
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
 
-  const entryFor = (b) => config[b.id] || { included: false, classId: b.recommendedClass || 'IOP' };
+  const entryFor = (b) => config[b.id] || { included: false, classId: (CLASSES[b.recommendedClass] ? b.recommendedClass : DEFAULT_CLASS_ID) };
   const setEntry = (id, patch) => setConfig((c) => ({ ...c, [id]: { ...entryFor({ id }), ...c[id], ...patch } }));
 
   const launch = () => {
@@ -54,6 +57,7 @@ export default function TournamentScreen({ allBots, onReplay }) {
     <div style={{ display: 'grid', gridTemplateColumns: '340px minmax(0, 1fr)', gap: 14, alignItems: 'start' }}>
       <div className="panel">
         <h3>Participants</h3>
+        <WorldFilter />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {allBots.map((b) => {
             const e = entryFor(b);
@@ -71,7 +75,8 @@ export default function TournamentScreen({ allBots, onReplay }) {
                   value={e.classId}
                   onChange={(ev) => setEntry(b.id, { classId: ev.target.value })}
                 >
-                  {CLASS_IDS.map((id) => (
+                  {!worldClasses.includes(e.classId) && <option value={e.classId}>{CLASSES[e.classId].name} · sélection actuelle</option>}
+                  {worldClasses.map((id) => (
                     <option key={id} value={id}>{CLASSES[id].emoji} {CLASSES[id].name}</option>
                   ))}
                 </select>

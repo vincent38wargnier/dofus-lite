@@ -1,4 +1,4 @@
-import { PACKAGE_LIMITS as LIMIT } from './packageSchema';
+import { PACKAGE_LIMITS as LIMIT } from './packageLimits';
 
 const check = (ok, message) => { if (!ok) throw new Error(message); };
 const table = Array.from({ length: 256 }, (_, n) => {

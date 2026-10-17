@@ -62,10 +62,9 @@ test('hero choices require exact count, unique allowed IDs, and obey the AI opti
   expect(adventureErrors(dungeon)).toContain('Proposez assez de héros pour constituer l’équipe.');
 });
 
-test('manual launch derives both teams, map, level and equipment from the package, never caller overrides', () => {
+test('manual launch uses packaged heroes by default while preserving the authored enemy group and map', () => {
   const dungeon = room(), initial = JSON.stringify(dungeon);
   const match = new LiveMatch({ mode: 'custom', dungeon, seed: 2, mapId: 'arene', playerClass: 'FECA',
-    team: [{ kind: 'character', ...hero('Hors règles', 'FECA'), controller: 'player' }],
     opponents: [{ kind: 'monster', monsterId: POUTCH_ID, grade: 5 }],
     loadouts: { A: { ...hero().loadout, level: 1 } } });
   expect(Object.keys(match.state.fighters)).toEqual(['A', 'A2', 'B']);
@@ -76,6 +75,19 @@ test('manual launch derives both teams, map, level and equipment from the packag
   expect(match.humanIds).toEqual(new Set(['A', 'A2']));
   expect(match.state.fighters.B.hp).toBe(100);
   expect(JSON.stringify(dungeon)).toBe(initial);
+});
+
+test('an explicitly composed team keeps its characters, controls and AI in any world', () => {
+  const dungeon = room(); dungeon.adventure.allowAI = false;
+  const own = [{ kind: 'character', ...hero('Mon Féca', 'FECA'), controller: 'player' },
+    { kind: 'character', ...hero('Mon Crâ', 'CRA'), controller: 'ai' }];
+  const allyBots = { A2: pass };
+  const match = new LiveMatch({ mode: 'custom', dungeon, seed: 2, team: own, allyBots });
+  expect(match.state.fighters.A.name).toBe('Mon Féca');
+  expect(match.state.fighters.A2.name).toBe('Mon Crâ');
+  expect(match.humanIds).toEqual(new Set(['A']));
+  expect(match.allyBots).toBe(allyBots);
+  expect(() => new LiveMatch({ mode: 'custom', dungeon, seed: 2, team: [] })).toThrow(/Ajoutez/);
 });
 
 test('automatic simulation selects the same provided hero and cannot bypass a manual-only adventure', () => {

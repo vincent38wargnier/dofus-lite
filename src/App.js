@@ -14,10 +14,12 @@ import { CreationsProvider } from './ui/CreationsContext';
 import WorkshopScreen from './ui/WorkshopScreen';
 import { CustomEquipmentProvider } from './ui/CustomEquipmentContext';
 import { ProfilesProvider } from './ui/ProfilesContext';
+import { WorldsProvider } from './ui/WorldsContext';
 import { newCreationId } from './ui/creationsStore';
 import './styles/playerSetup.css';
 import './styles/combatLayout.css';
 import './styles/profiles.css';
+import { PLATFORM } from './platform/config';
 
 const TABS = [
   { id: 'characters', label: 'Personnages' },
@@ -25,8 +27,9 @@ const TABS = [
   { id: 'docs', label: 'Règles & API' },
 ];
 
-export default function App() {
-  const [tab, setTab] = useState('play');
+export default function App({ initialTab = 'play', initialSelection = null, onPlatformBack, libraries, initialWorldId }) {
+  const [tab, setTab] = useState(initialTab);
+  const opened = useRef(new Set([initialTab])); opened.current.add(tab);
   const [fighting, setFighting] = useState(false);
   const [arenaFighting, setArenaFighting] = useState(false);
   const [automaticSession, setAutomaticSession] = useState(false);
@@ -39,7 +42,7 @@ export default function App() {
   const [arenaLaunch, setArenaLaunch] = useState(null);
   const [matchLaunch, setMatchLaunch] = useState(null);
   const [editorRequest, setEditorRequest] = useState(null);
-  const [selectionRequest, setSelectionRequest] = useState(null);
+  const [selectionRequest, setSelectionRequest] = useState(initialSelection);
   const [workshopError, setWorkshopError] = useState('');
   const allBots = listAllBots(customBots);
 
@@ -60,27 +63,27 @@ export default function App() {
   const playActive = tab === 'play' || tab === 'arena';
   const openCreator = (returnTo, kind, entryId) => {
     setWorkshopError('');
-    setEditorRequest({ id: newCreationId(), tab: kind, entryId, returnTo });
+    setEditorRequest({ id: newCreationId(), tab: kind === 'profiles' ? 'characters' : kind, entryId, returnTo, browse: kind === 'profiles' });
     setTab('workshop'); window.scrollTo(0, 0);
   };
   const leaveCreator = (kind, entry) => {
-    const returnTo = editorRequest?.returnTo || 'play';
+    const returnTo = kind === 'profiles' ? 'play' : editorRequest?.returnTo || 'play';
     setSelectionRequest({ id: newCreationId(), tab: kind, entry, returnTo });
     setEditorRequest(null); setTab(returnTo); window.scrollTo(0, 0);
   };
 
   return (
-    <CustomEquipmentProvider><LoadoutsProvider><CreationsProvider><ProfilesProvider><div className={`app${(tab === 'play' && fighting) || (tab === 'arena' && arenaFighting) ? ' in-combat' : ''}`}>
+    <CustomEquipmentProvider><LoadoutsProvider><CreationsProvider><WorldsProvider libraries={libraries} initialWorldId={initialWorldId}><ProfilesProvider><div className={`app${(tab === 'play' && fighting) || (tab === 'arena' && arenaFighting) ? ' in-combat' : ''}`}>
       <header className="app-header">
-        <button className="app-brand" onClick={openPlay} aria-label="Dofus Koliséum — Jouer"><span className="brand-mark"><Swords size={23} /></span><span className="app-title">Dofus <strong>Koliséum</strong><span className="sub">VOTRE ARÈNE, VOS RÈGLES</span></span></button>
+        <button className="app-brand" onClick={onPlatformBack || openPlay} aria-label={PLATFORM ? 'Retour à Arena Forge' : 'Dofus Koliséum — Jouer'}><span className="brand-mark"><Swords size={23} /></span><span className="app-title">{PLATFORM ? <>Arena <strong>Forge</strong></> : <>Dofus <strong>Koliséum</strong></>}<span className="sub">{PLATFORM ? '← MON ESPACE LOCAL' : 'VOTRE ARÈNE, VOS RÈGLES'}</span></span></button>
         <nav className="tabs" aria-label="Navigation principale">
           <button className={`tab${playActive ? ' active' : ''}`} aria-current={playActive ? 'page' : undefined} onClick={openPlay}><UserRound size={17} /> Jouer</button>
           <button className={`tab${tab === 'workshop' ? ' active' : ''}`} aria-current={tab === 'workshop' ? 'page' : undefined} onClick={() => setTab('workshop')}><Hammer size={17} /> Atelier</button>
           <button className={`tab${tab === 'editor' ? ' active' : ''}`} aria-current={tab === 'editor' ? 'page' : undefined} onClick={() => setTab('editor')}><BrainCircuit size={17} /> Studio IA</button>
-          <button className={`tab${tab === 'spells' ? ' active' : ''}`} aria-current={tab === 'spells' ? 'page' : undefined} onClick={() => setTab('spells')}><BookOpen size={17} /> Grimoire</button>
+          {!PLATFORM && <button className={`tab${tab === 'spells' ? ' active' : ''}`} aria-current={tab === 'spells' ? 'page' : undefined} onClick={() => setTab('spells')}><BookOpen size={17} /> Grimoire</button>}
           <details className="tools-menu" ref={toolsMenu} onKeyDown={e => { if (e.key === 'Escape') { toolsMenu.current.open = false; toolsMenu.current.querySelector('summary').focus(); } }}>
             <summary className={`tab${TABS.some(t => t.id === tab) ? ' active' : ''}`}><SlidersHorizontal size={16} />{TABS.find(t => t.id === tab)?.label || 'Outils'}<ChevronDown size={14} /></summary>
-            <div className="tools-dropdown">{TABS.map((t) => (
+            <div className="tools-dropdown">{TABS.filter(t => !PLATFORM || t.id === 'tournament').map((t) => (
             <button
               key={t.id}
               className={`tab${tab === t.id ? ' active' : ''}`}
@@ -91,7 +94,7 @@ export default function App() {
             </button>
           ))}</div></details>
         </nav>
-        <RetroStatus compact />
+        {!PLATFORM && <RetroStatus compact />}
       </header>
       {tab === 'characters' ? <RetroLibraryScreen /> : null}
       {tab === 'spells' ? <SpellbookScreen /> : null}
@@ -109,7 +112,7 @@ export default function App() {
 
       {/* Tous les écrans restent montés pour conserver replays et brouillons. */}
       <div className="arena-route" style={{ display: tab === 'arena' ? 'block' : 'none' }}>
-        <ArenaScreen
+        {(!PLATFORM || opened.current.has('arena')) && <ArenaScreen
           active={tab === 'arena'}
           onFightChange={setArenaFighting}
           onSessionChange={setAutomaticSession}
@@ -122,20 +125,20 @@ export default function App() {
           matchLaunch={matchLaunch} onMatchConsumed={() => setMatchLaunch(null)}
           selectionRequest={selectionRequest?.returnTo === 'arena' ? selectionRequest : null}
           onOpenCreator={(kind, entryId) => openCreator('arena', kind, entryId)}
-        />
+        />}
       </div>
       <div className="play-route" style={{ display: tab === 'play' ? 'block' : 'none' }}>
-        <PlayScreen allBots={allBots} active={tab === 'play'} onFightChange={setFighting}
+        {(!PLATFORM || opened.current.has('play')) && <PlayScreen allBots={allBots} active={tab === 'play'} onFightChange={setFighting}
           onOpenPeer={() => setTab('play')}
           onAutomaticLaunch={request => { setAutomaticReturn('play'); setMatchLaunch(request); setTab('arena'); window.scrollTo(0, 0); }}
           onResumeAutomatic={automaticSession ? () => { setTab('arena'); window.scrollTo(0, 0); } : undefined}
           selectionRequest={selectionRequest?.returnTo === 'play' ? selectionRequest : null}
           onOpenCreator={(kind, entryId) => openCreator('play', kind, entryId)}
           customLaunch={customLaunch} onCustomConsumed={() => setCustomLaunch(null)}
-          onCustomExit={error => { setWorkshopError(typeof error === 'string' ? error : ''); setTab('workshop'); }} />
+          onCustomExit={error => { setWorkshopError(typeof error === 'string' ? error : ''); setTab('workshop'); }} />}
       </div>
       <div style={{ display: tab === 'editor' ? 'block' : 'none' }}>
-        <EditorScreen
+        {(!PLATFORM || opened.current.has('editor')) && <EditorScreen
           allBots={allBots}
           customBots={customBots}
           addBot={addBot}
@@ -143,14 +146,14 @@ export default function App() {
           deleteBot={deleteBot}
           onWatch={config => { setReplay(config); setAutomaticReturn('editor'); setTab('arena'); window.scrollTo(0, 0); }}
           onTournament={() => { setTab('tournament'); window.scrollTo(0, 0); }}
-        />
+        />}
       </div>
       <div style={{ display: tab === 'tournament' ? 'block' : 'none' }}>
-        <TournamentScreen allBots={allBots} onReplay={requestReplay} />
+        {(!PLATFORM || opened.current.has('tournament')) && <TournamentScreen allBots={allBots} onReplay={requestReplay} />}
       </div>
       <div style={{ display: tab === 'docs' ? 'block' : 'none' }}>
-        <DocsScreen />
+        {!PLATFORM && <DocsScreen />}
       </div>
-    </div></ProfilesProvider></CreationsProvider></LoadoutsProvider></CustomEquipmentProvider>
+    </div></ProfilesProvider></WorldsProvider></CreationsProvider></LoadoutsProvider></CustomEquipmentProvider>
   );
 }

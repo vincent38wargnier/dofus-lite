@@ -43,8 +43,13 @@
 .duel-candidate-stats span { display: flex; align-items: center; gap: 3px; }.duel-candidate-stats svg { color: #bd7b69; }
 .combat-choice .duel-candidate-add { width: 100%; border-color: #d9e0cc; background: #f0f4e7; color: #566d3d; font-size: 10px; padding: 8px 3px; font-weight: 650; }
 .duel-candidate.invalid { opacity: .6; }.duel-candidate-error { color: #a7513d; font-size: 11px; }
-.duel-monster-filters { display: flex; gap: 12px; align-items: center; margin: 0 0 12px; font-size: 11px; }
-.duel-monster-filters select { min-width: 0; flex: 1; }.duel-monster-filters label { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.duel-catalogue-filters { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; margin: 0 0 14px; font-size: 11px; }
+.duel-catalogue-filters:empty { display: none; }
+.duel-catalogue-filters .world-filter { flex: 1 1 190px; min-width: 0; width: auto; margin: 0; }
+.duel-catalogue-filters .world-filter label, .duel-dungeon-filter { display: flex; flex-direction: column; align-items: stretch; gap: 5px; min-width: 0; width: 100%; font-size: 11px; font-weight: 650; }
+.duel-dungeon-filter { flex: 1 1 160px; }
+.duel-catalogue-filters select { width: 100%; min-width: 0; }
+.duel-boss-filter { display: flex; align-items: center; gap: 5px; min-height: 34px; white-space: nowrap; }
 .duel-composer select { border: 1px solid var(--duel-line); border-radius: 6px; padding: 7px; background: #fcfcf5; color: var(--duel-ink); font: inherit; font-size: 11px; max-width: 100%; }
 .duel-candidate.monster select { width: 100%; margin: 0 0 9px; }
 .duel-catalogue-empty { display: grid; justify-items: center; padding: 42px 16px; color: #88937b; text-align: center; gap: 12px; border: 1px dashed var(--duel-line); border-radius: 10px; }.duel-catalogue-empty p { font-size: 12px; margin: 0; }
@@ -79,7 +84,8 @@
   .duel-terrain-bar { padding: 8px; margin-bottom: 16px; }.duel-terrain-choice { gap: 10px; }.duel-terrain-choice > .map-preview { width: 78px; flex-basis: 78px; height: 62px; }.duel-terrain-choice strong { font-size: 13px; }.duel-match-count { display: none; }
   .duel-composition { grid-template-columns: minmax(0, 1fr); }.duel-team { order: -1; }.duel-team-list { max-height: 160px; }.duel-team-drop-hint:not(.empty) { display: none; }.duel-team-drop-hint.empty { min-height: 60px; padding: 12px; }.duel-team-drop-hint.empty svg { display: none; }
   .duel-team-bottom { padding: 10px 14px; }.duel-team-total { display: none; }.duel-bot-choice { display: flex; align-items: center; margin: 0; gap: 8px; }.duel-bot-choice > span { flex: 1; }.duel-bot-choice select { width: 55%; }.duel-monster-ai { margin: 0; }
-  .duel-catalogue-heading h3 { font-size: 17px; }.duel-catalogue-tools > small { display: none; }.duel-catalogue-grid { max-height: 420px; }.duel-monster-filters { flex-wrap: wrap; }.duel-monster-filters select { flex-basis: 100%; }
+  .duel-catalogue-heading h3 { font-size: 17px; }.duel-catalogue-tools > small { display: none; }.duel-catalogue-grid { max-height: 420px; }
+  .duel-catalogue-filters .world-filter { flex-basis: 100%; }
   .duel-map-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }.duel-map-card > .map-preview { height: 95px; }.duel-map-card-info { padding: 9px; }.duel-map-card-info strong { font-size: 10px; }.duel-map-card-info > svg { display: none; }
 }
 
@@ -88,7 +94,7 @@
 .combat-team-tabs button[aria-pressed=true] { background: #e5ecd7; border-color: #8a9f71; color: #34482b; }
 .combat-team-tabs button span { font-size: 11px; padding: 2px 5px; border-radius: 4px; background: #d0dbbd; }
 .team-leader { background: #e8efdd; border-color: #a6b88e; }
-.team-control-badge { font-size: 10px; color: #536d3d; }
+.team-control-badge { display: block; margin: 4px 0; font-size: 10px; color: #536d3d; }
 .ally-controller { display: grid; gap: 7px; margin-top: 8px; }
 .ally-controller label { display: grid; gap: 4px; font-size: 10px; color: #6b795c; }
 .ally-controller select { width: 100%; min-width: 0; }
@@ -102,3 +108,4 @@
 @media (max-width: 680px) {
   .combat-team-tabs button { flex: 1; justify-content: center; font-size: 12px; padding: 9px 6px; }
 }
+.duel-save-notice { color: var(--gold); font-size: 12px; margin: 12px 0 0; }.duel-save-notice:empty { display: none; }

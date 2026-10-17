@@ -1,0 +1,446 @@
+[
+  {
+    "key": "potter",
+    "file": "/Users/vincent/Documents/code/dofus/dofus-lite/var/demo-libraries/potter-v2.zip",
+    "bytes": 9641047,
+    "images": 35,
+    "release": "2.0.0",
+    "counts": {
+      "characters": 3,
+      "dungeons": 1,
+      "equipment": 24,
+      "monsters": 9,
+      "maps": 3,
+      "spells": 42,
+      "images": 9,
+      "rooms": 3
+    },
+    "arena": [
+      {
+        "index": 0,
+        "name": "Elias, duelliste de la tour",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 1,
+        "name": "Maëlle, botaniste de garde",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 2,
+        "name": "Robin, maître des potions",
+        "spells": 8,
+        "level": 200
+      }
+    ]
+  },
+  {
+    "key": "brice",
+    "file": "/Users/vincent/Documents/code/dofus/dofus-lite/var/demo-libraries/brice-v2.zip",
+    "bytes": 8570077,
+    "images": 35,
+    "release": "2.0.0",
+    "counts": {
+      "characters": 3,
+      "dungeons": 1,
+      "equipment": 24,
+      "monsters": 9,
+      "maps": 3,
+      "spells": 42,
+      "images": 9,
+      "rooms": 3
+    },
+    "arena": [
+      {
+        "index": 0,
+        "name": "Brice, roi de la casse",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 1,
+        "name": "Nora, sauveteuse du rivage",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 2,
+        "name": "Momo, bricoleur des flots",
+        "spells": 8,
+        "level": 200
+      }
+    ]
+  },
+  {
+    "key": "asterix",
+    "file": "/Users/vincent/Documents/code/dofus/dofus-lite/var/demo-libraries/asterix-v2.zip",
+    "bytes": 9535006,
+    "images": 35,
+    "release": "2.0.0",
+    "counts": {
+      "characters": 3,
+      "dungeons": 1,
+      "equipment": 24,
+      "monsters": 9,
+      "maps": 3,
+      "spells": 42,
+      "images": 9,
+      "rooms": 3
+    },
+    "arena": [
+      {
+        "index": 0,
+        "name": "Brennix, porteur de menhir",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 1,
+        "name": "Alix, éclaireuse du bocage",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 2,
+        "name": "Mélodrix, druide du festin",
+        "spells": 8,
+        "level": 200
+      }
+    ]
+  },
+  {
+    "key": "kaamelott",
+    "file": "/Users/vincent/Documents/code/dofus/dofus-lite/var/demo-libraries/kaamelott-v2.zip",
+    "bytes": 9193217,
+    "images": 35,
+    "release": "2.0.0",
+    "counts": {
+      "characters": 3,
+      "dungeons": 1,
+      "equipment": 24,
+      "monsters": 9,
+      "maps": 3,
+      "spells": 42,
+      "images": 9,
+      "rooms": 3
+    },
+    "arena": [
+      {
+        "index": 0,
+        "name": "Léodagan, rempart impatient",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 1,
+        "name": "Perceval, spécialiste approximatif",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 2,
+        "name": "Karadoc, logisticien du casse-croûte",
+        "spells": 8,
+        "level": 200
+      }
+    ]
+  },
+  {
+    "key": "starwars",
+    "file": "/Users/vincent/Documents/code/dofus/dofus-lite/var/demo-libraries/starwars-v2.zip",
+    "bytes": 8621880,
+    "images": 35,
+    "release": "2.0.0",
+    "counts": {
+      "characters": 3,
+      "dungeons": 1,
+      "equipment": 24,
+      "monsters": 9,
+      "maps": 3,
+      "spells": 42,
+      "images": 9,
+      "rooms": 3
+    },
+    "arena": [
+      {
+        "index": 0,
+        "name": "Kara, sentinelle de l’aube",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 1,
+        "name": "Vex, pilote du convoi",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 2,
+        "name": "R0-M, technicien de bord",
+        "spells": 8,
+        "level": 200
+      }
+    ]
+  },
+  {
+    "key": "rings",
+    "file": "/Users/vincent/Documents/code/dofus/dofus-lite/var/demo-libraries/rings-v2.zip",
+    "bytes": 9122788,
+    "images": 35,
+    "release": "2.0.0",
+    "counts": {
+      "characters": 3,
+      "dungeons": 1,
+      "equipment": 24,
+      "monsters": 9,
+      "maps": 3,
+      "spells": 42,
+      "images": 9,
+      "rooms": 3
+    },
+    "arena": [
+      {
+        "index": 0,
+        "name": "Aradan, garde du Nord",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 1,
+        "name": "Lethiel, archère des saules",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 2,
+        "name": "Mira, gardienne des simples",
+        "spells": 8,
+        "level": 200
+      }
+    ]
+  },
+  {
+    "key": "onepiece",
+    "file": "/Users/vincent/Documents/code/dofus/dofus-lite/var/demo-libraries/onepiece-v2.zip",
+    "bytes": 9682442,
+    "images": 35,
+    "release": "2.0.0",
+    "counts": {
+      "characters": 3,
+      "dungeons": 1,
+      "equipment": 24,
+      "monsters": 9,
+      "maps": 3,
+      "spells": 42,
+      "images": 9,
+      "rooms": 3
+    },
+    "arena": [
+      {
+        "index": 0,
+        "name": "Riko, capitaine élastique",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 1,
+        "name": "Sora, navigatrice des courants",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 2,
+        "name": "Basile, cuisinier du bord",
+        "spells": 8,
+        "level": 200
+      }
+    ]
+  },
+  {
+    "key": "dragonball",
+    "file": "/Users/vincent/Documents/code/dofus/dofus-lite/var/demo-libraries/dragonball-v2.zip",
+    "bytes": 8793637,
+    "images": 35,
+    "release": "2.0.0",
+    "counts": {
+      "characters": 3,
+      "dungeons": 1,
+      "equipment": 24,
+      "monsters": 9,
+      "maps": 3,
+      "spells": 42,
+      "images": 9,
+      "rooms": 3
+    },
+    "arena": [
+      {
+        "index": 0,
+        "name": "Ren, disciple de la roche",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 1,
+        "name": "Aya, messagère du vent",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 2,
+        "name": "Tao, médecin du ki",
+        "spells": 8,
+        "level": 200
+      }
+    ]
+  },
+  {
+    "key": "pokemon",
+    "file": "/Users/vincent/Documents/code/dofus/dofus-lite/var/demo-libraries/pokemon-v2.zip",
+    "bytes": 9750870,
+    "images": 35,
+    "release": "2.0.0",
+    "counts": {
+      "characters": 3,
+      "dungeons": 1,
+      "equipment": 24,
+      "monsters": 9,
+      "maps": 3,
+      "spells": 42,
+      "images": 9,
+      "rooms": 3
+    },
+    "arena": [
+      {
+        "index": 0,
+        "name": "Carapace, gardien des mares",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 1,
+        "name": "Voltige, éclaireur électrique",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 2,
+        "name": "Florette, soigneuse du bosquet",
+        "spells": 8,
+        "level": 200
+      }
+    ]
+  },
+  {
+    "key": "visiteurs",
+    "file": "/Users/vincent/Documents/code/dofus/dofus-lite/var/demo-libraries/visiteurs-v2.zip",
+    "bytes": 9323815,
+    "images": 35,
+    "release": "2.0.0",
+    "counts": {
+      "characters": 3,
+      "dungeons": 1,
+      "equipment": 24,
+      "monsters": 9,
+      "maps": 3,
+      "spells": 42,
+      "images": 9,
+      "rooms": 3
+    },
+    "arena": [
+      {
+        "index": 0,
+        "name": "Godefroy, visiteur pressé",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 1,
+        "name": "Jacquouille, éclaireur malgré lui",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 2,
+        "name": "Béatrice, réparatrice du temps",
+        "spells": 8,
+        "level": 200
+      }
+    ]
+  },
+  {
+    "key": "naheulbeuk",
+    "file": "/Users/vincent/Documents/code/dofus/dofus-lite/var/demo-libraries/naheulbeuk-v2.zip",
+    "bytes": 9550267,
+    "images": 35,
+    "release": "2.0.0",
+    "counts": {
+      "characters": 3,
+      "dungeons": 1,
+      "equipment": 24,
+      "monsters": 9,
+      "maps": 3,
+      "spells": 42,
+      "images": 9,
+      "rooms": 3
+    },
+    "arena": [
+      {
+        "index": 0,
+        "name": "Borg, négociateur à la hache",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 1,
+        "name": "Lys, éclaireuse sous contrat",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 2,
+        "name": "Zélie, mage intérimaire",
+        "spells": 8,
+        "level": 200
+      }
+    ]
+  },
+  {
+    "key": "wakfu",
+    "file": "/Users/vincent/Documents/code/dofus/dofus-lite/var/demo-libraries/wakfu-v2.zip",
+    "bytes": 9463795,
+    "images": 35,
+    "release": "2.0.0",
+    "counts": {
+      "characters": 3,
+      "dungeons": 1,
+      "equipment": 24,
+      "monsters": 9,
+      "maps": 3,
+      "spells": 42,
+      "images": 9,
+      "rooms": 3
+    },
+    "arena": [
+      {
+        "index": 0,
+        "name": "Orin, veilleur du portail",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 1,
+        "name": "Sève, pisteuse des bourgeons",
+        "spells": 8,
+        "level": 200
+      },
+      {
+        "index": 2,
+        "name": "Luma, gardienne des échos",
+        "spells": 8,
+        "level": 200
+      }
+    ]
+  }
+]

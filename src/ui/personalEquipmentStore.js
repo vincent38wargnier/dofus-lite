@@ -1,8 +1,9 @@
+import { storageKey } from '../platform/config';
 import { ITEMS, EQUIPMENT_SLOTS } from '../engine/equipment';
 import { customEquipmentItem, equipmentItem } from '../engine/customEquipment';
 import { fmEffect, isForgeSnapshot, matchingForge, replaceEquipment } from '../engine/forgedItems';
 
-export const PERSONAL_EQUIPMENT_STORAGE = 'dofus-lite-personal-equipment-v1';
+export const PERSONAL_EQUIPMENT_STORAGE = storageKey('dofus-lite-personal-equipment-v1');
 const clone = value => JSON.parse(JSON.stringify(value));
 const canonical = value => Array.isArray(value) ? value.map(canonical)
   : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(key => [key, canonical(value[key])])) : value;

@@ -228,3 +228,10 @@
   .studio-dialog > header { padding: 20px 16px; }
   .studio-test-dialog .creator-launch { padding: 0 16px 20px; }
 }
+.studio-saved-characters { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.studio-saved-characters h3, .studio-class-heading h3 { font-size: 14px; margin: 0 0 8px; }
+.studio-saved-characters h3 span { color: var(--muted); margin-left: 5px; }
+.studio-saved-characters p, .studio-class-heading p { font-size: 12px; color: var(--muted); line-height: 1.5; margin: 0 0 12px; }
+.studio-saved-list { display: grid; gap: 6px; max-height: 360px; overflow-y: auto; margin-top: 10px; }
+.studio-saved-list .retro-portrait { width: 46px; height: 54px; flex-shrink: 0; }
+.studio-saved-list small svg { vertical-align: middle; }.studio-class-heading { margin-bottom: 10px; }

@@ -3,6 +3,7 @@ import { MAPS, MAP_IDS } from '../engine/maps';
 import { RETRO_BASE, useRetroAssets } from './RetroAssets';
 import { placementDescription } from './PlacementPanel';
 import { useCharacterArtwork } from './characterArtwork';
+import { useWorlds, WorldFilter } from './WorldsContext';
 
 function TacticalThumbnail({ map }) {
   const hw = 9, hh = 4.5, top = 6;
@@ -29,6 +30,7 @@ export function MapPreview({ map, artwork }) {
 
 export default function MapPicker({ value, onChange, preview = false, mapIds = MAP_IDS }) {
   const assets = useRetroAssets();
+  const worlds = useWorlds();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const dialog = useRef(null);
@@ -37,19 +39,23 @@ export default function MapPicker({ value, onChange, preview = false, mapIds = M
   const selected = MAPS[value];
   const normalize = text => text.toLocaleLowerCase('fr').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .replace(/;/g, ',').replace(/[\s[\]()]/g, '');
-  const matches = mapIds.filter(id => normalize(MAPS[id].name).includes(normalize(query)));
+  const worldMaps = mapIds.filter(id => !worlds || worlds.matches('maps', id, worlds.selected));
+  const matches = worldMaps.filter(id => normalize(MAPS[id].name).includes(normalize(query)));
   return <div className="map-picker">
+    <WorldFilter />
     {preview ? <button className="selected-map-preview" type="button" onClick={() => setOpen(true)} aria-label="Choisir une autre carte">
       <MapPreview map={selected} artwork={assets?.imagesReady && assets.maps[value]} /><span>Changer de terrain</span></button> : null}
     <label className="field">Carte
       <select aria-label="Carte de combat" value={value} onChange={e => onChange(e.target.value)}>
-        {mapIds.map(id => <option key={id} value={id}>{MAPS[id].name}</option>)}
+        {!worldMaps.includes(value) && <option value={value}>{selected.name} · carte actuelle</option>}
+        {worldMaps.map(id => <option key={id} value={id}>{MAPS[id].name}</option>)}
       </select>
     </label>
     <span className="map-placement-note">{placementDescription(selected)}</span>
-    <button type="button" className="map-open" onClick={() => setOpen(!open)} aria-expanded={open}>Voir les {mapIds.length} cartes</button>
+    <button type="button" className="map-open" onClick={() => setOpen(!open)} aria-expanded={open}>Voir les {worldMaps.length} cartes</button>
     <dialog ref={dialog} className="map-gallery panel" aria-labelledby={titleId} onCancel={() => setOpen(false)} onClick={e => { if (e.target === e.currentTarget) setOpen(false); }}>
       {open && <><div className="map-gallery-heading"><h3 id={titleId}>Choisir le terrain</h3><button className="btn" type="button" onClick={() => setOpen(false)}>Fermer</button></div>
+      <WorldFilter />
       <input type="text" aria-label="Rechercher une carte" placeholder="Astrub, Amakna, 5;-23…" value={query} onChange={e => setQuery(e.target.value)} />
       <div className="map-cards">{matches.map(id => {
         const map = MAPS[id];

@@ -1,8 +1,9 @@
+import { storageKey } from '../platform/config';
 import React, { createContext, useContext, useCallback, useRef, useState } from 'react';
 import { customEquipmentShape, validateCustomEquipment } from '../engine/customEquipment';
 import { PERSONAL_EQUIPMENT_STORAGE, readPersonalEquipment, rememberForgedEquipment } from './personalEquipmentStore';
 
-export const CUSTOM_EQUIPMENT_STORAGE = 'dofus-lite-custom-equipment-v1';
+export const CUSTOM_EQUIPMENT_STORAGE = storageKey('dofus-lite-custom-equipment-v1');
 const Context = createContext(null);
 export function readCustomEquipment(storage) {
   try {

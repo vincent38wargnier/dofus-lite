@@ -1,11 +1,12 @@
+import { storageKey } from '../platform/config';
 import { customEquipmentShape } from '../engine/customEquipment';
 import { CLASSES } from '../engine/classes';
 import { isCustomSpellbookDraft } from '../engine/customSpells';
 import { isForgeSnapshot } from '../engine/forgedItems';
 import { EQUIPMENT_SLOTS } from '../engine/equipment';
 
-export const DRAFT_STORAGE = 'dofus-lite-loadouts-v1';
-export const LIBRARY_STORAGE = 'dofus-lite-stuff-library-v1';
+export const DRAFT_STORAGE = storageKey('dofus-lite-loadouts-v1');
+export const LIBRARY_STORAGE = storageKey('dofus-lite-stuff-library-v1');
 export const emptyLibrary = () => ({ version: 1, builds: [], active: {} });
 const record = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const clone = value => JSON.parse(JSON.stringify(value));

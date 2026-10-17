@@ -29,6 +29,7 @@ export function addCustomDungeonCharacter(dungeon, profile) {
 
 export function customDungeonMemberPreview(member) {
   if (member.character) return { kind: 'character', ...member.character };
+  if (member.customMonster) return { kind: 'monster', customMonster: member.customMonster, name: member.customMonster.name, artworkId: member.customMonster.artworkId };
   return { kind: 'monster', monsterId: member.customMonster?.reference.monsterId || member.monsterId,
     grade: member.customMonster?.reference.grade || member.grade, name: member.customMonster?.name, artworkId: member.customMonster?.artworkId };
 }

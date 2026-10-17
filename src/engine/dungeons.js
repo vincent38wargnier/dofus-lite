@@ -1,4 +1,4 @@
-import DATA from './dungeonData.json';
+import { dungeonData as DATA } from './gameData';
 import { BOSSES, getMonster, monsterGrades, defaultMonsterGrade } from './monsters';
 import { createRng, hashSeed } from './rng';
 

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Plus, Copy, Check, Trash2 } from 'lucide-react';
 import { resolveLoadout } from '../engine/equipment';
 import { RetroPortrait } from './RetroAssets';
+import { useWorlds, WorldFilter } from './WorldsContext';
+import { characterMatchesWorld } from './worldCatalogue';
 
 export function ProfileIdentity({ profiles }) {
   const [editing, setEditing] = useState(false);
@@ -19,12 +21,15 @@ export function ProfileIdentity({ profiles }) {
 }
 
 export default function ProfileLibrary({ profiles, onNew, onConfigure }) {
+  const worlds = useWorlds();
   const [removed, setRemoved] = useState(null);
+  const visible = profiles.profiles.filter(profile => characterMatchesWorld(worlds, profile));
   return <section className="profile-library" aria-label="Mes personnages">
     <div className="setup-section-heading"><div><h2>Mes personnages</h2><p>Chacun garde son équipement, ses caractéristiques et ses sorts.</p></div>
       <button type="button" className="btn primary" onClick={onNew}><Plus size={16} />Nouveau personnage</button></div>
     {removed && <div className="profile-notice" role="status">« {removed.name} » supprimé.<button className="btn" onClick={() => { profiles.restore(removed); setRemoved(null); }}>Annuler</button></div>}
-    <div className="profile-grid">{profiles.profiles.map(profile => {
+    <WorldFilter />
+    <div className="profile-grid">{visible.map(profile => {
       const stats = resolveLoadout(profile.classId, profile.loadout);
       const selected = profile.id === profiles.activeId;
       return <article className={`profile-card${selected ? ' selected' : ''}`} key={profile.id} data-profile-id={profile.id}>
@@ -37,5 +42,6 @@ export default function ProfileLibrary({ profiles, onNew, onConfigure }) {
           <button type="button" className="btn subtle" disabled={profiles.profiles.length <= 1} aria-label={`Supprimer le personnage ${profile.name}`} onClick={() => { setRemoved(profile); profiles.remove(profile.id); }}><Trash2 size={15} /></button></div>
       </article>;
     })}</div>
+    {!visible.length && <p className="muted">Aucun personnage pour ce monde. Choisissez une autre bibliothèque ou « Tous mes mondes ».</p>}
   </section>;
 }
